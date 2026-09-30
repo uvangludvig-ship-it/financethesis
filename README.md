@@ -1,4 +1,18 @@
-# Finance thesis award winners
+# Finance thesis (BE451, hösten 2026)
+
+## Valt thesis-ämne
+
+**The Impact of the Swedish Fund Selection Agency (Fondtorgsnämnden) on the
+Mutual Fund Market.**
+
+- Författare: Ludvig Pauli Uväng och Alexander Fox.
+- Önskad handledare: Michael Klug.
+- Tentativ forskningsfråga: Hur har upphandlingen av premiepensionens
+  fondtorg påverkat fondutbud, avgifter och kapitalflöden i Sverige, och har
+  effekten spridit sig till fonder utanför PPM?
+- Inlämnad synopsis: `synopsis/BScThesis_Fox_Pauli_Uvang.pdf`.
+
+## Historiska vinnare
 
 Den här mappen innehåller de historiska vinnarna i Stockholm School of
 Economics officiella Primo-samling
