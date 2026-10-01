@@ -1,7 +1,8 @@
 # Econometrics for Finance — Fall 2026
 
 Originalfiler och praktiska anteckningar från Canvas-modulen
-**Econometric Course**, kontrollerad den 3 september 2026.
+**Econometric Course**, kontrollerad den 3 september 2026 och
+kompletterad den 30 september 2026.
 
 ## Originalfiler
 
@@ -10,6 +11,16 @@ Originalfiler och praktiska anteckningar från Canvas-modulen
 - [Lecture_1_Introduction_and_Cross_section_I.pdf](Lecture_1_Introduction_and_Cross_section_I.pdf)
   — materialet för pass 1 den 3 september; 83 fysiska PDF-sidor med
   Beamer-overlays, motsvarande 39 numrerade slides.
+- [Lecture_2_Cross_section_and_IV.pdf](Lecture_2_Cross_section_and_IV.pdf)
+  och [Lecture_2_Codes.zip](Lecture_2_Codes.zip) — pass 2, tvärsnitt och IV.
+- [Lecture_3_Panel_Methods_and_DID_I.pdf](Lecture_3_Panel_Methods_and_DID_I.pdf)
+  och [Lecture_3_Codes.zip](Lecture_3_Codes.zip) — pass 3, panelmetoder och
+  difference-in-differences I.
+- [Lecture_4_DID_II_Portfolio_sorts_and_Event_Study.pdf](Lecture_4_DID_II_Portfolio_sorts_and_Event_Study.pdf)
+  och [Lecture_4_Codes.rar](Lecture_4_Codes.rar) — pass 4, DID II,
+  portföljsorteringar och eventstudier.
+- [All_slides_Fall_2026.pdf](All_slides_Fall_2026.pdf) — samtliga slides i
+  en fil (uppladdad 22 september).
 - [MANIFEST.md](MANIFEST.md) — Canvas-ID, storlek och SHA-256.
 
 Den första föreläsningsfilen skapades av Morteza den 3 september 2026
@@ -134,4 +145,7 @@ skriftligt klargörande vid osäkerhet.
 Canvas-modulen innehöll två nedladdningsbara filer: kursöversikten och
 Lecture 1. Material för pass 2–4 var inte publicerat som egna filer vid
 kontrollen. Modulen innehöll också Python- och bokningslänkarna ovan.
+
+Den 30 september hade pass 2–4 (slides och kod) samt en samlad slidefil
+publicerats; de ligger nu i mappen enligt listan ovan.
 
