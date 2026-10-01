@@ -1,0 +1,2368 @@
+                    Return Predictability
+          Can correlation effectively predict returns?
+
+                                  Authors
+
+                                             1                            2
+                      Stina Karlsson & Tor Fryer Petersson
+                                   Supervisor
+                              Jungsuk Han, Ph.D.
+                            May, 2018
+
+ABSTRACT
+
+Previous research shows that index variance can be decomposed into average constituent correlation and
+average constituent variance. These studies hold that the average correlation captures features of the
+aggregate market risk and under a risk-reward relationship is a predictor of future excess returns. Based
+on these findings, this paper looks at contemporaneous and forecasting features of the risk variables,
+with market data from Eurostoxx50 and Swedish OMXS30. This study contributes to previous research
+by specifically studying the predictability of average correlation during market downturns and the
+conditional nature of risk and return. In accordance with previous research, the results confirmed that
+risk can be decomposed contemporaneously into average constituent correlation and average variance.
+When examining if average correlation is a predictor of future excess returns, a forecasting relationship
+is only found during market downturns, indicative of a conditional risk-reward trade-off. This is
+explained partly by the (i) Roll Critique, as different market proxies cause deviating results depending on
+the proxy’s constituents, (ii) distinguishing changes in idiosyncratic risk from systematic risk as the risk
+proxy´s components vary over time, and (iii) the conditionality of market efficiency.
+
+KEYWORDS: Average Correlation, CAPM, Roll Critique, Risk-Reward Trade-Off,
+Return Predictability
+
+Acknowledgements: We would like to extend our gratitude to Jungsuk Han for valuable input and help
+throughout the process.
+
+1
+ 23554@student.hhs.se
+2
+ 23664@student.hhs.se
+Contents
+
+1 Introduction 3
+
+2. Theoretical Background 5
+
+3. Theory & Previous Literature 7
+   3.1 The Accuracy of the Capital Asset Pricing Model 7
+
+   3.2 Proxies for Risk 8
+
+   3.3 Correlation as a Risk Proxy 10
+
+   3.4 Conditional Relationship of Risk & Return 12
+
+4. Data 14
+   4.1 The Eurostoxx50 15
+
+   4.2 The NASDAQ OMX Stockholm 30 17
+
+   4.4 Data period and frequency 17
+
+5. Methodology 20
+   5.1 Equal-weight vs value weight 20
+
+   5.2 Average constituent variance 20
+
+   5.3 Average constituent correlation 21
+
+   5.4 Index return 22
+
+   5.5 Index variance 22
+
+   5.6 Overview of variables 23
+
+6. Results 25
+   6.1 Variable properties 25
+
+        6.1.1 Eurostoxx50 25
+
+        6.1.2 OMXS30 26
+
+   6.2 Index Variance Decomposition 27
+
+        6.2.1 Eurostoxx50 index variance 27
+
+        6.2.2 OMXS30 index variance 29
+
+   6.3 The Predictability of Average Correlation 29
+
+   6.4 Average correlation as a predictor during market downturns 32
+
+   6.5 Robustness checks 34
+
+7. Discussion 36
+
+8. Conclusion 40
+
+                                           1
+   8.2 Further Research 40
+
+References 42
+
+Appendix 45
+   A. Changes in Data Set 45
+
+   B. Complementary Regressions 53
+
+         Equal-weighted Eurostoxx50 index 53
+
+         Sub-periods of the value-weighted Eurostoxx50 index 53
+
+         Equal-weighted OMXS30 index 56
+
+         Sub-periods of the value-weighted OMXS30 index 56
+
+                                           2
+ 1 Introduction
+The relationship between risk and return has been a key concept in finance and asset pricing
+theory. Most literature state a positive relationship between the two factors, and a common
+proxy for risk is using either standard deviation or variance of returns. A common model
+capturing this trade-off is the Capital Asset Pricing Model, also known as the CAPM. This
+relationship relies not only on the accuracy of the CAPM, or the mean-variance trade-off, but
+also the proxy which is used to measure systematic risk and thus forecast future excess returns.
+
+Using the research of Wilson & Pollet (2008) on this relatively narrow topic, this paper will
+examine if average constituent stock correlation is a predictor of future excess returns. This risk
+proxy will be studied both as a predictor of future excess returns, and contemporaneously to
+extend market knowledge about the underlying factors of the efficient market.
+
+The underlying theories of the risk-reward dynamic will ultimately lead back to the Roll
+Critique, which states that the linear relationship between risk and return depend on the market
+portfolio being efficient and that they can be independently tested. Furthermore, the Roll
+Critique highlights that in any sample which acts as a proxy for the true market portfolio, the
+actual constituents still are of importance. Even if the proxies are correlated with each other and
+the market portfolio, the sample might exhibit market efficiency even if the true market is not
+efficient, and the other way around. This market portfolio identification problem is a limitation
+to the testability of the risk-reward dynamic. On the other hand, if individual stock returns share
+a sensitivity to market returns, an increase in correlation between the individual stocks could
+reveal an increase in the aggregate market risk. It is said dynamic that this paper aims to
+emphasize.
+
+Wilson & Pollet (2008) show that the average correlation calculated of daily stock returns has
+forecasting features to future excess returns on a monthly and quarterly basis. They also show
+that if average correlation is held constant, changes in the stock market risk can be interpreted as
+the changes in average variance of individual stocks. These changes in average individual
+variance have a negative relationship with future excess stock returns, indicating that they are of
+idiosyncratic nature. Based on the findings of Wilson & Pollet (2008), this paper examines (i)
+the contemporaneous index variance and whether it can be decomposed into constituent
+variance and correlation, (ii) if lagged average constituent stock correlation is a predictor of
+
+                                            3
+future excess returns, (iii) if lagged average constituent stock correlation is a predictor of future
+excess returns during market downturns. This is studied using market data from Eurozone
+Eurostoxx50 and Swedish OMXS30.
+
+In accordance with Wilson & Pollet (2008), the results confirmed that risk can be decomposed
+contemporaneously into average constituent correlation and average variance. When examining
+if average correlation is a predictor of future excess returns, a forecasting relationship is only
+found during market downturns, indicative of a conditional risk-reward trade-off. This is
+explained partly by the (i) Roll Critique, as different market proxies cause deviating results
+depending on the constituents, (ii) distinguishing changes in idiosyncratic risk from systematic
+risk as the risk proxy´s components vary over time (iii) the conditionality of market efficiency.
+
+                                            4
+ 2. Theoretical Background
+
+The paper aims to examine a risk-reward relationship where average stock correlation together
+with average stock variance act as a risk proxy in forecasting future excess returns. Revising the
+fundamentals of the risk reward trade-off, the Capital Market Line (CML) represents the
+possible combinations of risk and expected return, Berk & DeMarzo (2014). The increase in risk
+will subsequently increase the expected return the investor requires as compensation for holding
+the risky asset. The investor will then allocate his funds along the capital market line, ranging
+from risk free assets (such as T-bills which commonly are utilized in such an example), to a
+risky portfolio, depending on investor risk appetite. This relationship is illustrated below.
+
+                              Graph 1 – Capital Market Line
+
+The slope of the CML is known as the Sharpe Ratio, S, given by the equation below:
+
+                                                        (𝐸(𝑟𝑝)−𝑟𝑓)
+                              𝑆 =                                                   (1)
+                                                                              𝜎𝑝
+
+Where 𝑆 represents the Sharpe ratio, (𝐸(𝑟𝑝) − 𝑟𝑓) the expected excess return on the portfolio
+and 𝜎𝑝 the standard deviation of the portfolio.
+
+All other things held equal, the investor would prefer a steep-sloping capital market line, as this
+would maximize the increase in expected return per each level of increasing risk.
+
+                                            5
+This model is a good overview and introduction to the risk-reward trade-off, and why an
+accurate estimate of risk is important to the investor. Under CAPM assumptions, an efficient
+portfolio can be identified, and the risk-reward trade-off is established as:
+
+                           𝐸(𝑅𝑖) = 𝑟𝑖 = 𝑟𝑓 + 𝛽𝑖 × (𝐸[𝑅𝑚𝑘𝑡] − 𝑟𝑓) (2)
+
+Where 𝐸(𝑅𝑖) is the expected return on investment, 𝑟𝑓 the risk-free return, 𝛽𝑖 the beta of the
+security with respect to the market portfolio (volatility due to systematic risk) and
+ (𝐸[𝑅𝑚𝑘𝑡] − 𝑟𝑓) the expected excess market return.
+
+                                            6
+ 3. Theory & Previous Literature
+
+ 3.1 The Accuracy of the Capital Asset Pricing Model
+
+The ability of average stock correlation and average variance to predict future excess returns,
+relies on the accuracy of the theory that there is a fundamental risk-reward or mean-variance
+trade-off in the market. This relationship can be found in one of the most fundamental asset
+
+                                                                                                         3
+pricing models in finance, the CAPM, which relies on the variance in mean relationship .
+Despite the risk-reward being an assumption in the efficient market, it´s accuracy has been
+studied for decades with only limited success, by amongst others Campbell (1987) and Glosten,
+Jagannathan & Runkle (1993), which both find a negative relationship between variance and
+excess expected return. The model has faced direct criticism, nonetheless from Black, Jensen &
+Scholes (1972) which amongst other things points out that low beta assets earn a higher return
+on average, and high beta assets earn a lower return on average than forecasted by the CAPM
+model. This potential lack of accuracy in the mean-variance relationship can be one of the
+reasons further research using systematic risk as a predictor of returns lack explanatory power.
+
+Merton (1973) also points out that the CAPM is a static model, although it is often applied as an
+intertemporal model, which points to further critique of the validity of the CAPM relationship
+when applied over time. Merton shows that in a number of examples, the portfolio behavior of
+an intertemporal maximizer will be significantly different than that of a constant one. This leads
+to a second conclusion that the validity of the mean-variance relationship holds different amount
+of explanatory power over time and is therefore dependent of varying economic conditions. The
+intertemporal model which Merton deduces for the investor which acts to maximize expected
+utility of lifetime consumption continuously, is referred to as the Intertemporal Capital Asset
+Pricing Model, henceforth the ICAPM.
+
+Looking further at the accuracy of the risk-reward trade off, Wilson & Pollet (2008) refer to the
+Roll Critique, Roll (1976), where amongst several conclusions, CAPM is criticized on the fact
+that the linear relationship between expected return and beta, depends on the market portfolio
+being efficient and that they can be independently tested, which the Roll Critique proposes is
+not the case. Furthermore, the Roll Critique highlights that in any sample which acts as a proxy
+
+3
+ For more research on the positive relation of expected risk premium and volatility, please see French, Schwert &
+Stambaugh (1986)
+                                            7
+for the true market portfolio, the actual constituents still are of importance. Even if the market
+proxies are correlated with each other and the market portfolio, the sample might exhibit market
+efficiency even if the true market is not, and the other way around. This market portfolio
+identification problem is a limitation to the testability of the risk-reward dynamic.
+
+ 3.2 Proxies for Risk
+
+The relationship between risk and return has been a key concept in finance and asset pricing
+theory. Most literature state a positive relationship between the two factors, and a common
+proxy for risk is using either standard deviation or variance in returns. Bali, Cakici, Yan & Zang
+(2005) state that despite literature using these measures of risk, there is no clear consensus
+regarding the validity of these parameters. In particular, Bali et al. (2005) refer to a study
+conducted by Goyal & Santa-Clara (2003), in which the authors find that the lagged equal-
+weighted average stock variance correlates positively with value-weighted portfolio returns. In
+other words, Goyal & Santa-Clara´s (2003) results support the theory of a risk reward trade off,
+where increased variance in period t-1 implies increased excess returns in period t. On the other
+hand, Bali et al. (2005) contradict their findings by showing the effect of a liquidity premium
+distorting the variance measure when equal-weighting larger and smaller market capitalized
+stocks amongst the constituents, in the predictive regressions. By extending the sample data for
+a longer period and replicating Goyal & Santa-Clara´s (2003) study, Bali et al. (2005) show that
+the lagged equal-weighted average stock variance is not a significant predictor of future value-
+weighted excess portfolio returns.
+
+Nonetheless, the risk reward theory remains central in asset pricing theory, and has within
+trading strategy and financial market efficiency studies been a core concept. Expanding the
+theory on what can be considered an accurate risk proxy, Wilson & Pollet (2008) find that
+changes in aggregate risk may be distinguished in the change in correlation between individual
+stock returns in the market. Since the return on the market portfolio is a component of most
+stock returns, an increase in market risk, all other things equal, would be associated with an
+increased tendency of stock prices to move together. As a result, such increases in correlation
+represents increases in true aggregate market risk. Assuming an efficient market, if stock market
+premium depends positively on aggregate market risk, then the average correlation between
+stock returns should forecast future excess market returns. Wilson & Pollet (2008) find that the
+
+                                            8
+average correlation of the S&P500 constituent stocks forecast future excess returns on a
+monthly and quarterly basis. The reason being, that if average correlation captures market
+shocks and aggregate market risk, based on a risk-reward trade-off, correlation should forecast
+future stock market excess returns.
+
+The different theories of how to capture market risk to determine future returns are debated, and
+nonetheless important for the topic. Wilson & Pollet (2008) refer to both Bali et al. (2005) and
+Goyal & Santa-Clara (2003) when looking at variance as a proxy for risk, and present results
+closer to Bali et al. (2005), and at odds with Goyal & Santa-Clara (2003). Wilson & Pollet
+(2008) show that average constituent variance itself does not predict future excess returns, but
+when index variance is decomposed into average constituent variance and correlation, this
+variable is a predictor of future excess returns.
+
+The topic of looking at correlation as a proxy for risk and a variable which has forecasting
+features is a relatively narrow topic. Longin & Solnik (1995) have contributed to this field with
+their investigation of correlation between international stock markets by using monthly return
+data. In contrast to previous theory, which had assumed constant correlation over time, Longin
+& Solnik (1995) found that correlation in general increased over time, as well as a tendency for
+correlation to increase during periods of high volatility in the market. Longin & Solnik (2001)
+find that this is not necessarily the case, and that market trends matter more when relating to
+correlation. More specifically they find that correlation increases in bear markets, but not during
+bull markets. This finding is shared by Hong, Tu & Zhou (2007) as well as Ang & Chen (2002),
+where the former conclude that stocks more often move together when the market goes down,
+and the latter that correlations between U.S. stocks increase during downside trends and
+especially for extreme downside market moves. By applying extreme value theory to model the
+multivariate distribution tails, the distribution of extreme correlation for stock returns is derived.
+Longin & Solnik (2001) find that the negative tail of this distribution does not show multivariate
+normality, but the positive tail does. Thus the conclusion is made that average stock correlation
+not only is time-varying but also trend varying. Longin & Solnik’s (2001) conclusion that
+correlation is time varying, is fundamental to this paper, as average correlation is used as a
+variable to predict future excess returns.
+
+On the same topic on how correlation varies with time, it is also worth mentioning Cochrane
+
+                                            9
+        4
+(2011) , which studies the effect of time varying discount rates, which in turn would factor into
+CAPM to change the mean-variance relationship. This relationship will not be discussed in this
+study, but would be an interesting next step to investigate.
+
+ 3.3 Correlation as a Risk Proxy
+
+The main theoretical background for this paper builds on Wilson & Pollet (2008), and their
+contribution to quantitative research by showing the importance of correlation when predicting
+future excess returns. By decomposing market variance into average stock variance and
+correlation, they prove that average correlation between constituent stock returns predict
+subsequent excess stock market returns. Wilson & Pollet (2008) also show that if average
+correlation is held constant, changes in market risk can be interpreted as the changes in average
+variance of individual constituent stocks. These changes in average individual variance are
+negatively correlated to future excess returns, indicating they are of idiosyncratic nature, if
+referring to Bali et al. (2005).
+
+Wilson & Pollet (2008) highlight that when a market proxy is used, only a subset of aggregate
+market wealth is captured, referring to amongst others, Roll (1976) and the Roll Critique.
+Therefore the ability to accurately observe the true market variance interferes with the empirical
+relationship in CAPM and the risk-reward trade-off. Despite this, Wilson & Pollet (2008) find
+that average stock correlation can predict future excess stock market return for the S&P500, and
+do so better than average stock market variance. The authors use a logarithmic version of
+CAPM based on the assumption that returns are log-normally distributed. The results indicate
+that changes in the market variance of daily returns are almost completely captured by the
+product of average stock correlation and variance.
+
+The model for expected returns used by Wilson & Pollet (2008) is based on Campbell &
+Viceira´s (2002) model of asset returns, where the expected excess returns on a risky asset
+follow a conditional log-normal distribution:
+
+                                                        2
+                                                                                              𝜎𝑖,𝑡               𝑁        ∗
+                              𝐸𝑡[𝑟𝑖,𝑡+1] − 𝑟𝑓,𝑡+1 +     = 𝛾 ∑ 𝑗=1 𝑤𝑗,𝑡 𝜎𝑖𝑗,𝑡 (3)
+                                              2
+
+4
+ For more information on time varying discount rates, please see Cochrance (2011)
+                                            10
+          ∗
+Where 𝑤𝑗,𝑡 is the optimal weight of asset j, in the portfolio, 𝑟𝑓,𝑡+1 = log(1 + 𝑅𝑖,𝑡+1) is the log
+
+return for asset i , 𝑟𝑓,𝑡+1, is the log return on the risk-free asset at t, 𝛾 is the investors
+
+                                     2
+coefficient of relative risk aversion, 𝜎𝑖,𝑡 the conditional variance, 𝜎𝑖𝑗,𝑡 the conditional covariance
+for log returns. The time t subscript for conditional variance and covariance, indicates that both
+parameters possibly are time-varying, as defined by Wilson & Pollet (2008).
+
+From this model, an approximation for the log return of a portfolio is used, in terms of the log
+returns of the constituents and the portfolio weights.
+
+                                                                 2
+                                                                                                                                                  𝜎𝑖,𝑡
+                                       𝐸𝑡[𝑟𝑖,𝑡+1] − 𝑟𝑓,𝑡+1 +     ≊ 𝛾𝜎𝑖𝑚,𝑡 (4)
+                                                     2
+
+Here the expected excess log return for asset i is proportional to the conditional covariance of
+the return for asset i with the return of the market portfolio, hence the logarithmic version of
+CAPM holds. Where the return on asset i, ri, will equal the observable stock market, rs. These
+assumptions on the structure of the stock market returns will be the basis for the variables
+derived later in the methodology section.
+
+Similar to Wilson & Pollet (2008), this paper examines the explanatory power of average
+constituent correlation in the market risk proxy. Driessen, Maenhout and Vilkov (2009), study
+whether exposure to average correlation in the stock market, affect market returns. If so, assets
+that pay off well when market correlations are higher than expected, earn higher returns than
+can be justified by their exposure to other priced risk factors. For this question the authors use
+index options to investigate, as this is a good example of an asset which would appear expensive
+if correlation risk is priced. The authors conclude that the high risk premium earned when
+writing stock index option, compared to the low or zero risk premium earned when writing
+individual stock options, can be explained by the price of correlation risk being larger than
+individual stock variance.
+
+Driessen et al. (2009) collect this evidence for a correlation risk premium by decomposing
+changes in individual stock variances and changes in stock correlation, so that individual
+variance risk and correlation risk is priced. Using the S&P100, the authors find that unlike the
+                                            11
+estimated variance risk premium in individual options (which is positive on individual variance
+risk), a large negative index variance risk premium is found for writing the index option. This
+would point to that the average correlation of an index is priced.
+
+An option based trading strategy is also implemented to test the theory, which is aimed at
+exploiting priced correlation risk. The strategy sells index straddles and buys individual
+straddles and stocks in order to hedge individual variance risk and stock market risk. The
+strategy results in an attractive risk return and correcting for standard risk factors, offers an
+excess return of more than 10% per month. This would indicate evidence of a correlation risk
+premium.
+
+The decomposition of risk into average stock correlation and average stock variance may at first
+be misleading as previous research may point to the predictive power of correlation to future
+market variance, i.e. that these are dependent variables and affect each other. To analyze
+average correlation, market variance needs to be decomposed. Driessen, Maenhout and Vilkov
+(2009), as well as Wilson & Pollet (2008) decompose market variance into average constituent
+variance and correlation, where the risk premium can be decomposed in a similar way.
+
+Below is Driessen et al.’s (2009) study of index and individual variance risk premium, where
+the left hand side represents index variance risk premium, the first term on the right hand side is
+the individual stock variance risk premium and the final term is the correlation risk premium.
+
+                                               𝑄     2       𝑃     2
+                                       𝐸𝑡 [𝑑∅𝐼 ] − 𝐸𝑡 [𝑑∅𝐼 ] =
+
+               𝑁        𝑄      2        𝑃      2         𝑁                            𝑄               𝑃
+       = ∑ 𝑖=1 𝜄𝑖{𝐸𝑡 [𝑑∅𝑖 ] − 𝐸𝑡 [𝑑∅𝐼 ]} + ∑ 𝑖=1 ∑ 𝑗≠𝑖 𝑤𝑖𝑤𝑗∅𝑖 ∅𝑗{𝐸𝑡 [𝑑𝜌𝑖𝑗] − 𝐸𝑡 [𝑑𝜌𝑖𝑗]}
+                                                                                                (5)
+
+This relationship is important to the thesis of average correlation forecasting excess returns, as it
+shows empirical evidence of how correlation risk premium relates to both index variance and
+average constituent variance.
+
+ 3.4 Conditional Relationship of Risk & Return
+
+Going back to the question if risk can have forecasting power when looking at the average
+excess daily return, economic conditions play a rather significant role. Wilson & Savor (2014),
+
+                                            12
+show that stock market risk premium, and the relation between beta and average excess returns
+is positive during times when macroeconomic data is scheduled to be announced. Most previous
+studies find no direct relation between beta and average excess returns, i.e the risk-reward trade-
+off, but Wilson & Savor (2014) show that asset prices behave differently during days when
+macroeconomic news is scheduled to be announced.
+
+The authors find that compared to the average trading day, the announcement day risk premium
+is highly statistically significant and robust, showing higher average excess return and showing
+higher significance for a risk-reward trade-off. Formally, this shows that on days when
+macroeconomic data is scheduled to be announced, the risk-reward relationship has higher
+significance, thus raising the question if the relationship is conditional and dependent on market
+conditions. A possible reason for this is suggested; that on days when macroeconomic
+announcements are scheduled, the investor requires higher reward to hold higher risk assets, a
+shift which affects the market risk-reward trade-off. The main results include the conclusion that
+expected variance is positively correlated with future announcement day returns on, i.e. market
+efficiency could be conditional.
+
+This is in line with several previous studies which conclude that CAPM holds in a conditional
+sense, i.e. that beta and stock market premium vary over time, by amongst others Jagannathan &
+Wang (1996). Hence the relative efficiency of a potential risk proxy would therefore also be
+conditional and vary over time.
+
+                                            13
+ 4. Data
+
+To measure the correlation and variance of the indices’ constituent stocks, market proxies were
+created using the constituents in Eurostoxx50, starting October 1st 1998, and OMXS30, starting
+October 1st 1998. These datasets include the daily returns for the constituents of the
+Eurostoxx50 index and the OMXS30 index. Data for these indices were collected both from
+Bloomberg Terminal and Reuters Datastream. All index constituent changes were manually
+adjusted for the relevant period Oct-1998 – Mar-2018. All changes are recorded (see Appendix).
+Price indices are reported, as it is calculated solely on constituent returns, which implies that no
+dividends have been reinvested during the time period. This represents the capital gains
+component, as the daily stock movements are of interest, to study the predictability of average
+correlation.
+
+Furthermore, data for 1-month floating EURIBOR was collected, and used as a proxy for the
+risk-free rate to determine excess market return. While the EURIBOR might not be an optimal
+proxy, the fluctuations of the rate will nonetheless likely capture the fluctuations of the true risk-
+free rate and the effect on the regression is deemed to be minimal. EURIBOR data was collected
+from Reuters Datastream. Data for Eurozone seasonally adjusted GDP change was collected
+from the ECB database to use as a determinant of market conditions. The seasonally adjusted
+GDP is used to adjust for cyclicality, as this study aims to identify market downturns to test the
+conditionality of the risk-reward trade-off. GDP data is reported on a quarterly basis and the
+study primarily looks at a monthly frequency, hence it is assumed that all months where the
+quarterly adjusted GDP growth is negative also are negative.
+
+The risk-free rate for the OMXS30 index is the monthly rate for a Swedish 1-month T-bill from
+the Fama-French factor dataset from Swedish House of Finance. Data for the Swedish
+seasonally adjusted GDP was collected from the SCB database.
+
+                                            14
+ 4.1 The Eurostoxx50
+
+The index covers 50 stocks from 11 Eurozone countries: Austria, Belgium, Finland, France,
+Germany, Ireland, Italy, Luxembourg, the Netherlands, Portugal and Spain. The constituents in
+the index are decided by the floating market cap of blue chip stocks in the Eurozone universe.
+The 50 stocks which are largest by market cap are included in the index, and once a year a
+review is conducted to reconstruct the index in Q3. Finally, the index follows an additional rule
+of fast entry and fast exit, where a constituent is deleted from the index if it ranks below nr 75
+on the market cap ranking, and the stock next in line for the top 50 is added. A deleted stock is
+replaced immediately to maintain the fixed number of stocks.
+
+The indices’ calculations are based on a Laspeyres formula, which measures price changes
+against a fixed-base quantity weight:
+
+                                                                                   𝑛
+                                                                ∑𝑖 =1(𝑝𝑖𝑡∗𝑠𝑖𝑡∗𝑓𝑓𝑖𝑡∗𝑐𝑓𝑖𝑡∗𝑥𝑖𝑡)     𝑀𝑡
+                                 𝐼𝑡 =                      =                                (6)
+                                                                                                         𝐷𝑡                            𝐷𝑡
+
+Where t is the time when the index is computed, n in the number of constituents in the index, 𝑝𝑖𝑡
+is the price of company i at time t, 𝑠𝑖𝑡 is the number of shares of company i at time t, 𝑓𝑓𝑖𝑡 is the
+free float factor of company i at time t, 𝑐𝑓𝑖𝑡 the weighting cap factor of company i at time t, 𝑥𝑖𝑡
+the exchange rate from local currency into index currency, 𝐷𝑡 the divisor of the index at time t,
+and 𝑀𝑡 the free float market capitalization of the index at time t.
+
+                                            15
+The Eurostoxx50 – Practical limitations
+
+The Eurostoxx50 index uses a more complex weighting procedure to derive its index than above
+illustrated. Instead of the free-float market capitalization methodology, Eurostoxx excludes
+additional institutional holdings from its calculations. Furthermore, Eurostoxx applies a liquidity
+multiple depending on how liquid the constituent stock is. These metrics applied to calculate the
+correct weighting are both proprietary and hence cannot be included in the calculation.
+Eurostoxx also adjusts the weighting so that no constituent can contribute more to the total
+weighting than 10% at time t. As such each constituent, i, was assigned an adjusted weight,𝑊𝑖,𝑡,
+in each time t, where the excess weight contributed by any stock where 𝑊𝑖,𝑡t > 10% was
+portioned out to the other constituents.
+                                          10% 𝑊𝑖,𝑡 ≥ 10%
+                                                       𝑊𝑖,𝑡 {
+                                                      𝑊𝑖,𝑡  𝑊𝑖,𝑡 ≤ 10%
+
+                                                                                             (7)
+
+This loop was repeated until no stocks had a weight above 10% for each time t in the data time
+series.
+
+Data availability issues for the Eurostoxx50 Index
+
+Data for the market capitalization for certain constituent stocks were missing, especially in the
+earlier years of the time series. These stocks were assigned a market capitalization equal to the
+lowest market capitalization among the other active constituents, at the point when the stock
+enters the index. The market capitalization then develops as a function of the returns for the
+constituent. It is assumed that the company undertakes no managerial actions, i.e. no dividends,
+share buybacks or any other type of equity issuances, affecting the market capitalization. An
+alternative approach would be to delete these constituent stocks when replicating the index.
+However, as the weight of each constituent is a function of the percentage of the total market
+capitalization for Eurostoxx50, calculated as the aggregate market capitalization for all
+constituent stocks at that time, excluding a constituent stock would distort the weight assigned
+to all other stocks.
+
+The following example is provided; an index consists of 4 stocks, these stocks have the true
+market capitalization, S1=10, S2=20, S3=50, S4=20. However, S4’s market capitalization is
+unknown. If S4 is excluded from the weighting calculations, the weight for S1 would equate
+                                            16
+W1 = 12,5%. If S4 is included and assigned a market capitalization of 10 equal to the lowest
+market capitalization of the know market capitalization for other constituent stocks, the weight
+for S1 would equate W1 = 11,1%. The true W1 = 10%, had the weighting been computed with the
+correct market capitalization for S4. Not including S4 would distort the weights to a greater
+extent, than if S4 is included with an assigned market capitalization of 10. While neither method
+is optimal, assigning a value is more accurate. The reason the lowest value is assigned, is
+because that implicitly becomes the threshold market capitalization required to be part of the
+index. Manual adjustments made reported in the appendix.
+
+ 4.2 The NASDAQ OMX Stockholm 30
+
+The NASDAQ OMX Stockholm 30 index calculates and reweights the index in real-time. The
+index is calculated using the formula below.
+
+                                                                            𝑛
+                                                                    ∑𝑖 =1 𝑞𝑖,𝑡∗𝑝𝑖,𝑡∗𝑟𝑖,𝑡
+                             𝐼𝑡 = 𝑛                                                                   (8)
+                                                    ∑𝑖 =1 𝑞𝑖,𝑡∗(𝑝𝑖,𝑡−1−𝑑𝑖,𝑡)∗𝑟𝑖,𝑡−1∗𝑗𝑖,𝑡
+
+Here 𝐼𝑡 is the index level at time t, 𝑞𝑖,𝑡 is the number of shares of company i in the index at time
+t, which is the current number of outstanding shares. 𝑝𝑖,𝑡 is the price quote currency of a share in
+company i at t, 𝑑𝑖,𝑡 is the dividend used for total return indices, 𝑟𝑖,𝑡 is the foreign exchange rate
+of index quote currency to quote currency of company i at time t (where needed). 𝑗𝑖,𝑡 is an
+adjustment factor for corporate actions.
+
+The index has fast entry and fast exit rules, the periodic review is conducted on the basis of
+figures after closing on the last trading day of October and April by NASDAQ OMX. A deleted
+stock is not necessarily replaced immediately. As a result, the active constituents in the OMX
+index might vary between 27 – 30 stocks for each trading day, t.
+
+ 4.4 Data period and frequency
+
+The complete period ranges from October 1998 to March 2018. The reason for the selection of
+the data period is that the Eurostoxx50 index was created in 1997. During the first year, the
+Eurostoxx50 exhibited strange movements and data is scarce on which constituents constituted
+the index at the time. While data is available further back in time for the OMXS30 index, the
+                                            17
+same time period was chosen to increase comparability between the two data sets and avoid
+potential data snooping. Results are reported on a monthly frequency.
+
+Complete period
+  I. October 1998 – March 2018
+
+To test whether the predictability of average correlation and the risk-reward trade-off is
+conditional on market conditions, two sub-periods have been devised. The main devisor for
+market conditions is the seasonally adjusted GDP in the Eurozone and Sweden for the
+Eurostoxx50 and OMXS30 index respectively. As these are not the same periods for the indices,
+a complementary definition of what constitutes a common market downturn is reported as a
+control time period. A dummy variable has been created to collapse the different sub time-series
+constituting a market downturn into a consecutive time series.
+
+Periods during which the seasonally adjusted GDP growth was negative for the Eurozone
+   i. January 2003 – March 2003
+  ii. April 2008 - June 2009
+  iii. April 2011- June 2011
+  iv. October 2011 – March 2013
+
+Periods during which the seasonally adjusted GDP growth was negative in Sweden
+   i. July 2001 - September 2001
+  ii. March 2002 - May 2002
+  iii. January 2008 - March 2008
+  iv. October 2008 - March 2009
+  v. October 2011 – December 2011
+  vi. July 2012 – December 2012
+ vii. April 2013 – June 2013
+
+While the same criterion is used to define what constitutes a market downturn, an alternative
+definition is provided below, to increase comparability between the two datasets and avoid
+potential data snooping.
+
+                                            18
+Alternative market downturn definition
+   i. Dotcom Crisis
+       March 2000 – October 2002
+      Defined as the bear market during and post the dotcom market crash in late March
+         until the recovery in late 2002.
+
+   ii. Subprime Crisis
+       August 2007 – June 2009
+        Defined as the bear market from when the subprime crisis started to unfold, and
+         financial institutions started to default in late 2007, until mid-2009 when the stock
+        market started to show signs of recovery.
+
+  iii. Sovereign Debt Crisis
+       June 2011 – December 2012
+        Defined as the period post S&P´s downgrade of Greek sovereign bonds to junk bonds
+        during June 2011 until gradual recovery in late 2012.
+
+                                            19
+ 5. Methodology
+
+ 5.1 Equal-weight vs value weight
+
+One of the main critique articulated by Bali, Cakici, Yan and Zhang (2005) against Goyal and
+Santa-Clara (2001), is that by only looking at the equal-weighted variance as a predictor of
+value-weighted portfolio returns on the NYSE/AMEX/Nasdaq stocks, the liquidity premium is
+not taken into account. The positive relationship proven by Goyal and Santa-Clara (2001) was
+mainly due to variance being overstated, as less liquid and subsequently more volatile stocks,
+were equally weighted to liquid and less volatile stocks. Even though Bali et al. (2005) and
+Goyal and Santa-Clara (2001) only discuss average variance as a predictor, the critique could be
+deemed valid against using an equal-weighted average correlation variable as a predictor of
+excess portfolio return, as the liquidity premium would likely distort the correlation as well.
+However, unlike Nasdaq, the Eurostoxx50 index used in this study comprises only the largest
+blue-chip stocks in the eurozone area. The market capitalization for many of the constituent
+stocks is not available for the full period of the data sample. Hence equal-weighted regressions
+are reported in the appendix, to show that the manual adjustments done to the value-weighted
+data variables did not have any qualitative implications for the results.
+
+ 5.2 Average constituent variance
+
+The average variance among all constituents in the Eurostoxx50 and OMXS30 index are key
+components of the forecasting regression. The daily sample variance of returns is calculated for
+each active constituent on a rolling basis, where 𝐷𝑡 is the number of trading days in each month.
+The daily sample variance is thus given by
+
+                                  1         𝐷𝑡                    1      𝐷𝑡                2
+                  𝜎̂ 𝑖,𝑡 = (    ) × ∑ 𝑑=1( (1 + 𝑅𝑖,𝑑) −   × ∑ 𝑑=1( 1 + 𝑅𝑖,𝑑)) )               (9)
+                                 𝐷𝑡−1                             𝐷𝑡
+
+To compute the average variance. Wi,t is defined as the weight that stock i represents of the
+total index at time t. Due to the specific rules of the Eurostoxx50 and OMXS30 index and the
+“fast entry & exit rule” especially, some firms are excluded and added into the index mid-
+month. In order to have the same amount of data points of daily returns constituting the variance
+calculation, these stocks are excluded from the computation of the average variance in period t,
+instead only the active constituents in period t are included, defined as At. Opening market
+capitalizations are used in the weighting procedure. For the value-weighted average variance for
+                                            20
+the stock index it is computed as the market capitalization of stock i over the total market
+capitalization of the active components for the index as a whole. Whereas in the computation of
+the equal-weighted average variance each stock is assigned a weight so that the sum of all
+weights assigned equal to 100% in each period.
+
+                                                       𝐴𝑡             2
+                                     𝐴𝑉𝑡 = ∑ 𝑖=1 𝑤𝑖,𝑡 × 𝜎̂ 𝑖,𝑡                                           (10)
+
+ 5.3 Average constituent correlation
+
+The daily conditional covariance at time t is calculated pairwise for all possible combinations in
+the index. As some stocks are excluded and others consequently included in the index mid-
+month, only the active constituents At where data points for all trading days in the month are
+available, are included. As At ≤ 50, the total available combinations at any time t will never
+exceed 1225. The estimator for covariance for stocks i and j in period t is given below:
+
+                                   2       1
+                                         𝜎̂ 𝑖𝑗,𝑡 = (     ) ×
+                                           𝐷𝑡 − 1
+                      𝐷𝑡                                          𝐷𝑡                                                                    𝐷𝑡
+                     1                          1
+         ∑((1 + 𝑅𝑖,𝑑) −   × ∑(1 + 𝑅𝑖,𝑑)) × ((1 + 𝑅𝑗,𝑑) −   × ∑(1 + 𝑅𝑗,𝑑))
+                                 𝐷𝑡                                        𝐷𝑡
+           𝑑=1                     𝑑=1                                   𝑑=1
+                                                                                         (11)
+
+On average there are 20.95 trading days in every month in the dataset. The daily covariance and
+variance is thus multiplied by 21, to get the variables in a monthly frequency. Henceforth
+variance and covariance will be denoted as monthly and not daily. The correlation is calculated
+using the Pearson product-moment correlation coefficient, which is measured at the last trading
+day for each month, using all trading days in the month as basis.
+
+                                                                                                                                      𝜎̂   𝑗𝑘,𝑡
+                                                𝜌̂ 𝑖𝑗,𝑡 =                                                     (12)
+                                                                                                          𝜎̂  𝑗,𝑡×𝜎̂  𝑘,𝑡
+
+The average monthly correlation is thus estimated as
+
+                                            21
+                                                                                  𝐴𝑡
+                                 𝐴𝐶𝑡 = ∑ ∑ 𝑤𝑖,𝑡 × 𝑤𝑗,𝑡 × 𝜌̂ 𝑖𝑗,𝑡
+                                                   𝑖=1 𝑖≠𝑗
+                                                                                         (13)
+The value-weighted average correlation for the stock index is computed as the market
+capitalization of stock i and stock j over the total market capitalization of the active components
+for the index as a whole. Whereas in the computation of the equal-weighted average correlation
+each stock is assigned a weight so that the sum of all weights assigned equal to 100% in each
+period.
+
+ 5.4 Index return
+
+A value-weighted and equal-weighted basket based on the daily returns of the constituent stocks
+are created for Eurostoxx50 and OMXS30, henceforth referred to as the value-weighted and the
+equal return respectively for each index. The returns for the active constituent stocks in the
+index at time t is calculated as below:
+
+                                                                                                       𝐴𝑡
+                                                            ∑ 𝑖=1 𝑅𝑖,𝑡
+                                            𝑅𝐸𝑊,𝑡 =
+                                                            𝐴𝑡𝑡−1
+                                                                                         (14)
+
+                                                                                                𝐴𝑡
+                                        𝑅𝑉𝑊,𝑡 = ∑ 𝑤𝑖,𝑡 × 𝑅𝑖,𝑡
+                                                     𝑖=1
+                                                                                         (15)
+
+ 5.5 Index variance
+
+The sample variance for the index is calculated based on the daily returns for all previous days
+in the month. As with the average variance and covariance measures, it is multiplied by 21, the
+average number of trading days in each month for the data set, to estimate the monthly variance.
+The sample index variance based on index returns k, is calculated as follows:
+
+                                                                             𝐷𝑡                                           𝐷𝑡
+                         1                    1               2
+              𝑉𝑎𝑟 − 𝐼𝑡 = (     × ∑((1 + 𝑅𝑘,𝑑) −   × ∑(1 + 𝑅𝑘,𝑑)) )
+                            𝐷𝑡 − 1                     𝐷𝑡
+                                         𝑑=1                     𝑑=1
+                                                                                         (16)
+To test whether the index variance can be decomposed, an alternative approximation
+methodology is presented inspired by Wilson & Pollet (2008). As previously discussed in the
+literature overview, Wilson & Pollet (2008) provides mathematical evidence supporting the
+decomposition. The index variance should thus be a function of the average correlation and
+                                            22
+average variance of the stock constituents at any point in time. Implying that index variance can
+be captured by:
+                          𝑉𝑎𝑟𝑠,𝑡 = 𝑏0 + 𝑏1(𝐴𝐶𝑡 × 𝐴𝑉𝑡) + 𝜀𝑡 (17)
+While Wilson and Pollet (2008) argue that the mean of errors will not equate to 0 given ACt ×
+AVt, as a result of issues regarding measurements errors and the exclusion of the sum of squared
+weights from the AC calculations. As such the coefficient b1 might not equate to 1. In order to
+derive an additional proxy for market risk, the multiplicative variable will be used.
+Albeit the variable will not capture all of the index variance, it will serve as an additional
+measure of risk. The multiplicative variable is defined as:
+                                 𝑉𝑎𝑟 − 𝑀𝑡 = 𝐴𝐶𝑡 ∗ 𝐴𝑉𝑡 (18)
+
+ 5.6 Overview of variables
+
+A summary of all variables used in the regressions are presented below;
+
+Average correlation: The average correlation for all active constituent stocks calculated at each
+month’s end, based on all daily return data in that month. Covariance and variance multiplied
+with 21 to get monthly frequency. Reported as equal-weight, value weight and median.
+
+       Denotation: AC(Index), (Weighting), (Time)
+
+Average variance: The average variance for all active constituent stocks calculated at each
+month’s end, based on all daily return data in that month. Variance multiplied with 21 to get
+monthly frequency. Reported as equal-weight, value weight and median.
+
+      Denotation: AV(Index), (Weighting), (Time)
+
+Index variance calculated as the factor of average correlation and variance multiplied: The
+variance for the index calculated as the average constituent correlation multiplied with the
+average constituent variance.
+
+      Denotation: Var-M(Index), (Weighting), (Time)
+
+Index variance calculated off index returns: The variance for the index calculated at each
+
+                                            23
+month’s end, based on the daily return data for the index in that month. Multiplied with 21 to
+get monthly frequency. Reported as equal-weight and value weight.
+
+        Denotation: Var-I(Index), (Weighting), (Time)
+
+Risk-free rate: The Euribor 1-month floating rate as the risk-free proxy for the Eurostoxx50
+index and 1-month Swedish T-bill as a risk-free proxy or the OMXS30 index. The logarithmic
+version reported, in line with the assumption that returns are lognormally distributed and the
+logarithmic version of CAPM holds in line with Campbell & Viceira´s (2002)
+
+       Denotation: Rf(Index), (Time)
+
+Excess return: Defined as the logarithmic returns less the risk-free rate. in line with the
+assumption that returns are lognormally distributed and the logarithmic version of CAPM holds
+in line with Campbell & Viceira´s (2002) Reported for equal-weight, value-weight and the
+index return,
+
+       Denotation: Re(Index), (Weighting), (Time)
+
+                                            24
+ 6. Results
+
+ 6.1 Variable properties
+
+ 6.1.1 Eurostoxx50
+
+      Table 1 – Descriptive statistics for the value-weighted independent variables for the
+                                    Eurostoxx50 index
+
+                        Observations Mean Min Max STD
+ ACES50, VW, t-1 233 .1589449 .0075092 .6052715 .1016279
+ AVES50, VW, t-1 233 .0099816 .0016743 .0752632 .0100431
+ VAR-MES50, VW, t-1 233 .0014398 .0001008 .0121075 .0016727
+ VAR-IES50, VW, t-1 233 .0015686 .0001666 .0145323 .0017485
+ ReES50, VW, t-1 232 .0026171 -.1531502 .1089615 .043247
+ RfES50, t-1 232 .0018182 -.0001593 .0044657 .0013335
+
+In comparison to the descriptive statistics reported by Wilson & Pollet (2008), the Eurostoxx50
+index is significantly less correlated than the CRSP data set, which has a mean average
+correlation of rho = 0,237. Even though the study is conducted over a different time horizon and
+the results are not directly comparable, there is still a notably lower correlation. The different
+variance measures are not comparable, as Wilson & Pollet (2008) reports descriptive statistics
+with a quarterly frequency. As can be seen on the descriptive statistics during market downturns
+(appendix table 19), correlation increases during market downturn periods. A characteristic is in
+line with Longin and Solnik (2001) findings, who present evidence that correlation is driven by
+market trend. All other risk measures also demonstrate similar characteristics, indicating that all
+of the variables likely capture a portion of some form of risk, as they are increasing during
+market downturns, i.e. periods of negative and/or low excess return.
+
+  Table 2 – Correlation matrix for the value-weighted independent variables and the primary
+     dependent variable, value-weighted excess return in period t for the Eurostoxx50 index
+
+                                                             VAR-M       VAR-I
+                             ReES50, VW, t ACES50, VW, t-1 AVES50, VW, t-1       ES50, VW, t-1        ES50, VW, t-1 ReES50, VW, t-1 RfES50, t-1
+ ReES50, EW, t 1.0000
+  ACES50, VW, t-1 -0.0831 1.0000
+  AVES50, VW, t-1 -0.0745 -0.1382 1.0000
+ VAR-MES50, VW, t-1 -0.1253 0.4104 0.7529 1.0000
+ VAR-IES50, VW, t-1 -0.1365 0.3053 0.8320 0.9770 1.0000
+  ReES50, VW, t-1 0.3022 -0.2135 -0.2805 -0.4234 -0.4506 1.0000
+ RfES50, t-1 -0.1905 -0.5704 0.4077 0.0601 0.1462 -0.1787 1.0000
+
+The correlation matrix indicates that both the lagged constituent correlation and variance
+                                            25
+correlates negatively with the future excess return. A positive coefficient is a requisite for the
+risk-reward trade-off to hold, as more risk should correspond to higher expected excess returns
+in the future. The correlation matrix is indicative that holding excess risk in period t-1
+corresponds to lower returns in period t, echoing Campbell (1987) among others, who claim a
+negative relation with variance and expected excess return. Constituent variance is more
+positively correlated with index variance than the constituent correlation, regardless which
+calculation methodology is applied. Furthermore, constituent correlation is negatively correlated
+with constituent variance, contrary to Wilson & Pollet’s (2008) findings, as well as the
+OMXS30 data reported below.
+
+ 6.1.2 OMXS30
+
+ Table 3 – Descriptive statistics for the value-weighted independent variables for the OMXS30
+                                  index for the entire time period
+
+                     Observations Mean Min Max STD
+ ACOMX, VW, t-1 233 .4002867 .0687882 .8091449 .1640511
+ AVOMX, VW, t-1 233 .0099448 .0015719 .05863 .009421
+ VAR-MOMX, VW, t-1 233 .0041769 .0002591 .0366307 .0051493
+ VAR-IOMX, VW, t-1 233 .0049681 .0003673 .0406785 .0057739
+ ReOMX, VW, t-1 232 .0017243 -.1725469 .1514077 .0601543
+ RfOMX, t-1 232 .0016576 0 .0038246 .0012587
+
+The mean for constituent correlation is significantly higher for the OMXS30 index than the
+Eurostoxx50 index. This is likely due to the fact that OMXS30 is a national index, whereas the
+Eurostoxx50 index consists of stocks from all across the Eurozone. While these countries share
+the same currency and many of the blue-chip stocks constituting the index are global firms,
+national stock indices tend to commove to a greater extent. Other potential sources for differing
+results for the Eurostoxx50 include the fact that stocks are affected by different macroeconomic
+conditions and policy changes, as well as the OMXS30 being overweight financials and
+industrials. Constituent correlation, constituent variance and index variance all increase during
+market downturns (see appendix for comparison). Strengthening the theory that correlation
+increases as a result of market trend, Longin & Solnik (2001).
+
+                                            26
+   Table 4 – Correlation matrix for the value-weighted independent variables and the primary
+   dependent variable, value-weighted excess return in period t for the OMXS30 index for the
+                                        entire time period
+
+                                                                     VAR-M        VAR-I      ReOMX, VW, t-
+                            ReOMX, VW, t ACOMX, VW, t-1 AVOMX, VW, t-1       OMX, VW, t-1        OMX, VW, t-1           1 RfOMX, t-1
+ReOMX, EW, t 1.0000
+ACOMX, VW, t-1 0.0274 1.0000
+AVOMX, VW, t-1 -0.0757 0.1087 1.0000
+VAR-MOMX, VW, t-1 -0.0481 0.4874 0.8623 1.0000
+VAR-IOMX, VW, t-1 -0.0529 0.4033 0.9177 0.9711 1.0000
+ReOMX, VW, t-1 0.1202 -0.2551 -0.2079 -0.2926 -0.2885 1.0000
+RfOMX, t-1 -0.1815 -0.1409 0.5994 0.4095 0.4543 -0.1730 1.0000
+
+The correlation matrix contrary to the finding for the Eurostoxx50 data set, indicates that
+constituent variance and correlation are positively correlated with each other. As can be seen in
+the appendix, constituent correlation becomes significantly more correlated with future excess
+returns during market downturns. The results are indicative of a potential risk-reward trade-off,
+given that constituent correlation is positively correlated with future excess returns.
+Furthermore, the contemporaneous relationship between constituent correlation and index
+variance increases during market downturns. Possibly indicating that the constituent correlation
+multiple captures market shocks, as the correlation increase is simultaneous to an increase in
+average variance.
+
+ 6.2 Index Variance Decomposition
+
+As discussed in the literature overview, the variance calculated directly off the index returns for
+period t should be a function of the average correlation and average variance of the constituents.
+It is tested if the average value-weighted correlation explains a fraction of the index variance
+and that average correlation and average variance multiplied constitutes a proxy capturing
+almost the entire variance calculated off the index returns. To strengthen the results, this is
+tested for both the Eurostoxx50 index and the complementary dataset constituted by the
+OMXS30 index. OLS regressions with standard errors are reported for the regression. No
+qualitatively different results become apparent when a Newey-West t-statistic with four lags is
+reported (see Appendix).
+
+  6.2.1 Eurostoxx50 index variance
+
+Table 5 reports an ordinary least square regression on the stock market index variance,
+
+                                            27
+regressed against different combinations of the lagged average correlation and average variance
+of the constituent stocks in that period for the Eurostoxx50 index.
+
+  Table 5 – Contemporaneous regressions on the index variance, measured through the value-
+                     weighted return in period t for the Eurostoxx50 index
+
+                           (1) (2) (3) (4)
+ VARIABLES VAR-IES50, VW, t VAR-IES50, VW, t VAR-IES50, VW, t VAR-IES50, VW, t
+
+ ACES50, VW, t 0.144*** 0.155***
+                         (22.46) (36.83)
+ AVES50, VW, t 0.005*** 0.007***
+                                                  (4.77) (17.84)
+ VAR-MES50, VW, t 1.021***
+                                                                                                                       (69.52)
+ Constant 0.000 0.001*** -0.001*** 0.000***
+                           (1.51) (3.80) (-12.30) (3.02)
+
+ Observations 234 234 234 234
+ R-squared 0.685 0.089 0.868 0.954
+                                                                  t-statistics in parentheses
+                                                    *** p<0.01, ** p<0.05, * p<0.1
+
+Column 1 indicates that the value-weighted variance for all the stock constituents of the
+Eurostoxx50 index captures 68,5% of the variations in the index variance. As shown in column
+2 the value-weighted average correlation for all the stock constituents captures 8,9% of the total
+variation in the index variance, a much smaller fraction than what the average variance for all
+the stock constituents captures. As the average variance and correlation are negatively
+correlated, the explanatory power is substantially increased by regressing the index variance on
+both the average variance and correlation for the stock constituents simultaneously. As shown
+by equation 17 the average correlation and average variance multiplied, should in theory
+
+                                                                                                                  2
+comprise the index variance. Regressing the index variance on the theoretical proxy yields an R
+– value of 95,4%. The coefficient is close to 1 and should in theory be equal to 1. A potential
+explanation for this discrepancy is a measurement error arising when calculating the average
+variance and correlation. Nonetheless, the average variance and correlation multiplied captures
+almost the entire variation of contemporaneous stock market variance. The average variance,
+average correlation and correlation multiplied with variance, remains statistically significant
+with a p-value of below 1% for all regressions. Empirical results indicate that index variance
+can effectively be decomposed contemporaneously into average constituent correlation and
+variance. The results from the Eurostoxx50 regression strengthens the theory that index variance
+can be decomposed into average constituent variance and correlation.
+
+                                            28
+ 6.2.2 OMXS30 index variance
+
+  Table 6 – Contemporaneous regressions on the index variance, measured through the value-
+                      weighted return in period t for the OMXS30 index
+
+                             (1) (2) (3) (4)
+ VARIABLES VAR-IOMX, VW, t VAR-IOMX, VW, t VAR-IOMX, VW, t VAR-IOMX, VW, t
+
+ ACOMX, VW, t 0.567*** 0.544***
+                           (37.08) (55.04)
+ AVOMX, VW, t 0.014*** 0.010***
+                                                     (6.78) (18.25)
+ VAR-MOMX, VW, t 1.092***
+                                                                                                                    (64.95)
+ Constant -0.001*** -0.001 -0.005*** 0.000***
+                               (-3.18) (-0.84) (-18.11) (3.68)
+
+ Observations 234 234 234 234
+ R-squared 0.856 0.165 0.941 0.948
+                                                               t-statistics in parentheses
+                                                  *** p<0.01, ** p<0.05, * p<0.1
+
+In table 6, a similar regression is performed, but with the complementary OMXS30 dataset.
+Column 1 indicates that average variance alone captures more than the average correlation, of
+the total index variance. However, the average value-weighted correlation based on the
+OMXS30 data set shows a significantly higher explanatory power of the variation in the index
+variance than what the respective variable does in the regression on the Eurostoxx50 dataset. As
+the average correlation and variance are positively correlated with each other, the linear
+
+                                                                                                  2
+regression including both variables have an increased explanatory power and an R -value of
+94,1%, almost equivalent to the multiplicative model. As with the Eurostoxx50 dataset almost
+the entire variation in the index variance is captured by the multiplicative variable of variance
+and correlation. All variables remain statistically significant with a p-value of below 1%. The
+data is supportive that index variance can be decomposed into constituent variance and
+constituent correlation. Both regressions for the OMXS30 and Eurostoxx50 indicate that index
+variance can effectively be decomposed. The results gain external validity as the regression has
+been tested on two separate datasets with similar results. These findings seem unrelated to the
+fact that constituent correlation is negatively correlated with constituent variance for the
+Eurostoxx50 data set and vice versa for the OMXS30.
+
+ 6.3 The Predictability of Average Correlation
+
+Testing the forecasting abilities of average correlation as a market risk proxy, the explaining
+                                            29
+ variables have been lagged with one month to see if changes in the average correlation amongst
+ the constituents can predict increases or decreases in future excess monthly returns. Below in
+ table 7 the results for this are presented, when using Eurostoxx50 as the underlying index.
+
+  Table 7 – Predictive regression on the value-weighted excess returns and Eurostoxx50 excess
+                                            returns
+
+                         (1) (2) (3) (4) (5) (6) (7)
+                                                                            *
+VARIABLES ReES50, VW, t ReES50, VW, t ReES50, VW, t ReES50, t       ReES50, VW, t ReES50, VW, t ReES50, VW, t
+
+ACES50, VW, t-1 -0.034 -0.039 -0.025 -0.078*
+                            (-1.20) (-1.40) (-0.72) (-1.66)
+AVES50, VW, t-1 -0.345 -0.402 -0.341 0.395
+                                            (-1.22) (-1.41) (-0.95) (0.54)
+VAR-IES50, VW, t-1 -3.390** -0.241
+                                                                                                    (-2.11) (-0.05)
+VAR-MES50, VW, t-1 -3.230*
+                                                                                                                               (-1.92)
+ReES50, VW, t-1 0.233***
+                                                                                                                                    (3.17)
+RfES50, t-1 -9.360***
+                                                                                                                                                   (-3.37)
+Constant 0.008 0.006 0.013** 0.006 0.008** 0.007* 0.028**
+                       (1.50) (1.50) (2.03) (0.79) (2.08) (1.93) (2.58)
+
+Observations 233 233 233 233 233 233 232
+R-squared 0.006 0.006 0.015 0.005 0.019 0.016 0.135
+                                            t-statistics in parentheses for OLS standard errors.
+                                                      *** p<0.01, ** p<0.05, * p<0.1
+
+ The results are indicative that neither average correlation nor average variance are statistically
+ significant predictors of excess returns in the subsequent period, regardless if regressed on the
+ value-weighted return or the actual Eurostoxx50 return. Furthermore, coefficient sign is
+ “wrong”, in the sense that an intertemporal risk-reward trade-off would require a positive
+ coefficient. The reason being that if risk is high in period t, investors require a greater premium
+ in terms of higher expected return. If the risk-reward trade-off is to hold intertemporally the
+ coefficient needs to be positive, i.e. holding more risk in period t-1 rewards the investor with
+ realized excess returns in period t. The aggregate stock market variance measured either through
+ the variable calculated directly based on past returns for the index, or the multiplicative variable,
+ are statistically significant predictors for a p<5% respectively a p<10%. The regressions capture
+ c. 2% of return variation in the subsequent period. However, the effect captured in the
+ regression is the opposite to what the risk-reward framework implies, as the coefficient is
+ negative. These findings are at odds with Wilson & Pollet (2008). The implication is that
+ holding the portfolio when the index variance is high, results in negative realized returns in the
+
+                                             30
+subsequent period. When controlling for the lagged dependent variable and the lagged risk-free
+rate, the market variance is not a significant predictor of returns. Including all variables in the
+
+                           2
+regression, yields an R -value of 13,5%. The average correlation variable becomes statistically
+significant, however, this is likely a residual event from including the lagged return. The
+coefficient remains negative, indicating that the data does not support an intertemporal risk-
+reward trade-off for the full time series, where average correlation is a predictor of excess
+returns.
+
+   Table 8 – Predictive regression on the value-weighted excess returns and OMXS30 excess
+                                            returns
+
+                         (1) (2) (3) (4) (5) (6) (7)
+                                                                            *
+VARIABLES ReOMX, VW, t ReOMX, VW, t ReOMX, VW, t ReOMX, t      ReOMX, VW, t ReOMX, VW, t ReOMX, VW, t
+
+ACOMX, VW, t-1 0.012 0.015 0.022 0.004
+                        (0.49) (0.60) (0.95) (0.10)
+AVOMX, VW, t-1 -0.354 -0.386 -0.198 0.238
+                                            (-0.85) (-0.91) (-0.50) (0.14)
+VAR-IOMX, VW, t-1 -0.337 0.323
+                                                                                              (-0.49) (0.11)
+VAR-MOMX, VW, t-1 -0.295
+                                                                                                                                 (-0.38)
+ReOMX, VW, t-1 0.105
+                                                                                                                                     (1.50)
+RfOMX, t-1 -9.395**
+                                                                                                                                                    (-2.28)
+Constant -0.003 0.005 -0.000 -0.005 0.003 0.003 0.011
+                          (-0.30) (0.89) (-0.04) (-0.44) (0.62) (0.55) (0.65)
+
+Observations 233 233 233 233 233 233 232
+R-squared 0.001 0.003 0.005 0.004 0.001 0.001 0.044
+                                          t-statistics in parentheses for OLS standard errors.
+                                            *** p<0.01, ** p<0.05, * p<0.1
+The OMXS30 exhibits slightly differing results to the Eurostoxx50 dataset. No variables
+indicate any statistically significant predictability for excess returns. Notable in comparison to
+the Eurostoxx50 dataset is the fact that the coefficient is positive, which it should be in theory
+under an efficient risk-reward trade-off. Revising the characteristics of the variables used in the
+regression for the respective indices, an apparent difference is that average correlation and
+average variance are correlated for OMXS30, but not for Eurostoxx50. When the regression is
+controlled for lagged excess return and the lagged risk-free rate, only the risk-free rate remains a
+
+                                                                              2
+significant predictor for excess returns for a p<5% probability, with an R of 4,4%, significantly
+lower than the 13,5% for the respective regression on the Eurostoxx50 index. The results from
+the regressions on the OMXS30 index in conjunction with the results from Eurostoxx50 index,
+indicates that average correlation is not a predictor of excess returns in the subsequent period.
+
+                                            31
+Results are not dependent on weighting procedure and equal-weighted regressions are reported
+in the appendix.
+
+ 6.4 Average correlation as a predictor during market downturns
+
+A final test is computed, to distinguish whether there is any significant discrepancy between the
+predictability of the decomposed risk proxies during certain market conditions in contrast to the
+entire data set. Relating back to Wilson & Savor (2014) and Longin & Solnik (2001) which
+studied the conditional relationship between risk and reward, the test aims to break out sub-
+periods during which there has been a market downturn or when GDP-growth has been negative
+on a quarterly basis.
+
+ Table 9 – Predictive regression on the value-weighted excess returns and Eurostoxx50 excess
+                              returns during market downturns
+
+                        (1) (2) (3) (4) (5) (6) (7)
+                                                                         *
+VARIABLES ReES50, VW, t ReES50, VW, t ReES50, VW, t ReES50, t       ReES50, VW, t ReES50, VW, t ReES50, VW, t
+
+ACES50, VW, t-1 0.189* 0.175 0.155 0.077
+                       (1.79) (1.58) (1.22) (0.47)
+AVES50, VW, t-1 -0.533 -0.300 -0.467 1.176
+                                           (-0.94) (-0.52) (-0.70) (0.68)
+VAR-IES50, VW, t-1 -2.124 -3.310
+                                                                                                 (-0.66) (-0.34)
+VAR-MES50, VW, t-1 -1.081
+                                                                                                                             (-0.31)
+ReES50, VW, t-1 0.148
+                                                                                                                                (0.87)
+RfES50, t-1 -20.834**
+                                                                                                                                              (-2.49)
+Constant -0.043* 0.003 -0.035 -0.035 0.000 -0.003 0.013
+                         (-1.92) (0.21) (-1.30) (-1.13) (0.02) (-0.22) (0.33)
+
+Observations 39 39 39 39 39 39 39
+R-squared 0.080 0.023 0.087 0.067 0.012 0.003 0.298
+                                          t-statistics in parentheses for OLS standard errors.
+                                                     *** p<0.01, ** p<0.05, * p<0.1
+The average correlation variable is a statistically significant predictor with a p-value of below
+
+                     2
+10%, and with an R of 8%. When controlling for other variables, the average correlation
+variable loses its significance but retains the positive coefficient, for all regressions. The
+average variance variable has a negative coefficient when regressed alone on the future excess
+return, implying that high average variance, all else equal, penalizes investors with lower excess
+returns in the future.
+
+                                            32
+During periods of market downturn only the risk-free rate retains significance as a predictor,
+
+                                                           2
+when all variables are included in the regression. The R more than doubles, indicating that the
+complete model is a better predictor during market downturns. An increase in the average
+constituent variance, without an equivalent increase in correlation, is likely indicative of
+idiosyncratic risk factors, in accordance with Wilson & Pollet (2008), of which investors are not
+entitled to a risk premium for. The different measures of index variance when regressed alone,
+both retain the “wrong” coefficient to be indicative of a risk-reward trade-off as discussed by
+Wilson & Pollet (2008). Providing some support that the decomposition of index variance
+provides additional explanation to predictability and market dynamics. For the control definition
+of market downturn (see appendix), average correlation does not demonstrate the necessary
+properties nor any significance as a predictor of excess returns. The results, while not being
+conclusive and statistically robust for lower p-values, are indicative of some relationship
+between the lagged average correlation and future excess returns, conditional on the time period
+chosen to define market downturns. Echoing important insights from Roll (1998), that the
+efficiency likely is dependent on the time period, data set and market proxy chosen.
+
+  Table 10 – Predictive regression on the value-weighted excess returns and OMXS30 excess
+                              returns during market downturns
+
+                          (1) (2) (3) (4) (5) (6) (7)
+                                                                             *
+ VARIABLES ReOMX, VW, t ReOMX, VW, t ReOMX, VW, t ReOMX, t      ReOMX, VW, t ReOMX, VW, t ReOMX, VW, t
+
+ ACOMX, VW, t-1 0.114 0.165* 0.115 0.154
+                         (1.30) (1.79) (1.30) (1.16)
+ AVOMX, VW, t-1 -0.945 -1.655 -0.725 6.949
+                                              (-0.89) (-1.52) (-0.70) (1.09)
+  VAR-IOMX, VW, t-1 -0.683 -8.483
+                                                                                                   (-0.49) (-0.97)
+ VAR-MOMX, VW, t-1 -0.738
+                                                                                                                               (-0.46)
+  ReOMX, VW, t-1 -0.166
+                                                                                                                                                  (-0.88)
+  RfOMX, t-1 -52.869***
+                                                                                                                                                  (-4.02)
+ Constant -0.076 -0.005 -0.079* -0.068 -0.012 -0.013 -0.011
+                             (-1.64) (-0.25) (-1.73) (-1.56) (-0.67) (-0.69) (-0.15)
+
+ Observations 29 29 29 29 29 29 29
+ R-squared 0.059 0.029 0.135 0.063 0.009 0.008 0.494
+                                          t-statistics in parentheses for OLS standard errors.
+                                                     *** p<0.01, ** p<0.05, * p<0.1
+For the OMXS30 index the same effect is captured as with the regressions for the Eurostoxx50.
+Notably, market downturn as defined by negative seasonally adjusted GDP growth, includes
+                                            33
+fewer periods than for the Eurostoxx50 index. While the fact that the periods denoted as market
+downturns differ, could be problematic from a comparability point of view, this is motivated by
+the fact that the same criterion was applied to single out these periods. Another caveat is that
+N<30, the normal threshold for when N is considered large. However, this threshold is
+somewhat arbitrary and considering the fact that the same selection criteria has been applied,
+conclusions can still be made based on the finding, albeit with some more caution.
+
+The effect captured is similar to that for the Eurostoxx50 dataset. Average constituent
+
+                                                                                           2
+correlation becomes a more significant predictor of excess returns and the R -value improves
+for all combinations of the regressions. The average correlation is significant for a p-value of
+below 10%, when regressed together with the average variance. The index variance does not
+have the right properties of the coefficient nor is a statistically significant predictor of excess
+returns. The findings are consistent with the findings for the Eurostoxx50 index, during market
+downturns as defined by negative GDP growth.
+
+In summary, while no definite conclusions can be drawn concerning the predictability of
+average correlation, the data seems to capture an effect where predictability increases during
+market downturns for both data sets. The results seem conditional on the definition of market
+downturns and during the more generalized definition of a crisis period (see appendix), no
+predictability nor indicative variable properties are found.
+
+ 6.5 Robustness checks
+
+A number of robustness checks have been employed to solidify the results. To increase external
+validity and avoid risks of data snooping, the results of one complementary data set have been
+reported. The Eurostoxx50 index, is a supranational index consisting of the 50-largest most
+liquid blue chips stocks in the Eurozone area. Echoing Bali, Cakici, Yan & Zang (2005), the
+upside with such an index is that equal-weighted measurements can be used, without running
+the risk of misleading metrics due to distortion to the average variance and correlation from
+liquidity premiums as was the case in Goyal & Santa-Clara (2001), which is the case when a
+
+      5
+larger  index, e.g. S&P500 is used and more illiquid stocks are included. Contrary to the dataset
+
+5
+ In terms of N, the number of constituents included in the index.
+                                            34
+used in Wilson & Pollet (2008) study, the Eurostoxx50 is not a national index, and hence
+affected by different macroeconomic decisions and country specific factors. This is another
+reason for including the OMX30 index, to make sure that differing results are not mainly the
+consequence of not using a national index.
+
+Autocorrelation is a common phenomenon occurring in time series data. It is often argued that
+autocorrelation is problematic when studying the stock market, especially when looking at daily
+returns. Consider a sharp decline in stock price, certain automatic risk management systems are
+triggered as price decreases and the trading systems start getting rid of their long positions. As
+such the initial drop causes more volatility, as more trades are executed in the market and prices
+fluctuate. As such both variance and returns are likely to exhibit tendencies of autocorrelation.
+
+To test for autocorrelation a Barlett-correlogram is plotted in the appendix. The graph is
+indicative for autocorrelation for the first and fourth lag for the excess value-weighted return in
+the Eurostoxx50 index and for the third lag for the value-weighted returns for the OMXS30
+index. As such Newey-West t-statistics is used in the regression, a common methodology used
+to try to overcome the autocorrelation. No qualitatively different results are found with regards
+to the predictability of the risk capturing variables when a Newey-West t-statistic is used. The
+market downturn periods are constituted by different sub-time series collapsed into one. Due to
+dates not being regularly spaced, autocorrelation is not considered a significant issue.
+
+                                            35
+ 7. Discussion
+
+Revisiting Driessen et al.’s (2009) model of market risk premium (equation 5), the results
+indicate the risk proxy can be decomposed, where index variance contemporaneously can be
+explained by the average correlation and average variance of the constituents. In contrast to
+Driessen et al. (2009) the data suggests that average individual stock variance and correlation
+are negatively correlated with each other for the Eurostoxx50 index. Potentially indicating that
+the majority of the risk that is captured in the decomposition relates to idiosyncratic deviations
+and subsequently the majority of the risk for the index is explained by this. When average
+correlation is high, average variance tends to be low indicating that correlation only is high in
+the absence of idiosyncratic shocks. Average variance is relatively more correlated with the
+stock market index variance than the average correlation is. As the lagged stock market variance
+is negatively correlated with future excess returns, it indicates that the risk captured by the stock
+market variance primarily contains diversifiable risk and not market risk where the investor
+requires a risk premium for holding the asset. As no intertemporal risk-reward trade-off can be
+found in the data for the stock market variance, results are inconsistent with Wilson & Pollet
+(2008).
+
+Wilson & Pollet (2008), highlight the Roll Critique as an important counter to the argument that
+average correlation has significance as a part of the risk factor in the mean-variance trade off.
+Applying the Roll Critique (Roll, 1976), this would imply going beyond criticizing the usage of
+a risk proxy such as average correlation, and argue that changes in stock market variance may
+only be weakly related to changes in aggregate risk, and subsequently in excess returns. This is
+of importance, as the Roll Critique would criticize both the CAPM (and the efficient market)
+and the argument that return on aggregate wealth is not directly observable. Most problematic
+for this paper when applying the Roll Critique would be that the linear relationship between risk
+and reward would follow the market portfolio’s efficiency, and are not independently testable.
+Furthermore, this risk-reward relationship is not reliably testable without the exact composition
+of the true market portfolio instead of a proxy. Our indices have N (where N is the number of
+constituent stocks) less than Wilson & Pollet´s study (which uses the S&P500). Even if N were
+greater, capturing aggregate market wealth is complex, as the aggregate market portfolio would
+include all investment opportunities on the efficient frontier, including other asset classes and
+non-listed assets. This is an additional obstacle when testing the efficient market.
+
+                                            36
+Capturing the market portfolio by using proxies is difficult in several ways, amongst other
+things as the market proxy may be mean-variant efficient even if the true market portfolio is not.
+Furthermore, when in this case a proxy index is constituted, these indices will reasonably be
+very highly correlated with each other (due to systematic risk) as well as with the true market
+portfolio, whether or not these proxies or the true market portfolio are mean-variance efficient.
+This high correlation between proxies make it seem as the indices’ constituents are irrelevant as
+long as N is large and correlation with the true market is high. In fact, the results from different
+compositions can vary significantly when testing the mean-variance relationship, as the results
+from this paper would indicate. These differences can amongst other things be attributed
+differences in idiosyncratic risk, average correlation and variance amongst the individual
+constituents, and liquidity premiums.
+
+This would imply that the dataset used as a proxy for the market portfolio is rather important, as
+results vary depending on what proxy is used. The previous studies on this relatively narrow
+topic have looked at the S&P, both S&P 500 and 100, and the differing results may very well be
+due to the difference in the market proxy’s composition, where some are efficient and some are
+not. Whether the true market is efficient in this case is unknown and thus the conclusion which
+can be made is that the significance of average correlation as a predicting variable will depend
+on the accuracy of the proxy for the market, in line with the Roll Critique.
+
+Moving from the CAPM and the efficient market, let it be assumed that CAPM does hold and
+the market proxies used are efficient. This allows a closer look at the proxy for risk, which as
+the results indicated, can be decomposed into average constituent variance and correlation. In
+line with Wilson & Pollet (2008) we find a negative relationship between lagged average
+variance and stock market returns, which also would be in line with the findings of Bali, Cakici,
+Yan & Zang (2005). Contemporaneously average correlation and average variance are
+negatively correlated with excess returns. These findings indicate that correlation has a
+contemporaneous relationship with excess returns similar to the one illustrated by the more
+sophisticated methods employed by Longin & Solnik (2001). The contemporaneous findings are
+consistent with Wilson & Pollet (2008), however no predictability is discovered for the average
+correlation and variance variable in the predictive regressions.
+
+                                            37
+If we take the opposite approach and side with the Roll Critique, let it be assumed that market
+proxies are efficient at some times and inefficient at others. This would also relate back to
+Wilson & Savor (2014) and Jagannathan & Wang (1996), which show that stock market beta is
+a determinant of risk premium and relates to future excess returns, depending on market
+conditions. This would imply that even if the stock market on average is not efficient, and beta
+does not have forecasting ability of excess return, there might be certain market conditions
+where it is efficient. Assuming this is the case, and building on Longin & Solnik’s (2001) study
+on average correlation increasing in market downturns, this has been tested in the paper.
+
+As seen in the results, periods with negative GDP growth have been broken out from the data,
+showing increasing significance in the forecasting ability of average correlation. The underlying
+theory for why this was tested was from Wilson & Savor’s (2014) study which concluded that
+the relationship between risk and return was strongly positive during certain market conditions
+when investors demand higher return to hold higher-beta assets. Due to the negative skewness
+in the Eurostoxx50 data set, and based on the results from Longin & Solnik (2001) that average
+correlation increases in market downturns, these tendencies should have become more apparent
+if any pattern exists during market downturns. In line with these previous studies, the
+forecasting ability of average correlation increases during these periods of market downturns.
+
+There are several possible reasons for this, amongst others that in the times when investors
+require higher returns to hold high-beta assets, this changes the risk-reward dynamic in the
+market. When average variance increases together with average correlation, this increases the
+systematic market risk, and as the results indicate, a tendency in which average correlation and
+average variance can predict future excess returns is distinguished.
+
+When the controlling sub-periods are broken out, and the three recent financial crises are used
+as periods of market downturn instead, the significance diminishes. This might partly be
+explained by the fact that the control periods have too generalized definitions of market
+downturns, which do not correspond to the data set and thus constitute a poor proxy for market
+downturn.
+
+Another potential reason may be the relative increases in average variance compared to average
+correlation. In contrast to the previous result of negative GDP growth being examined as a
+
+                                            38
+market downturn, this change in risk may be attributed to other risk aspects than systematic risk.
+In other words, when average variance increases more than average correlation, so that the
+increase in correlation during market downturns (in accordance with Longin & Solnik (2001))
+would be reflected in the change in aggregate idiosyncratic risk. Thus affecting the dynamic in
+the market risk-reward trade-off, but not necessarily result in an efficient market in which
+CAPM holds.
+
+This distinction of risk gains importance for the question if lagged average stock correlation is a
+predictor of future excess returns during market downturns. When changes in market conditions
+cause both average correlation and variance to increase, it is indicative of systematic risk. This
+risk increase correlates positively with increases in future excess returns, in line with a risk-
+reward relationship conditional on market trends, as well as with Wilson & Pollet (2008)
+distinction of risk in relation to returns.
+
+                                            39
+ 8. Conclusion
+
+This paper examines (i) the contemporaneous index variance and whether it can be decomposed
+into constituent variance and correlation, (ii) if lagged average constituent stock correlation is a
+predictor of future excess returns, (iii) if lagged average constituent stock correlation is a
+predictor of future excess returns during market downturns.
+
+In accordance with the conclusions of Wilson & Pollet (2008) and that of Driessen, Maenhout
+and Vilkov (2009), the results confirmed that risk can be decomposed contemporaneously into
+average constituent correlation and average variance. When examining if average correlation is
+a predictor of future excess returns, a forecasting relationship is only found during market
+downturns, indicative of a conditional risk-reward trade-off. This is explained partly by the (i)
+Roll Critique, as different market proxies cause deviating results depending on the constituents,
+(ii) distinguishing changes in idiosyncratic risk from systematic risk as the risk proxy´s
+components vary over time (iii) the conditionality of market efficiency.
+
+ 8.2 Further Research
+
+As it has been concluded that the Roll critique is of importance when studying the role of
+average correlation, where results differ depending on the constituents of the market proxy,
+extending this study with a different sample would be of interest. All factors which could help
+improve the accuracy of the risk proxy and the risk-return relationship could be examined
+further. For example expanding to a multifactor model in the style of Fama & French (1996),
+and tweak factors which disrupt the models forecasting ability, for example adjusting for size to
+reduce liquidity premiums, or to include time-varying discount rates based on Cochrane (2011).
+
+These potential adjustments would also include testing indices of national and international
+constituents, together with larger and smaller market proxies (defined by N), to see which
+proxies come close to an efficient market. Together with changes in the dataset, a method
+change would also be of interest. Ghysels, Santa-Clara & Valkanov (2004) find a significant
+forecasting relationship between risk and returns in the ICAPM by using a Mixed Data
+Sampling approach. This same approach is mentioned in Wilson & Pollet (2008), and would be
+
+                                            40
+a relevant expansion of the study. Using MIDAS, it would be highly relevant to also re-test the
+data samples broken out as market downturns, i.e. the periods where tendencies of conditional
+risk-reward relationship is found. Despite the usage of a different data set, in comparison to
+Wilson & Pollet (2008), the results in this paper are relatively less significant, and using a
+MIDAS approach could potentially increase significance as more data points are used.
+
+On the other hand, studies such as of Ghysels, Plazzi & Valkanov (2013), show that using
+MIDAS, data periods which would be identified as financial crisis and “flight to safety” periods,
+show no significant positive or negative risk-reward trade-off. If this is a result from changing
+the data sample or method is unknown and would be of interest to investigate further.
+
+Furthermore, relating back to Driessen, Maenhout & Vilkov (2009) and correlation risk premia,
+it might also be of interest to create a trading strategy using correlation as a forecasting variable,
+and apply this in option trading strategy. In the light of Jegadeesh & Titman (1993) which find
+that short-term returns tend to continue in a momentum trend, adding a momentum component
+to buy indices or baskets when correlation is increasing and to sell once correlation has seized
+to increase, would be one potential take, assuming the indices included have features of an
+efficient market.
+
+                                            41
+ References
+
+Published Papers:
+
+ Ang, A & Chen, J., 2002, “Asymmetric Correlations of Equity Portfolios”, Journal of
+      Finance, vol. 63, no.3, p. 443-494
+
+ Bali, T., Cakici, N., Yan, X., & Zhang, Z., 2005,”Does Idiosyncratic Risk Really Matter?”,
+      The Journal of Finance, vol. 60, no. 2, p. 905-929
+
+ Black, F., Jensen, M & Scholes, M., 1972, “The Capital Asset Pricing Model: Some
+      Empirical Tests”., Studies in the Theory of Capital Markets, Praeger Publishers Inc.
+
+ Campbell, J., 1987, “Stock Returns an then Term Structure”, Journal of Financial
+      Economics, vol. 18, no. 2, p. 373-399
+
+ Campbell, J., Viceira, L., 2002, “Strategic Asset Allocation in a Continuous-Time VAR
+      Model”, Harvard Institute of Economic Research, Discussion Paper no. 1973
+
+ Driessen, J., Maenhout, P., Vilkov, G., 2009, “The Price of Correlation Risk: Evidence from
+      Equity Options”, The Journal of Finance, vol. 64, no. 3, p. 1377-1406
+
+ Fama, F & French, K., 1996, “Multifactor Explanations of Asset Pricing Anomalies”, Journal
+      of Finance, vol. 51, no. 1, p. 55-84
+
+ French, K., Schwert, W & Stambaugh, R., 1986, “Expected Stock Returns & Volatility”,
+      Journal of Financial Economics, vol 19, p. 3-29
+
+ Ghysels, E., Plazzi, A & Valkanov, R., 2013, “The Risk-Return Relationship and Financial
+      Crises”, manuscript, University of California at San Diego
+
+ Ghyles, E., Santa-Clara, P & Valkanov, R., 2004, “There is a risk-return tradeoff after all”,
+      Journal of Financial Economics, vol. 76, no. 3, p. 509-548
+
+                                            42
+ Glosten, L., Jagannathan, R & Runkle, D., 1993, ”On the Relationship between the Expected
+      Value and the Volatility of the Nominal Excess Return on Stocks”, Journal of Finance,
+      vol. 48, no. 5, p. 1779-1801
+
+ Goyal, A & Santa-Clara, P., 2001, “Idiosyncratic Risk Matters!”, The Journal of Finance,
+      vol. 58, no. 3, p. 975-1007
+
+ Hong, Y., Tu, J & Zhou, G., 2007, “Asymmetries in Stock Returns: Statistical Tests and
+      Economic Evaluation”, The Review of Financial Studies, vol. 20, no. 5, p. 1547-1581
+
+ Jagannathan, R & Wang, Z., 1996, “The Conditional CAPM and the Cross-Section of
+      Expected Returns”, The Journal of Finance, vol. 51, no.1, p. 3-53
+
+ Jegadeesh, N & Titman, S., 1993, “Returns to Buying Winners & Selling Losers:
+      Implications for Stock Market Efficiency”, Journal of Finance, vol. 48, no. 1, p. 65-91
+
+ Longin, F & Solnik, B., 1995, “Is the Correlation in International Equity Returns Constant:
+      1960-1990?”, Journal of International Money & Finance, vol. 14, no. 1, p. 3-26
+
+ Longin, F & Solnik, B., 2001, “Extreme Correlation of International Equity Markets”,
+      Journal of Finance, vol. 56, no 2, p.649-676
+
+ Merton, R.C., 1973, “An Intertemporal Capital Asset Pricing Model”, Econometrica, vol. 41,
+      no. 5, p. 867-887
+
+ Pollet, J., Wilsson, M., 2008, “Average Correlation and Stock Market returns”, Journal of
+      Financial Economics 96, p.364-380
+
+ Roll, R., 1976, “A critique of asset pricing theory’s tests”, Journal of Financial Economics,
+vol. 4, no 2, p. 129-176
+
+ Savor, P & Wilson, M., 2014, “Asset Pricing: A Tale of two Days”, Journal of Financial
+      Economics, vol. 113, no. 2, p. 171-201
+
+                                            43
+Litterature:
+Berk, J & DeMarzo, P., 2014, Corporate Finance, Third Edition, p. 373-374, p. 381-382
+
+Online Sources:
+STOXX., 2018, “Stoxx Index Methodology Guide (Portfolio Based Indices)”,
+     https://www.stoxx.com/document/Indices/Common/Indexguide/stoxx_indexguide.pdf
+
+                                           44
+ Appendix
+
+ A. Changes in Data Set
+
+ Table 11 – Manually assigned market capitalization to the constituent stocks where no market
+                     capitalization was available in the Eurostoxx50 Index
+
+ Stock Entry date Assigned market cap Exit date
+ HVMG 20-Sep-1999 6093 mEUR 17-Sep-1999
+ NPM 11-Sep-1998 5194 mEUR 18-Jul-2005
+ Rhone 11-Sep-1998 5194 mEUR 27-Jul-2004
+ Edition Canal 11-Feb-2000 6526 mEUR 08-Dec-2000
+ RLX 11-Sep-1998 5194 mEUR 19-Sep-2003
+ Suez 20-Sep-1999 6093 mEUR 21-Jul-2008
+
+A.1 Changes in EuroStoxx50
+
+Constituent changes for the Eurostoxx 50 from oct-1998 to apr-2018. Changes in constituents or ticker
+changes have been accounted for in the daily returns data set. When a constituent has left the index, the
+return data is replaced so that the entrant starts trading on the switching date (t), and the exiting
+constituent has its final trading day (t-1) in Eurostoxx 50. A (+) indicates that the company has been
+added to the index and a (-) indicates that the company has been removed from the index.
+
+    Table 12 – All constituent changes in the Eurostoxx50 index from oct-1998 to apr-2008
+             Company Ticker Date
+      + Adidas ADSGn.DE 19-Sep-2016
+      + Ahold Delhaize AD.AS 19-Sep-2016
+      - Carrefour CARR.PA 19-Sep-2016
+      + CRH CRH.I 19-Sep-2016
+       - Generali GASI.MI 19-Sep-2016
+       - UniCredit CRDI.MI 19-Sep-2016
+      - Uniper UN01.DE 13-Sep-2016
+      + Uniper UN01.DE 12-Sep-2016
+      + Fresenius FREG.DE 21-Sep-2015
+      - Repsol REP.MC 21-Sep-2015
+      - RWE RWEG.DE 21-Sep-2015
+      + Safran SAF.PA 21-Sep-2015
+      - CRH CRH.I 22-Sep-2014
+
+                                            45
++ Nokia NOKIA.HE 22-Sep-2014
+- ArcelorMitta MT.AS 23-Sep-2013
++ Deutsche Post DPWGn.DE 23-Sep-2013
+- Osram Licht OSRn.DE 09-Jul-2013
++ Airbus NL AIR.PA 18-Mar-2013
+- Nokia NOKIA.HE 18-Mar-2013
++ ASML Holding ASML.AS 18-Jun-2012
+- Deutsche Boerse DB1Gn.DE 18-Jun-2012
++ Essilor ESSI.PA 18-Jun-2012
+- Telecom IT TLIT.MI 18-Jun-2012
++ Deutsche Boerse DB1Gn.DE 08-Feb-2012
+- Deutsche Boerse DB1Gne.DE^B12 (expired) 08-Feb-2012
+- Alstom ALSO.PA 19-Sep-2011
+- Credit Agricole CAGR.PA 19-Sep-2011
++ Inditex ITX.MC 19-Sep-2011
++ Volkswagen VOWG_p.DE 19-Sep-2011
+- Deutsche Boerse DB1Gn.DE 20-Jul-2011
++ Deutsche Boerse DB1Gne.DE^B12 (expired) 20-Jul-2011
+- DIA DIDA.MC 06-Jul-2011
++ DIA DIDA.MC 05-Jul-2011
+- Aperam APAM.AS 01-Feb-2011
+- Aegon AEGN.AS 20-Sep-2010
++ BMW BMWG.DE 20-Sep-2010
++ Unibail Rodamco UNBP.AS 08-Feb-2010
+- Volkswagen VOWG.DE 08-Feb-2010
++ AB Inbev ABI.BR 21-Sep-2009
+- Ageas AGES.BR 21-Sep-2009
++ CRH CRH.I 21-Sep-2009
+- Renault RENA.PA 21-Sep-2009
+- Alcatel Lucent ALUA.PA^K16 (expired) 22-Sep-2008
++ Alstom ALSO.PA 22-Sep-2008
++ Engie ENGIE.PA 22-Jul-2008
+- Suez eniivi LYOE.PA^F10 (expired) 22-Jul-2008
++ Deutsche Boerse DB1Gn.DE 15-Oct-2007
+- RBS Hldg AAH.AS^D08 (expired) 15-Oct-2007
+
+                                      46
+- Endesa ELE.MC 10-Oct-2007
++ Volkswagen VOWG.DE 10-Oct-2007
+- Ahold Delhaize AD.AS 24-Sep-2007
+- AIB Grou AIBG.I 24-Sep-2007
++ ArcelorMitta MT.AS 24-Sep-2007
+- Lafarge LAFP.PA^J15 (expired) 24-Sep-2007
++ Schneider SCHN.PA 24-Sep-2007
++ Vinci SGEF.PA 24-Sep-2007
++ Intesa Sanpaolo ISP.MI 02-Jan-2007
+- Sanpaolo IM SPI.MI^A07 (expired) 02-Jan-2007
++ Renault RENA.PA 20-Jul-2005
+- Shell RDSa.AS 20-Jul-2005
+- Koninklijke NPM RD.AS^A06 (expired) 19-Jul-2005
++ AIB Grou AIBG.I 30-Jun-2005
+- Telecom Mobile TIM.MI^F05 (expired) 30-Jun-2005
++ Credit Agricole CAGR.PA 20-Sep-2004
+- Volkswagen VOWG.DE 20-Sep-2004
+- Rhone Poulenc AVEP.PA^J05 (expired) 28-Jul-2004
++ SAP SE SAPG.DE 28-Jul-2004
++ Iberdrola IBE.MC 22-Sep-2003
+- UniCredit HVMG.DE^I08 (expired) 22-Sep-2003
++ Telecom IT TLIT.MI 04-Aug-2003
+- Telecom It old TIT.MI^H03 (expired) 04-Aug-2003
+- Kering PRTP.PA 23-Sep-2002
++ Lafarge LAFP.PA^J15 (expired) 23-Sep-2002
+- Ageas AGES.BR 17-Dec-2001
++ Ageas AGES.BR 17-Dec-2001
++ Cie Saint Gobain SGOB.PA 24-Sep-2001
+- KPN KPN.AS 24-Sep-2001
+- Dresdner Bank DRSDn.DE^G02 (expired) 23-Jul-2001
++ Telecom Mobile TIM.MI^F05 (expired) 23-Jul-2001
+- Edition Canal CNLP.PA^I15 (expired) 11-Dec-2000
++ Volkswagen VOWG.DE 11-Dec-2000
+- Ceconomy CECG.DE 18-Sep-2000
++ Danone DANO.PA 18-Sep-2000
+
+                                      47
+- Electrabel ELCBt.BR^G07 (expired) 18-Sep-2000
++ Sanpaolo IM SPI.MI^A07 (expired) 18-Sep-2000
+- Cie Saint Gobain SGOB.PA 20-Mar-2000
++ Enel ENEI.MI 20-Mar-2000
++ Edition Canal CNLP.PA^I15 (expired) 14-Feb-2000
+- Vodafone VDFGn.DE^H02 (expired) 14-Feb-2000
++ BNP Paribas BNPP.PA 01-Nov-1999
+- Elf Aquitaine ELFP.PA^D10 (expired) 01-Nov-1999
++ Kering PRTP.PA 01-Nov-1999
+- Paribas SA PARI.PA^A00 (expired) 01-Nov-1999
+- AIB Grou AIBG.I 20-Sep-1999
+- Akzo Nobel AKZO.AS 20-Sep-1999
++ Banco Santander SAN.MC 20-Sep-1999
++ BASF SE BASFn.DE 20-Sep-1999
++ Dresdner Bank DRSDn.DE^G02 (expired) 20-Sep-1999
+- Fiat Chrysler FCHA.MI 20-Sep-1999
+- Lufthansa LHAG.DE 20-Sep-1999
++ Munich Re Group MUVGn.DE 20-Sep-1999
+- Pharol PHRA.LS 20-Sep-1999
+- Rlx RELN.AS 20-Sep-1999
++ Sanofi FR SASY.PA 20-Sep-1999
+- Schneider SCHN.PA 20-Sep-1999
++ Suez eniivi LYOE.PA^F10 (expired) 20-Sep-1999
++ UniCredit HVMG.DE^I08 (expired) 20-Sep-1999
++ Total TOTF.PA 16-Jun-1999
+- Total PR PETBt.BR^L00 (expired) 16-Jun-1999
+- Daimler DAIGa.F^L98 (expired) 12-Nov-1998
++ Daimler DAIGn.F 12-Nov-1998
++ Daimler DAIGa.F^L98 (expired) 26-Oct-1998
+- Daimler-Benz AG DAIG.F^L98 (expired) 26-Oct-1998
++ Aegon AEGN.AS 12-Aug-1998
++ Ageas AGES.BR 12-Aug-1998
++ Ahold Delhaize AD.AS 12-Aug-1998
++ AIB Grou AIBG.I 12-Aug-1998
++ Air Liquide AIRP.PA 12-Aug-1998
+
+                                      48
++ Akzo Nobel AKZO.AS 12-Aug-1998
++ Alcatel Lucent ALUA.PA^K16 (expired) 12-Aug-1998
++ Allianz ALVG.F 12-Aug-1998
++ Axa SA AXAF.PA 12-Aug-1998
++ Bayer BAYGn.F 12-Aug-1998
++ BBVA BBVA.MC 12-Aug-1998
++ Carrefour CARR.PA 12-Aug-1998
++ Ceconomy CECG.F 12-Aug-1998
++ Cie Saint Gobain SGOB.PA 12-Aug-1998
++ Daimler-Benz AG DAIG.F^L98 (expired) 12-Aug-1998
++ Deutsche Bank DBKGn.F 12-Aug-1998
++ Deutsche Telekom DTEGn.F 12-Aug-1998
++ E.ON EONGn.F 12-Aug-1998
++ Electrabel ELCBt.BR^G07 (expired) 12-Aug-1998
++ Elf Aquitaine ELFP.PA^D10 (expired) 12-Aug-1998
++ Endesa ELE.MC 12-Aug-1998
++ Eni ENI.MI 12-Aug-1998
++ Fiat Chrysler FCHA.MI 12-Aug-1998
++ Generali GASI.MI 12-Aug-1998
++ ING Groep INGA.AS 12-Aug-1998
++ Koninklijke NPM RD.AS^A06 (expired) 12-Aug-1998
++ KPN KPN.AS 12-Aug-1998
++ L'Oreal OREP.PA 12-Aug-1998
++ Lufthansa LHAG.F 12-Aug-1998
++ LVMH LVMH.PA 12-Aug-1998
++ Nokia NOKIA.HE 12-Aug-1998
++ Orange ORAN.PA 12-Aug-1998
++ Paribas SA PARI.PA^A00 (expired) 12-Aug-1998
++ Pharol PHRA.LS 12-Aug-1998
++ Philips PHG.AS 12-Aug-1998
++ RBS Hldg AAH.AS^D08 (expired) 12-Aug-1998
++ Repsol REP.MC 12-Aug-1998
++ Rhone Poulenc AVEP.PA^J05 (expired) 12-Aug-1998
++ Rlx RELN.AS 12-Aug-1998
++ RWE RWEG.F 12-Aug-1998
+
+                                      49
+      + Schneider SCHN.PA 12-Aug-1998
+      + Siemens SIEGn.F 12-Aug-1998
+      + Societe Generale SOGN.PA 12-Aug-1998
+      + Telecom It old TIT.MI^H03 (expired) 12-Aug-1998
+      + Telefonica TEF.MC 12-Aug-1998
+      + Total PR PETBt.BR^L00 (expired) 12-Aug-1998
+      + UniCredit CRDI.MI 12-Aug-1998
+ + Unilever UNc.AS 12-Aug-1998
+ + Vivendi VIV.PA 12-Aug-1998
+ + Vodafone VDFGn.F^H02 (expired) 12-Aug-1998
+
+A.2 Changes in OMXS30
+Constituent changes for the OMXS30 from sep-1996 to apr-2018. Changes in constituents or
+ticker changes have been accounted for in the daily returns data set. When a constituent has left
+the index, the return data is replaced so that the entrant starts trading on the switching date (t),
+and the exiting constituent has its final trading day (t-1) in OMXS30. A (+) indicates that the
+company has been added to the index and a (-) indicates that the company has been removed
+from the index.
+
+    Table 13 – All constituent changes in the Eurostoxx50 index from sep-1996 to apr-2008
+
+            Company Ticker Date
+      - LundinPetroleum LUPE.ST 02-Jan-2018
+      + Essity ESSITYb.ST 12-Jun-2017
+      + Autoliv ALIVsdb.ST 02-Jan-2017
+      - Nokia NOKIA.ST 02-Jan-2017
+      + FPC FINGb.ST 04-Jan-2016
+      - Modern Times MTGb.ST 04-Jan-2016
+      + Kinnevik KINVb.ST 01-Jul-2014
+      - Scania SCVb.ST^F14 (expired) 16-May-2014
+      - Qliro Group QLRO.ST 16-Dec-2010
+      - Eniro ENRO.ST 01-Jul-2009
+      + Getinge GETIb.ST 01-Jul-2009
+      + Modern Times MTGb.ST 01-Jul-2009
+      - Vostok Gas VGASsdb.ST^A09 (expired) 05-Jan-2009
+      - Autoliv ALIVsdb.ST 10-Dec-2008
+      + LundinPetroleum LUPE.ST 10-Dec-2008
+      - LundinPetroleum LUPE.ST 09-Dec-2008
+      - Autoliv ALIVsdb.ST 03-Jan-2008
+
+                                            50
++ LundinPetroleum LUPE.ST 03-Jan-2008
++ SSAB SSABa.ST 02-Jul-2007
+- Stora Enso STEr.ST 02-Jul-2007
+- Nokia NOKIsdb.ST^E07 (expired) 04-Jun-2007
++ Nokia NOKIA.ST 04-Jun-2007
+- Holmen HOLMb.ST 02-Jan-2007
++ Scania SCVb.ST^F14 (expired) 02-Jan-2007
++ Boliden BOL.ST 03-Jul-2006
+- Fabege FABG.ST 03-Jul-2006
+- Old Mutual OLDM.ST 03-Jul-2006
++ Vostok Gas VGASsdb.ST^A09 (expired) 03-Jul-2006
+- FAB Skandia SDIA.ST^F06 (expired) 15-Mar-2006
++ Fabege FABG.ST 01-Nov-2004
+- Fabege Fastighet FABGb.ST^A05 (expired) 01-Nov-2004
++ Nokia NOKIsdb.ST^E07 (expired) 21-Jul-2003
++ Fabege Fastighet FABGb.ST^A05 (expired) 01-Jul-2003
+- Nokia NOKIsdb.ST^E07 (expired) 01-Apr-2003
+- Telenor Sverige EURO.ST^D03 (expired) 05-Mar-2003
++ Alfa Laval AB ALFA.ST 02-Jan-2003
+- CGI IT konsulter WMb.ST^K06 (expired) 02-Jan-2003
+- Pharmacia PHA.ST^D03 (expired) 02-Jan-2003
++ Swedish Match SWMA.ST 02-Jan-2003
++ Eniro ENRO.ST 02-Jul-2001
+- LB Icon ICON.ST^G06 (expired) 02-Jul-2001
+- LBi Intl LBI.ST^G10 (expired) 02-Jul-2001
++ Telenor Sverige EURO.ST^D03 (expired) 02-Jul-2001
++ Assa Abloy ASSAb.ST 02-Jan-2001
+- Kinnevik Ind KINVb.ST^G04 (expired) 02-Jan-2001
+- Trelleborg TRELb.ST 02-Jan-2001
++ LBi Intl LBI.ST^G10 (expired) 03-Jul-2000
++ Telia Company TELIA.ST 15-Jun-2000
+- Sandvik SANDb.ST^E00 (expired) 10-May-2000
++ CGI IT konsulter WMb.ST^K06 (expired) 01-Jan-2000
++ LB Icon ICON.ST^G06 (expired) 01-Jan-2000
+- Scania SCVb.ST^F14 (expired) 01-Jan-2000
++ Securitas SECUb.ST 01-Jan-2000
+- Stora Enso STEa.ST 01-Jan-2000
+- AGA AGAb.ST^D00 (expired) 18-Oct-1999
++ Tele2 TEL2b.ST 02-Jul-1999
++ ABB ABB.ST 23-Jun-1999
+- ABB AB ABBPa.ST^G99 (expired) 23-Jun-1999
+- ABB AB ABBPb.ST^G99 (expired) 23-Jun-1999
++ AstraZeneca AZN.ST 07-Apr-1999
+- AstrZeneca ASTRb.ST^D99 (expired) 06-Apr-1999
+
+                                      51
+- AstrZeneca ASTRa.ST^D99 (expired) 06-Apr-1999
++ Stora Enso STEa.ST 04-Jan-1999
++ Stora Enso STEr.ST 04-Jan-1999
+- Stora Kopparberg STORa.ST^B99 (expired) 30-Dec-1998
+- Avesta Sheffield AVES.ST^B01 (expired) 23-Jun-1998
++ Nordea Bank NDA.ST 23-Jun-1998
++ Autoliv ALIVsdb.ST 22-Dec-1997
+- Stora Kopparberg STORb.ST^A99 (expired) 22-Dec-1997
+- Investr INVEa.ST 01-Jul-1997
++ Nokia NOKIsdb.ST^E07 (expired) 01-Jul-1997
++ Scania SCVb.ST^F14 (expired) 01-Jul-1997
+- Autoliv AB ALIV.ST^E97 (expired) 12-May-1997
++ ABB AB ABBPb.ST^G99 (expired) 24-Jun-1996
++ ABB AB ABBPa.ST^G99 (expired) 24-Jun-1996
++ AGA AGAb.ST^D00 (expired) 24-Jun-1996
++ AstrZeneca ASTRb.ST^D99 (expired) 24-Jun-1996
++ AstrZeneca ASTRa.ST^D99 (expired) 24-Jun-1996
++ Atlas Copco ATCOb.ST 24-Jun-1996
++ Atlas Copco ATCOa.ST 24-Jun-1996
++ Autoliv AB ALIV.ST^E97 (expired) 24-Jun-1996
++ Avesta Sheffield AVES.ST^B01 (expired) 24-Jun-1996
++ Cellulosa SCA SCAb.ST 24-Jun-1996
++ Electrolux ELUXb.ST 24-Jun-1996
++ Ericsson ERICb.ST 24-Jun-1996
++ FAB Skandia SDIA.ST^F06 (expired) 24-Jun-1996
++ Handelsbanken SHBa.ST 24-Jun-1996
++ Hennes & Mauritz HMb.ST 24-Jun-1996
++ Holmen HOLMb.ST 24-Jun-1996
++ Investr INVEa.ST 24-Jun-1996
++ Investr INVEb.ST 24-Jun-1996
++ Kinnevik Ind KINVb.ST^G04 (expired) 24-Jun-1996
++ Pharmacia PHA.ST^D03 (expired) 24-Jun-1996
++ Sandvik SAND.ST 24-Jun-1996
++ Sandvik SANDb.ST^E00 (expired) 24-Jun-1996
++ SEB SEBa.ST 24-Jun-1996
++ Skanska AB SKAb.ST 24-Jun-1996
++ SKF SKFb.ST 24-Jun-1996
++ Stora Kopparberg STORa.ST^B99 (expired) 24-Jun-1996
++ Stora Kopparberg STORb.ST^A99 (expired) 24-Jun-1996
++ Swedbank SWEDa.ST 24-Jun-1996
++ Trelleborg TRELb.ST 24-Jun-1996
++ Volvo VOLVb.ST 24-Jun-1996
+
+                                      52
+   B. Complementary Regressions
+    Equal-weighted Eurostoxx50 index
+
+    Table 14 – Predictive regression on the equal-weighted excess returns and Eurostoxx50 excess
+                                  returns for the complete time series
+
+                                 (1) (2) (3) (4) (5) (6) (7)
+                                                                                  *
+VARIABLES ReES50, EW, t ReES50, EW, t ReES50, EW, t ReES50, t        ReES50, EW, t ReES50, EW, t ReES50, EW, t
+
+ACES50, EW, t-1 -0.040 -0.042 -0.026 -0.056
+                                     (-1.27) (-1.33) (-0.68) (-1.05)
+AVES50, EW, t-1 -0.266 -0.286 -0.237 1.203
+                                                    (-1.01) (-1.09) (-0.75) (1.58)
+VAR-IES50, EW, t-1 -3.069** -5.158
+                                                                                                            (-2.04) (-1.09)
+VAR-MES50, EW, t-1 -2.568*
+                                                                                                                                         (-1.73)
+ReES50, EW, t-1 0.222***
+                                                                                                                                            (3.05)
+RfES50, t-1 -10.057***
+                                                                                                                                                            (-3.55)
+Constant 0.008 0.005 0.011* 0.005 0.007* 0.006 0.024**
+                               (1.41) (1.15) (1.76) (0.68) (1.76) (1.55) (2.02)
+
+Observations 233 233 233 233 233 233 232
+R-squared 0.007 0.004 0.012 0.004 0.018 0.013 0.146
+                                               t-statistics in parentheses for OLS standard errors.
+                                                         *** p<0.01, ** p<0.05, * p<0.1
+
+     Sub-periods of the value-weighted Eurostoxx50 index
+    Table 15 – Predictive regression on the value-weighted excess returns and Eurostoxx50 excess
+                            returns during the “Dotcom crisis” between
+
+                                    (1) (2) (3) (4) (5) (6) (7)
+                                                                                    *
+      VARIABLES ReES50, VW, t ReES50, VW, t ReES50, VW, t ReES50, t       ReES50, VW, t ReES50, VW, t ReES50, VW, t
+
+      ACES50, VW, t-1 0.299 0.227 0.315 0.555
+                                   (1.07) (0.76) (0.91) (1.01)
+      AVES50, VW, t-1 2.178 1.662 7.083** 3.699
+                                               (1.08) (0.77) (2.82) (0.70)
+      VAR-IES50, VW, t-1 5.556 -13.656
+                                                                                                       (0.55) (-0.31)
+      VAR-MES50, VW, t-1 13.808
+                                                                                                                           (1.30)
+       ReES50, VW, t-1 0.358
+                                                                                                                                           (0.61)
+       RfES50, t-1 -18.740
+                                                                                                                                                           (-0.60)
+      Constant -0.044 -0.047 -0.061 -0.151*** -0.025 -0.035* -0.032
+                                         (-1.63) (-1.59) (-1.74) (-3.71) (-1.39) (-2.07) (-0.27)
+
+     Observations 16 16 16 16 16 16 16
+     R-squared 0.076 0.077 0.116 0.470 0.021 0.107 0.414
+                                                 t-statistics in parentheses for OLS standard errors.
+                                                            *** p<0.01, ** p<0.05, * p<0.1
+
+                                               53
+Table 16 – Predictive regression on the value-weighted excess returns and Eurostoxx50 excess
+                     returns during the “Sovereign debt crisis” between
+
+                              (1) (2) (3) (4) (5) (6) (7)
+                                                                             *
+VARIABLES ReES50, VW, t ReES50, VW, t ReES50, VW, t ReES50, t      ReES50, VW, t ReES50, VW, t ReES50, VW, t
+
+ACES50, VW, t-1 -0.171 -0.193 -0.229 -0.464
+                                   (-0.95) (-1.09) (-1.27) (-1.16)
+AVES50, VW, t-1 3.040 3.266 2.703 -6.776
+                                            (1.30) (1.39) (1.13) (-0.45)
+VAR-IES50, VW, t-1 8.196 50.319
+                                                                                    (0.92) (0.83)
+VAR-MES50, VW, t-1 6.498
+                                                                                                                  (0.79)
+ReES50, VW, t-1 0.307
+                                                                                                                                  (1.32)
+RfES50, t-1 -57.113*
+                                                                                                                                                 (-1.85)
+Constant 0.043 -0.033 0.016 0.027 -0.023 -0.019 0.138
+                                (0.86) (-1.21) (0.30) (0.52) (-0.87) (-0.76) (1.31)
+
+Observations 19 19 19 19 19 19 19
+R-squared 0.050 0.090 0.153 0.143 0.047 0.036 0.461
+                                          t-statistics in parentheses for OLS standard errors.
+                                                    *** p<0.01, ** p<0.05, * p<0.1
+
+Table 17 – Predictive regression on the value-weighted excess returns and Eurostoxx50 excess
+                  returns during the “Subprime mortgage crisis” between
+
+                              (1) (2) (3) (4) (5) (6) (7)
+                                                                             *
+VARIABLES ReES50, VW, t ReES50, VW, t ReES50, VW, t ReES50, t      ReES50, VW, t ReES50, VW, t ReES50, VW, t
+
+ACES50, VW, t-1 -0.005 0.002 -0.137 0.219
+                                 (-0.02) (0.01) (-0.41) (0.65)
+AVES50, VW, t-1 -0.141 -0.141 -0.194 0.979
+                                                (-0.21) (-0.20) (-0.23) (0.45)
+VAR-IES50, VW, t-1 -1.945 -6.005
+                                                                                                     (-0.52) (-0.47)
+VAR-MES50, VW, t-1 -1.255
+                                                                                                                                (-0.31)
+ReES50, VW, t-1 0.220
+                                                                                                                                   (0.87)
+RfES50, t-1 -24.841
+                                                                                                                                                 (-1.64)
+Constant -0.023 -0.021 -0.021 -0.006 -0.017 -0.020 0.037
+                                  (-0.59) (-1.11) (-0.52) (-0.13) (-1.03) (-1.16) (0.51)
+
+Observations 23 23 23 23 23 23 23
+R-squared 0.000 0.002 0.002 0.013 0.013 0.005 0.318
+                                          t-statistics in parentheses for OLS standard errors.
+                                                     *** p<0.01, ** p<0.05, * p<0.1
+
+                                           54
+Table 18 – Predictive regression on the value-weighted excess returns and Eurostoxx50 excess
+returns during market downturn periods, defined as the collapsed time series of the “Dotcom”,
+                   “Sovereign Debt” and “Subprime Mortgage” crisis
+
+                                (1) (2) (3) (4) (5) (6) (7)
+                                                                                *
+ VARIABLES ReES50, VW, t ReES50, VW, t ReES50, VW, t ReES50, t       ReES50, VW, t ReES50, VW, t ReES50, VW, t
+
+ ACES50, VW, t-1 0.041 0.041 0.041 -0.153
+                                 (0.52) (0.50) (0.43) (-1.15)
+ AVES50, VW, t-1 -0.062 -0.034 0.041 -0.250
+                                                  (-0.11) (-0.06) (0.06) (-0.16)
+ VAR-IES50, VW, t-1 -0.445 5.257
+                                                                                                   (-0.15) (0.58)
+ VAR-MES50, VW, t-1 0.810
+                                                                                                                       (0.26)
+ ReES50, VW, t-1 0.312**
+                                                                                                                                       (2.26)
+ RfES50, t-1 -19.335**
+                                                                                                                                                       (-2.65)
+ Constant -0.021 -0.014 -0.021 -0.027 -0.014 -0.017 0.058
+                                   (-1.43) (-1.26) (-1.16) (-1.27) (-1.34) (-1.62) (1.56)
+
+ Observations 58 58 58 58 58 58 58
+ R-squared 0.005 0.000 0.005 0.003 0.000 0.001 0.255
+                                           t-statistics in parentheses for OLS standard errors.
+                                                     *** p<0.01, ** p<0.05, * p<0.1
+
+     Table 19 – Descriptive statistics for the value-weighted independent variables for the
+                     Eurostoxx50 index for the market downturn period
+
+                            Observations Mean Min Max STD
+ ACES50, VW, t-1 39 .1953256 .0563919 .3867823 .0822513
+ AVES50, VW, t-1 39 .0164354 .0031981 .0752632 .0157257
+ VAR-MES50, VW, t-1 39 .0028888 .0005443 .0121075 .0026122
+ VAR-IES50, VW, t-1 39 .0029431 .000499 .0145323 .0028193
+ ReES50, VW, t-1 39 -.0073702 -.1413318 .1089615 .0553712
+ RfES50, t-1 39 .0020628 .0004513 .0044657 .0012916
+
+ Table 20 – Correlation matrix for the value-weighted independent variables and the primary
+dependent variable, value-weighted excess return in period t for the Eurostoxx50 index during
+                                market downturn periods
+
+                                                               VAR-M        VAR-I
+                               ReES50, VW, t ACES50, VW, t-1 AVES50, VW, t-1        ES50, VW, t-1          ES50, VW, t-1 ReES50, VW, t-1 RfES50, t-1
+ ReES50, EW, t 1.0000
+ ACES50, VW, t-1 0.2823 1.0000
+ AVES50, VW, t-1 -0.1520 -0.2551 1.0000
+ VAR-MES50, VW, t-1 -0.0512 0.1566 0.8775 1.0000
+ VAR-IES50, VW, t-1 -0.1086 0.0744 0.8991 0.9852 1.0000
+ ReES50, VW, t-1 0.3322 0.2508 -0.4103 -0.2979 -0.3802 1.0000
+ RfES50, t-1 -0.5101 -0.4672 0.5015 0.3537 0.3952 -0.4666 1.0000
+
+                                           55
+Equal-weighted OMXS30 index
+
+ Table 21 – Predictive regression on the equal-weighted excess returns and OMXS30 excess
+                                 returns for the entire time series
+
+                               (1) (2) (3) (4) (5) (6) (7)
+                                                                               *
+VARIABLES ReOMX, EW, t ReOMX, EW, t ReOMX, EW, t ReOMX, t      ReOMX, EW, t ReOMX, EW, t ReOMX, EW, t
+
+ACOMX, EW, t-1 0.021 0.026 0.039 0.008
+                              (0.86) (1.05) (1.62) (0.26)
+AVOMX, EW, t-1 -0.217 -0.288 -0.266 0.014
+                                                 (-0.74) (-0.96) (-0.92) (0.02)
+VAR-IOMX, EW, t-1 -0.104 0.574
+                                                                                                  (-0.17) (0.43)
+VAR-MOMX, EW, t-1 -0.188
+                                                                                                                                    (-0.35)
+ReOMX, EW, t-1 0.108
+                                                                                                                                       (1.56)
+RfOMX, t-1 -9.184**
+                                                                                                                                                      (-2.59)
+Constant -0.004 0.007 -0.002 -0.009 0.004 0.005 0.013
+                                 (-0.39) (1.27) (-0.24) (-0.97) (0.95) (1.05) (0.90)
+
+Observations 233 233 233 233 233 233 232
+R-squared 0.003 0.002 0.007 0.013 0.000 0.001 0.054
+                                           t-statistics in parentheses for OLS standard errors.
+                                                     *** p<0.01, ** p<0.05, * p<0.1
+Sub-periods of the value-weighted OMXS30 index
+
+ Table 22 – Predictive regression on the value-weighted excess returns and OMXS30 excess
+            returns during market downturn periods during the “Dotcom” crisis
+
+                               (1) (2) (3) (4) (5) (6) (7)
+                                                                               *
+VARIABLES ReOMX, VW, t ReOMX, VW, t ReOMX, VW, t ReOMX, t      ReOMX, VW, t ReOMX, VW, t ReOMX, VW, t
+
+ACOMX, VW, t-1 0.608** 0.353 0.300 0.177
+                              (2.58) (1.31) (1.13) (0.30)
+AVOMX, VW, t-1 5.494** 3.806 3.439 -4.461
+                                              (2.86) (1.68) (1.54) (-0.25)
+VAR-IOMX, VW, t-1 10.293*** 16.689
+                                                                                       (3.22) (0.47)
+VAR-MOMX, VW, t-1 11.444***
+                                                                                                                      (3.33)
+ReOMX, VW, t-1 0.046
+                                                                                                                                      (0.17)
+RfOMX, t-1 -60.555
+                                                                                                                                                     (-0.56)
+Constant -0.258** -0.131*** -0.232** -0.207** -0.116*** -0.114*** 0.050
+                                  (-2.87) (-3.34) (-2.70) (-2.46) (-3.69) (-3.79) (0.16)
+
+Observations 16 16 16 16 16 16 16
+R-squared 0.322 0.369 0.443 0.390 0.425 0.442 0.494
+                                          t-statistics in parentheses for OLS standard errors.
+                                                    *** p<0.01, ** p<0.05, * p<0.1
+                                           56
+ Table 23 – Predictive regression on the value-weighted excess returns and OMXS30 excess
+         returns during market downturn periods during the “Sovereign Debt” crisis
+
+                                (1) (2) (3) (4) (5) (6) (7)
+                                                                                *
+VARIABLES ReOMX, VW, t ReOMX, VW, t ReOMX, VW, t ReOMX, t       ReOMX, VW, t ReOMX, VW, t ReOMX, VW, t
+
+ACOMX, VW, t-1 0.059 0.198 0.186 -0.034
+                                 (0.64) (1.43) (1.33) (-0.20)
+AVOMX, VW, t-1 -0.808 -4.486 -2.850 -34.957**
+                                                   (-0.35) (-1.32) (-0.83) (-2.29)
+VAR-IOMX, VW, t-1 0.057 38.334*
+                                                                                        (0.02) (2.13)
+VAR-MOMX, VW, t-1 -0.221
+                                                                                                                                     (-0.08)
+ReOMX, VW, t-1 0.289
+                                                                                                                                        (1.26)
+RfOMX, t-1 -15.173
+                                                                                                                                                       (-0.24)
+Constant -0.037 0.003 -0.079 -0.086 -0.004 -0.003 0.111
+                                  (-0.69) (0.13) (-1.29) (-1.39) (-0.22) (-0.14) (0.83)
+
+Observations 19 19 19 19 19 19 19
+R-squared 0.024 0.007 0.120 0.104 0.000 0.000 0.429
+                                          t-statistics in parentheses for OLS standard errors.
+                                                     *** p<0.01, ** p<0.05, * p<0.1
+
+ Table 24 – Predictive regression on the value-weighted excess returns and OMXS30 excess
+      returns during market downturn periods during the “Subprime Mortgage” crisis
+
+                                (1) (2) (3) (4) (5) (6) (7)
+                                                                                *
+VARIABLES ReOMX, VW, t ReOMX, VW, t ReOMX, VW, t ReOMX, t       ReOMX, VW, t ReOMX, VW, t ReOMX, VW, t
+
+ACOMX, VW, t-1 -0.070 -0.117 -0.175 0.453
+                                   (-0.46) (-0.70) (-1.25) (1.41)
+AVOMX, VW, t-1 0.699 1.166 2.364 20.886
+                                           (0.46) (0.70) (1.69) (1.56)
+VAR-IOMX, VW, t-1 0.249 -29.934
+                                                                                                   (0.13) (-1.55)
+VAR-MOMX, VW, t-1 0.221
+                                                                                                                       (0.10)
+ReOMX, VW, t-1 -0.169
+                                                                                                                                                       (-0.78)
+RfOMX, t-1 -38.370*
+                                                                                                                                                       (-2.07)
+Constant 0.013 -0.034 0.015 0.022 -0.024 -0.024 -0.186
+                                  (0.17) (-1.04) (0.20) (0.33) (-0.84) (-0.83) (-0.96)
+
+Observations 23 23 23 23 23 23 23
+R-squared 0.010 0.010 0.034 0.140 0.001 0.000 0.384
+                                           t-statistics in parentheses for OLS standard errors.
+                                                     *** p<0.01, ** p<0.05, * p<0.1
+
+                                           57
+  Table 25 – Predictive regression on the value-weighted excess returns and OMXS30 excess
+returns during market downturn periods, defined as the collapsed time series of the “Dotcom”,
+                   “Sovereign Debt” and “Subprime Mortgage” crisis
+
+                                (1) (2) (3) (4) (5) (6) (7)
+                                                                                 *
+ VARIABLES ReOMX, VW, t ReOMX, VW, t ReOMX, VW, t ReOMX, t       ReOMX, VW, t ReOMX, VW, t ReOMX, VW, t
+
+ ACOMX, VW, t-1 0.094 0.082 0.080 0.257*
+                               (1.28) (1.11) (1.19) (2.01)
+ AVOMX, VW, t-1 1.046 0.867 1.322 12.667***
+                                            (1.11) (0.91) (1.53) (2.79)
+ VAR-IOMX, VW, t-1 1.329 -16.781**
+                                                                                                     (0.99) (-2.38)
+ VAR-MOMX, VW, t-1 1.592
+                                                                                                                         (1.04)
+ ReOMX, VW, t-1 0.029
+                                                                                                                                          (0.24)
+ RfOMX, t-1 -31.449***
+                                                                                                                                                         (-3.17)
+ Constant -0.064* -0.034* -0.071* -0.078** -0.030* -0.030* -0.110
+                                    (-1.74) (-1.97) (-1.89) (-2.27) (-1.95) (-1.99) (-1.50)
+
+ Observations 58 58 58 58 58 58 58
+ R-squared 0.029 0.022 0.043 0.076 0.017 0.019 0.282
+                                            t-statistics in parentheses for OLS standard errors.
+                                             *** p<0.01, ** p<0.05, * p<0.1
+
+Table 26 – Descriptive statistics for the value-weighted independent variables for the OMXS30
+          index during the market downturn period defined by country GDP growth
+
+                                                             VAR-M        VAR-I
+                              ReES50, VW, t ACES50, VW, t-1 AVES50, VW, t-1        ES50, VW, t-1         ES50, VW, t-1 ReES50, VW, t-1 RfES50, t-1
+ ReES50, EW, t 1.0000
+ ACES50, VW, t-1 0.2421 1.0000
+ AVES50, VW, t-1 -0.1697 0.3640 1.0000
+ VAR-MES50, VW, t-1 -0.0879 0.5415 0.9717 1.0000
+ VAR-IES50, VW, t-1 -0.0930 0.5385 0.9705 0.9984 1.0000
+ ReES50, VW, t-1 0.1304 0.0030 -0.4931 -0.4134 -0.4123 1.0000
+ RfES50, t-1 -0.6252 -0.0968 0.5722 0.4510 0.4524 -0.4959 1.0000
+
+ Table 27 – Correlation matrix for the value-weighted independent variables and the primary
+  dependent variable, value-weighted excess return in period t for the OMXS30 index during
+                     market downturn periods defined by GDP growth
+
+                            Observations Mean Min Max STD
+ ACOMX, VW, t-1 29 .5059612 .2209389 .7825333 .1489766
+ AVOMX, VW, t-1 29 .0142683 .0026168 .05863 .0126353
+ VAR-MOMX, VW, t-1 29 .0078808 .0007025 .0366307 .0083776
+ VAR-IOMX, VW, t-1 29 .0089996 .0009035 .0406785 .0095773
+ ReOMX, VW, t-1 29 -.0247658 -.1587582 .1295904 .0676961
+ RfOMX, t-1 29 .0021269 .000808 .0038246 .0011502
+
+                                           58
+Graph 2 – Actual, value-weighted and equal-weighted return development over the entire time
+                              period for the OMXS30 index
+
+  450                                                                                             100%
+
+                                                                                           90%
+   400
+                                                                                           80%
+   350
+                                                                                           70%
+   300
+                                                                                           60%
+
+  250                                                                                           50%
+
+ Index value                                                                                         40%
+   200
+                                                                                           30%
+   150
+                                                                                           20%
+   100
+                                                                                           10%
+
+   50                                                                                        0%
+
+      Control-Mkt downturn GDP-Mkt downturn Overlapping period OMX-Index VW-Index EW-Index
+
+Graph 3 – Actual, value-weighted and equal-weighted return development over the entire time
+                              period for the Eurostoxx50 index
+
+  325                                                                                             100%
+
+                                                                                           90%
+   275
+                                                                                           80%
+
+                                                                                           70%
+   225
+                                                                                           60%
+
+  175                                                                                           50%
+
+ Index value                                                                                         40%
+   125
+                                                                                           30%
+
+                                                                                           20%
+    75
+                                                                                           10%
+
+   25                                                                                        0%
+
+          GDP-Mkt downturn Control-Mkt downturn Overlapping periods EW VW Eurostoxx
+
+                                           59
+Graph 4 – Value-weighted constituent correlation and variance multiplied with 10 over the
+                       entire time period for the OMXS30 index
+
+   1                                                                                             100%
+
+ 0,9                                                                                                   90%
+
+ 0,8                                                                                                   80%
+
+ 0,7                                                                                                   70%
+
+ 0,6                                                                                                   60%
+
+ 0,5                                                                                                   50%
+
+ 0,4                                                                                                   40%
+AC & AV x 10
+ 0,3                                                                                                   30%
+
+ 0,2                                                                                                   20%
+
+ 0,1                                                                                                   10%
+
+   0                                                                                        0%
+
+         Control-Mkt downturn GDP-Mkt downturn Overlapping period VW-VAR VW-CORR
+
+Graph 5 – Value-weighted constituent correlation and variance multiplied with 10 over the
+                       entire time period for the Eurostoxx50 index
+
+ 0,8                                                                                                     100%
+
+                                                                                         90%
+  0,7
+                                                                                         80%
+  0,6
+                                                                                         70%
+  0,5
+                                                                                         60%
+
+ 0,4                                                                                                   50%
+
+                                                                                         40%
+AC & AV x 100,3
+                                                                                         30%
+  0,2
+                                                                                         20%
+  0,1
+                                                                                         10%
+
+ 0,0                                                                                                0%
+
+         GDP-Mkt downturn Control-Mkt downturn Overlapping periods VW-CORR VW-VAR
+
+                                         60
+Graph 6 – Barlett correlogram for an equal-weighted excess return for the Eurostoxx50 index
+
+Graph 7– Barlett correlogram for a value-weighted excess return for the Eurostoxx50 index
+
+Graph 8– Barlett correlogram for the actual excess return for the Eurostoxx50 index
+
+                                            61
+Graph 9– Barlett correlogram for the equal-weighted excess return for the Eurostoxx50 index
+
+Graph 10– Barlett correlogram for the value-weighted excess return for the Eurostoxx50 index
+
+Graph 11– Barlett correlogram for the actual excess return for the Eurostoxx50 index
+
+                                            62
+Table 28 – Predictive regression on the value-weighted excess return for Eurostoxx50 with a newey-west t-
+statistics
+
+                          (1) (2) (3) (4) (5) (6) (7)
+                                                                                *
+ VARIABLES ReES50, VW, t ReES50, VW, t ReES50, VW, t ReES50, t        ReES50, VW, t ReES50, VW, t ReES50, VW, t
+
+ ACES50, VW, t-1 -0.0335 -0.0393 -0.0254 -0.0776
+                             (-1.09) (-1.30) (-0.76) (-1.70)
+
+ AVES50, VW, t-1 -0.345 -0.402 -0.341 0.395
+                                              (-0.89) (-1.11) (-0.81) (0.60)
+
+  VAR-IES50, VW, t-1 -3.390 -0.241
+                                                                                                          (-1.91) (-0.05)
+
+ VAR-MES50, VW, t-1 -3.230
+                                                                                                                                          (-1.60)
+
+                                                                                                                                                                                              ***
+  ReES50, VW, t-1 0.233
+                                                                                                                                               (3.56)
+
+                                                                                                                                                                                              ***
+  RfES50, t-1 -9.360
+                                                                                                                                                               (-3.61)
+
+                                                                    *                         *                        **
+ Constant 0.00786 0.00597 0.0128         0.00627 0.00785        0.00718 0.0279
+                        (1.20) (1.59) (2.09) (0.85) (2.19) (1.90) (2.93)
+                                t statistics in parentheses for Newey-west t-statistics
+                                       *          **          ***
+                                   p < 0.05,   p < 0.01,    p < 0.001
+
+Table 29 – Predictive regression on the value-weighted excess return for OMXS30 with a newey-west t-
+statistics
+
+                          (1) (2) (3) (4) (5) (6) (7)
+                                                                                *
+ VARIABLES ReOMX, VW, t ReOMX, VW, t ReOMX, VW, t ReOMX, t        ReOMX, VW, t ReOMX, VW, t ReOMX, VW, t
+
+ ACOMX, VW, t-1 0.0117 0.0145 0.0217 0.00390
+                         (0.43) (0.54) (0.85) (0.09)
+
+ AVOMX, VW, t-1 -0.354 -0.386 -0.198 0.238
+                                              (-0.76) (-0.82) (-0.41) (0.09)
+
+  VAR-IOMX, VW, t-1 -0.337 0.323
+                                                                                                    (-0.44) (0.07)
+
+ VAR-MOMX, VW, t-1 -0.295
+                                                                                                                                          (-0.34)
+
+  ReOMX, VW, t-1 0.105
+                                                                                                                                               (1.38)
+
+  RfOMX, t-1 -9.395
+                                                                                                                                                               (-1.84)
+
+ Constant -0.00311 0.00509 -0.000404 -0.00451 0.00325 0.00280 0.0113
+                           (-0.25) (1.06) (-0.03) (-0.41) (0.64) (0.55) (0.63)
+                                t statistics in parentheses for Newey-west t-statistics
+                                       *          **          ***
+                                   p < 0.05,   p < 0.01,    p < 0.001
+
+                                            63
+64
+65

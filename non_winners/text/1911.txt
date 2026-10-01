@@ -1,0 +1,962 @@
+    The accuracy of Value-at-Risk
+estimates - The effect of the amount of
+          historical data used
+
+                                             Bachelor Thesis in Finance
+
+                              Stockholm School of Economics, Department of Finance
+
+                                             Supervisor: Michael Halling
+
+                       Johan Engvall
+                    22227@student.hhs.se
+
+                       May 30, 2013
+                          Abstract
+
+Value-at-Risk(VaR) has become the leading risk measurement technique in
+finance. It’s important both from a regulatory and internal perspective that
+the calculated VaR measures are accurate and therefore they should be back-
+tested with appropriate methods. This thesis reviews the effect that the num-
+ber of historical returns used to calculate VaR measures have on the accuracy
+on the measurements. Two methods are considered, the parametric normal
+method and the historical simulation method. The accuracy is reviewed by
+backtesting, primarily by the Kupiec test.
+
+The thesis shows both that it is important to choose an appropriate time
+window and to adapt the time window used to the method and asset class
+used as the effect is very different between these.
+
+Keywords : Value-at-Risk, backtesting
+CONTENTS ii
+
+Contents
+
+1 Introduction 1
+   1.1 Background of VaR . . . . . . . . . . . . . . . . . . . . . . . . 1
+   1.2 Problem discussion . . . . . . . . . . . . . . . . . . . . . . . . 1
+
+2 Theoretical framework 3
+   2.1 Risk measures . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+   2.2 Definition of VaR . . . . . . . . . . . . . . . . . . . . . . . . . 3
+   2.3 Empirical methods . . . . . . . . . . . . . . . . . . . . . . . . 4
+   2.4 Backtesting . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
+
+3 Data 7
+   3.1 Equity indices . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+   3.2 Individual stocks . . . . . . . . . . . . . . . . . . . . . . . . . 7
+
+4 Method 8
+   4.1 Backtesting with the Kupiec test . . . . . . . . . . . . . . . . 8
+   4.2 Analyzing the clustering . . . . . . . . . . . . . . . . . . . . . 9
+
+5 Results 10
+   5.1 Descriptive statistics . . . . . . . . . . . . . . . . . . . . . . . 10
+   5.2 Indices . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12
+   5.3 Stocks . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 14
+   5.4 Clustering . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
+
+6 Conclusions 17
+
+7 Further research 18
+
+References 19
+
+A Data 20
+   A.1 Indices . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 20
+   A.2 Stocks . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 21
+
+B Calculations of abnormal probabilities 22
+   B.1 Indices . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 22
+   B.2 Stocks . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 24
+1 1 INTRODUCTION
+
+1 Introduction
+
+1.1 Background of VaR
+
+During the last decades there have been a lot of focus on financial risk man-
+agement. The measure that have become leading is the Value-at-Risk(VaR).
+Holton (2002) writes that measuring risk in a similar way to the modern VaR
+dates back to 1922. Holton also claims that it was during the 1990’s that
+the VaR-measure was universally adopted as a measure of risk. Since then it
+has become the core for the regulation of financial firms in many countries
+for example in Basel III(2010).
+
+Despite it’s widespread use the method is also frequently criticized for not
+accurately measuring risks. Measurement of VaR relies on forecasting future
+asset prices using historical asset prices. Also every model used to estimate
+VaR makes simplifications and assumptions about the future asset prices.
+Therefore it is important to evaluate the accuracy of the models used, this is
+done by comparing the estimation of the model to the actual outcome. This
+will be done in the thesis. Another possible problem with VaR is that people
+sometimes regard it as a worst possible outcome, but for many commonly
+used VaR measures a loss higher than the VaR is expected multiple times
+per year.
+
+While there is some criticism of VaR there are no real competing quanti-
+tative financial risk measure. There exists others, for example Conditional
+Value-at-Risk, but the use is not widespread. Even though it is liked by some
+academics because of the nice theoretical properties it have. That VaR is so
+widely used makes it very interesting to study different aspects of it. What
+makes it even more interesting is that it have indisputable problems but that
+it’s anyway almost universally used.
+
+1.2 Problem discussion
+
+While there is much research comparing and testing different ways to calcu-
+late VaR. There is not much research focusing on the other important aspect
+of the VaR calculation, how much data should be used to calculate the VaR
+for different assets and different methods. If too much data is used then the
+estimations of the future asset prices is based on too much old and irrele-
+vant information on the other hand using too little data will cause unreliable
+estimations. This thesis will focus on this issue. The thesis will specifically
+study the following questions:
+1 INTRODUCTION 2
+
+   • How is the accuracy of the VaR calculations affected by how many days
+      that is used to calculate it?
+
+and also:
+
+   • Is this different for different confidence levels of the VaR and different
+     methods for calculating the VaR?
+3 2 THEORETICAL FRAMEWORK
+
+2 Theoretical framework
+
+2.1 Risk measures
+To understand what Value-at-Risk is and why it’s important we must first
+think about what is risk and more importantly how do we quantifiy it.
+Artzner et al. (1999) describes the three properties a risk measure should
+have, a risk measure for the asset described by the random variable X de-
+noted ρ(X) should have the following three properties:
+
+Normalization:
+                               ρ(0) = 0
+Translativity:
+                  ∀a ∈ R ρ(X + a) = ρ(X) − a
+Monotonicity:
+
+                 If X1 ≤ X2 then ρ(X1) ≥ ρ(X2)
+
+A coherent risk measure also have the following two properties for portfolios
+X1 and X2
+
+Subadditivity:
+                    ρ(X1 + X2) ≤ ρ(X1) + ρ(X2)
+Positive homogeneity:
+
+                     ∀a ∈ R ρ(aX1) = aρ(X1)
+
+That a risk measure is coherent is not necessary for it’s ability to be used
+quantitatively to measure risk but it gives some important results, mainly
+that the effect of diversification cannot be negative as it can for a risk measure
+that is not coherent.
+
+2.2 Definition of VaR
+The VaR is given by a confidence level and a period. A n-day (1 − p)% VaR
+is given by the probability:
+
+                    minimize  P (L > V aR) ≤ p
+                            V aR
+Where L is the loss after n days. The VaR satisfies the three properties of
+a risk measure but it does not satisfy the property of subadditivity and it’s
+2 THEORETICAL FRAMEWORK 4
+
+therefore not a coherent risk measure. This means that diversification can
+affect the VaR negatively. From an academic point of view this is a large
+drawback of the VaR, but regardless it’s widely used in practice. A coherent
+risk measure that is sometimes used is the Conditional Value-at-Risk, but
+the VaR is much more common.
+
+2.3 Empirical methods
+To calculate the VaR historical returns of the asset is used. Either a para-
+metric or non-parametric method can be used. For a parametric method
+the asset prices is assumed to follow a probability distribution which is then
+modeled, for example a normal distribution. With a non-parametric method
+nothing is assumed about the distribution of the asset prices instead the VaR
+is calculated directly from the historical returns. In this thesis I will use one
+of the simplest methods from each, the non-parametric historical simulation
+and the parametric normal method.
+
+Historical simulation approach
+To calculate the VaR using the historical simulation approach the sample of
+the losses are first sorted:
+
+                        L1 ≥ L2 ≥ · · · ≥ Ln
+
+The VaR is then the empirical quantile of the sorted losses:
+                               V aR̂      = L[n∗p]+1
+
+Where [n ∗ p] is the integer part of n ∗ p. The strength of this approach is
+that nothing is assumed about the distribution of the returns.
+
+Parametric normal approach
+For the parametric normal approach a maximum likelihood estimation is used
+to approximate a normal distribution to the sample of historical losses the
+VaR is then:
+                              ̂                              −1
+                    V aR = 1 − exp(ˆμ + ˆσΦ  (p))
+Where μˆ and σˆ are the maximum likelihood estimations of the mean and
+                                 −1
+volatility of the log-returns and Φ   is the inverse of the cumulative distri-
+bution function of the normal distribution. The main weakness with this
+method is that it makes strong assumptions about the distributions of the
+log-returns, for example that the distribution is symmetric. Also the tails
+are often not fat enough.
+5 2 THEORETICAL FRAMEWORK
+
+2.4 Backtesting
+To evaluate how accurate the VaR calculations is for a given method the
+method have to be backtested. There are several approaches to do that, one
+approach is to define a time series of VaR-breaks as:
+                      {
+                                0 if Lt ≤ V aRt,
+                        It =                                         (1)
+                                   1 if Lt > V aRt,
+
+Christoffersen (1998) then defines two properties that the sequence (1) must
+satisfy:
+
+   1. Unconditional Coverage: That the probability to receive a loss larger
+     than the (1-p)% VaR should be exactly p%.
+
+   2. Independence: That the probability to receive a VaR-break is com-
+      pletely independent of historical VaR-breaks. If this property is not
+      fulfilled the Var-breaks are said to be clustered.
+
+This is equivalent to that the random variables It should be independent and
+identically distributed(iid) and come from the following distribution:
+
+                               It ∈ Be(p)
+                                ∑N
+To test the first property the the sum of VaR-breaks Y =   t=1 It can be
+formed, the sum will in turn come from the following distribution:
+
+                           Y ∈ Bin(N, p)
+
+A confidence interval for the numbers of outcomes of the known distribution
+is the created and then compared to the actual number of VaR-breaks in a
+time series. This test was first proposed by Kupiec (1995) and is therefore
+called the Kupiec test. The null hypothesis of the test is:
+
+          H0 : Y ∈ Bin(N, p) against H1 : Y ∈/ Bin(N, p) (2)
+
+However this test does not test that the variables are iid, an early approach for
+testing this property using Markov Chains is given by Christoffersen (1998).
+Another way to backtest VaR proposed by Christoffersen and Pelletier (2004)
+is to instead form a time series of the number of days between two consec-
+                                     1
+utive breaks which should be p for a (1 − p)% VaR. In this thesis only the
+test by Kupiec will be used. The hypothesis (2) is the main hypothesis used
+in the thesis and most of the results will be drawn from that.. However to
+check if there seem to be any clustering some calculations with inspiration
+2 THEORETICAL FRAMEWORK 6
+
+from Christoffersen (1998) will be used.
+
+The idea behind the Markov chain approach is that the random process (1)
+should be a Markov chain with known transition probabilities. This gives as
+a result that the conditional probabilities should be the same regardless if
+the previous was a VaR-break or not. With the definition given in (1) this
+gives for a (1 − p)% VaR:
+
+              P (It = 1|It−1 = 1) = P (It = 1|It−1 = 0) = p (3)
+              P (It = 0|It−1 = 1) = P (It = 0|It−1 = 0) = 1 − p
+
+Where the probability P (It = 1|It−1 = 1) is the most interesting, because
+this is the probability that will most likely deviate much from the correct
+probability incase that the model is not correct. This is the probability that
+after a VaR break there will be another the following day. This test also
+have the weakness that it only test the transition in one step, a complete
+test should incorporate the whole history. But this test will capture most of
+the VaR-models that have a problem with clustering. In this thesis i will use
+a abnormally high probability of two consecutive hits as a sign of VaR break
+clustering.
+7 3 DATA
+
+3 Data
+
+3.1 Equity indices
+To evaluate the VaR as a risk measure for equity indices, the log-returns
+of major national equity indices is used. All indices used are given in the
+appendix in section A.1. The indices that is used is all that is described as
+major by Yahoo finance for which there were more than 15 years of market
+data, the data is also collected from there. An exception is made for US
+equity indices were only the most commonly followed indices are used. For
+example the Russell 2000 is used instead of the S&P 600, because the results
+would probably be quite similar for those.
+
+The data is all trading days 1982-2012 except where the available history
+was shorter, then it’s all available history. Both because the stock exchanges
+are open different days in different countries and because I didn’t get closing
+prices all the way until 1982 for all indices the number of log-returns are
+different for most of the indices.
+
+3.2 Individual stocks
+To evaluate VaR as a risk measure for stocks, the log-returns of the current
+components of Dow Jones Industrial Average(DJIA). The stocks and their
+tickers are shown in the appendix in section A.2. The reason for choosing
+these stocks is that I wanted stocks with a long history as listed companies.
+On problem with choosing the stocks in this way is that it there is a form of
+survivorship bias, but as the aim is just to compare different methods this
+is not a major problem but it does however somewhat effect the conclusions
+that is possible to draw. The stock data is downloaded from the CRSP
+database and the log-returns are calculated corrected for dividends and splits.
+The price data is all trading days 1982-2012, except for stocks which have a
+shorter history in that case it is all their available history.
+4 METHOD 8
+
+4 Method
+
+4.1 Backtesting with the Kupiec test
+To create the time series in equation 1 in section 2.4 the time series of log-
+returns described in section 3 is used. Then for a given window size n the
+empirical VaRs described in section 2.3 are calculated for a time t by using
+the the log-returns:
+                            Rt−n, Rt−n+1, · · · , Rt−1
+For each time series this is done for all t larger than the window size n. With
+N log-returns this gives N − n comparisons for the given window size n, this
+is then done for different window sizes. For each window size and asset the
+hypothesis 2 in section 2.4 is tested, the hypothesis is tested with 95% and
+99% significance.
+
+The time windows that are tested between 100 and 1000 days in steps of
+100 days. The reason for this is that a commonly used number of days is 500
+which makes this a large enough window around it. It would of course be
+better to use a shorter time step, but due to time limits and lack of enough
+computational power this is not possible.
+
+The VaR levels that will be tested are the most commonly used which are
+95% and 99%. Another common level is 99.9%, that is not considered in this
+thesis. The reason for this is that the methods used are not advanced enough
+to give a good enough estimation of that level. For the historical simulation
+method at least 1000 trading days have to be used, more to give a reasonable
+estimate. For the normal approximation the fit of the tail will not be good
+enough and the problem with the tails not being fat enough will be very big.
+
+The hypothesis will be tested with significance 95% and 99% because they
+give a lot of interesting information on the validity of the VaR models. If
+the hypothesis 2 can be rejected on a 95% it is a strong indication that the
+model is not correct and 99% gives a very strong indication that the model is
+not correct. To test on a higher significance not give that much information
+for example 99.9% would not give that much information as a rejection on
+with a 99% significance is such a strong rejection.
+
+The results of these tests will be plotted in figures 1-4 in section 5. For
+each of the different asset classes the number of assets for which the hypoth-
+esis is rejected is plotted. The plots will be done separately for both the two
+VaR levels and show the number of rejections of both significances of the
+9 4 METHOD
+
+hypothesis testing in the same plot. From these plots the main conclusions
+regarding the unconditional coverage will be drawn.
+
+4.2 Analyzing the clustering
+To see if there is any tendencies for clustering the conditional probability
+given in table (3) is calculated for all time steps, assets, methods and prob-
+ability levels. From this the abnormal probability to receive a VaR-break
+the day after another VaR break will be calculated by subtracting the target
+probability. As no formal theoretical framework is used to analyze the ab-
+normal probabilities, no conclusions can be drawn from their absolute size.
+However it is possible to compare between both different time windows for
+the same asset, method and VaR level and between different methods for the
+same asset, time window and VaR level.
+5 RESULTS 10
+
+5 Results
+
+5.1 Descriptive statistics
+
+Indices
+
+The descriptive statistics for the log-returns of the indices are shown in Table
+1.
+
+   Table 1: Descriptive statistics for the log-returns of the equity indices
+  Ticker Observations Mean(%) Standard Deviation(%) Skewness Kurtosis
+   AEX 6327 0.03196 1.544 -1.249 46.65
+  AORD 7188 0.02613 1.01 -3.833 100.2
+   ATX 4980 0.02316 1.389 -0.3854 10.53
+   BFX 5495 0.01315 1.18 -0.003208 9.747
+  BVSP 4867 0.1607 2.442 0.4796 12.56
+   DJIA 6596 0.04109 1.052 -2.345 61.58
+   FCHI 5781 0.01188 1.433 -0.02321 7.446
+   FTSE 7261 0.02303 1.125 -0.3756 11.29
+  GDAT 6464 0.01743 2.13 -0.3009 291.4
+  GDAXI 5593 0.02973 1.465 -0.09732 7.629
+  GSPC 7818 0.03137 1.162 -1.202 29.96
+ GSPTSE 7142 0.02318 1.006 -0.9219 17.4
+    HSI 6463 0.03369 1.763 -2.383 59.0
+   IXIC 7818 0.03501 1.395 -0.2365 11.27
+   KLSE 4706 0.01063 1.545 0.4016 54.49
+  MERV 4001 0.0394 2.183 -0.2802 8.49
+   MXX 5285 0.06486 1.589 0.0191 8.633
+   N225 7129 0.0006464 1.453 -0.2772 11.5
+   RUT 6380 0.02531 1.348 -0.5914 11.77
+   SSEC 5675 0.05502 2.413 5.568 155.4
+   SSMI 5589 0.0285 1.18 -0.1189 8.959
+    STI 6263 0.02149 1.281 -0.1298 11.51
+
+   The first thing we see is that except for N225 the mean returns is of the
+same order. The standard deviation is also quite similar across the different
+indices. We further see that most have a negative skewness but for most it’s
+not that big. The kurtosis is positive and relatively big for all assets meaning
+that the distributions will have a high peak. The high kurtosis will make the
+fit to the normal distribution bad especially far out in the tails.
+11 5 RESULTS
+
+Stocks
+The descriptive statistics for the log-returns of the stocks are shown in table
+2.
+
+    Table 2: Descriptive statistics for the log-returns of the DJIA stocks
+ Ticker Observations Mean(%) Standard Deviation(%) Skewness Kurtosis
+   AA 7831 0.02238 2.332 -0.2681 12.66
+  AXP 7818 0.05023 2.33 -0.2044 13.51
+   BA 7818 0.0485 1.938 -0.2088 8.922
+  BAC 7818 0.03672 2.597 -0.3685 30.8
+  CAT 7818 0.04198 2.065 -0.3389 9.748
+ CSCO 5763 0.09676 2.847 -0.05119 8.241
+  CVX 7818 0.0466 1.662 -0.1287 11.65
+  DD 7818 0.03984 1.768 -0.2813 8.878
+  DIS 7818 0.05289 2.019 -0.8476 22.36
+   GE 7818 0.04799 1.791 -0.123 11.77
+  HD 7818 0.09348 2.341 -0.8016 18.7
+  HPQ 7818 0.03196 2.451 -0.127 11.53
+  IBM 7818 0.04182 1.752 -0.3764 16.1
+ INTC 7818 0.06024 2.67 -0.3073 8.709
+  JNJ 7818 0.05257 1.516 -0.4162 12.38
+  JPM 7818 0.03935 2.433 -0.1033 16.79
+  KO 7818 0.06037 1.576 -0.4926 22.75
+  MCD 7818 0.05726 1.619 -0.2214 9.002
+ MMM 7818 0.04629 1.529 -0.9938 26.22
+  MRK 7818 0.04959 1.727 -0.9747 21.98
+ MSFT 6759 0.08715 2.279 -0.6024 17.5
+  PFE 7818 0.05137 1.799 -0.2674 7.736
+   PG 7818 0.0529 1.544 -2.755 76.64
+   T 7283 0.04469 1.665 -0.2489 16.31
+  TRV 7818 0.04479 1.788 0.08192 16.35
+  UNH 7111 0.0839 2.802 -0.8704 24.68
+  UTX 7819 0.05419 1.749 -0.9452 23.56
+   VZ 7280 0.04356 1.595 -0.01973 11.47
+ WMT 7818 0.0718 1.821 0.04488 6.348
+ XOM 7818 0.05552 1.531 -0.5047 23.45
+
+   The descriptive statistics of the individual stocks look very similar to
+those of the equity indices except that the standard deviations are a little bit
+bigger.
+5 RESULTS 12
+
+5.2 Indices
+In the figures 1-2 the results for the hypothesis testing for the indices is
+shown. For the historical simulation method the dependency of the time
+window is not entirely clear but for both levels of the VaR and both levels of
+the hypothesis there seems to be least rejections with the time window 400
+days.
+
+For the parametric normal method, firstly the method does not perform
+good enough for any of the indices calculating the 99% VaR so no conclu-
+sions can be drawn there regarding the time windows. This is a result of
+the high kurtosis of the log-returns. For the 95% VaR the method seem to
+perform worse with shorter time windows.
+
+Figure 1: The percentage of indices for which the hypothesis is rejected on
+with 95% and 99% significance for the 99% VaR for the two different methods
+13 5 RESULTS
+
+Figure 2: The percentage of indices for which the hypothesis is rejected on
+with 95% and 99% significance for the 95% VaR for the two different methods
+5 RESULTS 14
+
+5.3 Stocks
+In the figures 3-4 the results for the hypothesis testing for the individual
+stocks are shown. The historical simulation method shows some unexpected
+results for both the 95% and 99% VaR, the method seem to perform worse
+with longer time windows. For both VaR levels and test levels of the hypoth-
+esis the method seem to perform best when a very short time window is used.
+
+For the parametric normal method no conclusions can be drawn from the
+99% VaR as it doesn’t perform good enough for any time window or stock.
+As for the indices this is an effect of the high kurtosis of the log-returns. For
+the 95% VaR however the method seem to perform better with longer time
+windows.
+
+Figure 3: The percentage of DJIA stocks for which the hypothesis is rejected
+on with 95% and 99% significance for the 99% VaR for the two different
+methods
+15 5 RESULTS
+
+Figure 4: The percentage of DJIA stocks for which the hypothesis is rejected
+on with 95% and 99% significance for the 95% VaR for the two different
+methods
+5 RESULTS 16
+
+5.4 Clustering
+In the table 3 means of the abnormal probabilities to receive adjacent VaR
+breaks is calculated for different time windows, methods, assets and confi-
+dence levels are shown. The full results is shown in the appendix in section
+B. First of all we see that there are serious tendencies for clustering for all
+time windows, methods, assets and confidence levels. There also seem to be a
+positive correlation between the length of the time window and the abnormal
+probability. This seem to be stronger for the historical simulation method
+than for the parametric normal method.
+
+The reason that the problem with clustering is higher for longer time win-
+dows is that is the well known phenomena of volatility clustering, for example
+described by Mandelbrot (1963). This is that "large changes tend to be fol-
+lowed by large changes-of either sign-and small changes tend to be followed
+by small changes". This has the effect that there are periods with high
+volatility followed by periods of low volatility. When a longer time window
+is used the volatility will not increase or decrease fast enough with changing
+market conditions, which will create more VaR-breaks in volatile markets
+and less VaR-breaks in calm markets.
+
+Table 3: Table of the means of the abnormal probability to have a VaR-
+break after another VaR-break for for the different methods and levels for
+the VaR.The historical simulation method is denoted hs and the parametric
+normal method pn
+                     100 200 300 400 500 600 700 800 900 1000
+  95%VaR hs, indices 0.01599 0.03406 0.05042 0.05182 0.05813 0.06254 0.06327 0.06532 0.0698 0.07468
+ 95%VaR pn, indices 0.0401 0.04161 0.05301 0.05729 0.06227 0.06602 0.06621 0.06891 0.07786 0.09055
+  95%VaR hs, stocks 0.02528 0.03807 0.04184 0.04412 0.04669 0.05121 0.05282 0.0608 0.06544 0.06661
+  95%VaR pn, stocks 0.03551 0.03673 0.03766 0.03854 0.04197 0.0469 0.04712 0.0468 0.04915 0.05041
+  99%VaR hs, stocks 0.048 0.05364 0.05849 0.06286 0.06685 0.06853 0.068 0.07006 0.07093 0.072
+  99%VaR pn, stocks 0.04481 0.04155 0.04542 0.04755 0.05052 0.05492 0.05265 0.05363 0.0542 0.0549
+  99%VaR hs, indices 0.04549 0.06428 0.07439 0.07806 0.08461 0.09463 0.09621 0.09933 0.09886 0.1047
+ 99%VaR pn, indices 0.04985 0.05321 0.06129 0.0632 0.07152 0.07094 0.07028 0.07073 0.0778 0.08408
+17 6 CONCLUSIONS
+
+6 Conclusions
+
+The results in this thesis points towards the parametric normal methods
+seem to have a better unconditional coverage for longer time windows when
+calculating a 95% VaR, this however come at the cost of a higher degree of
+clustering of the VaR breaks. So when using the parametric normal method
+the time window that should be used is a consideration between a better un-
+conditional coverage that the parametric normal method gives and the lower
+clustering that a shorter time window gives.
+
+For the historical simulation method the conclusions is that shorter time
+windows have a slightly better unconditional coverage and a lower degree
+of clustering. Using these a little bit crude backtesting techniques it seem
+that the best results is obtained by using a time window that is as short as
+possible. Especially surprising is that the the historical simulation seem to
+perform so good for both asset classes for the 99% VaR. Which is essentially
+taking the last 100 days and assuming that the VaR is the biggest loss in any
+of these days. This is the most interesting result of the thesis.
+
+A problem with the selection of the stocks is that the selection criteria cre-
+ates some bias, because the companies are successful now but the analysis is
+based on past performance the results may not be fully accurate for compa-
+rable stocks in general. Because of this bias the firm specific risk are not fully
+accounted for. It is not improbable that for example a shorter time window
+would make the model adapt faster in case the return of a stock performs
+very poorly over a period.
+7 FURTHER RESEARCH 18
+
+7 Further research
+
+It would be interesting to research the subject both using more advanced
+methods for backtesting the VaRs, for example the one outlined by Christof-
+fersen (1998) or Christoffersen and Pelletier (2004) and more advanced meth-
+ods to calculate the VaRs. Especially methods that account for volatility
+clustering. It would also be interesting to backtest using more different as-
+sets classes. It would be very interesting to see if the surprising result that
+historical simulation performs better with shorter would be the same with
+other more advanced backtesting methods and with other asset classes.
+19 REFERENCES
+
+References
+
+Glyn A. Holton. History of value-at-risk: 1922-1998. 2002.
+
+Basel iii: A global regulatory framework for more resilient banks and banking
+  systems. 2010.
+
+Philippe Artzner, Freddy Delbaen, Jean-Marc Eber, and David Heath. Co-
+  herent measures of risk. Mathematical Finance, 9:203–228, 1999.
+
+Peter F. Christoffersen. Evaluating interval forecasts. International Eco-
+  nomic Review, 39:841–862, 1998.
+
+Paul Kupiec. Techniques for verifying the accuracy of risk management mod-
+  els. Journal of Derivatives, 3:73–84, 1995.
+
+Peter F. Christoffersen and Denis Pelletier. Backtesting value-at-risk: A
+  duration- based approach. Journal of Financial Econometrics, 2:84–108,
+  2004.
+
+Benoit Mandelbrot. The variation of certain speculative prices. The Journal
+  of Business, 36:394–419, 1963.
+A DATA 20
+
+A Data
+
+A.1 Indices
+
+    • AEX (AEX)
+
+    • All Ordinaries(AORD)
+
+    • ATX(ATX)
+
+    • BEL-20(BFX)
+
+    • Bovespa(BVSP)
+
+    • Dow Jones Industrial Average(DJIA)
+
+    • CAC 40(FCHI)
+
+    • FTSE 100(FTSE)
+
+    • Athex Composite Share Price Index(GDAT)
+
+    • DAX(GDAXI)
+
+    • S&P 500(GSPC)
+
+    • S&P TSX Composite(GSPTSE)
+
+    • HANG SENG INDEX(HSI)
+
+    • NASDAQComposite(IXIC)
+
+    • FTSE Bursa Malaysia KLCI (KLSE)
+
+    • MERVAL BUENOS AIRES (MERV)
+
+    • IPC(MXX)
+
+    • Nikkei 225(N225)
+
+    • Russell 2000(RUT)
+
+    • Shanghai Composite(SSEC)
+
+    • Swiss Market(SSMI )
+
+    • STRAITS TIMES INDEX(STI)
+21 A DATA
+
+A.2 Stocks
+The current stocks of the Dow Jones Industrial Average with their ticker in parenthesis:
+
+    • 3M(MMM)
+
+    • Alcoa(AA)
+
+    • American Express(AXP)
+
+    • AT&T(T)
+
+    • Bank of America( BAC)
+
+    • Boeing(BA)
+
+    • Caterpillar(CAT)
+
+    • Chevron Corporation(CVX)
+
+    • Cisco Systems(CSCO)
+
+    • Coca-Cola(KO)
+
+    • DuPont(DD)
+
+    • ExxonMobil(XOM)
+
+    • General Electric(GE)
+
+    • Hewlett-Packard(HPQ)
+
+    • The Home Depot(HD)
+
+    • Intel(INTC)
+
+    • IBM(IBM)
+
+    • Johnson & Johnson(JNJ)
+
+    • JPMorgan Chase(JPM)
+
+    • McDonald’s(MCD)
+
+    • Merck(MRK)
+
+    • Microsoft(MSFT)
+
+    • Pfizer(PFE)
+
+    • Procter & Gamble(PG)
+
+    • Travelers(TRV)
+
+    • UnitedHealth Group(UNH)
+
+    • United Technologies Corporation(UTX)
+
+    • Verizon(VZ)
+
+    • Wal-Mart(WMT)
+
+    • Walt Disney(DIS)
+B CALCULATIONS OF ABNORMAL PROBABILITIES 22
+
+B Calculations of abnormal probabilities
+B.1 Indices
+
+Table 4: Table of the abnormal probability to have a VaR-break after another
+VaR-break for 95% VaR with the historical simulation method
+             100 200 300 400 500 600 700 800 900 1000 Mean
+    AEX -0.01 0.004493 0.003699 0.01899 0.02704 0.05098 0.04952 0.04063 0.03706 0.06778 0.02902
+   AORD 0.01564 0.02529 0.04556 0.03762 0.03706 0.04618 0.05098 0.05329 0.05494 0.06353 0.04301
+    ATX -0.01 -0.01 0.03 -0.01 0.01381 0.03255 0.01273 0.01326 0.01381 0.03651 0.01227
+     BFX 0.05349 0.08231 0.1011 0.06407 0.1032 0.13 0.1196 0.1438 0.11 0.1124 0.102
+    BVSP 0.01128 0.1011 0.1048 0.1381 0.09 0.1306 0.1352 0.1306 0.1352 0.1233 0.11
+    DJIA 0.02125 0.005625 0.004706 -0.01 0.03286 0.0311 0.01817 0.01597 0.01564 0.0141 0.01494
+    FCHI -0.01 0.02175 0.04882 0.05557 0.03478 0.03412 0.03762 0.04 0.06143 0.0525 0.03766
+    FTSE 0.002346 0.0008696 0.02529 0.04063 0.08302 0.08091 0.05818 0.06059 0.06692 0.07955 0.04983
+   GDAT -0.01 0.05667 0.06246 0.03286 0.03 0.04405 0.05667 0.04479 0.06143 0.0497 0.04286
+  GDAXI 0.006667 0.006129 0.005625 0.006393 0.006393 0.004706 0.005873 0.02333 0.03545 0.03478 0.01354
+    GSPC 0.01469 0.0141 0.03938 0.05579 0.03878 0.05818 0.04882 0.04435 0.05383 0.04618 0.04141
+ GSPTSE 0.07 0.04063 0.07235 0.07235 0.08756 0.07861 0.1076 0.1063 0.1312 0.1275 0.08941
+     HSI -0.01 0.04405 0.04405 0.0311 0.04 0.04 0.05757 0.08524 0.08639 0.08756 0.0506
+    IXIC 0.001494 0.0005263 0.02191 0.02333 0.04319 0.0395 0.04263 0.05 0.0466 0.06143 0.03306
+    KLSE 0.04882 0.05977 0.0987 0.1063 0.115 0.05 0.09 0.1032 0.1032 0.1107 0.08857
+   MERV 0.04263 0.05977 0.05061 0.08091 0.07824 0.08524 0.07333 0.06895 0.06895 0.09811 0.07067
+    MXX 0.01 0.02704 0.0578 0.07929 0.07065 0.08677 0.08375 0.08524 0.08231 0.1032 0.0686
+    N225 0.03598 0.04 0.05667 0.07451 0.05849 0.04333 0.03225 0.03 0.0311 0.04 0.04423
+    RUT 0.01597 0.01667 0.03054 0.02333 0.04882 0.03478 0.03762 0.03762 0.0497 0.06143 0.03565
+    SSEC 0.02448 0.02571 0.02125 0.02175 0.01899 0.01817 0.01899 0.01632 0.01703 0.03225 0.02149
+    SSMI 0.005873 0.05452 0.07065 0.05557 0.1043 0.1039 0.1076 0.09345 0.09169 0.09169 0.07793
+     STI 0.02125 0.07219 0.1133 0.1415 0.1168 0.1522 0.1471 0.15 0.1818 0.1487 0.1245
+    Mean 0.01599 0.03406 0.05042 0.05182 0.05813 0.06254 0.06327 0.06532 0.0698 0.07468 0.0546
+
+Table 5: Table of the abnormal probability to have a VaR-break after another
+VaR-break for 95% VaR with the parametric normal method
+             100 200 300 400 500 600 700 800 900 1000 Mean
+    AEX 0.03545 0.0331 0.04785 0.0331 0.01344 0.02008 0.01308 0.02125 0.02077 0.1177 0.03558
+   AORD 0.01899 0.03237 0.0608 0.07257 0.08346 0.07929 0.08259 0.08174 0.07257 0.08804 0.06724
+    ATX 0.02409 0.003333 0.01941 0.03615 0.04556 0.06576 0.06576 0.06353 0.11 0.1204 0.0554
+     BFX 0.04556 0.05897 0.06042 0.07955 0.06895 0.1025 0.08877 0.0939 0.08639 0.1025 0.07875
+    BVSP 0.001765 0.002048 0.04 0.04195 0.07333 0.09526 0.09 0.1115 0.1107 0.09526 0.06618
+    DJIA 0.03032 0.03098 0.02906 0.05977 0.06143 0.06317 0.062 0.06519 0.1003 0.1003 0.06025
+    FCHI 0.02 0.03598 0.03545 0.03545 0.03494 0.03301 0.03211 0.03082 0.05931 0.05522 0.03723
+    FTSE 0.06246 0.0497 0.0773 0.0578 0.05897 0.05957 0.06477 0.06477 0.0785 0.09377 0.06676
+   GDAT 0.07594 0.05422 0.05612 0.07661 0.07661 0.06377 0.08167 0.07594 0.07871 0.07943 0.0719
+  GDAXI 0.01 0.01222 0.03545 0.04495 0.04263 0.04319 0.04435 0.03706 0.04682 0.05977 0.03764
+    GSPC 0.03046 0.01439 0.02704 0.04455 0.04882 0.04814 0.0541 0.06018 0.05857 0.06975 0.0456
+ GSPTSE 0.04385 0.05452 0.062 0.06937 0.09236 0.08756 0.08677 0.07333 0.08322 0.0968 0.07498
+     HSI 0.03511 0.02731 0.03688 0.05667 0.05207 0.04594 0.05338 0.05207 0.05383 0.06258 0.04758
+    IXIC 0.04422 0.03286 0.06857 0.05522 0.06947 0.07725 0.06383 0.06947 0.09692 0.1168 0.06946
+    KLSE 0.08783 0.07889 0.06692 0.05849 0.05173 0.08302 0.1049 0.1374 0.1264 0.1163 0.09119
+   MERV 0.02409 0.05593 0.05173 0.08639 0.07046 0.08783 0.08677 0.07333 0.1024 0.1166 0.07555
+    MXX 0.03651 0.05522 0.06813 0.06377 0.08375 0.0773 0.08091 0.07197 0.0713 0.06143 0.06703
+    N225 0.05154 0.06813 0.05977 0.08091 0.07547 0.05195 0.05087 0.04455 0.04357 0.03762 0.05644
+    RUT 0.04833 0.03167 0.04769 0.001628 0.02409 0.02614 0.02614 0.03706 0.04952 0.1084 0.04007
+    SSEC 0.05364 0.05931 0.03902 0.05481 0.06692 0.07594 0.07 0.06937 0.07661 0.09156 0.06572
+    SSMI 0.0239 0.04769 0.05061 0.02529 0.04556 0.04435 0.04155 0.05186 0.05061 0.07247 0.04539
+     STI 0.07824 0.07661 0.126 0.1253 0.1299 0.1214 0.1123 0.1299 0.136 0.1293 0.1165
+    Mean 0.0401 0.04161 0.05301 0.05729 0.06227 0.06602 0.06621 0.06891 0.07786 0.09055 0.06238
+23 B CALCULATIONS OF ABNORMAL PROBABILITIES
+
+Table 6: Table of the abnormal probability to have a VaR-break after another
+VaR-break for 99% VaR with the historical simulation method
+             100 200 300 400 500 600 700 800 900 1000 Mean
+    AEX 0.03638 0.06579 0.06498 0.05601 0.07092 0.09286 0.09426 0.08993 0.09931 0.1057 0.07761
+   AORD 0.03284 0.05029 0.06816 0.0642 0.07312 0.06905 0.06621 0.06838 0.07812 0.06746 0.06378
+    ATX 0.04778 0.0586 0.08717 0.07136 0.07745 0.09563 0.08942 0.08084 0.0893 0.1034 0.0801
+     BFX 0.07253 0.09876 0.09894 0.08778 0.1077 0.1281 0.144 0.1574 0.1446 0.1569 0.1197
+    BVSP 0.06268 0.05698 0.06538 0.1002 0.1063 0.1352 0.1314 0.1418 0.1307 0.142 0.1073
+    DJIA 0.03609 0.05774 0.05959 0.05368 0.04968 0.05543 0.05759 0.06818 0.06854 0.06111 0.05676
+    FCHI 0.0113 0.01923 0.03032 0.03097 0.04524 0.06508 0.07134 0.06934 0.07648 0.07705 0.04964
+    FTSE 0.03215 0.03798 0.04483 0.04467 0.05324 0.06143 0.05651 0.06176 0.05632 0.06145 0.05103
+   GDAT 0.07014 0.09029 0.09286 0.1189 0.1312 0.1236 0.1257 0.1265 0.1226 0.1336 0.1135
+  GDAXI -0.001613 0.02287 0.03627 0.04053 0.05246 0.04717 0.04565 0.05959 0.06737 0.0744 0.04447
+    GSPC 0.01933 0.02588 0.03671 0.05221 0.06653 0.07467 0.07267 0.0792 0.08299 0.08316 0.05933
+ GSPTSE 0.06526 0.09607 0.12 0.1011 0.1038 0.1152 0.1288 0.139 0.1403 0.1318 0.1141
+     HSI 0.0317 0.06842 0.08099 0.09803 0.1146 0.1207 0.105 0.1118 0.1015 0.1114 0.09442
+    IXIC 0.03753 0.06467 0.07 0.05556 0.07665 0.08351 0.09433 0.0966 0.09209 0.1057 0.07767
+    KLSE 0.149 0.131 0.1409 0.1249 0.1137 0.1423 0.1483 0.1558 0.1573 0.1555 0.1419
+   MERV 0.0125 0.03982 0.03642 0.05909 0.06932 0.08369 0.08812 0.09754 0.1025 0.1006 0.06896
+    MXX 0.06404 0.08439 0.09286 0.1243 0.1119 0.1329 0.1357 0.1287 0.1466 0.1587 0.118
+    N225 0.0314 0.04036 0.06144 0.05619 0.05029 0.05272 0.04877 0.04404 0.04032 0.05299 0.04785
+    RUT 0.05231 0.09815 0.1167 0.1065 0.09232 0.08688 0.09063 0.0951 0.08944 0.118 0.0946
+    SSEC 0.0254 0.05672 0.06508 0.05861 0.06191 0.07069 0.07587 0.07132 0.07545 0.0862 0.06473
+    SSMI 0.02925 0.06636 0.07774 0.1035 0.1077 0.1117 0.1187 0.123 0.1086 0.1014 0.09479
+     STI 0.08287 0.0838 0.08937 0.109 0.1253 0.1333 0.1276 0.1194 0.1044 0.1155 0.1091
+    Mean 0.04549 0.06428 0.07439 0.07806 0.08461 0.09463 0.09621 0.09933 0.09886 0.1047 0.08406
+
+Table 7: Table of the abnormal probability to have a VaR-break after another
+VaR-break for 99% VaR with the parametric normal method
+            100 200 300 400 500 600 700 800 900 1000 Mean
+    AEX 0.01452 0.01472 0.02167 0.02639 0.03306 0.04396 0.03042 0.03425 0.03302 0.09286 0.03449
+   AORD 0.07658 0.07368 0.08019 0.07684 0.08314 0.08084 0.07987 0.07541 0.0822 0.08167 0.07904
+    ATX 0.0314 0.05256 0.06009 0.05448 0.06579 0.05929 0.06538 0.06828 0.06538 0.09201 0.06147
+     BFX 0.06881 0.08127 0.08834 0.08389 0.09286 0.09226 0.09222 0.08242 0.08171 0.09208 0.08559
+    BVSP 0.01415 0.01926 0.02658 0.02175 0.03051 0.05127 0.04787 0.075 0.08308 0.08462 0.04541
+    DJIA 0.0373 0.02229 0.02477 0.02742 0.03333 0.03125 0.02837 0.02831 0.03798 0.0491 0.03201
+    FCHI 0.01623 0.02547 0.04449 0.03203 0.03915 0.04312 0.03974 0.02983 0.04129 0.04865 0.036
+    FTSE 0.03121 0.04474 0.05286 0.04792 0.05334 0.0587 0.06111 0.04459 0.05616 0.05909 0.05097
+   GDAT 0.08782 0.06401 0.08226 0.0877 0.09765 0.09 0.09915 0.09089 0.09828 0.1014 0.08992
+  GDAXI 0.01329 0.03333 0.03178 0.01615 0.03046 0.01589 0.01329 0.001948 0.02692 0.04259 0.02257
+    GSPC 0.02415 0.02907 0.03029 0.04453 0.05099 0.04824 0.03854 0.05025 0.0567 0.05933 0.04321
+ GSPTSE 0.09249 0.07392 0.0803 0.08826 0.08183 0.06905 0.07847 0.08287 0.08704 0.09343 0.08277
+     HSI 0.02008 0.03286 0.04199 0.06515 0.075 0.06963 0.05938 0.05972 0.05458 0.04594 0.05243
+    IXIC 0.06159 0.04548 0.06141 0.06051 0.08833 0.07651 0.08057 0.08975 0.1055 0.1161 0.07858
+    KLSE 0.1208 0.1151 0.1246 0.1239 0.1449 0.1417 0.148 0.1421 0.1452 0.1446 0.1351
+   MERV 0.0528 0.04744 0.03092 0.03602 0.05 0.05256 0.05053 0.06765 0.08408 0.08333 0.05553
+    MXX 0.04846 0.04967 0.06355 0.1044 0.1027 0.08455 0.07593 0.08636 0.089 0.08061 0.07853
+    N225 0.03919 0.05651 0.06111 0.05256 0.06003 0.06945 0.06888 0.06191 0.0694 0.0745 0.06136
+    RUT 0.05644 0.06182 0.06824 0.06913 0.08732 0.09229 0.08765 0.09575 0.1079 0.1277 0.08542
+    SSEC 0.04747 0.06328 0.08077 0.08846 0.08284 0.08523 0.0913 0.09234 0.09706 0.09662 0.08254
+    SSMI 0.04325 0.06439 0.0781 0.06157 0.06475 0.07288 0.07766 0.07664 0.08699 0.06682 0.0693
+     STI 0.09865 0.09985 0.1141 0.1213 0.1254 0.1321 0.1318 0.1198 0.1221 0.1167 0.1182
+    Mean 0.04985 0.05321 0.06129 0.0632 0.07152 0.07094 0.07028 0.07073 0.0778 0.08408 0.06729
+B CALCULATIONS OF ABNORMAL PROBABILITIES 24
+
+B.2 Stocks
+
+Table 8: Table of the abnormal probability to have a VaR-break after another
+VaR-break for 99% VaR with the historical simulation method
+           100 200 300 400 500 600 700 800 900 1000 Mean
+    AA 0.03167 0.04263 0.06229 0.06692 0.09227 0.08783 0.07421 0.07889 0.1034 0.1011 0.07412
+   AXP 0.03 0.04747 0.03819 0.0304 0.03211 0.05452 0.06609 0.06609 0.05593 0.07081 0.04916
+    BA 0.03 0.002346 0.03762 0.02488 0.04556 0.04747 0.04263 0.0525 0.05316 0.05383 0.039
+   BAC 0.04128 0.04128 0.04263 0.04319 0.05 0.05122 0.05306 0.06826 0.07475 0.09169 0.05574
+   CAT 0.04263 0.07642 0.04128 0.02797 0.02846 0.04063 0.03878 0.04128 0.04 0.065 0.04425
+  CSCO 0.06547 0.03839 0.04263 0.009231 0.006949 0.007544 0.008519 0.007544 0.007544 -0.01 0.01838
+  CVX 0.03 0.01899 0.02704 0.02704 0.0275 0.02896 0.02846 0.02704 0.0275 0.01469 0.02572
+    DD 0.003514 0.03 0.05024 0.0311 0.02614 0.03878 0.04882 0.05818 0.07046 0.1024 0.04596
+   DIS 0.01564 0.04195 0.02488 0.02571 0.02529 0.03598 0.05024 0.04952 0.04882 0.04814 0.03662
+    GE 0.004085 0.03938 0.0541 0.05667 0.08677 0.05522 0.07511 0.07511 0.07421 0.06547 0.05861
+    HD 0.03286 0.003889 0.015 0.004286 0.004493 0.004286 0.004925 0.05757 0.06895 0.08211 0.02784
+  HPQ 0.01703 0.04263 0.05329 0.0775 0.06595 0.07861 0.0714 0.08639 0.08756 0.07889 0.06592
+   IBM 0.04063 0.07974 0.06143 0.05977 0.06229 0.06865 0.07046 0.06955 0.07046 0.06368 0.06467
+  INTC -0.01 0.003514 0.01817 0.003699 0.01703 0.04128 0.04405 0.03 0.03054 0.04 0.02183
+   JNJ 0.02947 0.05494 0.07219 0.08722 0.08091 0.0939 0.1116 0.1233 0.1233 0.1233 0.09002
+   JPM 0.01597 0.02846 0.02896 0.04747 0.05452 0.06609 0.04435 0.07333 0.06071 0.05731 0.04772
+    KO 0.03286 0.09127 0.09 0.1105 0.08756 0.07889 0.07602 0.09 0.1076 0.09843 0.08632
+  MCD 0.0203 0.01778 0.03 0.03167 0.07108 0.05667 0.04405 0.04263 0.04263 0.06407 0.04209
+  MMM 0.04634 0.01985 0.02077 0.06692 0.07824 0.03167 0.05849 0.06407 0.06059 0.06059 0.05075
+  MRK 0.0311 0.005385 0.01985 0.01667 0.01597 0.01564 0.015 0.01597 0.01564 0.02846 0.01797
+ MSFT 0.04172 0.05452 0.05349 0.03918 0.005873 0.03615 0.03348 0.04479 0.04714 0.04714 0.04035
+   PFE 0.004706 0.03412 0.02947 0.02896 0.0275 0.01817 0.02704 0.02947 0.04128 0.04263 0.02834
+    PG 0.005625 0.02279 0.01632 0.02797 0.03762 0.05579 0.08412 0.08302 0.09227 0.09465 0.05202
+     T 0.05849 0.05944 0.0525 0.06407 0.06407 0.07974 0.05024 0.06955 0.07235 0.06407 0.06345
+   TRV 0.02896 0.03 0.03651 0.03545 0.04435 0.06955 0.06059 0.04952 0.05977 0.07989 0.04946
+  UNH 0.02509 0.03412 0.05452 0.05349 0.07333 0.07333 0.07772 0.04882 0.08804 0.08804 0.06165
+  UTX 0.01985 0.01469 0.04479 0.05667 0.03762 0.06059 0.05522 0.09526 0.1058 0.06368 0.05542
+    VZ 0.01597 0.03054 0.06143 0.07 0.05173 0.06595 0.06317 0.07537 0.07333 0.0775 0.0585
+  WMT 0.004085 0.08231 0.04556 0.07 0.06792 0.06692 0.08091 0.1133 0.11 0.0939 0.07349
+  XOM 0.002987 0.05329 0.03 0.02896 0.03167 0.02614 0.02571 0.03762 0.04952 0.04682 0.03327
+  Mean 0.02528 0.03807 0.04184 0.04412 0.04669 0.05121 0.05282 0.0608 0.06544 0.06661 0.04929
+
+Table 9: Table of the abnormal probability to have a VaR-break after another
+VaR-break for 99% VaR with the parametric normal method
+           100 200 300 400 500 600 700 800 900 1000 Mean
+    AA 0.02086 0.04031 0.03403 0.05098 0.05061 0.06018 0.04389 0.04488 0.04844 0.04806 0.04422
+   AXP 0.01597 0.04128 0.02896 0.03321 0.03762 0.03217 0.04325 0.05707 0.06229 0.06879 0.04206
+    BA 0.03861 0.05294 0.05475 0.04755 0.0497 0.05107 0.05923 0.05154 0.05015 0.05202 0.05076
+   BAC 0.07485 0.07333 0.08412 0.08524 0.09857 0.0889 0.09811 0.09695 0.1046 0.1131 0.09177
+   CAT 0.03861 0.02974 0.04442 0.02731 0.05618 0.07333 0.06576 0.05923 0.05618 0.05993 0.05107
+  CSCO 0.02226 0.01105 0.000989 0.01198 0.02371 0.02297 0.02158 0.03167 0.03167 0.03082 0.02087
+  CVX 0.003889 -0.01 -0.001935 -0.002308 0.005748 0.0129 0.01273 0.02077 0.02731 0.02731 0.009642
+    DD 0.009481 0.002987 0.015 0.008519 0.008072 0.008519 0.01424 0.0141 0.02468 0.02509 0.01307
+   DIS 0.02974 0.03545 0.03487 0.0311 0.04674 0.04797 0.03895 0.04517 0.04333 0.03762 0.03909
+    GE 0.04422 0.05289 0.03487 0.04521 0.04294 0.04294 0.05857 0.0525 0.05897 0.04882 0.04819
+    HD 0.06429 0.04921 0.04128 0.03605 0.04556 0.05536 0.0496 0.03698 0.03636 0.05122 0.04659
+  HPQ 0.015 0.01273 0.02846 0.02101 0.02521 0.02676 0.02597 0.02817 0.0358 0.0358 0.02549
+   IBM 0.01381 0.02448 0.0254 0.03237 0.0497 0.05154 0.05716 0.0497 0.05475 0.05475 0.04137
+  INTC 0.04185 0.02759 0.0265 0.01256 0.01222 0.0129 0.0129 0.01273 0.01273 0.0129 0.01849
+   JNJ 0.03225 0.02876 0.02252 0.02937 0.02937 0.03651 0.03478 0.03511 0.04385 0.05299 0.03455
+   JPM 0.02593 0.04325 0.03706 0.05215 0.05417 0.07065 0.07939 0.07939 0.06865 0.0987 0.06093
+    KO 0.06429 0.05587 0.05061 0.06975 0.07982 0.09625 0.09559 0.09191 0.08494 0.07917 0.07682
+  MCD 0.0579 0.06237 0.07966 0.07276 0.06042 0.06586 0.06534 0.05849 0.05207 0.04405 0.06189
+  MMM 0.04422 0.03 0.02448 0.02356 0.02378 0.02378 0.03027 0.03545 0.03667 0.04161 0.03138
+  MRK 0.05081 0.05667 0.05294 0.06971 0.05522 0.05569 0.05522 0.06353 0.06407 0.06634 0.05902
+ MSFT 0.03444 0.02101 0.03098 0.0239 0.02306 0.04738 0.03839 0.02252 0.03762 0.03878 0.03181
+   PFE 0.02311 0.01581 0.01564 0.01614 0.01098 0.02448 0.03167 0.01759 0.02546 0.01857 0.01995
+    PG 0.02797 0.03459 0.04063 0.03459 0.03636 0.03054 0.03138 0.03 0.04229 0.04229 0.03506
+     T 0.04556 0.04926 0.06383 0.0504 0.05081 0.05122 0.05207 0.05667 0.05383 0.04072 0.05144
+   TRV 0.07228 0.05536 0.07333 0.06595 0.07805 0.08697 0.08756 0.09897 0.1054 0.1088 0.08326
+  UNH 0.02676 0.04085 0.01727 0.01778 0.02738 0.03854 0.04051 0.03255 0.03348 0.03301 0.03081
+  UTX 0.02448 0.04229 0.03196 0.04634 0.05122 0.05081 0.05536 0.05081 0.05536 0.065 0.04736
+    VZ 0.04479 0.0496 0.06051 0.06595 0.05329 0.06639 0.04634 0.04755 0.04882 0.03651 0.05198
+  WMT 0.02846 0.04442 0.04732 0.05 0.04405 0.0393 0.04 0.05122 0.04442 0.0504 0.04396
+  XOM 0.02846 0.02788 0.02937 0.02704 0.02846 0.03511 0.02788 0.03065 0.03032 0.02906 0.02942
+  Mean 0.03551 0.03673 0.03766 0.03854 0.04197 0.0469 0.04712 0.0468 0.04915 0.05041 0.04308
+25 B CALCULATIONS OF ABNORMAL PROBABILITIES
+
+Table 10: Table of the abnormal probability to have a VaR-break after an-
+other VaR-break for 99% VaR with the historical simulation method
+          100 200 300 400 500 600 700 800 900 1000 Mean
+    AA 0.05 0.05582 0.05554 0.0539 0.04845 0.05667 0.05444 0.06257 0.06429 0.07276 0.05744
+   AXP 0.04249 0.05541 0.0776 0.07629 0.07661 0.08265 0.08811 0.0852 0.09323 0.09796 0.07756
+    BA 0.03982 0.05448 0.04064 0.04687 0.05145 0.05882 0.06813 0.06749 0.08092 0.08115 0.05898
+   BAC 0.03708 0.054 0.0629 0.07564 0.09436 0.1011 0.1021 0.1117 0.1127 0.1222 0.08738
+   CAT 0.04429 0.03986 0.05756 0.05364 0.06749 0.05894 0.06732 0.0764 0.07466 0.07188 0.0612
+  CSCO 0.0602 0.05331 0.05887 0.06673 0.07253 0.074 0.07941 0.07157 0.06508 0.06245 0.06642
+  CVX 0.03696 0.03092 0.03069 0.03782 0.03475 0.03696 0.0338 0.03023 0.03708 0.03914 0.03483
+    DD 0.03596 0.07162 0.07885 0.07903 0.08137 0.07973 0.07834 0.08351 0.08228 0.07533 0.0746
+   DIS 0.04065 0.06111 0.06264 0.06798 0.07216 0.07147 0.06272 0.06748 0.06798 0.06582 0.064
+    GE 0.04064 0.03964 0.06732 0.06781 0.08115 0.094 0.1022 0.09824 0.09861 0.1014 0.0791
+    HD 0.04632 0.06389 0.08068 0.09164 0.09167 0.07717 0.07464 0.07647 0.08411 0.09205 0.07786
+  HPQ 0.05986 0.07353 0.06976 0.07712 0.06681 0.06816 0.07256 0.07113 0.06732 0.07849 0.07047
+   IBM 0.05541 0.04695 0.04167 0.05298 0.05188 0.05484 0.05499 0.05638 0.05263 0.05263 0.05204
+  INTC 0.01916 0.01322 0.01389 0.003221 0.02353 0.02396 0.03012 0.0306 0.0358 0.04329 0.02368
+   JNJ 0.07877 0.08703 0.08772 0.0937 0.09203 0.08905 0.08253 0.08804 0.07883 0.07693 0.08546
+   JPM 0.075 0.06944 0.07064 0.06811 0.08452 0.09646 0.08466 0.08706 0.09573 0.09496 0.08266
+    KO 0.06798 0.07045 0.06396 0.08137 0.09096 0.08793 0.08838 0.08867 0.08838 0.08542 0.08135
+  MCD 0.05405 0.06953 0.075 0.07349 0.07647 0.075 0.07321 0.06304 0.06239 0.06662 0.06888
+  MMM 0.03284 0.02062 0.03192 0.04804 0.06019 0.05986 0.05959 0.0587 0.06022 0.06321 0.04952
+  MRK 0.06172 0.08239 0.08445 0.09127 0.08462 0.08056 0.06924 0.07228 0.06846 0.06749 0.07625
+ MSFT 0.0481 0.05204 0.0569 0.05884 0.05239 0.05811 0.06037 0.05997 0.05884 0.06186 0.05674
+   PFE 0.0258 0.0477 0.04943 0.05756 0.05375 0.05204 0.05632 0.06207 0.06561 0.06748 0.05378
+    PG 0.04036 0.03876 0.05571 0.05756 0.0608 0.07281 0.07 0.08105 0.07931 0.08636 0.06427
+     T 0.06562 0.06854 0.07216 0.06421 0.06421 0.05795 0.05306 0.05924 0.05145 0.04639 0.06028
+   TRV 0.05345 0.06602 0.07 0.06699 0.06202 0.0626 0.05243 0.04917 0.05165 0.04537 0.05797
+  UNH 0.08272 0.07258 0.08029 0.09058 0.09865 0.1017 0.09983 0.1 0.1013 0.09943 0.09271
+  UTX 0.03564 0.03743 0.03046 0.04706 0.05756 0.05787 0.06299 0.06429 0.06714 0.05924 0.05197
+    VZ 0.04568 0.04552 0.06594 0.05811 0.06748 0.06782 0.06207 0.07644 0.07166 0.07012 0.06308
+  WMT 0.04972 0.05526 0.04855 0.04668 0.0503 0.05526 0.05769 0.05976 0.06515 0.06782 0.05562
+  XOM 0.01358 0.01215 0.01286 0.03169 0.0354 0.04244 0.03883 0.04302 0.0451 0.04483 0.03199
+  Mean 0.048 0.05364 0.05849 0.06286 0.06685 0.06853 0.068 0.07006 0.07093 0.072 0.06394
+
+Table 11: Table of the abnormal probability to have a VaR-break after an-
+other VaR-break for 99% VaR with the parametric normal method
+          100 200 300 400 500 600 700 800 900 1000 Mean
+    AA 0.03858 0.0416 0.05742 0.0614 0.06364 0.06881 0.06911 0.06779 0.08648 0.08 0.06348
+   AXP 0.02692 0.01357 0.03101 0.03163 0.03229 0.0416 0.04661 0.04409 0.04763 0.05667 0.0372
+    BA 0.03941 0.04375 0.06307 0.06026 0.0678 0.06924 0.06233 0.06357 0.06175 0.05756 0.05887
+   BAC 0.07583 0.07357 0.07381 0.07077 0.08171 0.1033 0.1011 0.09458 0.09914 0.1105 0.08843
+   CAT 0.04929 0.05149 0.03947 0.04186 0.05 0.05753 0.05428 0.05109 0.04659 0.05141 0.0493
+  CSCO 0.03725 0.03451 0.04057 0.03333 0.03468 0.03 0.03032 0.04055 0.03333 0.03439 0.03489
+  CVX 0.01763 0.005138 0.01313 0.01753 0.01299 0.0125 0.002925 0.005556 0.01011 0.01216 0.01097
+    DD 0.05829 0.04456 0.04512 0.0436 0.04653 0.05831 0.0537 0.05539 0.05945 0.06707 0.0532
+   DIS 0.02907 0.03226 0.04383 0.05219 0.04296 0.04763 0.04867 0.04563 0.05243 0.05383 0.04485
+    GE 0.0319 0.03909 0.04375 0.03186 0.03241 0.05 0.04417 0.05115 0.05706 0.05251 0.04339
+    HD 0.07254 0.05817 0.06028 0.06735 0.07403 0.07827 0.07272 0.06609 0.05904 0.05456 0.0663
+  HPQ 0.0484 0.01647 0.0178 0.0267 0.03046 0.03746 0.04169 0.03504 0.03187 0.02485 0.03108
+   IBM 0.02507 0.02027 0.0114 0.02283 0.02649 0.03571 0.03914 0.03555 0.03876 0.03596 0.02912
+  INTC 0.03431 0.03521 0.03718 0.02671 0.02418 0.02843 0.02082 0.02143 0.02714 0.0267 0.02821
+   JNJ 0.04005 0.0575 0.07219 0.07245 0.0678 0.06765 0.06828 0.07748 0.06798 0.07 0.06614
+   JPM 0.04091 0.0294 0.04569 0.05194 0.05791 0.07315 0.07871 0.0799 0.08086 0.08568 0.06242
+    KO 0.04956 0.04647 0.05402 0.05689 0.0574 0.05074 0.05579 0.06082 0.05456 0.05326 0.05395
+  MCD 0.05514 0.05049 0.05973 0.06869 0.07304 0.07596 0.06811 0.07534 0.07737 0.08151 0.06854
+  MMM 0.02907 0.02692 0.02481 0.01941 0.0233 0.02507 0.02124 0.02124 0.02388 0.0288 0.02437
+  MRK 0.0549 0.05256 0.05219 0.05049 0.04804 0.05565 0.04391 0.04184 0.04924 0.05183 0.05006
+ MSFT 0.05579 0.0544 0.05029 0.05089 0.05876 0.05843 0.06079 0.07059 0.07048 0.0694 0.05998
+   PFE 0.04977 0.03962 0.03937 0.05843 0.0698 0.0702 0.06579 0.06559 0.06382 0.06475 0.05872
+    PG 0.02812 0.02601 0.03029 0.03088 0.04474 0.04284 0.046 0.04756 0.03939 0.03621 0.0372
+     T 0.07471 0.05451 0.05238 0.0568 0.05706 0.06194 0.05918 0.06399 0.06717 0.0608 0.06085
+   TRV 0.0747 0.07057 0.0694 0.07281 0.07958 0.07808 0.0703 0.05818 0.06765 0.06497 0.07062
+  UNH 0.05278 0.05494 0.05356 0.05458 0.06565 0.06744 0.05791 0.05687 0.05359 0.062 0.05793
+  UTX 0.04375 0.05072 0.04804 0.04924 0.04044 0.04391 0.04367 0.04351 0.04596 0.05433 0.04636
+    VZ 0.04548 0.05553 0.06358 0.0652 0.05997 0.06749 0.07169 0.08228 0.07064 0.06978 0.06516
+  WMT 0.02778 0.03134 0.02178 0.02538 0.0329 0.0329 0.02572 0.03511 0.03401 0.03564 0.03026
+  XOM 0.03726 0.036 0.04732 0.05448 0.05891 0.05732 0.055 0.05104 0.04867 0.03992 0.04859
+  Mean 0.04481 0.04155 0.04542 0.04755 0.05052 0.05492 0.05265 0.05363 0.0542 0.0549 0.05002

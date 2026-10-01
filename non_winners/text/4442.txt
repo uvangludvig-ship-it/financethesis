@@ -1,0 +1,2168 @@
+                                 BSc thesis
+
+                        Department of Finance
+                    Stockholm School of Economics
+
+Portfolio optimization with catastrophe bonds
+
+                     Tianfang Zhang
+                 24015@student.hhs.se
+
+                      May 15, 2019
+
+                          Tutor: Jungsuk Han
+Abstract
+
+This thesis investigates properties of the returns of catastrophe bonds and their risk di-
+versification potential in portfolios. Ideas from existing literature, such as modeling the
+evolution of the outstanding principal as a compound Poisson process, are extended to
+take into account the times of occurrence of the loss events, which are important for
+the returns of catastrophe bonds with certain types of payment structure. Monte Carlo
+sampling of joint returns is used for optimization of risk measures such as value-at-risk
+and conditional value-at-risk, where a special method for rendering standard nonlin-
+ear optimization techniques applicable is developed. Numerical results performed for
+illustrative purposes showcase key characteristics of portfolios augmented by a single
+catastrophe bond as well as one exclusively consisting of catastrophe bonds.
+
+Keywords: Catastrophe bonds, Poisson processes, portfolio theory, risk diversification, value-at-
+risk, conditional value-at-risk.
+
+                                  1
+Contents
+
+1 Introduction 4
+   1.1 Catastrophe bonds . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
+         1.1.1 Preliminaries . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
+         1.1.2 Restrictions . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+         1.1.3 Examples of catastrophe bonds . . . . . . . . . . . . . . . . . . 7
+   1.2 Catastrophe bonds in portfolios . . . . . . . . . . . . . . . . . . . . . . 8
+         1.2.1 Comparison with equity and bond market . . . . . . . . . . . . 8
+         1.2.2 Literature review . . . . . . . . . . . . . . . . . . . . . . . . . 10
+   1.3 Aim and research questions . . . . . . . . . . . . . . . . . . . . . . . . 11
+
+2 Theoretical framework 12
+   2.1 General mathematical notation . . . . . . . . . . . . . . . . . . . . . . 12
+   2.2 Probability theory . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 13
+         2.2.1 Probability spaces and random variables . . . . . . . . . . . . . 13
+         2.2.2 Common distributions . . . . . . . . . . . . . . . . . . . . . . 14
+         2.2.3 Poisson processes . . . . . . . . . . . . . . . . . . . . . . . . . 15
+   2.3 Portfolio theory and risk valuation . . . . . . . . . . . . . . . . . . . . 17
+         2.3.1 Preliminaries . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
+         2.3.2 Mean-variance analysis . . . . . . . . . . . . . . . . . . . . . . 18
+         2.3.3 Stock processes and geometric Brownian motions . . . . . . . . 20
+         2.3.4 Risk measures . . . . . . . . . . . . . . . . . . . . . . . . . . 21
+   2.4 Numerical methods . . . . . . . . . . . . . . . . . . . . . . . . . . . . 23
+         2.4.1 Monte Carlo sampling . . . . . . . . . . . . . . . . . . . . . . 23
+         2.4.2 Optimization . . . . . . . . . . . . . . . . . . . . . . . . . . . 23
+
+3 Main work 25
+   3.1 Loss modeling of cat bonds . . . . . . . . . . . . . . . . . . . . . . . . 25
+         3.1.1 Discontinuous uniform model . . . . . . . . . . . . . . . . . . 25
+         3.1.2 Compound Poisson process . . . . . . . . . . . . . . . . . . . 27
+   3.2 Gradient-based optimization on VaR and CVaR . . . . . . . . . . . . . 29
+         3.2.1 Variance as risk measure . . . . . . . . . . . . . . . . . . . . . 29
+         3.2.2 Smoothing by auxiliary noise . . . . . . . . . . . . . . . . . . 30
+
+                                  2
+4 Numerical results 35
+   4.1 Mean-variance analysis of stock portfolio . . . . . . . . . . . . . . . . 35
+   4.2 Single catastrophe bond in stock portfolio . . . . . . . . . . . . . . . . 37
+         4.2.1 Discontinuous uniform model . . . . . . . . . . . . . . . . . . 37
+         4.2.2 Compound Poisson model . . . . . . . . . . . . . . . . . . . . 39
+   4.3 Catastrophe bond portfolio . . . . . . . . . . . . . . . . . . . . . . . . 41
+
+5 Discussion 43
+   5.1 Summary and conclusions . . . . . . . . . . . . . . . . . . . . . . . . 43
+   5.2 Novelty and impact . . . . . . . . . . . . . . . . . . . . . . . . . . . . 44
+   5.3 Further work . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 44
+
+6 References 46
+
+                                  3
+Chapter 1
+
+Introduction
+
+With the currently ongoing climate changes, natural catastrophes are occurring with
+increasingly higher frequency. In 2017, hurricanes in the Atlantic ocean alone caused
+damage worth over 280 billion USD and insured losses of over 80 billion USD [3]. If left
+unmanaged, the risks associated with such catastrophic events would be overwhelming
+for insurance companies, and as a consequence contracts are often written with so called
+reinsurance companies in order to relieve parts of these risks in exchange for a premium.
+Reinsurance is a central part of the risk management of insurance companies and have
+traditionally been handled by large global reinsurance companies such as Munich Re,
+Swiss Re and Hannover Re.
+    In recent years, however, a type of financial product known as insurance-linked
+securities (ILSs) has gained popularity in serving a similar purpose. ILSs are broadly
+defined as financial instruments whose values are driven by insurance loss events, and a
+particular type of ILSs are catastrophe bonds which are triggered by catastrophic events
+such as earthquakes or hurricanes. From the perspective of an investor, the risk associ-
+ated with a catastrophe bond is vastly different in nature compared to that of e g stocks,
+bonds or options due to a highly skewed return distribution in which tail events are the
+main drivers of the bond price. As a consequence, parameters in loss models are often
+hard to estimate with satisfactory certainty, which makes accurate pricing hard.
+    Due to the fundamental independence between trigger events of catastrophe bonds
+and other market events, it is often claimed that catastrophe bonds are efficient in di-
+versifying portfolio risks [23] and, furthermore, can form successful portfolios entirely
+on their own. Given this independence, it is perhaps not surprising that there is a gain
+from including the possibility of taking positions in one or multiple catastrophe bonds,
+but quantifying this gain will require modeling of their losses and risks.
+
+                                  4
+1.1 Catastrophe bonds
+
+1.1.1 Preliminaries
+
+In 1984, the Swedish state-owned corporation Svensk Exportkredit launched what can
+be considered as the earliest known instance of a catastrophe bond [5]. This took the
+form of a private placement of earthquake bonds which were immediately redeemable
+if a major earthquake hit Japan, and Japanese insurers bought these and agreed to accept
+coupons with relatively low rate as premium for the right to put the bonds back to the
+issuer at face value should an earthquake occur [5]. Ever since then, catastrophe bonds
+have been issued in many different formats, varying in perils, trigger mechanisms, pay-
+ment structures, etc. Unlike e g corporate bonds, which behave similarly as catastrophe
+bonds with the event of default analogous to that of a catastrophe occurring, the returns
+of catastrophe bonds cannot be replicated by only ordinary bonds and stocks and thus
+cannot be hedged by primitive instruments.
+    Starting with formalities, the issuer of a catastrophe bond—that is, the party whose
+risks are to be relieved, typically an insurance or reinsurance company—is called the
+sponsor, and a counterparty buying the bond and assuming the specified risk is called
+an investor. When issuing a catastrophe bond, a contract size is decided by the sponsor,
+which is the desired amount of cash to be raised from the capital market. There is,
+however, no guarantee that this amount will be met—this will depend on the market’s
+interest in the specific contract. An investor buying the bond pays an amount called
+the original principal at the time of the purchase, and the degree of participation of one
+investor is given by the ratio between the original principal and the contract size [10].
+   The money raised from the market is placed in a special purpose vehicle (SPV),
+which can be seen as a third party whose sole purpose is to manage the money and handle
+eventual payments to the sponsor and the investors. The SPV, in turn, puts the money
+in a collateral account, usually consisting of low-risk investments such as government
+bonds. For the investors, the SPV comprises a protection from risks such as that of the
+sponsor going bankrupt, whereas for the sponsor, it has the effect of ear-marking the
+money in the collateral account. During the term of the bond, coupon payments are paid
+regularly to the investors from the SPV. If one or multiple catastrophic events which meet
+the criteria of the contract occur, the sponsor withdraws corresponding amounts from the
+collateral account. The remaining amount in the collateral account at a given time during
+the term of the bond is called the outstanding principal. At maturity, the outstanding
+principal, if any remaining, is repaid to the investors, and the SPV is closed. Of special
+importance is the fact that in most cases, the coupon payments are proportional to the
+outstanding principal [14, 10].
+    For each catastrophe bond issued, there is a legal document defining the circum-
+stances under which money may be withdrawn from the SPV by the sponsor and how
+the severity of these circumstances translate into the size of the instrument loss. Typ-
+ically, each catastrophe bond has a specific peril—that is, a type of catastrophe trig-
+gering the bond, such as earthquakes, hurricanes or windstorms—and a risk exposure
+area—that is, the geographic area in which catastrophes may lead to instrument losses,
+
+                                  5
+such as “US east coast”, “Japan” or “northern Europe”. For the calculation of the ac-
+tual instrument loss associated with a certain event, there are different types of trigger
+mechanisms. In the case of an indemnity trigger, actual losses for the sponsor are deter-
+mined with respect to definitions and standards stated in the contract (which may be a
+tedious process); for a modeled loss trigger, the instrument losses are instead based on
+statistics such as earthquake magnitude regardless of the actual losses incurred for the
+sponsor; for a parametric trigger, the instrument losses are determined from a formula
+based on continuous measurements of metrics such as air pressure or wind speed; and
+for an industry loss index trigger, the instrument losses are instead based on an index of
+the losses of the insurance industry following an event. The probability that instrument
+losses are incurred at all is usually called the attachment probability, and the probabil-
+ity that the outstanding principal is zero at maturity is called the exhaustion probability
+[14, 10].
+
+Figure 1.1: Illustration of cash flows in a typical catastrophe bond contract. (1) shows the payment
+of the initial principal by the investors, (2) shows the coupon (and interest) payments to the in-
+vestor, (3) shows the eventual repayment of the outstanding principal at maturity and (4) shows
+the eventual payments from the SPV to the sponsor.
+
+1.1.2 Restrictions
+
+Due to the vast amount of different payment structures for catastrophe bonds in the mar-
+ket today, it is not possible to analyze losses and risks without first making some restric-
+tions. In this thesis, only catastrophe bonds with coupons of constant rate and propor-
+tional to the outstanding principal at the time of payment will be considered. Eventual
+interest yields from the collateral account (which are normally paid forward to the in-
+vestors) will be disregarded and joined with the coupons, and the canonical payment
+structure will be that demonstrated in Example 1 below. Each event qualified as a catas-
+trophe according to the contract terms will be assumed to incur an immediate instrument
+loss—that is, an immediate reduction of outstanding principal—although other ways of
+
+                                  6
+loss calculation, such as annual aggregation of catastrophe event severities, are common
+[14]. Also, all types of transaction costs will be disregarded.
+
+1.1.3 Examples of catastrophe bonds
+
+Example 1 is taken from [14] and illustrates typical cash flow scenarios for an investor
+of a catastrophe bond, where it is showcased that both the degrees of severity of the
+catastrophes and their times of occurrence are important. Example 2 is also taken from
+[14] and is a real-world example of how the terms of a cat bond may be specified. Ex-
+ample 3 is a catastrophe bond with somewhat different and more complex properties,
+taken from [5].
+
+Example 1 (Cash flow). Consider a one-year catastrophe bond with original principal
+100 and quarterly coupon payments, where the coupon rate is 10 % per annum, quar-
+terly compounded. If no catastrophe occurs, the outstanding principal is constantly
+equal to 100 over the whole term, and the cash flow for the investor is as in Table 1.1
+below. The nominal net cash flow is 10.
+
+                   Table 1.1: Cash flow for investor if no catastrophe occurs.
+
+                  t (years) 0 0.25 0.5 0.75 1
+                Cash flow −100 2.5 2.5 2.5 102.5
+
+If, instead, a catastrophe occurs at t = 0.6 such that the sponsor immediately withdraws
+the whole original principal from the collateral account, the cash flow would be as in
+Table 1.2 below. The nominal net cash flow is −95.
+
+                 Table 1.2: Cash flow for investor if a large catastrophe occurs.
+
+                    t (years) 0 0.25 0.5 0.75 1
+                  Cash flow −100 2.5 2.5 0 0
+
+Lastly, consider the case of a smaller catastrophe occurring at t = 0.6 leading to a re-
+duction of the outstanding principal by 50. Since the coupon payments are proportional
+to the outstanding principal, the cash flow would be as in Table 1.3. The nominal net
+cash flow is 42.5.
+
+                Table 1.3: Cash flow for investor if a smaller catastrophe occurs.
+
+                  t (years) 0 0.25 0.5 0.75 1
+                Cash flow −100 2.5 2.5 1.25 51.25
+
+                                  7
+Example 2 (Calypso Capital II Ltd). The following catastrophe bond is a real-world ex-
+ample with the following specifications [14]:
+
+            Table 1.4: Specifications of the Calypso Capital II Ltd catastrophe bond.
+
+          SPV: Calypso Capital II Ltd, class A
+         Sponsor: AXA Global P&C
+          Trigger mechanism: Industry loss index
+          Peril: European windstorm
+          Size: 185 million EUR
+          Risk period: Jan 1, 2014–Dec 31, 2016
+          Annual attachment probability: 1.45 %
+          Annual exhaustion probability: 0.61 %
+
+Example 3 (Winterthur windstorm bonds). In 1998, the Swiss insurance company Win-
+terthur, named after the city in which it is based, issued three-year annual coupon bonds
+with face value 4 700 Swiss francs. The coupon rate of 2.25 % was subject to the risk of
+windstorm damage of automobiles owned by the company’s insurance customers during
+a specified period each year—if the number of automobile windstorm claims during the
+period exceeded 6 000, the coupon for the corresponding year was not paid. Further-
+more, at maturity, each bond was convertible to five shares of Winterthur common stock.
+The deal was described in the trade press and was valued in an article in 1999 [5].
+
+1.2 Catastrophe bonds in portfolios
+
+1.2.1 Comparison with equity and bond market
+
+Given the risk diversification benefits of taking positions in catastrophe bonds for insur-
+ance and reinsurance companies, it is natural to investigate whether they are also able to
+benefit “ordinary” investors in terms of return and risk. The market has grown steadily
+over the years, with about 32 billion USD of public deals outstanding as of 2018 [22].
+An overview of the returns from the catastrophe bond market after 2006 is seen in Figure
+1.2, where catastrophe bond market indices are compared to equity and bond indices.
+The dark blue line shows the Swiss Re Global Cat Bond Total Return Index, which is a
+market-value weighted index of cat bonds, excluding life and health bonds. The yellow
+line is the Eurekahedge ILS Advisers Index, which is an equally weighted index of 31
+constituent funds, designed to provide a broad measure of the performance of underly-
+ing hedge fund managers who explicitly allocate to insurance-linked investments. The
+light blue line is the MSCI World Net Total Return Index, representing the equity mar-
+ket, and the green line is the Bloomberg Barclays Capital Global Aggregate Bond Index,
+representing the bond market. Figures 1.3, 1.4 show, respectively, descriptive statistics
+and cross-correlations.
+
+                                  8
+Figure 1.2: Comparison of returns for two market indices for catastrophe bonds (dark blue and
+yellow) against those for equity and bonds, 2006–2019 [22]
+
+Figure 1.3: Comparison of descriptive statistics for two market indices for catastrophe bonds
+against those for equity and bonds [22].
+
+                                  9
+Figure 1.4: Cross-correlations between two market indices for catastrophe bonds and those for
+equity and bonds [22].
+
+    By inspection of the figures provided, it is easy to see that catastrophe bonds present
+appealing alternatives for investors. First, Figure 1.2 shows higher as well as less volatile
+returns for the catastrophe bond market, which is confirmed in Figure 1.3 where Sharpe
+ratios of 2.39 and 1.69 are contrasted to 0.45 and 0.69. Second, Figure 1.4 provides
+evidence of low correlations between catastrophe bond returns and the equity and bond
+markets, which motivates their often claimed diversification potential.
+
+1.2.2 Literature review
+
+The topic of the risk diversification benefits of catastrophe bonds in portfolios, either
+as complement to other assets or entirely on their own, has been addressed in numerous
+published studies as well as online articles. A general discussion of the topic is done in
+[23], as well as a review of the contemporary literature on catastrophe bond pricing and
+risk modeling. A more technical study of the quantitative effects of including catastro-
+phe bonds in portfolios is done in [21]. [11], [4] and [22] provide short presentations of
+the topic accessible for the general reader and illustrate clearly why catastrophe bonds
+are interesting from an investor’s perspective.
+    In particular, a variety of valuation models for catastrophe bonds have been pro-
+posed since the early 2000s. [12] studied in 1999 the general concept of catastrophe
+bonds from a quantitative finance perspective. Soon thereafter, [5] developed in 2000
+a pricing model based on a term structure model and certain probability features for the
+catastrophe risk exposure, which became one of the most frequently cited papers on the
+subject. Many authors have focused on the problem of finding relevant factors and de-
+veloping some regression model for the price. For example, a model based on factors
+such as interest rate, credit rating and expected loss is proposed in [15], and an analysis is
+done in [2] based on a series of least-squares regressions corrected for heteroskedasticity
+and autocorrelation, where significances of additional factors such as covered territory,
+sponsor and reinsurance cycle are determined. [7] investigated the effect of a major
+catastrophic event, such as the hurricane Katrina, on catastrophe bond prices, and [16]
+also examined the impact of financial market volatility. For a thorough evaluation of
+similar models in literature, see e g [13] and [18].
+
+                                  10
+    Although the majority of the existing literature has been focused on evaluating the
+significance of price determinants, other authors have addressed the modeling of the
+probability distributions of catastrophe occurrences and their influence on the price and
+risk of catastrophe bonds. A simplistic yet illustrative model is developed in [1] based
+on somewhat different assumptions than those used in this thesis, where the possibility
+of one catastrophic event occurring is modeled by a Poisson-distributed stopping time.
+A more sophisticated pricing model is presented in [20], based on a Cox–Ingersoll–Ross
+interest rate and an aggregated loss specified as a compound Poisson process with log-
+normal jumps; these authors, however, also use a somewhat different payoff structure
+than in this thesis, although the underlying loss process is almost identical to that used
+here. Poisson processes also occur in the loss models in [14].
+    Other miscellaneous topics on catastrophe bonds addressed in literature include
+moral hazard issues between the sponsor and the investors [20, 6] and role of credit
+rating classes [9].
+
+1.3 Aim and research questions
+
+The thesis at hand aims to investigate the risk diversification potential of catastrophe
+bonds in equity and bond portfolios, as well as the performance of portfolios only con-
+sisting of catastrophe bonds. More precisely, by developing a loss model for catastrophe
+bonds and optimizing on risk measures such as value-at-risk and conditional value-at-
+risk in a one-period portfolio optimization problem, the risk diversification effect is
+quantified for given model parameters. Focus will be on theoretical and computational
+aspects of the models rather than on making inferences from real-world data. The thesis
+is based on the following research questions:
+
+    • How can one model the return of a catastrophe bond given specifications of the
+      distributions of catastrophe frequency and severity?
+
+    • How can one minimize the risk associated with a portfolio of ordinary assets
+      and/or catastrophe bonds subject to some mean return constraint?
+
+    • How is the tradeoff between mean return and risk affected by the inclusion of a
+      catastrophe bond in a portfolio of ordinary assets?
+
+    • What are the characteristics of portfolios consisting of only catastrophe bonds?
+
+                                   11
+Chapter 2
+
+Theoretical framework
+
+In order to precisely describe the models used in this thesis, it is necessary to first ac-
+quaint the reader to some of the necessary mathematical theory. The following sections
+are brief summaries of chosen topics and are by no means exhaustive of all theory used
+in this thesis.
+
+2.1 General mathematical notation
+
+A set S with elements s1, ..., sn is denoted by S = {s1, ..., sn}, for which we shall often
+                               n
+use the shorthand notation S = {si}i=1. Similarly, a collection {X(t) : t ∈ R, t ≥ 0}
+will be denoted by {X(t)}t≥0. A vector v with components v1, ..., vn will be denoted by
+           T
+v = (v1, ..., vn) , where the superscript T indicates transpose and where the convention
+is that vectors are column vectors. Similarly, a matrix A where Aij is the component
+in row i and column j will be denoted by A = (Aij )i,j . For a vector v, diag v is the
+matrix with the components of v on its diagonal and zero elsewhere. The one-vector
+           T
+e = (1, ..., 1)  and the identity matrix I = diag e are often used when formulating
+problems on vector form.
+                                                              n
+   For a multivariate, scalar-valued, twice differentiable function f : R  → R written
+as f (x), the gradient
+                         (             )T
+                       ∂f (x)     ∂f (x)    ∂f (x)
+                            =       , ...,
+                       ∂x      ∂x1      xn
+is a vector collecting all partial derivatives, and the Hessian
+                           (      )n
+                                2             2
+                         ∂ f (x)     ∂ f (x)
+                         2 =
+                           ∂x       ∂xi ∂xj
+                                                                  i,j=1
+
+                                                                 T
+is the matrix collecting all second partial derivatives. If f (x) = (f1(x), ..., fm(x))  is
+vector-valued, the Jacobian ∂f (x)/∂x is the matrix
+                             (      )m,n
+                           ∂f (x)     ∂fi(x)
+                            =             .
+                          ∂x      ∂xj
+                                                               i,j=1
+
+                                  12
+In calculations, it is often convenient to introduce the indicator function 1(A), which
+takes the value 1 if the predicate A is true and 0 otherwise—in particular, we have the
+Kronecker delta δij = 1(i = j).
+
+2.2 Probability theory
+
+The following is a short summary of the most important parts—for a thorough mathe-
+matical treatment of probability theory, see e g [19].
+
+2.2.1 Probability spaces and random variables
+
+A probability space is a triplet (Ω, F, P), where Ω is the sample space, a set containing
+all possible events, where F is the associated σ-algebra, consisting of subsets of Ω,
+and where P : F → [0, 1] is a probability measure, assigning for each event A ∈
+Ω a probability P A. σ-algebras and the probability measures have to satisfy certain
+properties (see [19] for details). Of particular interest is the Borel σ-algebra B, defined
+as the smallest σ-algebra on R containing all open intervals.
+   A real-valued random variable on a probability space (Ω, F, P) is a function X :
+                 −1
+Ω → R such that X  (B) = {ω : X(ω) ∈ B} ∈ F for each B ∈ B. Its distribution
+is described by the cumulative distribution function (cdf) FX (x) = P(X ≤ x), which
+is non-decreasing and ranges from 0 to 1. If FX (x) is differentiable, the distribution of
+X is also determined by the probability density function (pdf) fX (x) = ∂FX (x)/∂x.
+Else, if X only takes values in a discrete set S, its distribution can also be described by
+the probability mass function (pmf) pX (x) = P(X = x), x ∈ S. Two random variables
+X, Y are independent if and only if their joint cdf FX,Y (x, y) = P(X ≤ x, Y ≤ y) can
+be written as FX,Y (x, y) = FX (x)FY (y).
+   The expectation E X of a random variable X is given by the Lebesgue–Stieltjes
+integral (for the precise meaning of this, see e g [19])
+                    ˆ ∞          ˆ ∞
+                 E X =     x dFX (x) =     xfX (x) dx,
+                  −∞         −∞
+
+where the latter is well-defined only if fX (x) exists. The variance Var X of X is given
+by                          [           ]
+                                              2         2          2
+              Var X = E (X − E X)  = E[X ] − E[X] ,
+
+and the covariance Cov[X, Y ] between two random variables X, Y is given by
+
+        Cov[X, Y ] = E [(X − E X)(Y − E Y )] = E[XY ] − E X E Y .
+
+                  T
+If X = (X1, ..., Xn)  is a vector, E X is the componentwise expectation E X =
+             T                                   n
+(E X1, ..., E Xn) . The covariance matrix Var X = (Var X)i,j=1 is defined compo-
+                                                          T
+nentwise by (Var X)ij = Cov[Xi, Xj ] or in vector form by Var X = E[XX ] −
+        T
+E[X] E[X] .
+
+                                  13
+2.2.2 Common distributions
+
+Below are some common distributions of random variables, described by their cdf’s and
+pdf’s/pmf’s.
+
+Definition 1 (Uniform). A random variable X is uniformly distributed on the interval
+(a, b), denoted X ∼ U(a, b), if
+                  
+                           0, x < a,
+                  
+                           x − a
+                    FX (x) =       , a ≤ x ≤ b,
+                         b − a
+                  
+                                      1, x > b,
+and                   
+                            0, x < a, x > b,
+                    fX (x) =    1
+                              , a ≤ x ≤ b.
+                            b − a
+Definition 2 (Normal). A scalar-valued random variable X is normally distributed with
+                        2                       2
+mean μ and variance σ , denoted X ∼ N(μ, σ ), if
+                         (     (     ))
+                          1         x − μ
+                   FX (x) =    1 + erf   √
+                            2          σ  2
+and                          (       )
+                                                            2
+                             1         (x − μ)
+                   fX (x) = √   exp  −     2    .
+                          σ  2π         2σ
+A vector-valued random variable X is multivariate normal with mean μ and covariance
+                             T       T   T
+matrix Σ, denoted by X ∼ N(μ, Σ), if a X ∼ N(a μ, a Σa) for all a.
+
+Definition 3 (Log-normal). A random variable X is log-normally distributed with mean
+                  2                         2
+μ and variance σ , denoted X ∼ LN(μ, σ ), if
+                        (     (       ))
+                           1         ln x − μ
+                   FX (x) =    1 + erf    √
+                           2           σ  2
+and                          (         )
+                                                              2
+                            1          (ln x − μ)
+                  fX (x) = √   exp  −      2     .
+                         σx  2π          2σ
+
+                                                                2
+In particular, a scalar-valued random variable X is LN(μ, σ ) if and only if ln X ∼
+       2
+N(μ, σ ), and a vector-valued random variable X is LN(μ, Σ) if and only if ln X ∼
+N(μ, Σ).
+
+Definition 4 (Binomial). A random variable X is binomially distributed with parameters
+n ∈ N and 0 < p < 1, denoted X ∼ Bin(n, p), if
+               
+                     0, x < 0,
+                  ( )
+                                  ⌊x⌋
+            FX (x) =  ∑ n
+                              k      n−k
+                             p (1 − p)   , x ≥ 0,
+                             k
+                            k=0
+
+                                  14
+and                ( )
+                          n   k      n−k
+                 pX (k) =     p (1 − p)   , k ∈ N ∪ {0}.
+                         k
+
+Definition 5 (Poisson). A random variable X is Poisson distributed with rate λ, denoted
+X ∼ Po(λ), if
+                 
+                          0, x < 0,
+                 
+                                            ⌊x⌋   k
+                FX (x) =     ∑ λ
+                        −λ
+                          e        , x ≥ 0,
+                                                k!
+                                     k=0
+and
+                                         k
+                             −λ λ
+                      pX (k) = e     , k ∈ N ∪ {0}.
+                                          k!
+Definition 6 (Exponential). A random variable X is exponentially distributed with rate
+λ, denoted X ∼ Exp(λ), if
+                    {
+                                  0, x < 0,
+                    FX (x) =      −λx
+                               1 − e   , x ≥ 0,
+
+and                       {
+                                    0, x < 0,
+                       fX (x) =    −λx
+                                 λe   , x ≥ 0.
+
+2.2.3 Poisson processes
+
+A Poisson process can be thought of as a counting process of events which occur with
+constant rate and independently of each other. Due to its convenient properties and
+relatively weak assumptions, it is widely used for modeling stochastic phenomena in
+numerous areas in science and engineering. Over time, it is nondecreasing and piecewise
+constant, with discontinuities at certain jump points.
+
+Example 4 (Bicycle counter). Consider a bridge on which a bicycle counter has been
+installed, displaying the number of bicycles that have crossed the bridge that day. Dis-
+regarding the fact that the bicycle traffic is likely to be heavier at certain times of the
+day, e g rush hour, and assuming that the event of one cyclist crossing the bridge is
+independent of those of all other cyclists crossing, we can model the count at each time
+of the day as a Poisson process.
+
+Formally, Poisson processes are defined as follows:
+
+Definition 7 (Poisson process). A Poisson process with rate λ is a time-indexed collection
+{M (t)}t≥0 of random variables such that
+
+  (i) M (0) = 0,
+
+                                  15
+  (ii) for each finite collection 0 = t0 < t1 < t2 < ..., the increments {M (ti+1) −
+     M (ti)}i≥0 are independent, and
+
+ (iii) M (t) ∼ Po(λt) for all t.
+
+    Poisson processes have many interesting properties, one of which is memorylessness
+in the sense that at any given time, the distribution of the time of the next jump does not
+depend on the time since the last jump. Letting 0 = t0 < t1 < t2 < ... be the times of
+                          −      +
+the jumps, i e {ti}i≥1 = {t ≥ 0 : M (t ) ̸= M (t )}, and letting ∆ti = ti − ti−1 for
+all i, we have that
+
+                                                  ′              ′
+                    P(∆ti > t + t | ∆ti > t ) = P(∆ti > t).
+
+One can prove that the interarrival times {∆ti}i≥0 are in fact independent and identi-
+cally Exp(λ)-distributed, where λ is the rate of the Poisson process. Furthermore, we
+have the following property about the distribution of {ti}i≥1, which will be important
+for sampling Poisson processes:
+
+                                                      N
+Theorem 1. Let T > 0, let N ∼ Po(λT ) for some constant λ > 0, and let {τi}i=1
+be conditionally independent given N and U(0, T )-distributed. Then the collection
+{M (t)}t∈[0,T ], where
+                 ∑N
+                           M (t) =    1(τi ≤ t)
+                                            i=1
+for each t, is a Poisson process with rate λ on [0, T ].
+
+Proof. Properties (i) and (ii) in Definition 7 are trivially satisfied due to the indicator
+functions. For (iii), note that M (t) | N = n ∼ Bin(t/T , n) since the event M (t) = k
+amounts to finding k of the τi below and n − k above t. Hence, by the tower property,
+direct calculation of the pmf gives
+
+             pM (t)(k) = P(M (t) = k)
+                    = E [P(M (t) = k | N )]
+                     [(  ) (  ) (     )   ]
+                                    k         N −k
+                        N    t    T − t
+                 = E
+                        k    T      T
+                     ( ) (  ) (     )
+                   ∑∞         k       n−k    n
+                           n    t     T − t     (λT )  −λT
+                =                         e
+                      n=0  k    T      T         n!
+                       k ∑∞        n−k
+                        −λT (λt)     (λ(T − t))
+                  = e
+                             k!        (n − k)!
+                                n=k
+                                     k
+                          −λt (λt)
+                    = e        ,
+                                 k!
+which is identified as the pmf of a Po(λt) distribution.
+
+                                  16
+    As a generalization of the Poisson process, which only counts the number of jumps
+until a certain time, the compound Poisson process has variable jumps which are iid
+random variables. The compound Poisson process can be defined as follows:
+
+Definition 8 (Compound Poisson process). Let {M (t)}t≥0 be a Poisson process with
+rate λ. A compound Poisson process with rate λ is a collection {P (t)}t≥0 of random
+variables defined by
+                                          M (t)
+             ∑
+                             P (t) =    Di
+                                               i=1
+for each t, where {Di}i≥1 are iid random variables independent of {M (t)}t≥0.
+
+Note that by virtue of Theorem 1, we can write
+
+                                    M (T )
+             ∑
+                          M (t) =     1(τi ≤ t)
+                                            i=1
+
+             M (T )
+for each t, {τi}i=1 being conditionally independent given M (T ) and U(0, T )-distributed.
+The process {P (t)}t∈[0,T ] can then be represented as
+
+                                  M (T )
+            ∑
+                          P (t) =     Di1(τi ≤ t)
+                                          i=1
+
+                    M (T )
+for each t, where {Di}i=1 are conditionally independent given M (T ), independent of
+    M (T )
+{τi}i=1 and identically distributed. This will be important for simulating compound
+Poisson processes.
+
+2.3 Portfolio theory and risk valuation
+
+This section briefly summarizes some of the most important parts from standard portfo-
+lio theory and risk valuation—for an introduction to the topic, see e g [17].
+
+2.3.1 Preliminaries
+
+                                                                   n
+Let [0, T ] be a given time period, and consider n risky assets with prices {Sj (t)}j=1 and
+                                                           T
+a risk-free asset with price S0(t) for 0 ≤ t ≤ T . Writing S(t) = (S1(t), ..., Sn(t)) , a
+position in these assets—a portfolio—is represented by a vector
+
+                                       T
+                            h(t) = (h1(t), ..., hn(t))
+
+and a scalar h0(t), where the investor is hi(t) units long in asset j at time t for each j,
+and where the total portfolio value V (t) at time t is given by
+
+            ∑n
+                                            T
+                 V (t) =    hj (t)Sj (t) = h0(t)S0(t) + h(t) S(t).
+                          j=0
+
+                                  17
+Here, a negative value of hj (t) represents a short position.
+    For the purposes of this thesis, we will assume that the positions are fixed during the
+whole time period and write h(t) = h and h0(t) = h0—in other words, we will restrict
+ourselves to solve the one-period optimal asset allocation problem. Without loss of
+generality, suppose that the initial value V (0) of the portfolio is 1. It is often convenient
+to let wj = hj Sj (0) for each j and write V (t) on the form
+
+             ∑n
+                                 Sj (t)                T
+                 V (t) =    wj      = w0R0(t) + w R(t),
+                           j=0   Sj (0)
+
+where R0(t) = S0(t)/S0(t) and
+                         (            )T
+                                   S1(t)     Sn(t)
+                         R(t) =        , ...,
+                                S1(0)     Sn(0)
+                                      ∑n
+is the vector of (geometric) returns over the period [0, t] and where   i=0 wi = 1.
+
+2.3.2 Mean-variance analysis
+
+In mean-variance analysis, the aim is to find the optimal allocation (w0, w) of resources
+such that the expected portfolio value E V (T ) at the end of the time period is maximized
+and such that the variance Var V (T ) is minimized. The latter can be interpreted as a
+quantification of the risk carried by the investor. This fundamental tradeoff between the√
+two objectives can be illustrated by drawing an efficient frontier in a plot of   Var V (T )
+against E V (t)—that is, a curve on which each point is optimal in the sense that one
+cannot improve one objective without worsening the other. Such an efficient frontier
+can be produced by solving multiple optimization problems minimizing the variance
+subject to a constraint on the mean return, varying the latter between suitable values.
+    Consider first the case when all assets are risky, which corresponds to the restric-
+tion w0 = 0. Letting μ = E R(T ) be the mean return vector of the risky assets and
+                        T     T
+Σ = Var R(T ) = E[R(T )R(T ) ] − μμ  be the covariance matrix of returns, we have
+         T                T
+E V (T ) = w μ and Var V (T ) = w Σw, so our optimization problem may be formu-
+lated as
+                                T
+                   minimize  w Σw
+                           w
+                                      T                               (2.1)
+                        subject to μ w ≥ μreq,
+                               T
+                                e w ≤ 1,
+where μreq is the required minimum mean return and e is the one-vector. The constraint
+ T              T
+e w ≤ 1 rather than e w = 1 is due to the possibility that one might not want to invest
+all initial capital if no risk-free asset is available. The solutions to (2.1) are given by the
+following result [17]:
+
+Theorem 2. All solutions to (2.1) can be written on the form
+                  (                )
+                                    T −1
+                    1  −1     max{e Σ  μ − λ, 0}
+               w =  Σ    μ −       T −1      e  ,
+                    λ               e Σ  e
+
+                                  18
+where λ > 0 is a parameter.
+         √      √
+                            T                               T
+   In a graph with   Var V (T ) =   w Σw on the horizontal axis and E V (T ) = w μ
+                                           T −1
+on the vertical axis, one can see from this that for λ ≥ e Σ  μ, the efficient frontier is
+                          T −1
+a straight line, whereas for λ < e Σ  μ, the frontier curves down as a hyperbola (see
+                               T −1
+Figure 2.1). The point for which λ = e Σ  μ (marked with a hollow circle in Figure
+2.1) corresponds to the minimum-variance portfolio where the mean return constraint
+is ignored completely, and the straight line beyond it can be interpreted as discarding a
+fraction of the initial capital.
+                                                               r0T
+    Now, introducing a risk-free asset with rate r0 and return e    over [0, T ], we have
+                     r0T     T
+instead E V (T ) = w0e   + w μ (the variance is unchanged) and are to solve
+
+                            T
+                minimize  w Σw
+                           w0,w
+                                        r0T     T                             (2.2)
+                    subject to w0e   + μ x ≥ μreq,
+                                T
+                            w0 + e w = 1.
+
+Similarly, one can show the following [17]:
+
+Theorem 3. All solutions to (2.2) are on the form
+                     1    (       )
+                           −1       r0T                T
+                w =  Σ   μ − e    , w0 = 1 − e w.
+                     λ
+Thus, it is easy to see that the entire efficient frontier is now a straight line. Comparing
+this to the previous efficient frontier (dashed line in Figure 2.1), it is not surprising to
+see that the opportunity to invest in a risk-free asset improves the efficient frontier. It
+can be shown that the dashed line is always tangent to the solid curve, and the tangency
+point corresponds to what is called the tangency portfolio. The dashed line is sometimes
+called the capital market line, and different points on this line correspond to different
+risk-aversion preferences. In particular, only the ratio of capital invested in risk-free
+assets and capital invested in risky assets is changed, while the relative capital allocation
+of the risky assets remains the same.
+
+                                  19
+Figure 2.1: Schematic plot of an efficient frontier with (dashed) and without (solid) a risk-free
+asset, with standard deviation on the horizontal axis and mean return on the vertical axis. The
+solid dot is the tangency portfolio and the hollow dot is the minimum-variance portfolio.
+
+2.3.3 Stock processes and geometric Brownian motions
+
+Stock processes are commonly modeled by geometric Brownian motions, implying log-
+normal marginal distributions of returns. The model is crude but standard due to its
+relatively weak assumptions and the existence of closed formulas, and is used in e g
+Black-Scholes option pricing. Below is a brief outline of the underlying theory—for a
+more rigorous treatment, see [8].
+                                                T
+   Consider n stocks with prices S(t) = (S1(t), ..., Sn(t))  for t ∈ [0, T ]. Built on
+the idea that the relative increment of S(t) at each time should be split into a drift term
+and a volatility term, we write
+                        dSi(t) = Si(t) (μi dt + σi dWi(t))
+
+                                T                  T
+for 1 ≤ i ≤ n, where μ = (μ1, ..., μn)  and σ = (σ1, ..., σn)  are constant param-
+                                        T
+eters and where {W (t)}t∈[0,T ] = {(W1(t), ..., Wn(t)) }t∈[0,T ] is a multidimensional
+                    n
+Brownian motion on R  with correlation E[dWi(t) dWj (t)] = ϱij dt. We then have the
+following:
+                                                    T
+Theorem 4. The return R(T ) = (S1(T )/S1(0), ..., Sn(T )/Sn(0))  is distributed as
+                ((          )              )
+                            1
+           R(T ) ∼ LN   μ −  diag(σ)σ  T , diag(σ)ϱ diag(σ)T
+                                    2
+Proof. By Itô’s lemma, we have
+            (                      )
+                   1           1   1       2 2         1
+     d ln Si(t) =       Si(t)μi −       2 Si(t) σi   dt +    Si(t)σi dWi(t)
+                   Si(t)           2 Si(t)                  Si(t)
+           (      )
+                       1  2
+             =  μi −  σi  dt + σi dWi(t)
+                     2
+
+                                  20
+or, integrating over [0, T ],
+                         (      )
+                             Si(T )          1  2
+              ln Ri(T ) = ln       =  μi −  σi  T + σiWi(T ).
+                            Si(0)          2
+
+On vector form, this amounts to
+                 (          )
+                            1
+              ln R(T ) =  μ −  diag(σ)σ  T + diag(σ)W (T ),
+                                     2
+
+and the result follows by noting that W (T ) ∼ N(0, ϱT ).
+
+2.3.4 Risk measures
+
+In classical mean-variance analysis, variance or standard deviation is used to quantify
+the risk associated with the return of a portfolio. Being simply the expected squared
+deviation from the mean, however, the variance does not differentiate between positive
+and negative deviations and only works in principle when the distribution of the return
+is completely parametrized by its mean and variance, e g in the case of a normal dis-
+tribution. This motivates the use of more sophisticated risk measures, which can take
+into account tail risks and highly skewed return distributions. Formally, we have the
+following:
+
+Definition 9 (Risk measure). Let X ∈ X be the return at t = T of a portfolio for some
+linear vector space X of random variables. A risk measure is a function ρ : X →
+R ∪ {∞}, assigning a (possibly infinite) real number to each X representing the risk
+associated with X.
+
+   The number ρ(X) can be interpreted as the minimum amount of capital that needs
+to be invested in the risk-free asset in order to make the position X acceptable. Equiv-
+alently, for our purposes, it might be convenient to instead consider the discounted loss
+             −r0T                                      T
+L = 1−V (T )e    where V (0) = 1 and V (T ) = x0R0(T )+x R(T ) are the portfolio
+values at t = 0 and t = T , respectively. The following is a list of desirable properties
+of a risk measure:
+
+                                        r0T
+  1. Translation invariance. ρ(X + ce   ) = ρ(X) − c for all c ∈ R. The interpreta-
+      tion of this is that adding an amount of c in risk-free investments will reduce the
+      risk by the same amount.
+
+  2. Monotonicity. If X1 ≥ X2, then ρ(X1) ≤ ρ(X2). That is, if some position surely
+       has higher return than another, then the first position is considered less risky.
+
+   3. Convexity. ρ (λ1X1 + λ2X2) ≤ λ1ρ(X1) + λ2ρ(X2) for all λ1, λ2 ≥ 0 such that
+     λ1 + λ2 = 1.
+
+   4. Normalization. ρ(0) = 0. This tells us that not investing anything will also imply
+       zero risk.
+
+                                  21
+   5. Positive homogeneity. ρ(λX) = λρ(X) for all λ ≥ 0. That is, if we scale the
+     size of the position by a factor λ ≥ 0, the risk will be scaled by the same amount.
+
+  6. Subadditivity. ρ(X1 + X2) ≤ ρ(X1) + ρ(X2).
+
+   There are numerous commonly used risk measures, some of which are more so-
+phisticated than others and each having its own advantages and disadvantages. For a
+thorough presentation of different examples of risk measures and their properties, see e
+g [17]. In this thesis, the study of risk measures will be restricted to value-at-risk (VaR)
+and conditional value-at-risk (CVaR).
+
+Definition 10 (Value-at-risk). The value-at-risk at level α ∈ (0, 1) of a portfolio X with
+loss L is defined as
+
+                VaRα(X) = inf {x ∈ R : FL(x) ≥ 1 − α} ,
+
+                                      −1
+where FL(x) is the cdf of L. In particular, if FL   exists, then one can write VaRα(X)
+more conveniently as
+                                     −1
+                       VaRα(X) = FL   (1 − α).
+
+    The VaR can be interpreted as the smallest amount of money required to be invested
+in the risk-free asset at t = 0 such that the probability of a positive loss at t = T is
+at most α. In practical applications, one commonly sets α to 0.01, 0.05 or 0.1. The
+VaR captures to some extent information about the right tail of the distribution of L—
+that is, loosely speaking, optimizing on VaR corresponds to controlling the presence of
+abnormally large losses. It is easy to show that VaR is translation-invariant, monotonous,
+and positive homogeneous; however, it is neither convex nor subadditive, which is one
+of its drawbacks. Another serious drawback is that VaR ignores the right tail of L beyond
+the 1 − α level quantile, which makes it possible to miss risks which are highly unlikely
+but very large in magnitude. This is especially relevant in the context of catastrophe
+bonds, where tail risks make up the main characteristics of the instrument.
+    As an improvement of VaR, one can instead use CVaR:
+
+Definition 11 (Conditional value-at-risk). The conditional value-at-risk at level α ∈ (0, 1)
+of a portfolio X with loss L is defined as
+                                  ˆ α
+                                              1                      ′
+                   CVaRα(X) =      VaRα′ (X) dα .
+                               α  0
+The motivation behind CVaR that it, instead of measuring where the “boundary” to the
+α-level upper tail lies, measures the mean in the whole tail. Indeed, when FL(x) is
+continuous, it is easy to show that
+
+                  CVaRα(X) = E [L | L ≥ VaRα(X)] .
+
+It is intuitive that measuring the mean tail loss better incorporates extreme loss events.
+Furthermore, one can show that CVaR, as opposed to VaR, is also subadditive and con-
+vex apart from being translation-invariant, monotonous and positive homogeneous.
+
+                                  22
+2.4 Numerical methods
+
+2.4.1 Monte Carlo sampling
+
+Apart from in very special cases, for a general portfolio with value X at t = T , the
+expression for ρ(X) is analytically intractable and not possible to evaluate directly. In-
+stead, the standard way to proceed is by Monte Carlo sampling of the returns, from
+which ρ(X) can be estimated. In particular, suppose that we have independent and
+                             N
+identically distributed (iid) realizations {Xi}i=1 of X, which we may obtain if the dis-
+tribution of X is known. For a portfolio with weight vector w and known joint distribu-
+                                                              n
+tion of the return vector R(T ) corresponding to the asset values {Sj (T )}j=0 at t = T ,
+                            N                         r0T     T
+we can obtain iid samples {Ri}i=1 of R(T ) where Xi = w0e   + w Ri for each i.
+                 N                       −r0T
+In turn, letting {Li}i=1 be such that Li = −Xie     for each i, the cdf FL(x) of the
+discounted loss L may be estimated by the empirical cdf
+
+                  ∑N
+                         emp      1
+                      FL   (x) =      1(Li ≤ x).
+                               N i=1
+
+Note that with this, we may estimate the VaR of X as
+
+                                         emp
+                VaRα(X) ≈ inf{x ∈ R : F L (x) ≥ 1 − α}
+
+and the CVaR of X as
+                         ˆ α
+                                  1                       emp               ′     ′
+          CVaRα(X) ≈      inf{x ∈ R : FL   (x) ≥ 1 − α } dα .
+                       α  0
+
+We shall, however, refrain from presenting details of explicitly computing these, as an
+arguably better method will be presented in Section 3.2.
+   Next, let R = (Rij )i,j be an N ×(n+1) matrix of sampled returns, where Rij is the
+return of asset j for the ith realization for all 0 ≤ j ≤ n and 1 ≤ i ≤ N —that is, each
+row Ri is the outcome of a realization of the return vector (R0(T ), R(T )) including the
+                                                −r0T
+risk-free asset. Thus, the components of ℓ = e − e    Rw, where we have included
+w0 in w, can be seen as outcomes of iid realizations of L with the resource allocation w,
+and the corresponding risk may be estimated by a function ρ(ℓ). For convenience, we
+shall adopt a slight abuse of notation and use ρ(ℓ) and ρ(X) interchangeably, where the
+former is the sample estimated risk measure and the latter a random variable defining
+the risk measure.
+
+2.4.2 Optimization
+
+In principle, we are now ready to state our main optimization problem formulation. The
+inherent tradeoff between a low estimated risk ρ(ℓ) and a high estimated expected return
+ T
+e Rw can be visualized by computing an efficient frontier similar to that in the case of
+mean-variance analysis. Again, we choose to optimize on the risk measure subject to
+
+                                  23
+                          T
+a minimum mean return constraint e Rw ≥ μreq and repeating for different values of
+μreq. The main optimization problem is thus stated as follows:
+                               (          )
+                                            −r0T
+                     minimize  ρ e − e    Rw
+                         w
+                                  1  T                              (2.3)
+                       subject to   e Rw ≥ μreq,
+                          N
+                             T
+                               e w = 1.
+
+    The problem (2.3) is a nonlinear optimization problem and typically solved numer-
+ically using some optimization solver package. For the purposes of this thesis, we shall
+use the fmincon function in MATLAB, which by default implements an interior-point
+algorithm. In short, the interior-point algorithm casts a generic nonlinear optimization
+problem
+                            minimize  f (x)
+                                 x
+                            subject to h(x) = 0,
+                                   g(x) ≤ 0
+to an approximate problem
+
+                                        T
+                        minimize  f (x) − μ  ln s
+                               x
+                          subject to h(x) = 0,
+                                    g(x) + s = 0,
+
+for all μ > 0, where s is a vector of slack variables and the logarithmic term is called the
+barrier function. At each iteration, the algorithm attempts to minimize a merit function
+on the form
+                        (                           )
+                 T            T              T
+           f (x) − μ  ln s + ν  h(x) h(x) + (g(x) + s) (g(x) + s) ,
+
+where violation of the constraints is taken into account by the ν-term. The algorithm
+relies on specifying the objective function and its gradient—in particular, one must be
+able to easily compute the gradient ∂ρ/∂w, which is not the case for the above defini-
+tions of VaR and CVaR. This issue is addressed in detail and resolved in Section 3.2.
+For more on optimization theory in general, see e g [24].
+
+                                  24
+Chapter 3
+
+Main work
+
+The main contribution of this thesis is twofold: the loss modeling of catastrophe bonds
+and the method of direct gradient-based optimization of value-at-risk and conditional
+value-at-risk. As for loss modeling, we present first a simplistic model—referred to
+as the discontinuous uniform model—intended to showcase the main characteristics of
+catastrophe bond returns, and then a more advanced model—referred to as the compound
+Poisson model. The former is mainly a special case of the two-point Kumaraswamy
+model outlined in [14], whereas the latter takes into account the possibility of multiple
+catastrophic events (which is highly probable for e g bonds with parametric or industry
+index loss trigger) and the influence of their times of occurrence on the total return of
+the bond.
+    As for the direct gradient-based optimization on VaR and CVaR, we are solving
+the problem of both being computationally intractable in the sense that they are dis-
+continuous and nondifferentiable in their empirical forms, preventing the application of
+standard optimization algorithms for which a gradient to the function must be supplied.
+Numerous methods of circumventing this problem are used in literature, such as the one
+described in the original article [25] in which CVaR was first introduced where the prob-
+lem is cast into a linear programming form; [14], for example, uses the Lagrangian dual
+of this formulation. In this thesis, the problems are overcome by the introduction of an
+auxiliary (fictional) measurement noise making VaR as well as CVaR smooth with eas-
+ily computable gradients. The method is equivalent to the technique of kernel density
+estimation and resembles the work in [26].
+
+3.1 Loss modeling of cat bonds
+
+3.1.1 Discontinuous uniform model
+
+Consider Example 2 and, in particular, the fact that the attachment and exhaustion prob-
+abilities are given. As a crude initial attempt at modeling the return distribution of a
+catastrophe bond, we shall exploit this information and divide the outcome at maturity
+into three distinct cases: (i) the outstanding principal equals the original principal, (ii)
+
+                                  25
+the outstanding principal is non-zero but smaller than the original principal, and (iii) the
+outstanding principal is zero. Denoting by pa and pe, respectively, the attachment and
+exhaustion probabilities, (i) occurs with probability 1 − pa, (ii) with probability pa − pe
+and (iii) with probability pe.
+   Let t ∈ [0, T ] be the term of a catastrophe bond and r0 the risk-free rate, where we
+are interested in the (nominal) value V (T ) at maturity of a portfolio containing only the
+catastrophe bond and the risk-free asset. Suppose that the original principal is 1 and that
+the position in the risk-free asset is 0 at t = 0, and assume continuous compounding and
+continuous coupon yield with rate c. Furthermore, in order to keep the model as simple
+as possible, suppose that at most one catastrophe may occur during the term and that, if
+                                                        +
+it occurs, it occurs immediately after the contract has been entered (that is, at t = 0  ).
+Finally, suppose that given (ii), the principal reduction due to the catastrophe is U(0, 1).
+The model built on these assumptions will be referred to as the discontinuous uniform
+model.
+   For (iii), it is clear that V (T ) = 0 since the bond loses all of its value as soon as
+the collateral account is exhausted. For (i), note that the continuously paid coupons
+are constant in nominal value over the whole term. During each infinitestimal interval
+[t, t + dt), a coupon of c dt is received and immediately invested in the risk-free asset,
+                              r0(T −t)
+the value of which will be ce      dt at t = T . Integrating, we get that V (T ) in this
+case will amount to
+                        ˆ T                  (       )
+                                     r0(T −t)            c    r0T
+              V (T ) = 1 +    ce      dt = 1 +    e   − 1 ,
+                               0                     r0
+
+where the added 1 is the repayment of the whole original principal. Similarly, for (ii), if
+the outstanding principal after the catastrophe and at maturity is P (T ), we have that
+                          (     (      ))
+                                              c    r0T
+                    V (T ) = P (T )  1 +    e   − 1   .
+                                           r0
+
+   In other words, in terms of the random variable P (T ), where P(P (T ) = 1) = 1−pa,
+P(P (T ) = 0) = pe and P (T ) | 0 < P (T ) < 1 ∼ U(0, 1), the cdf FV (T )(x) of V (T )
+may be written as
+            
+                  0, x < 0,
+            
+                  p − p
+                               a     e
+         FV (T )(x) =              x + pe, 0 ≤ x < 1 + cχ(0, T ),
+                  1 + cχ(0, T )
+            
+            
+                      1, x ≥ 1 + cχ(0, T ),
+
+where we have introduced the function χ(t1, t2), defined for 0 ≤ t1 < t2 ≤ T as
+                              ˆ t2                 r0(T −t1)     r0(T −t2)
+                               r0(T −t)      e        − e
+               χ(t1, t2) =     e       dt =                     .
+                                 t1                            r0
+
+In particular, we have the following:
+
+                                  26
+Proposition 1. The expected value E V (T ) at maturity of a catastrophe bond as defined
+in the discontinuous uniform model with unit original principal is given by
+                             (       )
+                                            pa + pe
+                  E V (T ) = (1 + cχ(0, T ))  1 −         .
+                                              2
+
+Proof. Direct calculation gives
+
+ E V (T ) = (1 + cχ(0, T )) E P (T )
+         = (1 + cχ(0, T )) (0pe + 1(1 − pa) + E[P (T ) | 0 < P (T ) < 1](pa − pe))
+                 (       )
+                            pa + pe
+         = (1 + cχ(0, T ))  1 −         ,
+                              2
+using the fact that E[P (T ) | 0 < P (T ) < 1] = E U(0, 1) = 1/2.
+
+For illustration, a plot of the cdf of V (T ) for parameters T = 1, r0 = 0.05, c = 0.25,
+pa = 0.4 and pe = 0.2 is shown in Figure 3.1, where E V (T ) ≈ 0.88.
+
+                                              Cdf of V(T)
+
+              1
+
+              0.8
+
+              0.6
+             (x)
+
+               V(T)
+          F 0.4
+
+              0.2
+
+              0
+
+                   0 0.2 0.4 0.6 0.8 1 1.2
+                                               x
+
+Figure 3.1: Plot of the cdf of V (T ) for the discontinuous uniform model with parameters T = 1,
+r0 = 0.05, c = 0.25, pa = 0.4 and pe = 0.2.
+
+3.1.2 Compound Poisson process
+
+In this model, we shall try to take into account the times of occurrence of the underlying
+catastrophe events more carefully than for the discontinuous uniform model. Since the
+coupons are central for the profitability of owning the bond and are affected by the arrival
+times of the events, as illustrated in Example 1, it is important not only to incorporate
+the possibility that several catastrophic events may occur but also model their arrival
+time distributions. Furthermore, it is reasonable to assume that the catastrophic events
+vary in degree of severity.
+
+                                  27
+    Let {P (t)}t∈[0,T ] be the outstanding principal process over the term [0, T ] of a catas-
+trophe bond with unit original principal P (0) = 1. Motivated by the above, suppose that
+{P (t)}t∈[0,T ] follows a compound Poisson process with rate λf , where {M (t)}t∈[0,T ] is
+the associated Poisson process with the same rate counting the number M (t) of catastro-
+phes that have occurred in the time interval [0, t] for each t ∈ [0, T ]. Suppose, further-
+                                                                        M (T )
+more, that the catastrophes (M (T ) in total) can be represented by pairs {(τi, Di)}i=1 ,
+where the τi are the arrival times of the catastrophes and Di are the corresponding
+reductions in outstanding principal (severities) of the catastrophes. Finally, suppose
+                     M (T )
+that the severities {Di}i=1 are conditionally independent given M (T ) and identically
+Exp(λs)-distributed.
+   Just as for the discontinuous uniform model, we seek the nominal value V (T ) of
+a portfolio only containing the catastrophe bond and the risk-free asset, with initial
+                                                         M (T )
+value V (0) = 1 all invested in the former. Note that the {τi}i=1 are the (not nec-
+essarily sorted) jump times in the processes {M (t)}t∈[0,T ] and {P (t)}t∈[0,T ], which by
+the properties of the Poisson process are conditionally independent given M (T ) and
+U(0, T )-distributed. We can thus for each t ∈ [0, T ] write M (t) and P (t) as
+
+                                    M (T )
+             ∑
+                          M (t) =     1(τi ≤ t)
+                                            i=1
+and                                
+                             M (T )           
+             ∑
+                   P (t) = max  1 −     Di1(τi ≤ t), 0  ,
+                                  
+                                             i=1
+which leads to the following:
+
+Proposition 2. Letting 0 = τ(0) ≤ τ(1) ≤ ... ≤ τ(M (T )) ≤ τ(M (T )+1) = T be the sorted
+arrival times, we can write
+                             
+               M (T )       M (T )        i         (        )
+       ∑    ∑    ∑
+ V (T ) = max  1 −     Dj , 0  + c     max  1 −    D(j), 0  χ  τ(i), τ(i+1)  .
+                                    
+                       j=1              i=0             j=1
+                   [        )
+Proof. In each interval  τ(i), τ(i+1) , 0 ≤ i ≤ M (T ), the outstanding principal is con-
+                                                  [        )
+stantly P (τ(i)), and in each infinitesimal interval [t, t + dt) ⊂  τ(i), τ(i+1)  we have that
+                                     (  )
+                                                           r0(T −t)
+the contribution to V (T ) due to coupon yield is cP  τ(i)  e       dt, where c is the con-
+tinuously compounded coupon rate. Integrating and summing over all subintervals, we
+
+                                  28
+get that
+                  M (T ) ˆ τ(i+1)    (   )
+      ∑
+                                             r0(T −t)
+ V (T ) = P (T ) +            cP  τ(i)  e       dt
+                          i=0   τ(i)
+                 M (T )  (   )  (        )
+       ∑
+       = P (T ) + c     P  τ(i)  χ  τ(i), τ(i+1)
+                       i=0
+                             
+               M (T )       M (T )        i         (        )
+       ∑    ∑    ∑
+       = max  1 −     Dj , 0  + c     max  1 −    D(j), 0  χ  τ(i), τ(i+1)  ,
+                                    
+                       j=1              i=0             j=1
+
+where P (T ) is added as the repayment of the outstanding principal at maturity.
+
+   Mainly due to the positive part operators x  7→ max{x, 0}, even the expectation
+of V (T ) is intractable, but it is on the other hand easy to sample from V (T ) since all
+distributions are well-defined. In practice, a realization of V (T ) is obtained by the
+following procedure:
+
+   1. Draw M (T ) ∼ Po(λf T ).
+
+               M (T )
+   2. Draw {τi}i=1 as iid realizations of a U(0, T )-distributed variable and sort in
+                                  M (T )
+      increasing order to obtain {τ(i)}i=1 .
+
+                M (T )
+   3. Draw {Di}i=1 as iid realizations of a Exp(λs)-distributed variable.
+
+   4. Compute V (T ) according to the above.
+
+3.2 Gradient-based optimization on VaR and CVaR
+
+3.2.1 Variance as risk measure
+
+In order to demonstrate the problem with optimizing directly on VaR and CVaR with
+their current definitions, consider the case when variance is used as “risk measure”—
+that is,
+                  (         )2         (       )
+          ∑N     ∑N
+               1           1             1   T      1  T
+        ρ(ℓ) =          ℓi −       ℓi′   =     ℓ   I −   ee   ℓ.
+            N − 1 i=1     N ′         N − 1        N
+                                        i =1
+The gradient ∂ρ(ℓ)/∂ℓ with respect to ℓ is given by
+               (            )T       (       )
+             ∂ρ(ℓ)     ∂ρ(ℓ)    ∂ρ(ℓ)         2         1   T
+                 =       , ...,         =      I −   ee   ℓ,
+            ∂ℓ     ∂ℓ1     ∂ℓN      N − 1     N
+and by the chain rule, the gradient ∂ρ(ℓ)/∂w with respect to the portfolio weights w is
+given by
+                                     r0T    (         )
+               ∂ρ(ℓ)    ∂ℓ ∂ρ(ℓ)     2e     T      1   T
+                  =        = −      R   I −  ee   ℓ,
+             ∂w   ∂w  ∂ℓ    N − 1        N
+
+                                  29
+                              r0T   T
+using the Jacobian ∂ℓ/∂w = −e   R . Hence, for each ℓ, both the function value ρ(ℓ)
+and its gradient ∂ρ(ℓ)/∂w are easily computed, which is necessary for using the interior-
+point algorithm. Moreover, it is apparent that ρ(ℓ) is convex and infinitely differentiable
+in w, guaranteeing that the algorithm will be well-behaved.
+    For VaR and CVaR, however, we do not have this convenience. In fact, since the
+              emp
+empirical cdf FL   (x) is discontinuous and piecewise constant, both VaR and CVaR
+are discontinuous functions of w and nowhere differentiable. This is a serious problem
+since it makes it impossible to proceed with well-established gradient-based nonlinear
+optimization algorithms. Instead, one has to resort to more or less ad hoc methods such
+as that first presented by [25], where one introduces auxiliary variables to transform the
+optimization problem into linear programming form (which can be more computation-
+ally expensive).
+
+3.2.2 Smoothing by auxiliary noise
+
+In this thesis, we shall employ a somewhat different approach to overcome this problem.
+Noting that the discontinuities and general intractabilities of VaR and CVaR arise as a
+               emp
+consequence of FL   (x) being piecewise constant, we seek a way of “smoothing out”
+the function and making its properties more mathematically convenient—in particular,
+ideally, we would like our estimate of the cdf to be infinitely differentiable and strictly
+increasing everywhere, guaranteeing the existence of a corresponding pdf. Note that
+                    emp
+estimating FL(x) by FL   (x) is equivalent to exchanging L with a discrete random
+                            N
+variable Ldisc with possible outcomes {ℓi}i=1 with P(L = ℓi) = 1/N for each i.
+                                                                                ′
+   Now, instead of replacing L by Ldisc, we shall replace L by L = Ldisc + ε where
+            2
+ε ∼ N(0, ϵ ) is some normally distributed noise independent of Ldisc. The role of
+  emp                                                  ′
+F    (x) is thus replaced by the cdf FL′ (x) of L , which is given by
+ L
+                                          ′
+                FL′ (x) = P(L ≤ x)
+                    ˆ ∞
+                                                              ′                    ′         ′       ′
+                      =     P(L ≤ x | ε = x )fε(x ) dx
+                  −∞
+                    ˆ ∞   N
+                1 ∑
+                                                                           ′              ′      ′
+                      =          1(ℓi + x ≤ x)k(x ) dx
+                       −∞ N i=1
+                              N ˆ x−ℓi
+              1 ∑
+                                                                                            ′        ′
+                      =           k(x ) dx
+                      N i=1 −∞
+
+              ∑N
+                         1
+                     =      K(x − ℓi).
+                        N i=1
+
+                                                                            2
+Here, k(x) and K(x) are the pdf and the cdf, respectively, of a N(0, ϵ )-distributed
+
+random variable. Note that with this, FL′ (x) becomes infinitely differentiable and ev-
+erywhere strictly increasing, and, in particular, one also has a corresponding pdf
+
+                     ∑N
+                              ∂FL′ (x)    1
+                    fL′ (x) =         =      k(x − ℓi)
+                            ∂x   N i=1
+
+                                  30
+which satisfies fL′ (x) > 0 for all x ∈ R. All of these properties will turn out to
+be important in the following. The above smoothing step amounts to making a kernel
+density estimation using a Gaussian kernel with bandwidth ϵ, and illustrations of the
+effect of this are shown in Figures 3.2, 3.3.
+                                                                           ′
+   For convenience, we shall in the following use L and L interchangeably as the
+discounted loss associated with X, eliminating the use of eventual approximation signs.
+                                         2
+For sufficiently small noise variances ϵ , one can argue that the addition of the noise ε
+has little effect on the loss distribution.
+
+Figure 3.2: Illustration of the effect of kernel density estimation compared to the histogram
+method, with data drawn from a N(±1, 1/2) mixture distribution. Note the smooth nature of
+the KDE estimate.
+
+                1
+                                                                                               Empirical cdf
+                   0.9                                                                KDE estimate of cdf
+
+                  0.8
+
+                  0.7
+
+                  0.6
+
+                  0.5
+
+                  0.4
+
+                  0.3
+
+                  0.2
+
+                  0.1
+
+                0
+                -3 -2 -1 0 1 2 3
+
+Figure 3.3: Comparison between the empirical cdf and the kernel density estimated cdf with the
+same data as in 3.2. Again, note the smooth nature of the latter.
+
+                                  31
+   For VaR, as a direct consequence of FL′ (x) being everywhere strictly increasing, its
+                                  −1
+inverse exists and we have VaRα(ℓ) = FL  ′ (1 − α). One can thus in a straightforward
+fashion evaluate VaRα(ℓ) numerically, e g by the Newton-Raphson algorithm, and it
+turns out that once this has been done the gradient is also easily evaluated. This is
+shown in the following:
+
+                            ′
+Proposition 3. Using L as substitute for L, VaRα(ℓ) is the unique solution to the equa-
+tion
+            ∑N
+                     1
+                          K(VaRα(ℓ) − ℓi) = 1 − α.
+                    N i=1
+Furthermore, for each 1 ≤ i ≤ N , we have
+
+                     ∂VaRα(ℓ)     k(VaRα(ℓ) − ℓi)
+                             =                 .
+              ∂ℓ    ∑N
+                                               i
+                                       k(VaRα(ℓ) − ℓi′ )
+                                                 i′=1
+
+Proof. Differentiation with respect to ℓi gives
+
+          ∑N
+             ∂  1
+          0 =          K(VaRα(ℓ) − ℓi′ )
+               ∂ℓi N ′
+                        i =1
+             N             (            )
+           1 ∑              ∂VaRα(ℓ)
+            =       k(VaRα(ℓ) − ℓi′ )            − δii′
+               N ′                        ∂ℓi
+                    i =1
+             ∑N
+             ∂VaRα(ℓ) 1                       1
+           =                k(VaRα(ℓ) − ℓi′ ) −   k(VaRα(ℓ) − ℓi)
+                 ∂ℓi    N ′                     N
+                                i =1
+or
+                     ∂VaRα(ℓ)     k(VaRα(ℓ) − ℓi)
+                             =                 ,
+              ∂ℓ    ∑N
+                                               i
+                                       k(VaRα(ℓ) − ℓi′ )
+                                                 i′=1
+where the denominator is clearly always positive as k(x) > 0 for all x.
+
+   As for CVaR, we may proceed similarly. The main result is summarized in the
+following:
+
+                            ′
+Proposition 4. Using L as substitute for L, we have
+
+               ∑N (                       )
+                       1                            2
+        CVaRα(ℓ) =        ℓiK(ℓi − VaRα(ℓ)) + ϵ k(ℓi − VaRα(ℓ))
+                   αN i=1
+
+and
+                    ∂CVaRα(ℓ)    1
+                             =   K(ℓi − VaRα(ℓ))
+                          ∂ℓi        αN
+for each 1 ≤ i ≤ N .
+
+                                  32
+Proof. By using the representation
+                    ˆ α                 ˆ ∞
+                         1       −1       ′    ′    1
+         CVaRα(ℓ) =      F  ′ (1 − α ) dα =          xfL′ (x) dx,
+                         L
+                       α  0                    α  VaRα(ℓ)
+
+                                                  ′        ′
+where the last step is by substituting 1−α = FL (x), we can integrate by parts to obtain
+               (           ∣        ˆ                 )
+                   ∞      ∞
+                  1                 ∣
+   CVaRα(ℓ) =    x(F ′ (x) − 1)∣       −        (F ′ (x) − 1) dx
+                       L        ∣                   L
+                  α                  VaRα(ℓ)     VaRα(ℓ)
+             (                       ˆ              )
+                        ∑N  ∞
+               1                          1
+            =    0 − VaRα(ℓ)(1 − α − 1) +             K(ℓi − x) dx
+                α                            N i=1  VaRα(ℓ)
+
+                   ∑N (                   ) ∣∞
+                                1                              2            ∣
+             = VaRα(ℓ) −        (ℓi − x)K(ℓi − x) + ϵ k(ℓi − x) ∣
+                             αN i=1                                    VaRα(ℓ)
+
+              ∑N
+                         1
+             = VaRα(ℓ) +      (ℓi − VaRα(ℓ))K(ℓi − VaRα(ℓ))
+                         αN i=1
+
+              2 ∑N
+                          ϵ
+                  +       k(ℓi − VaRα(ℓ))
+                    αN i=1
+
+            ∑N (                       )
+                 1                            2
+             =        ℓiK(ℓi − VaRα(ℓ)) + ϵ k(ℓi − VaRα(ℓ))  .
+               αN i=1
+
+                                                 2
+Here, we have used the fact that ∂(xK(x) + ϵ k(x))/∂x = K(x) as a property of k
+
+and K and that FL′ (VaRα(ℓ)) = 1 − α. Moreover,
+
+         ∑N
+∂CVaRα(ℓ)    1
+            =       δii′ K(ℓi′ − VaRα(ℓ))
+     ∂ℓi        αN  ′
+                      i =1
+                  N              (           )
+                 1  ∑                    ∂VaRα(ℓ)
+                   +        ℓi′ k(ℓi′ − VaRα(ℓ))  δii′ −
+                       αN  ′                                  ∂ℓi
+                              i =1
+                  2  N                        (            )
+                    ϵ  ∑ ℓi′ − VaRα(ℓ)                      ∂VaRα(ℓ)
+                  −                     k(ℓi′ − VaRα(ℓ))  δii′ −
+                   αN         ϵ2                         ∂ℓ
+                                     i′=1                                                               i
+              1                    1
+           =   K(ℓi − VaRα(ℓ)) +    VaRα(ℓ)k(ℓi − VaRα(ℓ))
+           αN                αN
+                 1 ∂VaRα(ℓ)       ∑
+                  −             VaRα(ℓ)    k(ℓi′ − VaRα(ℓ))
+                       αN    ∂ℓi               ′
+                                                                            i
+              1
+           =   K(ℓi − VaRα(ℓ)),
+            αN
+
+                                            2
+where we have used ∂k(x)/∂x = −(x/ϵ )k(x) and substituted in the expression for
+∂VaRα(ℓ)/∂ℓi.
+
+                                  33
+Thus, once VaRα(ℓ) is obtained, both the function value and the gradient of CVaRα(ℓ)
+are easily computed. It is worth noting that the partial derivative ∂CVaRα(ℓ)/∂ℓi comes
+out surprisingly clean despite the somewhat cumbersome expression for ∂VaRα(ℓ)/∂ℓi.
+   As a side note, one can also show that the convexity of CVaRα(ℓ) is preserved by
+                                       ′
+exchanging L with L . This is important for practical reasons as it guarantees uniqueness
+of the global minimum of the function, which is not the case for VaR and which is one
+of the main benefits with using CVaR.
+
+Proposition 5. CVaRα(ℓ) is a convex function in ℓ.
+
+Proof. It is easy to show that CVaRα(ℓ) is twice differentiable in ℓ, and it is well-known
+that such a function is convex if and only if its Hessian is positive semi-definite. Com-
+ponentwise, we have
+          2                          (            )
+           ∂ CVaRα(ℓ)    1                       ∂VaRα(ℓ)
+                        =   k(ℓi − VaRα(ℓ))  δii′ −
+                  ∂ℓi ∂ℓi′        αN                                 ∂ℓi′
+                          1   (             )
+                              T
+                          =       e κκiδii′ − κiκi′  ,
+                      αN eTκ
+
+                   T                                   T
+where κ = (κ1, ..., κN )  = (k(ℓ1 − VaRα(ℓ)), ..., k(ℓN − VaRα(ℓ))) , so for each
+     N
+ξ ∈ R ,
+
+            2                      (                )
+         T ∂ CVaRα(ℓ)       1    T   T             T
+        ξ       2 ξ =  T ξ   e κ diag(κ) − κκ   ξ
+               ∂ℓ         αN e κ
+                           1   ((   ) (          )         )
+                                 T    T            T  T
+                      =  T    e κ  ξ  diag(κ)ξ  − ξ κκ ξ
+                       αN e κ
+                          1   (               )
+                                             2    2          2
+                         =  T   ∥e∥ ∥ξ∥ − |⟨e, ξ⟩|
+                       αN e κ
+                     ≥ 0,
+
+showing positive semi-definiteness. The last inequality is due to Cauchy–Schwarz using
+                     T
+the inner product ⟨ξ1, ξ2⟩ = ξ1 diag(κ)ξ2 and corresponding norm ∥ · ∥, which is well-
+defined as κi > 0 for all i.
+
+                                  34
+Chapter 4
+
+Numerical results
+
+We present here a selection of numerical results obtained for different settings of portfo-
+lio assets. In order to solve multiple problems on the form (2.3) for varying values of the
+minimum expected return μreq to produce efficient frontiers and corresponding optimal
+solutions, a short program was built in MATLAB R2017b. The built-in nonlinear con-
+strained optimization solver fmincon, implementing an interior-point algorithm, was
+used to solve the optimization problems numerically. For all of the setup cases below, a
+Monte Carlo sample size of N = 50000 was used to form the empirical return matrix R,
+                                  2                                 2        2
+and the auxiliary noise ε ∼ N(0, ϵ ) was assumed to have variance ϵ  = 0.05 . In the
+assumed absence of transaction costs, short-sellings were treated as negative positions.
+
+4.1 Mean-variance analysis of stock portfolio
+
+In order to test the validity of the algorithm before proceeding with more advanced
+setups, we first tried to reproduce the efficient frontiers in Figure 2.1 where variance
+                                                n
+was used as portfolio risk measure. The stocks {Si(t)}i=1 were assumed to follow a
+multidimensional geometric Brownian motion on the form
+                             dS(t)
+                               = b dt + s dW (t),
+                             S(t)
+where {W (t)}t∈[0,T ] is a Brownian motion, yielding log-normal marginal distributions
+of returns (the quotient on the left-hand side is taken componentwise). For our purposes,
+we used n = 10 stocks with parameter values
+
+                                                             T
+b = (0.0100, 0.0133, 0.0167, 0.0200, 0.0233, 0.0267, 0.0300, 0.0333, 0.0367, 0.0400)  ,
+                                                             T
+s = (0.0800, 0.0844, 0.0889, 0.0933, 0.0978, 0.1022, 0.1067, 0.1111, 0.1156, 0.1200)
+and                                    
+                                   1 0.5 . . . 0.5
+                                    
+                              0.5 1 . . . 0.5
+                          ϱ =  .    .         . 
+                                            .      .     . .      .  
+                                    . .   . . 
+                                  0.5 0.5 . . . 1
+
+                                  35
+where ϱ is such that Var dW (t) = ϱ dt. By Theorem 4, the return vector R(T ) satisfies
+
+                          R(T ) ∼ LN(μ, Σ)
+
+where μ = (b − (1/2) diag(s)s)T and Σ = diag(s)ϱ diag(s)T , from which we can
+easily sample. Marginal distributions of returns for this setup are shown in Figure 4.1.
+    Figure 4.2 shows the efficient frontiers obtained from this setup, where the maturity
+was set to T = 3 and where the risk-free rate was assumed to be r0 = 0.001. One can
+see that the behaviour described in Section 2.3.2 is indeed reproduced. In particular, the
+tangency portfolio shows at a minimum mean return of around 1.3—in fact, this rather
+low value of r0 was used only to make the tangency portfolio show in the plot window.
+
+                             Return marginal distributions for stock portfolio
+                    2.5
+
+                  2
+
+                    1.5
+
+                 pdf
+
+                  1
+
+                    0.5
+
+                  0
+                  0 0.5 1 1.5 2 2.5 3
+                                               Return
+
+Figure 4.1: Plot of the pdf’s of the marginal distributions of returns for the given stock portfolio,
+all log-normal.
+
+                                  36
+                                     Efficient frontiers for stock portfolio
+                  2
+                                                                                     Without risk-free asset
+                                                                                      With risk-free asset
+                    1.8
+
+                    1.6
+
+                    1.4
+
+                    1.2
+               Minimum mean return
+
+                  1
+
+                    0.8
+                  0 0.5 1 1.5
+                                            Standard deviation
+
+Figure 4.2: Plot of obtained efficent frontiers for the above described setup, with and without the
+possibility of investing in a risk-free asset. Note especially the tangency portfolio occurring at a
+minimum mean return of around 1.3.
+
+4.2 Single catastrophe bond in stock portfolio
+
+4.2.1 Discontinuous uniform model
+
+Consider the same stock portfolio as in Section 4.1 and maturity T = 3, but with a more
+realistic risk-free rate of r0 = 0.02 and parameters
+
+                                                             T
+b = (0.0100, 0.0167, 0.0233, 0.0300, 0.0367, 0.0433, 0.0500, 0.0567, 0.0633, 0.0700)  ,
+                                                             T
+s = (0.1000, 0.1056, 0.1111, 0.1167, 0.1222, 0.1278, 0.1333, 0.1389, 0.1444, 0.1500)  .
+
+We investigate the effect of also including a cat bond specified by the discontinuous uni-
+form model, with a coupon rate of c = 0.08 and exhaustion and attachment probabilities
+pe = 0.03, pa = 0.07. By Proposition 1, the mean return of this catastrophe bond over
+[0, 3] is 1.1850, which lies in the middle of the mean marginal returns of the stock given
+by
+
+                                                           T
+  (1.0316, 1.0521, 1.0727, 1.0951, 1.1172, 1.1386, 1.1627, 1.1854, 1.2107, 1.2361)  ,
+
+                                     0.02·3
+although higher than the return e     = 1.0618 of the risk-free asset. Figure 4.3 shows
+the return profile of this catastrophe bond in comparison to those of the stocks.
+   We optimize on this portfolio using VaR at level α = 0.05 as risk measure. Fig-
+ure 4.4 shows the evolution of portfolio weights for the risk-free asset, the stocks and
+the catastrophe bond as the minimum mean return increases. One can see that after a
+minimum mean return of around 1.2, less is invested in the risk-free asset and more in
+
+                                  37
+the catastrophe bond. Furthermore, Figure 4.5 shows efficient frontiers with respect to
+VaR0.05 and CVaR0.05 and compares risks before and after introducing the possibility
+of investing in the catastrophe bond. Perhaps not very surprisingly, the efficient frontiers
+are shifted outwards by the catastrophe bond, showing that it adds value to the portfolio.
+
+                                   Return marginal distributions
+                8
+
+                7
+
+                6
+
+                5
+
+                pdf4
+
+                3
+
+                2
+
+                1
+
+                0
+                0 0.5 1 1.5 2 2.5 3 3.5 4
+                                             Return
+
+ Figure 4.3: Comparison of return profiles between catastrophe bond (red) and stocks (black).
+
+                          Portfolio weights for varying minimum mean return
+                   2
+                                                                                         Risk-free asset
+                     1.5                                                      Catastrophe bond
+                                                                               Stocks
+                   1
+
+                     0.5
+
+                   0
+
+                     -0.5
+               Weight
+                       -1
+
+                     -1.5
+
+                       -2
+
+                     -2.5
+
+                       -3
+                  0.8 1 1.2 1.4 1.6 1.8 2
+                                        Minimum mean return
+
+Figure 4.4: Plot of portfolio weights for risk-free asset, stocks, and catastrophe bond when varying
+minimum mean returns.
+
+                                  38
+                         VaR and CVaR for varying minimum mean return
+                  2
+                                                                           Without catastrophe bond
+                                                                          With catastrophe bond
+                    1.8
+
+                    1.6
+
+                    1.4
+
+                    1.2
+               Minimum mean return
+
+                  1
+
+                    0.8
+                  0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8
+                                 VaR   /CVaR
+                                                          0.05        0.05
+
+Figure 4.5: Plot of efficient frontiers for VaR0.05 (solid) and CVaR0.05 (dashed), before and after
+including a catastrophe bond.
+
+4.2.2 Compound Poisson model
+
+We can repeat the above using the same stock portfolio but the compound Poisson model.
+We set r0 = 0.02 and T = 3. In order to reflect the contrast between the models, suppose
+that the catastrophe bond triggers relatively often but with relatively small instrument
+losses each time—more precisely, we use λf = 0.5 and λs = 5, which amounts to
+the assertion that a catastrophe occurs once every two years on average and that each
+catastrophe incurs an instrument of 0.2 on average. These are arguably reasonable as-
+sumptions for e g a catastrophe bond with parametric trigger. In compensation, we also
+set a relatively high coupon rate of c = 0.2. This gives a mean return over [0, 3] of
+1.2458, comparable to that of the stock with the highest mean return. The return profile
+is compared to those of the stocks in Figure 4.6.
+   As above, we optimize on this portfolio using VaR at level α = 0.05 as risk measure.
+Figure 4.7 shows the evolution of portfolio weights for the risk-free asset, the stocks and
+the catastrophe bond as the minimum mean return increases. One can see that after a
+minimum mean return of around 1.1, less is invested in the risk-free asset and more in
+the catastrophe bond. Furthermore, Figure 4.8 shows efficient frontiers with respect to
+VaR0.05 and CVaR0.05 and compares risks before and after introducing the possibility
+of investing in the catastrophe bond. Again, the efficient frontiers are shifted outwards
+by the catastrophe bond.
+
+                                  39
+                                     Return marginal distributions
+                    2.5
+
+                  2
+
+                    1.5
+
+                 pdf
+
+                  1
+
+                    0.5
+
+                  0
+                  0 0.5 1 1.5 2 2.5 3 3.5 4
+                                              Returns
+
+ Figure 4.6: Comparison of return profiles between catastrophe bond (red) and stocks (black).
+
+                          Portfolio weights for varying minimum mean return
+                   2
+                                                                                         Risk-free asset
+                     1.5                                                      Catastrophe bond
+                                                                               Stocks
+                   1
+
+                     0.5
+
+                   0
+
+                     -0.5
+               Weight
+                       -1
+
+                     -1.5
+
+                       -2
+
+                     -2.5
+
+                       -3
+                  0.8 1 1.2 1.4 1.6 1.8 2
+                                        Minimum mean return
+
+Figure 4.7: Plot of portfolio weights for risk-free asset, stocks, and catastrophe bond when varying
+minimum mean returns.
+
+                                  40
+                         VaR and CVaR for varying minimum mean return
+                  2
+                                                                           Without catastrophe bond
+                                                                          With catastrophe bond
+                    1.8
+
+                    1.6
+
+                    1.4
+
+                    1.2
+               Minimum mean return
+
+                  1
+
+                    0.8
+                   0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8
+                                 VaR   /CVaR
+                                                          0.05        0.05
+
+Figure 4.8: Plot of efficient frontiers for VaR0.05 (solid) and CVaR0.05 (dashed), before and after
+including a catastrophe bond.
+
+4.3 Catastrophe bond portfolio
+
+As a concluding experiment, we try the case of a portfolio only consisting of catastrophe
+bonds and a risk-free asset. More precisely, we use the compound Poisson model on n
+independent catastrophe bonds with coupon rates all equal to 0.2 and frequency/severity
+rates (λf , λs) given according to
+                   {(                   )}n
+                                 i − 1      i − 1
+                 (λf , λs) ∈    0.1 + 0.4      , 1 + 4             .
+                                 n − 1      n − 1   i=1
+
+For example, if n = 5, catastrophe bond i would be such that the mean frequency of
+catastrophes is 0.1i per year and that the mean severity is 1/i for each 1 ≤ i ≤ 5. Again,
+we use r0 = 0.02 and T = 3.
+   Figure 4.9 shows efficient frontiers with respect to CVaR0.05 for portfolios consist-
+ing of n = 2, 4, 6, 8, 10 catastrophe bonds, testing for minimum mean returns between
+0.8 and 2.0. One can observe outward shifting of the efficient frontier when n increases,
+which is expected since the catastrophe bond returns are all independent. Figure 4.10
+shows, perhaps more interestingly, return profiles of the optimal portfolios correspond-
+ing to a minimum mean return of 1.4 for varying n. From a highly skewed distribution
+for n = 2, the estimated pdf becomes more symmetric and Gaussian-like as n increases.
+Indeed, this can be made rigorous by the central limit theorem, although some care is
+required as the returns are not identically distributed (more precisely, one can use the
+Lyapunov version of the central limit theorem).
+
+                                  41
+                      Efficient frontiers for different numbers of catastrophe bonds
+                  2
+                                                                                  2
+                                                                                  4
+                   1.8                                                                6
+                                                                                  8
+                                                                                  10
+
+                    1.6
+
+                    1.4
+
+                    1.2
+               Minimum mean return
+
+                  1
+
+                    0.8
+                  0 0.2 0.4 0.6 0.8 1 1.2 1.4 1.6 1.8
+                                  CVaR
+                                                                 0.05
+
+Figure 4.9: Plot of efficient frontiers for CVaR0.05 for different numbers of independent catastro-
+phe bonds.
+
+                         Return distributions of optimal portfolios of different size
+                    2.5
+                                                                                  2
+                                                                                  4
+                                                                                  6
+                   2                                                          8
+                                                                                  10
+
+                    1.5
+
+                 pdf
+
+                  1
+
+                    0.5
+
+                  0
+                  0 0.5 1 1.5 2 2.5 3
+                                               Return
+
+Figure 4.10: Plot of return profiles of optimal portfolios corresponding to a minimum mean return
+of 1.4 for varying n.
+
+                                  42
+Chapter 5
+
+Discussion
+
+In this thesis, the risk diversification potential of catastrophe bonds in portfolios as well
+as the performance of portfolios exclusively consisting of catastrophe bonds have been
+investigated. We account here for the main points treated, discuss the novelty of the
+findings and give suggestions for further work.
+
+5.1 Summary and conclusions
+
+For the loss modeling, while the discontinuous uniform model was used to showcase es-
+sential characteristics of the return of catastrophe bonds, the compound Poisson model
+was developed to also take into account the times of occurrence of the underlying losses.
+In particular, given specifications of the distributions of catastrophe frequency and sever-
+ity, a compound Poisson process with exponentially distributed increments was em-
+ployed to model the evolution of the outstanding principal during the term. With the
+assumed coupon payment structure of constant coupon rate, proportionality to the out-
+standing principal and continuous coupon yield, the total return over the term for the
+catastrophe bond could be computed given each realization of the compound Poisson
+process.
+    With fully specified joint return distributions of all assets, we used Monte Carlo
+sampling to obtain the return matrix R on which all optimization was based. Standard
+optimization techniques on risk measures such as value-at-risk and conditional value-at-
+risk were made applicable by the introduction of an auxiliary noise variable, mathemat-
+ically equivalent to kernel smoothing. This rendered value-at-risk as well as conditional
+value-at-risk continuously differentiable, enabling derivations of explicit and compu-
+tationally tractable formulas for objective function values and gradients. As such, the
+implementation in code was straightforward and the computation times were relatively
+short.
+    Numerical results demonstrated the risk diversification value of a catastrophe bond
+in a hypothetical portfolio of correlated stocks. This was done with both the discon-
+tinuous uniform and compound Poisson models, where the former case was intended
+to reflect a catastrophe bond triggering very seldomly and the latter a catastrophe bond
+
+                                  43
+triggering more often but with relatively small instrument losses. For both cases, the
+expected outward shift of the efficient frontiers with respect to value-at-risk and con-
+ditional value-at-risk was confirmed. Moreover, it was shown that the return profile of
+a portfolio exclusively consisting of catastrophe bonds is highly skewed for few assets
+but converges to a normal distribution when the number of assets increases, which is
+also expected.
+
+5.2 Novelty and impact
+
+The main contributions of this thesis are related to the compound Poisson model for the
+return distribution of a catastrophe bond and the formulas for function values and gradi-
+ents of risk measures derived from introducing an auxiliary noise. As for the former, al-
+though models accounting for the possibility of multiple independent catastrophe events
+by a compound Poisson outstanding principal process have been previously mentioned
+in literature [20, 14], they address catastrophe bonds with somewhat different payment
+structure where the arrival of the catastrophe events do not matter. The model presented
+here thus combines the time aspect of the assumed payment structure with these jump
+process models of the outstanding principal, which to the best of the author’s knowl-
+edge is novel in literature. For the formulas for risk measures, despite the fact that it is
+well-known that kernel smoothing renders VaR differentiable by virtue of the implicit
+function theorem, derivations of explicit formulas have not been accounted for in exist-
+ing literature. Instead, the work here is mainly based on that done in [26], which uses
+the same idea but in an essentially different setting.
+    On the other hand, the impact of the results are not as obvious. This is mainly due to
+the lack of real-world data used in the test cases, which was intentional due to the limited
+scope of the project. Instead, the numerical tests were solely performed in the purpose
+of demonstrating the validity of the portfolio optimization procedure and illuminating
+key features of the loss models. Although the tests successfully fulfill this purpose,
+further inferences cannot be made as to, for instance, how the models compare to existing
+ones and how real-world catastrophe bond portfolios perform in comparison to other
+portfolios. However, it is believed that the developed method of applying gradient-based
+optimization of VaR and CVaR will be an interesting alternative to current standard
+approaches.
+
+5.3 Further work
+
+A natural extension of the work in this thesis would be to apply it to realistic examples, e
+g by using historical data on stock returns and the events underlying catastrophe bonds,
+which would strengthen the impact. Furthermore, the compound Poisson model could
+be adapted to other types of payment structures, which is straightforward given the cor-
+responding specifications. The impact of this thesis work would be further strengthened
+by some comparison to other existing catastrophe bonds loss models. Lastly, the use-
+
+                                  44
+fulness of the method of gradient-based optimization could be evaluated by comparing
+e g behavior and computational times to other standard methods.
+
+                                  45
+Chapter 6
+
+References
+
+ [1] Baryshnikov Y, Mayo A, Taylor D R. Pricing of cat bonds. http:
+    //citeseerx.ist.psu.edu/viewdoc/download;jsessionid=
+    BA9EF3FBFF0696271638C18BC10ED284?doi=10.1.1.42.5811&rep=rep1&
+     type=pdf, accessed 2019-05-15.
+
+ [2] Braun A. Pricing in the primary market for cat bonds: New empirical evidence.
+     Journal of Risk and Insurance. 2016;83(4):811–847.
+
+ [3] Business Insurance. US insurers well prepared for ex-
+     pected average hurricane season: Fitch. https://www.
+    businessinsurance.com/article/00010101/NEWS06/912321670/
+      US-insurers-well-prepared-for-expected-average-hurricane-season-Fitch,
+     accessed 2019-05-15.
+
+ [4] Carnegie. Diversifiera med Irma och Maria. https://www.carnegie.se/
+     private-banking/Aktuellt/cat-bonds-i-portfoljen/, accessed 2019-
+     05-15.
+
+ [5] Cox S H, Pedersen H W. Catastrophe risk bonds. North Americal Actuarial Jour-
+     nal. 2000;4(4):56–82.
+
+ [6] Cummins J D, Weiss M A. Convergence of insurance and financial markets:
+      hybrid and securitized risk-transfer solutions. Journal of Risk and Insurance.
+     2009;76(3):493–545.
+
+ [7] Dieckmann S. By force of nature: explaining the yield spread on catastrophe
+     bonds. Working paper, University of Pennsylvania, 2009.
+
+ [8] Djehiche B. Stochastic calculus: An introduction with applications. Lecture notes,
+     KTH Royal Institute of technology, 2000.
+
+ [9] Elton E J, Gruber M J, Agrawal D, Mann C. Explaining the rate spread on corporate
+     bonds. Journal of Finance. 2001;56(1):247–277.
+
+                                  46
+[10] Entropics Asset Management. How cat bonds work. http://en.entropics.se/
+     cat-bonds/how-cat-bonds-work/, accessed 2019-05-15.
+
+[11] Entropics Asset Management. How is a portfolio affected by
+     the inclusion of cat bonds? http://en.entropics.se/blog/
+     portfolio-affected-inclusion-cat-bonds/, accessed 2019-05-15.
+
+[12] Froot K A. The market for catastrophe risk: A clinical examination. Journal of
+     Financial Economics. 2001;60(2–3):529–571.
+
+[13] Galeotti M, Gürtler M, Winkelvos C. Accuracy of premium calculation models for
+     cat bonds: An empirical analysis. Journal of Risk and Insurance. 2013;80(2):401–
+     421.
+
+[14] Giertz F. Analysis and optimization of a portfolio of catastrophe bonds. MSc thesis,
+     KTH Royal Institute of Technology, 2014.
+
+[15] Gomez L, Carcamo U. A multifactor pricing model for cat bonds in the secondary
+     market. Journal of Business, Economics and Finance. 2014;3(2):247–258.
+
+[16] Gürtler M, Hibbeln M T, Winkelvos C. The impact of the financial crisis and natu-
+     ral catastrophes on cat bonds. Journal of Risk and Insurance. 2016;83(3):579–612.
+
+[17] Hult H, Lindskog F, Hammarlid O, Rehn C J. Risk and portfolio analysis. New
+     York: Springer; 2012.
+
+[18] Jaeger L, Müller S, Scherling S. Insurance-linked securities: What drives their
+     returns? Journal of Alternative Investments. 2010;13(2):9–34.
+
+[19] Koski T. Probability and random processes at KTH. Lecture notes, KTH Royal
+     Institute of Technology, 2017.
+
+[20] Lee J, Yu M. Pricing default-risky cat bonds with moral hazard and basis risk.
+     Journal of Risk and Insurance. 2002;69(1):25–44.
+
+[21] Loubergé H, Kellezi E, Gilli M. Using catastrophe-linked securities to diversify
+      insurance risk: A financial analysis of cat bonds. Journal of Insurance Issues.
+     1999;22(2):125–146.
+
+[22] Man Group. Catastrophe bonds: Investing with impact. https://www.man.com/
+     catastrophe-bonds-investing-with-impact, accessed 2019-05-15.
+
+[23] Mariani M, Amoruso P. The effectiveness of catastrophe bonds in portfo-
+      lio diversification. International Journal of Economics and Financial Issues.
+     2016;6(4):1760–1767.
+
+[24] Nash S G, Sofer A. Linear and nonlinear programming. New York: McGraw-Hill;
+     1996.
+
+                                  47
+[25] Rockafellar R T, Uryasev S. Optimization of conditional value-at risk. Journal of
+     Risk. 1997;2:21–-41.
+
+[26] Zhang T. Direct optimization of dose-volume-histogram metrics in intensity-
+     modulated radiation therapy treatment planning. BSc thesis, KTH Royal Institute
+     of Technology, 2018.
+
+                                  48

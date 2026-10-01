@@ -1,0 +1,4391 @@
+Stockholm School of Economics Spring 2013
+Department of Finance
+
+Telling True from False
+Do Markets React Efficiently to Takeover Rumors?
+
+Alexander Kronvall*
+Ossian Hanning**
+
+Abstract
+
+This thesis examines how U.S. markets react to 345 different takeover rumors, and how efficiently the
+market is capable of distinguishing between true and false rumors. The markets do appear to react
+differently to true rumors, with a statistically significant difference in the stock price reaction on the
+day of the rumor, giving weight to the hypothesis that the market can discern true rumors from false.
+Using this finding, we attempt to create a trading strategy by applying methods previously used for
+estimating the likelihood of success for takeovers to rumors. With the use of logit classification models
+and holdout samples we seem to be able to distinguish between true and false rumors with some success,
+but we cannot profit from trading on the rumors. Using an out-ofsample dataset also on the U.S.
+market as well as a sample of U.K. rumors, we manage to classify rumors with some degree of precision
+using the model constructed from estimates from the primary sample. The stock market seems to be
+reacting efficiently to rumors as we cannot find any evidence to the contrary. We also find a rumor run-
+up before the rumor publication, which we attribute to the rumor diffusing through the market rather
+than to insider trading.
+
+Keywords: Takeover Rumors, Market Efficiency, Event Study, Mergers and Acquisitions, Logit
+Analysis
+
+Tutor: Francesco Sangiorgi
+Date: 15 May 2013
+
+Acknowledgements: We would like to thank our tutor Francesco Sangiorgi, Assistant Professor at
+the Department of Finance, Stockholm School of Economics, for his valuable input and guidance
+throughout the process of writing this thesis.
+
+* 22179@student.hhs.se ** 22184 Qstudent.hhs.se
+
+CONTENTS
+
+1. Introduction
+
+2. Previous Literature 4
+2.1 Rumors in financial markets ......0ccccccccececcesecscsscsecsecsesscsececsesecesecsesscsessessesscsessessesecseecsesseseseesseeeeee 4
+2.2 Takeover prediction 6
+2.3 Bankruptcy prediction ........cecceceecessesseeeeesceseesecseeessceseeeececesesseeeesecsseceeesecseeseeeeseseeeeesaeseeeenseeaeeeeseeeaees 7
+2.4 Media and the market .......0...cccccecsesesseseescesesescseecscsesesecscsesessscsesscscsesesssseseaesesseseseseacsessesceesesessesenesessens 7
+2.5 Preannouncement run-up and insider trading 0.0... ccc eeeeseeeseeeeeeeeneceeeeseeseeceeeseeseeseeseeeeesseeseseaessseeeennees 8
+3. Data 9
+B.1 Rumor data ..cccccccccccccccecccecscsscscsscsscsecsesscsecsecsesecsssecsesscsscsessssscsecsesessecsssecsessssecsessssecsessesesesssseeeeseseae 9
+3.2 Stock and accounting data cece eeeececeesseeeeeeensceeesseseeeesececsaeceesesecsecsesseceaeseseseeneeseesseeseeceeneeseeseeeeneeeee 10
+3.3 Data for robustness teSts ....c.ccccccccce cece csecsescsscecsesscsecsesscceeecsessescsscsecsessssecsessseessessessesssscsesssssseeeesseeee 10
+4. Methodology and Theory 11
+4.1 Event study methodology .....ccecccecessesecesseseeeeessseeesseeseecsseseseseceeesanseeeaeseecesseessesseeseesssenseeesseesnesseeeeeeee 11
+4.2 Corrections for outliers and missing data 0... cc eececeeeeeeseesesenseseesensceecseesceesesseeecsenecaeeestssnesseeeseeeneeaeeee 14
+4.3 Tests for difference .....ccccccceccccc cece cscscsscsecsecsesscsessscscsecsececsssscsecsesscsecsessessssecsesecsesssseeseesssecsessseessesasees 14
+4.4 Bankruptcy probability formulas... ce cceccceesececceseeseeeeeseceseceseeseeeeceeceseseeseseceeeeesesaeeeeeeesseseeeeeensereenee 15
+4.5 Binary logit regression analysis. lS
+4.6 Model specifications .........ccceeeeseceseseeeeseseeeseeseeeeeeseeeseseresseeeeesecsseeaesseeseeeseseeseeeasesceeesaeseeeeeeeaeseeseeseneses 16
+
+4.7 The Efficient Markets Hypothesis
+
+4.8 Connections between takeover likelihood and book values ......cccccccsceeeseeeeessesees esses eesseseesesseeeeseeeeee 18
+4.9 Insider trading in our dataset... ccccceecessceeeeeseeeescescseeecescsecseeseeecsecseeeeecesseeeeescesaeeeseeseesaseeeeseseeeseeaeeee 19
+5. Results 20
+5.1 Descriptive statistics ON TUMOTS.........ccceeesceseeseeeecesesecescesecesecesecsecesecseceaeeceaeceeceeesecseecaeeeeseeneseaseeaeeaee 20
+5.2 Stock market reaction around rumor publications ........cccceeeeseeseeeeeeeeseceseeseceseeeeeeseseseseeeneeaeeteesnseseeaee 22
+5.3 Characteristics of firms depending on veracity Of PUMOT ........ceceeeeseseeeeeeeeeeeeeeeeeeeeeeteeeseeteeeeeeeeesenteeenaee 28
+
+5.4 Difference testing.
+
+5.5 Regressions on difference in rumor day reaction based on veracity .......:ccsceecsseeeeeeseeseeeeeeeeseeeeeeeeeseeees 31
+5.6 Logit regressions and trading model specification..........ccccceeesecereeeeeeeseeeseeeeeseeeeesseenseseeseeseeseenaeeneeeaea 35
+5.7 Classification of rumors and outcome of trading strategy.......ccccceceeceseeeeeeeseeeeseeseesseseessseteeseseeeeeneeeeen 38
+5.8 Robustness tests .......ccccccccssesecscsesseseessescscscsesscsesesesecscsesesssesescscsesesecscscsesesseseseseacsessescsssesesscseseessesenseceeee 42
+6. Conclusion 49
+7. Limitations and Suggestions for Future Research 51
+8. References 53
+
+A. Appendix 56
+
+1. INTRODUCTION
+
+Few corporations in today's information-driven financial markets have not at least once come across
+rumors about themselves. Rumors can concern almost any business-related matter and vary greatly in
+how strongly they impact markets. A rumor, when compared to an announcement, often contains little
+information. Sources are often either not revealed or report anonymously what they know to journalists
+or other investors. In most cases, details are sparse and investors have to rely on other indicators than
+the rumor report itself to judge the veracity of the rumor. One common type of rumors in finance
+concerns takeovers. As the premium for takeovers sometimes go as high as 50 percent! above the current
+market value, and an investor that holds the stock at a point early enough in the process is able to
+capture a majority of this, takeover rumors can be argued to be of particular interest to researchers.
+The returns from making the right call can be very large and the ability to correctly estimate the
+veracity of takeover rumors could potentially prove very profitable.
+
+This thesis investigates the reaction of the U.S. stock market to rumors concerning acquisitions as
+they are published in the media. First, we examine whether the market appears to be able to distinguish
+between rumors that are followed by a takeover (hereafter referred to as true rumors) and rumors that
+are not followed by any bids (hereafter referred to as false rumors) and find that the market reacts more
+strongly to the publication of true rumors than to false. We investigate simple strategies such as whether
+it is profitable to buy and hold the target stock as a rumor surfaces, and what profits are achieved if
+one would be able to trade either on only true or only false rumors. We show that no abnormal holding
+period returns can be made from simply buying and holding rumored target firms, but that the difference
+between the buy-and-hold returns of trading on true rumors and false rumors are noticeable.
+
+Second, we seek potential explanations for the difference in the stock market’s reaction to the
+publication of true and false rumors by examining whether there is any difference in the run-up before
+the rumor, but do not find any statistically significant difference between the two rumor types. We do,
+however, find a statistically significant run-up for rumors overall, which could be a signal that the run-
+up is evidence of the rumor diffusion process (as described by Van Bommel, 2003; based on Kyle, 1985)
+throughout the market rather than of insider trading. If the rumor run-ups were only caused by insider
+trading, we would expect a smaller run-up before false rumors which we do not find. The fact that both
+trading volume and stock price reaction are larger for rumors that are followed by bids tells us that
+there is some form of information not readily visible in the rumors themselves; even when controlling
+for the level of detail in the published rumor and how well-reputed the news source is, the difference
+between true and false rumors changes little.
+
+Third, we attempt to use the information that is publicly available to determine if we can classify
+rumors depending on whether the rumored target firm is more or less likely to be acquired. Dietrich &
+Sorensen (1984), Palepu (1986), Walter (1990) and Barnes (1998) are some of a number of papers
+
+attempting to use firm-specific characteristics to classify firms as more or less attractive to acquirers.
+
+1 As established by, among others, Comment and Jarrell (1988).
+
+1
+
+The notion is that firms that are resource-constrained but exhibit high growth; firms that have an
+abundance of resources but exhibit low growth; smaller firms; and firms that are badly managed are all
+more likely to be taken over than the average firm. Variables of interest may thus be market
+capitalization, sales growth and the price-to-earnings ratio. The technique used is strikingly similar to
+the bankruptcy prediction models by Altman (1968), Ohlson (1980) and Zmijewski (1984), models that
+are all in popular use and considered successful in estimating the probability of bankruptcy for firms.
+All of the papers on acquisition prediction mentioned above find that it is possible to classify firms into
+targets and non-targets better than chance, but that the technique is unwieldy to apply on the markets.
+The reason is that the number of non-targets outnumber the number of targets by more than 30-to-1
+in the wild (Palepu, 1984), and that the models used only skews the odds in one's favor. Furthermore,
+the efficient markets hypothesis states that it might not be possible to trade profitably using these
+models, as stock prices should have already internalized the increased likelihood of an acquisition.
+
+By combining the techniques used by these papers (dichotomous classification models using book
+values and financial key ratios) with an event, the publication of a rumor, we see whether we can find
+any systematically different target firm characteristics between true and false rumors and whether these
+characteristics help explain some of the difference in the reaction to the publication of rumors. The
+difference between looking at all firms listed on a market and only the firms that have been identified
+as potential takeover targets in rumors is that instead of non-targets outnumbering targets by 30-to-1
+the ratio is closer to 3-to-1. We find a model that, using financial key ratios and other firm-specific
+characteristics as well as the level of detail of the rumor, manages to classify firms significantly better
+than chance (while avoiding data snooping biases as the sample is divided into a training set and a
+validation set). None of the different investment strategies we formulate using the model, some of which
+are more conservative and some of which are less conservative, yield any statistically significant
+abnormal one-year holding period returns. However, we find that by adding the abnormal return on the
+day of publication of the rumor results in a model with a significantly higher degree of explanatory
+power. This means that we are unable to observe the underlying information that the market uses to
+distinguish between true or false rumors, but we can use the information inherent in the market reaction
+in combination with the explanatory power we find in the firm-specific characteristics to identify true
+rumors. The model specification including the abnormal return on the day the rumor is published
+manages to classify rumors as true or false even better. However, no profits that are statistically different
+from zero are achieved using any trading rule based on this model either, implying that the market
+already has incorporated this information into the stock price.
+
+Fourth, for robustness, we test whether we can replicate the results we found in our U.S. sample
+(from the M&A database Zephyr) with a dataset from a different source, also containing U.S. acquisition
+rumors (from Bloomberg). Ascertaining that no target firms are included in both datasets, we estimate
+the model coefficients on the U.S. Zephyr sample and apply the model with these estimated coefficients
+to the U.S. Bloomberg sample. The same model with the same coefficients is applied to a U.K. sample,
+also from Zephyr, and we find that we are able to classify rumors into groups based on the likelihood
+of them being true better than chance in these two datasets as well.
+
+The thesis is divided as follows: in section 2, we go over the previous literature on the topic. In
+
+section 3, we discuss our dataset and initial data generation. In section 4 we present the methodology
+
+used and the theoretical framework that lays the foundation for the rest of our thesis. Section 5 lists
+the results we arrive at, and section 6 sums up our conclusions based on the results. Section 7 concludes
+
+with the limitations of the study and some suggestions for potential areas for further research.
+
+Hypothesis 1: Markets are able to distinguish between true and false acquisition rumors, be it using
+
+public or private information.
+
+While the opposite could be possible, several aspects point towards the hypothesized outcome being
+the more likely case. Previous works on the topic have found that some financial key ratios differ
+systematically between targets and non-targets. The possibility of insider information being traded
+on also opens up for larger trading volumes and abnormal returns for the rumors that actually hold
+water. We do not expect, however, to be able to explain the exact causes of a potential difference
+between true and false rumors quantitatively as we cannot observe variables such as insider
+
+information.
+
+Hypothesis 2: It is not possible to profit from following a buy-and-hold strategy based on acquisition
+
+rumors.
+
+This is a relatively straightforward test of market efficiency, and given efficient markets a profitable
+
+trade on rumors should not on average be possible.
+
+Hypothesis 3a: It is possible, as an uninformed trader, to use public information (including the stock
+
+market’s reaction pattern) to distinguish between true and false acquisition rumors.
+
+Our hypothesis is that characteristics that make some firms more likely to be taken over than others
+exist, analogous to some of the papers within the field of takeover prediction. We however also
+believe that a model based on firm characteristics can be built upon by including some of the private
+
+or unobservable information reflected in the target stock price reaction that is not publicly available.
+Hypothesis 3b: It is not possible to profit from acquisition rumors using only this public information.
+The expectation is that the market's reaction to an acquisition rumor is efficient enough to eliminate
+
+any possible profits from trading on the rumors, regardless of whether the stock price reaction is
+
+used as an indicator or not.
+
+2. PREVIOUS LITERATURE
+
+Before we present our findings it is only natural to look at what has previously been done on the topic
+at hand and what lessons can be learned from the works of others. We start off by briefly summarizing
+the research done on rumors. As we use our findings on the stock market’s reaction on takeover rumors
+to predict which rumors are more likely to be true (and result in an acquisition) an understanding of
+the field of takeover prediction and the tools most commonly used will prove beneficial. Another field
+where much effort has been made toward finding predictive models is the field of bankruptcy prediction.
+We take a closer look at some of the papers within this field, both to learn from its long history and
+some of its missteps along the way, but also to later prove a linkage between the probability of
+bankruptcy and that of being taken over. Since we look at rumors that are diffused by the media, by
+large international news outlets as well as smaller online-only publications, rather than by word-of
+mouth, the relationship between the media and the stock market is highly relevant. A phenomenon
+commonly seen before takeovers is a significant run-up in the stock price, for which one potential
+explanation is rumors. In academia, the run-up is also often linked to insider trading, which is why we
+
+conclude this section with some papers which agree with this view and some that do not.
+
+2.1 Rumors in financial markets
+
+One of the earliest empirical papers on the effect of rumors on stock markets is Rose (1951), who
+hypothesize that trends, unidirectional movements of stock prices in the stock market, are caused by
+rumors. These trends are named stickiness and Rose is able to identify a certain degree of stickiness in
+the market. While he manages to discard several other explanations for the stickiness, he is unable to
+ascertain that rumors have an effect on the market.
+
+After Rose, not much significant research was done on rumors until the 1990’s when Pound and
+Zeckhauser (1990) did a study on actual rumors, using 42 takeover rumors published in the Wall Street
+Journal column Heard on the Street. Their findings show that, on average, no excess return can be
+realized through buying (or selling) rumored target stocks for a holding period of one year, indicating
+that the market reacts efficiently to rumors. Pound and Zeckhauser’s study reveals, however, that there
+is a significant run-up in prices before the publication of the rumor, indicating that the rumor has
+already been disseminated in the investment community prior to publication in the column.
+
+Pound and Zeckhauser’s research was followed by a similar study by Zivney, Bertin, and Torabzedeh
+(1996). Zivney et al., however, also study another column in the Wall Street Journal called Abreast of
+the Market, published on the same page of the journal as the Heard on the Street column. Analyzing a
+total of 871 takeover rumors divided between the two columns they find that the market reacts in a
+much stronger fashion to the rumors published in the Abreast of the Market column. They calculate
+that the cumulative abnormal return of a portfolio of rumored target stocks has a mean of -4.32% in a
+period of 80 days following the rumor publication and that it is hence possible to make a profit by
+trading on this overreaction. Contrary to the Pound and Zeckhauser study, Zivney et al. thus conclude
+
+that the market is not fully efficient in its reaction to rumors.
+
+Both Pound and Zeckhauser and Zivney et al. find that a majority of the takeovers rumored in the
+column never take place, but they do not try to determine if there are any differences between true and
+false rumors. This is where we believe that our study can contribute; by examining the characteristics
+of the firms appearing in the true and false rumors, respectively, in addition to separating the market
+reaction on basis of the validity of the rumor we are able to build upon the findings of the two
+aforementioned studies.
+
+Chou et al. (2010) attempt to predict takeovers based on only cumulative abnormal return around
+the publication date of the rumor using 74 rumors that led to a takeover announcement and 187 that
+did not. Thus, their study bears some similarities with our study. Using this approach, contrary to the
+findings of the present study, Chou et al. are not able to establish a statistically significant difference
+in the stock price reaction following true and false rumors on the day of publication of the rumor. They
+are instead able to find differences in the period preceding the rumor publication, a finding that we have
+been unable to replicate.
+
+There are a great number of psychological studies treating the topic of rumors. While many are
+beyond the scope of the present, more quantitative, study there are still some interesting considerations
+in these papers. One example is Kimmel (2004), who finds that rumors that ultimately prove to be true
+become more credible and precise as they are transmitted, in contrast to false rumors which grow
+
+progressively more distorted.
+
+Trading volume and rumors
+
+One of the most recent papers on rumors is Gao and Oler (2012). They find abnormally high trading
+volumes during the period following a takeover rumor and that the volume consists of both significant
+buy- and sell-sides. Looking at explanations as to why investors would want to sell on takeover rumors
+they discard several reasons before concluding that investors act rationally when selling. As so few
+takeover rumors actually materialize (twelve percent of the rumors in their sample) shorting the rumors
+
+becomes a profitable trading strategy.
+
+Credibility of rumors
+
+DiFonzo and Bordia (1997) find, using experimental stock simulations, that people, contrary to their
+stated opinion that rumors are non-credible, trade on rumors as if they were news. Oberlechner and
+Hocking (2004) show in a questionnaire-based study find that traders prioritize the speed of news and
+anticipated impact on the markets above the accuracy of the information. Kosfeld (1998) states that
+the important characteristic of a rumor is not whether it is true or false, but rather the inability to tell
+the difference and that a rumor becomes more credible with the extent it is communicated as well as
+
+the number of sources reporting it.
+
+Rumors on the Internet
+
+Many of the papers concerning rumors were written before the popularization of the Internet as a source
+of information, a tool that has simplified and created new ways for the dissemination of rumors. Clarkson
+et al. (2006) examine whether or not postings about rumored takeovers on Internet Discussion Sites
+(IDS) affect stock prices. They find that there are significant intraday abnormal returns and volume
+during a 10 minute posting interval and significant trading volume during the 10 minute interval
+immediately preceding it, in the predicted direction. Using these findings they discuss whether traders
+use IDS to manipulate the prices of stocks they already have a position in. Tumarkin and Whitelaw
+(2001) perform a similar study on the at-the-time leading investment discussion forum Ragingbull.com
+and find that message board activity does not predict returns or trading volume. Their findings refute
+the possibility that the market can be manipulated by discussion site postings and are instead consistent
+
+with market efficiency.
+
+2.2 Takeover prediction
+
+If rumors is an area of study that is still relatively unexplored, the same cannot be said about the
+research concerning takeovers. A large number of papers have been published on the subject, each
+introducing a new model aiming to identify firms that are likely to be takeover targets. Among these
+papers are Simkowitz and Monroe (1971), Castagna and Matolesy (1976), Belkoui (1978) and Dietrich
+and Sorensen (1984). The study by Dietrich and Sorensen was the first to apply a logit regression
+analysis to the question of takeover prediction, an approach that is largely followed by this study. Using
+this analysis tool on several accounting values they are able to create a model with an accuracy rate of
+90 percent.
+
+Palepu (1986) presents some damning criticism toward the earlier work and lay down some ground
+rules for how to construct a model for takeover prediction. His criticism is mainly focused on the fact
+that previous studies had not used random sampling of their data (leading to biased estimates and
+unrealistic error rates) and that the probability cutoff used was often chosen arbitrarily. We have tried
+to keep his criticism in mind when constructing our model. Palepu then develops a model for takeover
+prediction himself, but as he was not able to find any specification that made its explanatory power
+significant he reached the conclusion that it is not possible to robustly predict takeovers beforehand.
+This finding was later challenged by Powell (1997) who states that Palepu’s decision rule to create
+trading portfolios (to include as many target firms as possible) is erroneous and that the portfolios
+should instead be formed by maximizing the proportion of target firms to non-target firms. This is also
+the decision rule applied in this thesis. Powell then convincingly shows that by following this rule, it is
+in fact possible to create a profitable takeover prediction model. Barnes (1998) also tries to improve on
+the methodology of Palepu (1986) and includes anticipatory share price movements in his model. Unlike
+Powell (1997), Barnes confirms the findings of Palepu and states that the semi-strong form of the
+efficient market hypothesis is valid since the market has already accounted for the probability of a firm
+being a takeover target. More recent work on takeover prediction include Branch and Yang (2003) who
+look at takeover bids and extend the scope of the model beyond accounting data by using the form and
+size of proposed payment as determinants and conclude that cash offers are more likely to succeed than
+
+equity offers. Branch further improves on the model in Branch and Wang (2009) by using a pair-
+
+matched logit regression and including other factors such as stock price, bid competition and target
+resistance.
+
+Consequently, there is empirical evidence showing both that it is and that it is not possible to predict
+which firms are more likely to be takeover targets. The present study sides with the views of, among
+others, Dietrich and Sorensen (1984), Powell (1997) and Branch and Yang (2003): that it is possible to
+formulate a model that allows classification of firms into those more and less likely to be taken over.
+None of the papers find conclusive evidence that it is possible to trade profitably using their models, a
+
+conclusion that we are hesitant to make as well.
+
+2.3 Bankruptcy prediction
+
+While this thesis deals with the question of takeovers and takeover prediction, the field of bankruptcy
+prediction is closely related. Both fields try to predict a major event in the lifespan of a company by
+using publicly available data. Barnes (1998) points out that the major difference between predicating
+takeovers and predicting bankruptcies is the larger influence of insider trading and rumors, the very
+topic of this study, on takeover prediction.
+
+The classic paper in this field is Altman (1968), who by using a sample of only 66 firms is able to
+formulate a model for bankruptcy prediction that has proven to stand the test of time and is still in
+popular use today. Zmijewski (1984) tries to improve on Altman’s model by addressing the biggest
+concern of all previous work in the field: that the models are constructed using non-random samples.
+Building upon Altman’s model, Zmijewski’s model was able to correctly identify 72 percent of the
+bankrupt firms in his sample. Ohlson (1980) also challenges the conclusions of previous work by arguing
+that these papers were not careful enough with the timing of the data used. Specifically, that the highly
+accurate predictions of some papers were reached by using data from after the companies entered
+bankruptcy. Correcting for this error and adding some additional factors, Ohlson is still able to find a
+
+robust prediction model, albeit with a slightly lower accuracy rate than that of earlier works.
+
+2.4 Media and the market
+
+Engelberg and Parsons (2009) and Peress (2012) present strong cases for the role that media plays in
+relation to the stock market. The former by showing that investors who live in areas where an event
+was reported in the local newspaper trade significantly more in the concerned stock than investors in
+other areas and the latter by demonstrating that trading volume falls by twelve percent during
+newspaper strikes. Tetlock (2007) and Dougal et al. (2011) find that the level of pessimism each day in
+the Wall Street Journal column Abreast of the Market and which journalist writes the column can
+predict the direction the market takes, findings that clearly demonstrate that not only the information
+
+content of media reporting matters but also the way it is framed.
+
+2.5 Pre-announcement run-up and insider trading
+
+Jarrell and Poulsen (1989) present several explanations to the commonly observed pre-announcement
+run-up in stock prices, including insider trading and investors trying to get a foothold, but find that the
+presence of rumors is the most significant explaining factor. They establish, however, that investing in
+rumored takeover targets is very risky; the variance of one-year excess returns after the publication of
+a takeover rumor is found to be exceptionally high. Sanders and Zdanowicz (1992) are unable to identify
+significant abnormal trading volume before takeover announcements and use this finding to draw the
+conclusion that insider trading is not as prevalent as is sometimes believed. Holland and Hodgkinson
+(1994) find that press reporting prior to announcements explains the run-up and that any potential
+insider trading is done in such small volumes that it is unable to move the share price. Muelbroek (1992)
+is, on the contrary, able to show an abnormal return of three percent on insider trading days prior to a
+takeover announcements and that almost half of the pre-announcement run-up takes place during these
+days. Bettis (1995) presents a test to gauge the validity of a rumor using a line of thinking based on
+insider trading activities. Since investors are barred from trading on private information one can use
+these insiders’ trading activity to judge a rumor’s validity. If the insider is trading after the publication
+of the rumor, the rumor is most likely false since the insider otherwise would be committing a crime.
+On the other hand, if one would expect insider activity and there is none the rumor may be valid. Bettis
+does not, however, perform a quantitative data analysis of this test but instead presents three cases in
+
+support of his hypothesis.
+
+3. DATA
+
+The primary data sources used are the M&A database Zephyr and COMPUSTAT. Additionally, data
+from Yahoo! Finance (FTSE100 historical values), the Bank of England (3-month Treasury bills as
+proxy for the risk-free rate) and the Ken French Data Library (Fama-French factors for the U.S.) is
+
+collected.
+
+3.1 Rumor data
+
+An extensive number of observations on mergers and acquisitions is available through Zephyr, with
+data on a total of 89 747 acquisitions and institutional buyouts in the U.S. We filter these observations
+to make sure the target firms are either publicly traded or, in the case of true rumors, have been publicly
+traded prior to the acquisition. No filters are used for acquiring firms, both since the acquiring firm is
+often unknown at the rumor stage and also because the acquiring firm seldom shows any noticeable
+stock price reactions in conjunction with acquisitions (Betton et al., 2008).
+
+The rumors are manually screened to ascertain that they really can be considered to be rumors.
+Zephyr's rumor categorization is often very broad, and sometimes classifies events such as company
+press releases concerning signed letters of intent or memorandums of understanding about acquisitions
+as rumors. Thus, a closer scrutiny of Zephyr's data is required. In addition to filtering the Zephyr data
+down to rumors only, each rumor record is examined and classified by whether it is reported by a major
+or minor news source, and whether the initial rumor publication contains what can be deemed to be
+
+‘detailed' information. A set of selection criteria are set up for the classification of rumors:
+
+- The rumor may not spring from a press release issued by the firm; if the only source given by
+
+Zephyr is an involved company the rumor is not included.
+
+- The firm has not made any public statements (affirmations or denials) regarding the rumor on
+
+the days just after the rumor publication.
+
+- The rumor is not based on the event that the firm has hired an investment bank or advisor to
+
+look for potential buyers.
+- At least three days must pass before any official announcement occurs.
+
+Rumors that are classified as coming from 'major news sources’ are rumors that originate from
+Reuters, Bloomberg, The New York Times, the Wall Street Journal and similar outlets, while non-major
+news sources are for instance online-only news sources or smaller news networks. Rumors are considered
+‘detailed' if they contain suggestions for potential bid premiums or suggestions for which the acquiring
+firm might be, or otherwise provide convincing details. A rumor is considered true if the rumor is
+followed by an acquisition announcement within a year, or within two years if there is good reason to
+believe that the rumor has a good connection to the acquisition (for example, rumor information on a
+potential acquirer is correct) and the completion of the acquisition occurs within a maximum of two
+
+years.
+
+3.2 Stock and accounting data
+
+The rumor data is then merged with stock data from COMPUSTAT. Thomson Reuters Datastream
+and CRSP were both evaluated as potential data sources, but COMPUSTAT was chosen as it had stock
+price and volume data for the largest number of the securities in our sample. Stock data for one year
+before and one year after the rumor publication is kept for each rumor to allow for the estimation of
+normal returns as well as the calculation of potential profits from trading on the rumor. Only rumors
+where the concerned stock of the target firm is listed in the COMPUSTAT database for our period are
+included in our study. The data is then complemented with annual report data for the three years
+preceding the rumor publication, for which COMPUSTAT is used as well. We end up with a dataset
+
+consisting of a total of 354 takeover rumors, 104 of them true rumors and 250 false.
+
+3.3 Data for robustness tests
+For robustness, data on takeover rumors from the U.K. markets is also downloaded and screened in the
+same way as the U.S. rumors. The same criteria are used as filters and Zephyr rumor data is used for
+the U.K. dataset as well. The U.K. rumors are then merged with COMPUSTAT annual report data
+and COMPUSTAT daily security data. Several noticeable differences can be seen in the U.K. rumor
+data in Zephyr, compared to the data stemming from the U.S. Zephyr appears to have a larger amount
+of U.K. rumors recorded compared to the size of the U.K. market, and a slightly different distribution
+of false and true rumors. The firms are also marginally smaller than for the U.S., which could contribute
+to differences in the results. In the end we have 290 U.K. rumors of which 79 are true and 211 are false.
+Another robustness check is performed by verifying the findings from the primary Zephyr dataset
+using rumor data also on the U.S. market, provided by Bloomberg. This out-of-sample data contains
+less information than the primary dataset. Only the date of the rumor is available; no data on the dates
+for when announcements or completions of takeovers took place is present - only whether the rumor
+was followed by a takeover or not. The source of the rumor is not listed either. Therefore, the data is
+of slightly lower quality than the main U.S dataset but still serves well as an out-of-sample dataset to
+test the external validity of the Zephyr results. The dataset from Bloomberg contains a total of 1875
+rumors on 717 companies during the period 2005-2010, and the data is complemented with stock data
+and annual report data in the same way as the other two datasets. Bloomberg only provides ticker
+symbols as firm identifiers and we therefore manually verify and match some of the ticker symbols with
+the corresponding firm in the stock data. We also ensure that no overlap exists between the main
+dataset and the Bloomberg out-of-sample dataset, considering that they both cover the U.S. market
+during the same time period. After the filtering, we end up with 1520 rumors from Bloomberg, split
+
+between 235 true rumors and 1285 false rumors.
+
+10
+
+4, METHODOLOGY AND THEORY
+
+In this section we lay out the empirical framework that we use to examine the market’s reaction to the
+publication of rumors and the methods used to create a trading strategy. First, normal and abnormal
+performances of the target firms’ securities are calculated around the publication of the rumor. Once
+the rumor, pre-rumor and post-rumor reactions have been calculated a variety of regression techniques
+are used. Ordinary least squares (OLS) models are used in a first attempt to explain the cross-sectional
+returns on and around the rumor publication date, using both the veracity of the rumor but also other
+potential explanatory factors as independent variables. Building on this, logit regression models are
+employed to investigate whether public data available on the rumored target before the rumor date,
+such as book values, financial key ratios and market capitalization, and rumor-specific information, such
+as the source, its level of detail and the market reaction, say something about the probability of the
+
+rumor leading to a takeover.
+
+Rumor timeline
+
+An overview of the timelines surrounding false and true rumors can be seen in Figure 1 and Figure 2,
+respectively. A false rumor consists of a prerumor period, a post-rumor period and a rumor day, which
+is the day the rumor is reported by the media. A true rumor also consists of a prerumor period and
+post-rumor period, but is followed by a bid announcement, which is considered a verification of the
+authenticity of the rumor. If the bid succeeds, the announcement is also followed by a completion of the
+
+takeover.
+
+Figure 1. Timeline for false rumors.
+
+Pre-rumor period Post-rumor period
+
+Rumor day
+
+Figure 2. Timeline for true rumors.
+
+| Pre-announcement period | |
+
+Pre-rumor period | Post-rumor period | Post-announcement period |
+
+Rumor day Announcement day Completion day
+
+4.1 Event study methodology
+
+The dominating methodology used in this study is an event study. MacKinlay (1997) discusses the use
+and applications of event studies in finance and defines an event study as a study that measures the
+impact of some event on the value of a firm using security prices observed over a relatively short time
+period. The methodology has ever since the 1960’s been successfully applied to studies on mergers and
+acquisitions, with Manne (1965) as an early example. An event study requires calculation of the normal
+performance of a firm's security, from which the abnormal performance of the security around the event
+
+can be determined.
+
+11
+
+The simple market model (the CAPM)
+MacKinlay (1997) suggests several different methods for estimating the normal performance of a stock.
+
+One of the simpler models for this purpose is the CAPM (Capital Asset Pricing Model) specified as
+Er) =% +a, + Binet, (Tmt - T;) + &
+
+where 7 is the logarithmic stock return for security i, Tmxe is the return for the market and 7; is the
+risk-free rate. Bmxei is a measure of the systematic risk of security i in relation to the market and @; is
+the performance of security i after accounting for the systematic risk. For the U.S., a value-weighted
+index encompassing NASDAQ, Amex and NYSE is used as a proxy for the market return. For the U.K.,
+the FTSE100 is used. The risk-free rate used is the 1-month U.S Treasury and the 3-month U.K. Bank
+
+of England Treasury bill rate for the two markets respectively. Abnormal returns are calculated as
+ARie = Tit — [ree + at Bmatet,i Tmake,t - Te)
+
+Where AR;, is the abnormal return for security i on day t, 7 is the logarithmic stock return for security
+ion day t, nxee is the return for the market and rf; is the risk-free rate. a; and Bmxe, are estimated
+
+using the CAPM.
+
+The Fama-French three-factor model
+An alternative model, meant to provide more accurate expected returns, is the Fama-French three-
+
+factor model, which includes two more factors than the CAPM. It is specified as
+Er) =% +a, + Binet, (Tmt - a) + BumiiHML + BsupiSMB + &
+
+where 7; is the logarithmic stock return for security i and Tnx is the return for the market. HML is the
+return of a portfolio that is long firms with the highest book-to-market ratios and short firms with the
+lowest book-to-market ratios and SMB is the return on a portfolio that is long firms with low market
+capitalization (small firms) and short firms with high market capitalization (big firms). Bym1,; and Bsup,i
+are measures of how the return of security i co-moves with these portfolios. a; is the performance of
+security i after accounting for the systematic risk in relation to both the market and these portfolios. A
+value-weighted index encompassing NASDAQ, Amex and NYSE is used as a proxy for the market
+return. The risk-free rate used is the Lmonth U.S Treasury bill rate. The abnormal returns for this
+
+model are calculated as
+AR ig = Tit — (Qi + Binet il Rmxee — Me] + BamiiHM Le + Bop iSMBz).
+
+The Fama-French three-factor model will be used for our main dataset, but as daily HML- and SMB-
+returns are only readily available for the U.S., the simple CAPM will be used when analyzing the U.K.
+
+data in our robustness tests. A comparison between the CAPM and the Fama-French model, using our
+
+12
+
+U.S. data, showed that the differences between the two are very small. The application of the different
+
+models should thus not be a big concern when comparing the U.S. and the U.K. data.
+
+Cumulative abnormal return (CAR) and cross-sectional regression analysis
+
+Abnormal returns are summed over a period of time to achieve a cumulative abnormal return,
+-ymn
+CAR,(n, mM) = Vien ARit.
+
+As suggested by MacKinlay (1997), we will use an event window of 120 days in the span of 180 days to
+60 days before the publication of the rumor. This is to make sure that the beta coefficients are not
+affected by the event itself, and will allow us to look at rumor run-ups as far as 60 days before the
+rumor without the estimation period overlapping with the run-up returns.
+
+MacKinlay (1997) further discusses how insights can be gained by creating cross-sectional models to
+examine the association between the magnitude of the abnormal return and characteristics specific to
+
+the event observation. A regression model for this should take the form
+AR; = Bo + BiX1i + + BmXmi + &
+
+where E(¢;) = 0, AR; is the abnormal return for observation i, Xj;,m = 1,...,M, are M characteristics
+for observation i and €; is the error term that is uncorrelated with the independent variables. B,,,m =
+0,...,M are the regression coefficients. Since we have no reason to believe that the assumption of
+homoscedasticity will hold, the regression model is estimated using OLS with homoscedasticity-
+
+consistent (robust) standard errors.
+
+Measuring abnormal volume
+We also investigate the abnormal trading volume around the rumor publication. Jarrell and Poulsen
+(1989) and Bajo (2010) find that the normalized abnormal volume (NAV) is a suitable measure for this.
+The NAV for a security i on day t is computed as
+
+TV ie — Hi
+
+NAV, = it — Hit
+
+it
+
+N(TVit — Hit). TV; is trading volume, computed as the
+
+—1iyyv =
+where [j= yuist TVi¢ and oj =
+
+natural logarithm of (trading volume + 1), for security i on day t; u and o are the mean and standard
+deviation of trading volume in an N day window in a period prior to the observation. Jarrell and Poulsen
+(1989) use an estimation window of 150 days, looking at a ‘clean’ period of 170 days before the event
+to 20 days before the event, while Bajo use a period of the 66 days directly preceding his event. We will
+use the same estimation window as for our market models, 120 days, a window close to the time span
+
+Jarrell and Poulsen (1980) used.
+
+13
+
+Bajo (2010) finds that the logarithmically transformed trading volume closely follows a normal
+distribution and as the NAV is similar in construction to a t-statistic we can classify trading volume as
+
+extreme if the daily trading volume is more than 2.33 standard deviations from the mean.
+
+4.2 Corrections for outliers and missing data
+As is always the case when dealing with real-world data there is the issue of outliers, missing data and
+other impurities in the data. To adjust for this, three different techniques are applied: winsorizing,
+
+trimming and imputation.
+
+Winsorizing and trimming
+
+To illustrate the abnormal returns and trading volumes around the rumor publication in graphs, the
+average cumulative abnormal return and NAV is calculated for each day. Because of a small number of
+outliers, the graphs are heavily skewed for some days. To make the figures more representative of the
+sample as a whole, both winsorizing and trimming were considered. Winsorizing, however, appears to
+provide the best results with the least information lost. Some accounting ratios are nevertheless
+trimmed; for example, negative dividend payout ratios are treated as missing values. Winsorizing is
+done at the five percent level, which means that all observations above the 95th percentile are set to
+
+the 95th percentile and all observations below the 5th percentile are set to the 5th percentile.
+
+Imputation
+
+When returns are missing on a trading day for some firm, we carry forward the preceding price. The
+alternative would be to interpolate prices on those days, which would give the day with a missing price
+an average of the price before and after the day in question. Carrying forward the preceding price is
+argued to be the most correct method to adjust for missing prices in our dataset, considering that some
+of the firms in the sample have very low market capitalizations and could be missing prices simply
+
+because there were no trades on the days with missing price data.
+
+4.3 Tests for difference
+
+When testing for differences in abnormal returns between true and false rumors, during various time
+periods, we use Student's t-test. The test compares the means of two samples in order to test equality.
+We use the variant of the t-test where the sample sizes are allowed to differ but variances are assumed
+to be approximately equal, since this assumption seems to hold reasonably well for our sample. The
+simple one-sample t-test is also applied to investigate whether the abnormal returns around the rumor
+publication differ from zero. To account for some of the non-normality of the abnormal returns we also
+use the Wilcoxon rank-sum test and Mood’s median test, the latter considered slightly weaker but still
+useful. The Wilcoxon rank-sum test tests the null hypothesis that two populations are equal against the
+alternative hypothesis that one population tends to have larger values than the other. Mood’s median
+test is a simpler alternative to the Wilcoxon rank-sum test, only counting the number observations
+above or below the median of the combined sample, as opposed to ranking them and adding up their
+
+rank-sum.
+
+14
+
+4.4 Bankruptcy probability formulas
+
+To control for bankruptcy risk, we use three different models: Ohlson's probabilistic bankruptcy model,
+Zmijewski’s probabilistic bankruptcy model and the most popular - Altman's Z-score (Ohlson, 1980;
+Zmijewski, 1984; Altman, 1968).
+
+The Ohlson model can be calculated as
+
+Z = -1.3 — 0.4 x log(GNP — Deflated Total Assets) + 6.0 x Solvency — 1.4 x ( we ) +0.1 x CurrentRatio — 2.4 x
+
+Total Assets.
+
+EquityIsNegative — 1.8 x ROA+0.3 x (Feng om operations) — 1.7 x NetIncomeNegativePast2Y ears — 0.5 x Ne Nena
+
+Total Liabilities INT ¢l-|NIe—-a1
+which is transformed into a probability through
+
+1
+PO Tte*
+The Zmijewski model is calculated as
+1 43-48 Net Income Total Liabilities Current Assets
+= -4.3 — 45x 7X — 0.04x
+Total Assets + Total Assets Current Liabilities
+and transformed into a probability in the same way as the Ohlson model.
+Altman's Z-score is calculated as
+2=656 Working Capital 43.26 Retained Earnings 46.72 EBT + Interest + Market Value of Equity
+= 6.56 X 26 X 72x .05 x
+Total Assets Total Assets Total Assets Total Liabilities
+
+Altman's Z-score differs from the other models in that it is not converted into a probability but can
+take any continuous value. The Z-score has cutoff points above and below which firms are considered
+healthy or unhealthy. Firms with a Z-score above 2.99 are considered healthy, firms below 2.99 are
+considered to be in a gray zone and firms below 1.81 are considered to be in financial distress (Altman,
+
+1968).
+
+4.5 Binary logit regression analysis
+Binary logit regressions are used to model dichotomous outcome variables such as, which is our case, a
+rumor, which can be classified as true or false following our definitions. A binary logit regression has
+
+the specification
+
+»
+In (PO) = 21 = Bo + Baka + Bake +--+ BaXn
+U
+
+in which p; is the probability of a rumor i being followed by a successful bid (being true) and where n
+
+independent variables are included. The probability of a rumor being followed by a successful bid can
+
+be backed out and is calculated as
+
+pi=1/(ite*).
+
+15
+
+Dependent variables in logit regressions can just like in other types of regressions be either continuous
+or categorical. Several different types of model specifications are tried. Once a model is found, our main
+sample is divided at random into an estimation sample (training set) and a prediction sample (validation
+set), where we estimate the model parameters - the logit regression coefficients - on the estimation
+sample and then apply these coefficients to our prediction sample to arrive at estimated probabilities of
+the rumors in the validation set being true. To get a better indication of how well the model performs,
+repeated random sub-sampling cross-validation is used’. This entails repeatedly shuffling the dataset
+and splitting it in the same proportions each time, where we, following a common rule of thumb, assign
+1/3 of the sample to the validation set and 2/3 to the training set. The model parameters are estimated
+on the training set and applied to the validation set each time, and the accuracy of the model is recorded
+for each iteration. This allows us to get a better idea of how well the model performs on an independent
+dataset. Repeated random sub-sampling cross-validation is usually repeated a few hundred to a few
+thousand times depending on the complexity of the model, and an average value of the fit is calculated
+over all the runs. In this respect, the method shares some similarities with Monte Carlo simulations.
+We perform the process 200 times, providing a reasonable trade-off between computational execution
+time and precision in the values.
+
+A t-statistic for whether the model outperformed chance can be calculated as
+
+where p is the proportional chance criterion, a measure of the expected classification accuracy rate based
+on chance alone and z is the proportion of total individuals correctly classified. The proportional chance
+
+criterion is calculated as
+
+p=c?+(1-c)?
+
+where c is the actual proportion of the individuals from the group of interest in the whole sample
+
+(Barnes, 1998; Hair et al., 1995).
+
+4.6 Model specifications
+
+Difference between true and false rumors
+This is a simple regression run in order to see whether there is any statistically significant difference in
+the abnormal return reaction caused by true and false rumors on the rumor day. This is equivalent to
+
+a t-test of the difference between the true and false rumor samples.
+
+ARoi = Bo + BiTrue; t+ &
+
+2 Kohavi (1995) presents a good review of cross-validation methods like this one.
+
+16
+
+Cross-sectional CAR taking into account detail and source of rumor
+
+In this regression, additional variables are included in order to explore to what extent the rumor effect
+can be explained by rumor-specific characteristics, such as whether the rumor originates from a major
+source (see data section) or contains a significant amount of detail. The regression seeks to determine
+whether the difference in reaction between true and false rumors derive from true rumors being published
+
+in more reputable sources or being more detailed than false rumors.
+ARoi = Bo + by True; + B,MajorSource; + B3Detailed; + €;
+
+Cross-sectional CAR taking into account firm-specific factors
+
+Additionally, a regression is run containing firm-specific variables and the bankruptcy risk of the firm,
+to see whether these factors help explain the price jump on the rumor day. If we can eliminate the effect
+of the categorical variable indicating whether a rumor is true or false, we might be able to extract some
+
+of the factors the market uses to estimate the probability of a rumor being true.
+ARoi = Bo + bi True; + B,MajorSource; + B3Detailed; + DY: BFirmspecificPropertyi.s + &
+
+Logit regression using rumor- and firm-specific properties and including stock market reaction
+
+The logit regression attempts to classify firms as true or false after the stock market has reacted to the
+rumor. By determining factors that contribute to explaining whether a rumor is true or false, we can
+formulate a model for predicting takeover targets from a sample of rumored firms. We include the rumor
+reaction into the logit model. Ideally, we would be able to include the information the market uses to
+judge the validity of the rumor as a variable. However, this information is not quantifiable or
+unobservable; it could be private information, nuances in the rumor report or some other information
+that leaked to the market but that Zephyr failed to report and that we failed to find. Given that we
+cannot observe this information, we are instead able to incorporate it indirectly in the regression by
+
+including the abnormal rumor day return.
+
+1
+
+pi (True) = 1+ oe Bot Bi ARio +d jb jFirmspecificProperty ij,¢-1 +24 Br Rumor SpecificProperty ix)
+
+Logit regression using rumor- and firm-specific properties but excluding stock market reaction
+
+The logit regression is rerun without using the stock market reaction on the rumor day in an attempt
+to test if the classification can be performed using only public information available beforehand and the
+content of the rumor itself (excluding the information inherent in the reaction of the stock market to
+
+the rumor publication).
+
+1
+
+pi(True) = 1 4 @ Both; BjFirmSpecificProperty j,—1 +L, BeRumorSpecificProperty ix.)
+
+17
+
+Using these logit models, we attempt to see whether it is possible to achieve abnormal holding period
+returns by classifying rumors into true or false and trading on them. Since the rumor day reaction is
+included in the first model, our strategy will consist of buying at the close price of the rumor day and
+holding the rumored stock for a period of 365 days or the delisting of the stock, whichever comes first.
+The abnormal holding period return is the return of the stock during this period compared to the market
+index for the year, after dividends have been accounted for. The alternative is to use the cumulative
+abnormal return for the period. However, compounding the abnormal return for such a long period leads
+to unreasonable discrepancies between the cumulative abnormal return and the holding period return
+as even small inaccuracies in model alphas are magnified 365 times. Another alternative would be to
+ignore alphas or re-estimate the model for stocks excluding the alphas. After consideration of the
+alternatives we concluded that we would use the holding period return and that we would use the value-
+weighted market index as a benchmark in calculation of excess returns. This was deemed the most
+appropriate considering that an overwhelming majority of the beta values in our dataset are close to
+one (see Table 4) and the reduced likelihood of estimation errors due to the simpler nature of these
+calculations. The holding period return is calculated as
+_ Dividends + (Pra1 — Pr)
+
+HPR, = 5 0
+
+4.7 The Efficient Markets Hypothesis
+
+Fama (1970) defines an efficient market as a market where security prices fully reflect all available
+information. The adjustment of security prices differ between three information subsets of the
+hypothesis. In the weak-form subset, all security prices are assumed to reflect all information contained
+in historical prices. In the semi-strong subset prices are thought to adjust accordingly and immediately
+to all other public information as well. Finally, the strong form assumes that prices reflect all public
+
+and private information, an assumption that is commonly seen as more of a theoretical scenario.
+
+4.8 Connections between takeover likelihood and book values
+There are numerous theories seeking to explain why some firms may be more likely to be taken over
+than others. Some of the more popular theories are summarized by Barnes (1998) and presented here.
+
+Inefficient management is often suggested as a possible attractant for acquiring firms. Firms which
+underperform their competitors with low profits are suggested to be more vulnerable to takeovers than
+firms which outperform their peers. Inefficiently managed firms may also be undervalued. Both these
+factors are captured in ratios such as profit margins, return on equity, price-to-earnings, the dividend
+payout ratio and market-to-book.
+
+Growth-resource mismatches are also popular explanations. The theory suggests that low growth-
+resource rich and high growth-resource poor firms are likely acquisition targets. Firms with low activity
+ratios or low growth history could also be attractive to acquiring firms. Cash-constrained firms could
+be easy takeover targets for rich firms, as the rich firms can help fund the expansion of the constrained
+firm. The capital structure of a firm could also affect how attractive a firm is as a takeover target. A
+
+firm with very low leverage can be seen as having unutilized debt capacity. These different notions of
+
+18
+
+why some firms may exhibit properties that make them more attractive as targets than others can be
+captured in several different accounting ratios. Sales growth over the past few years, the current ratio,
+the solvency/leverage level and interest coverage ratio could all be indicators for some of these scenarios.
+
+Additionally, a firm with very high leverage may be in some form of distress, and could potentially
+be saved by a white knight acquirer. Firms in financial distress that are close to bankruptcy could also
+potentially be more interesting to acquirers, since the value of a revived firm usually exceeds the value
+of solely liquidating its assets in bankruptcy. We intend to investigate whether such a connection
+between the bankruptcy risk and the likelihood of a firm being taken over exists, using three measures
+from the field of bankruptcy prediction: Altman's Z-score, Zmijewski's probability measure and Ohlson's
+probability measure. All of these measures are tested in different model specifications to determine if
+there is a connection and if they can help discern between true and false rumors.
+
+The size of the target firm is another variable that could play a role in how likely a firm is to be
+acquired. Palepu (1986) suggests that the likelihood of acquisitions decreases due to what he calls
+‘transaction costs' that increase with size. Another simple reason stated by Barnes (1998) is that the
+larger a firm is, the fewer firms that are larger than the firm itself exists and thus there are fewer
+potential acquirers. The market capitalization of the firm or the total assets of the firm should be
+
+capable of explaining this notion.
+
+4.9 Insider trading in our dataset
+
+Toeholds registered with a 13D SEC filing? could have been potential precursors to the rumor, but
+Zephyr records when a rumor appeared in conjunction with a filing, and no such rumors were included
+in our sample. Insider trading is also heavily regulated in the U.S. A Form 4 or 5 SEC filing has to be
+submitted at the latest two days after a change in the ownership share of any director, officer or owner
+if the ownership is above ten percent. Directors and other employees are required by law to ensure that
+information about their company is not used unlawfully in the purchase or sale of securities. Any rumors
+where information regarding insider trading SEC filings is available in Zephyr are dropped, thus
+hopefully reducing the likelihood of legal insider trading being the cause of the rumor reactions in our
+sample. That leaves room for word-of-mouth dissemination of the rumor, illegal insider trades or very
+
+late or illegal toehold acquisitions to explain any abnormal rumor reaction before the rumor publication.
+
+3 The Securities and Exchange Commission requires anyone who acquires ownership of more than 5 percent of any class of
+publicly traded securities in a public company to submit a Schedule 13D filing within 10 days. Any changes in the ownership
+above 1 percent require additional submissions.
+
+19
+
+5. RESULTS
+
+The results section is introduced with descriptive statistics on the rumor datasets, including graphs
+illustrating the different events of interest. The graphs and the accompanying tables indicate some
+differences between true and false rumors. These differences are then further explored by applying OLS
+regression techniques and difference testing. Once a difference has been established logit regressions are
+used to distinguish potential explanatory variables. The results from the logit regressions are applied in
+the formulation of trading strategies using probability cutoffs with various degrees of conservativeness,
+after which we present the extent to which the strategies are able to classify true and false rumors as
+well as the returns these strategies yield. In the robustness test section, we briefly present results for
+
+the U.K. and Bloomberg datasets.
+
+5.1 Descriptive statistics on rumors
+The rumor publication events are distributed as is shown in Table 1. A large number of false rumors
+were circulating during the period between 2006 and 2008, most likely created in the turbulent business
+
+climate caused by the fall of Lehman Brothers and the consequential financial crisis.
+
+Table 1. Distribution of rumors over the years
+
+This table provides a short summary of how the rumors from the Zephyr U.S. dataset are
+distributed after the filtering explained in the data section. The rumors are divided based
+on whether they are followed by an acquisition bid announcement (true) or not (false).
+
+Year Number of true rumors Number of false rumors
+2000 - 2002 6 20
+2003 - 2005 34 67
+2006 - 2008 46 123
+2009 - 2011 35 47
+2012 8 23
+Total 129 280
+
+Table 2 shows that a total of 34 out of the 129 true rumors are followed by an announcement within 20
+days of the rumor publication day. For nearly all true rumors, less than 300 days pass between the
+
+rumor being published and a bid announcement.
+
+20
+
+Table 2. Days between rumor and _ subsequent
+announcement for true rumors
+
+This provides a short summary of how many days pass
+between the rumor being published and the announcement
+of a bid. Rumors where less than three days passed before
+an announcement were not included in our sample, as
+
+explained in the data section.
+
+Days between rumor and announcement Frequency
+4-5 days 12
+6 - 10 days 8
+11 - 20 days 14
+21 - 60 days 26
+60 - 180 days 45
+181 - 300 days 17
+> 300 days 7
+Total 129
+
+Returns from trading on rumors
+Table 3 displays, consistent with Zivney et al. (1996) and Pound and Zeckhauser (1990), that buying
+on rumors do not on average allow an investor to make any money, with the average return for our
+full sample being -1.8%, a result not statistically different from zero due to the high variability in the
+returns. For true rumors, the average return is 14.0% and for false rumors -8.4%, indicating that an
+investor capable of distinguishing between the two could potentially use this ability to trade profitably.
+As is evident in Figure 3, most firms subject to true rumors exhibit positive returns during the one-
+year period following the rumor publication while the returns of falsely rumored firms are more evenly
+split between positive and negative reactions. The span is, however, very large for both true and false
+
+rumors, with extremes in both directions, showing that a rumor being true does not guarantee a profit.
+
+Table 3. One-year holding period returns for target firms from close on
+rumor publication day to close 365 days later
+
+For the whole sample, for true rumors only and for false rumors only, this table
+provides a summary for the holding period returns that materialize when the
+target firms are held for one year following the close on the day the rumor is
+published. This is simply the return you would earn if you bought the rumored
+target firm after the rumor and held it for one year. Holding period returns are
+calculated as
+
+_ Dividends + (Pui — Pa)
+
+HPR, =
+n P,
+
+Variable Obs Mean Std. Dev. Min Max
+Whole Sample 354 -1.8% 42.3% -99.6% 152.1%
+True Rumors 104 14.0% 36.5% -87.7% 126.7%
+False Rumors 250 -8.A% 42.9% -99.6% 152.1%
+
+21
+
+Figure 3. Distribution of one-year holding-period returns for target
+firm from close on rumor publication day to close 365 days later
+
+For true rumors and for false rumors, this histogram shows the distribution of
+the holding period returns. It is based on 104 true rumors and 250 false rumors,
+with a total of 354 rumors. The fraction is positive in both directions, making
+the figure mirrored along the x-axis.
+
+3
+
+o = a a | I | | meee -s
+AS
+25
+35
+1 1
+-1 -5 0 5 1 15
+
+HPR(1, 365)
+
+False
+
+HE True
+
+5.2 Stock market reaction around rumor publications
+
+The rumor reaction distribution, shown in Figure 4, is very dense just above the zero mark, with most
+stocks reacting with less than ten percent and very few with more than 15 percent. The fraction of
+reactions that are negative is also noticeably larger for false rumors, and there is a visibly higher
+density of false rumors around the zero mark compared to true rumors. The fraction of rumors that
+have a comparably significant positive reaction is decidedly larger for true rumors. The difference in
+the distribution between true and false rumors for the rumor day reaction is nevertheless not as
+apparent as for the one-year holding period return shown in Figure 3.
+
+Figure 4. Distribution of CARs for target firm from day -1 to +1
+based on veracity
+
+This is a histogram showing the distribution of CAR(-1;+-1) around the rumor
+publication date, divided by whether the rumor ends up being true or false. The
+abnormal returns are calculated using the Fama-French three-factor model. The
+y-axis shows the fraction that falls within a certain bin. The fraction is positive
+in both directions, making the figure mirrored along the x-axis. The histogram
+is based on 112 true rumors and 247 false rumors.
+
+4
+Bo
+25
+= 9 --8 | Ze ==
+a
+2
+3
+44
+1 ;
+-4 -2 0 2 4 6
+CAR(-1, 1)
+False
+HE Tre
+
+22
+
+Figure 5, displaying the average cumulative abnormal return (ACAR) for true and false rumors, tells
+us there is a clear difference in the market reaction between the two rumor types. For both true and
+false rumors, the increase appears to continue on the day following the rumor publication, but with a
+more pronounced subsequent jump for the true rumors, corresponding to a few additional percentage
+units. The observable jump in the winsorized graph is approximately ten percent for true rumors and
+five percent for false rumors. This difference of five percent between true and false rumors is consistent
+with the difference found by Zivney et al. (1996).
+
+Figure 6 shows that the reaction to the rumor depends on what news source published the rumor
+report. Consistent with expectations, major news sources such as the Wall Street Journal and Reuters
+have a larger impact on markets than smaller, less known news sources. The premium for the rumors
+coming from a major source appears to be as large as five percent. Figure 7 shows that even when the
+sample is restricted to rumors from the same type of source, the discrepancy between true and false
+rumors remains intact.
+
+The existence and the extent of the jump confirm the media’s role in diffusing information in the
+stock market, since one would expect that many of the rumors had spread via word-of mouth prior to
+publication. That we observe a stronger reaction to rumors published in more reputable sources indicates
+that the stock market takes other factors into account than just the information content when processing
+news or, as in this case, rumors. These findings are in line with the existing literature on the effect on
+
+the stock market of media reporting (for example Tetlock, 2007; Dougal et al., 2011).
+
+Figure 5. Winsorized ACAR for target firms day -30 to +30 relative
+to rumor publication contingent on veracity
+
+This figure shows the average cumulative abnormal return (ACAR) for the days
+-30 to +30 around the rumor publication day for both rumors that are followed
+by an acquisition (true) and rumors that are not (false). The figure is based on
+129 true rumors and 280 false rumors, where the CARs are winsorized on the
+5% level every day before the average is calculated.
+
+T T T 1 1
+-30 -20 -10 0 10 20 30
+Day relative to rumor day
+
+True rumors
+
+TTT False rumors
+
+23
+
+Figure 6. Winsorized ACAR for target firms day -30 to +30 relative
+to rumor publication contingent on source
+
+This figure shows the average cumulative abnormal return (ACAR) for the days
+-30 to +30 around the rumor publication day for true and false rumors together,
+with different lines for only those rumors that come from major sources (see
+data section for further explanation), those that do not come from major sources
+and the average altogether. The figure is based on 129 true rumors and 280 false
+rumors, where the CARs are winsorized on the 5% level every day before the
+
+average is calculated.
+
+15>
+
+AR(-30, t)
+
+AC
+
+-.05-4
+r r r r ; ;
+-30 -20 -10 0 10 20 30
+Day relative to rumor day
+Major
+- Non-major
+
+All
+
+Figure 7. Winsorized ACAR for target firms day -30 to +30 relative
+to rumor publication contingent on source and veracity
+This figure shows the average cumulative abnormal return (ACAR) for the
+
+days -30 to +30 around the rumor publication day with different lines for only
+(see data section for further
+
+those rumors that come from major sources
+explanation) and all rumors, and further divided based on the veracity of the
+rumor. The figure is based on 129 true rumors and 280 false rumors, where
+the CARs are winsorized on the 5% level every day before the average is
+
+calculated.
+
+157
+
+ACAR(-2
+
+30 20 -10 0 10 20 30
+Day relative to rumor day
+True - Major Only
+----- False - Major Only
+- True- All
+—-—- False - All
+
+24
+
+Figure 8 shows the same effect but for rumors with a low level of detail compared to all rumors in the
+sample. The difference is small here as well, with rumors of less detail generating market movements
+that are one to two percentage units smaller than otherwise. However, the difference between true and
+false rumors does not seem to be explained by the level of detail either. Figure 9 shows the normalized
+abnormal volume, where we can clearly see a difference in the volumes traded on the rumor day between
+true and false rumors. The normalized abnormal volume on the rumor day is above 2.33 for true rumors
+on average, which would classify the trading volume as extreme. The same classification cannot be done
+for the false rumors. No noticeable levels of abnormal volume can be seen in the 30-day window
+preceding the rumor being published, which tells us that although there is stock price run-up in the pre-
+rumor period, the volumes traded are small. (The pattern in the period following the rumor publication
+is a pattern recurring every 7 days and is due to subsequent announcements or bids. Since the rumor
+reaction has to occur on a trading day, every multiple of 7 days following the rumor day is guaranteed
+to be a trading day, leading to a disproportionate amount of announcements or bids taking place on
+these days.)
+
+Figure 10 displays the CAR around the announcement, where the pre-announcement period is
+significantly affected by rumors. Slightly more than a third of the total acquisition reaction in the period
+is already incorporated into the price over the two weeks preceding the announcement due to the rumor.
+This complements the existing empirical body trying to explain run-ups to bid announcements. Figure
+11 shows the pattern Betton et al. (2008) found when investigating the reaction to the initial bid on
+firms in the U.S. The pattern is remarkably similar to the one in our Figure 10, only showing
+announcements preceded by rumors. This similarity suggests that rumors is a large contributing factor
+to the general pre-announcement run-up. Betton et al. (2008) find that around one third of the bid
+premium is incorporated into the price starting 20 to 30 days preceding the bid, which is consistent
+
+with the run-up observed in our sample and shown in Figure 10.
+
+Figure 8. Winsorized ACAR for target firms day -30 to +30
+relative to rumor publication contingent on detail and veracity
+This figure shows the average cumulative abnormal return (ACAR) for
+the days -30 to +30 around the rumor publication day for rumors that
+were published with little details against all rumors, divided based on
+the rumor veracity. The figure is based on 129 true rumors and 280 false
+rumors, where the CARs are winsorized on the 5% level every day before
+the average is calculated.
+
+r r ; ; ;
+-30 -20 -10 0 10 20 30
+Day relative to rumor day
+
+True - Not Detailed
+----- False - Not Detailed
+-> True - All
+—-— - False - All
+
+25
+
+Figure 9. Winsorized NAV for target firms day -30 to +30 relative
+to rumor publication contingent on rumor veracity
+
+This figure show the average normalized abnormal volume (NAV) for the
+days -30 to +30 around the rumor publication day for true rumors and for
+false rumors. The graph includes subsequent bid announcement reactions.
+The figure is based on 129 true rumors and 280 false rumors, where the
+NAVs are winsorized on the 5% level every day before the average is
+calculated.
+
+TVie = Hit
+
+NAV, ¢ =
+it
+
+where Hit = Foy TV, and oj4 = (T it Hit). TViz is trading
+
+volume, computed as the natural logarithm of (trading volume + 1), for
+
+security ion day t; # and o are the mean and standard deviation of trading
+
+volume in an N day window in the period prior to the observation.
+
+T T T T T T
+-30 -20 -10 0 10 20 30
+Day relative to rumor day
+
+True rumors
+---7- False rumors
+
+Figure 10. Winsorized ACAR for target firms day -30 to +30 relative
+to bid announcement
+
+This figure shows the average cumulative abnormal return (ACAR) for the days
+-30 to +30 around the announcement day for all true rumors in our sample.
+The figure is based on 129 true rumors, where the CARs are winsorized on the
+5% level every day before the average is calculated. The reaction includes the
+rumor reaction for rumors that had a rumor published less than 30 days before
+the announcement.
+
+155
+
+aan
+
+«
+=
+
+-30 -20 -10 0 10 20 30
+
+Day relative to announcement day
+
+Figure 11. ACAR for target firms and bidding firms from day -40 to
+day +10 relative to bid announcement
+
+Source: Betton, Eckbo and Thorburn (2008)
+
+This figure from a study of a very large sample of firms by Betton et al. (2008)
+shows the average cumulative abnormal return (ACAR) for the days -40 to
++10 around the announcement day for both bidding firms and target firms. The
+figure is based on bids between 1980 and 2005.
+
+25% +
+£
+5 20% 4
+2
+t
+5 15% +
+5
+c
+& 10% 4
+s
+S
+5 5%
+3°
+&
+S
+S 0%+4
+>
+<
+
+8% 2 2 © 2 re ° ey ° © 2
+
+en ' ~
+Trading days relative to initial control bid
+Bidder, private target (N= 9,480) lili Bidder, public target (N = 6,210)
+- - - Target, private bidder (N=3,017) —— Target, public bidder (N = 5,193)
+
+27
+
+5.3 Characteristics of firms depending on veracity of rumor
+
+Table 4 shows general firm-specific information on the rumored target firms in the dataset divided
+depending on whether the rumors ex-post are true or false. There are few striking differences between
+the two categories. Consistent with theory, the median values for the market capitalization of the firms,
+the values of their total assets and their annual revenues all indicate that firms that are not acquired
+seem to be larger than the firms that are acquired. It also appears as if firms in the false rumor category
+may have a lower bankruptcy probability than firms that are the subject of true rumors. The median
+value for the Altman Z-score for the firms in the true rumor category is within what Altman denotes a
+gray zone, below 2.99, while the median value for the firms in the false rumor category is above this
+level.
+
+We do not observe any clear differences in financial key ratios at this stage, and cannot conclusively
+say that firms that are acquired suffer from a resource growth mismatch or are managed worse than the
+firms that are not acquired. The market beta values for both samples are very close to the beta of the
+market portfolio (8 = 1) suggesting that our dataset represents a good cross-section of the market. The
+alpha values are reassuringly close to zero indicating that the Fama-French three-factor model does a
+
+good job at explaining the return composition of our sample.
+
+5.4 Difference testing
+
+By performing three different tests (the Wilcoxon Rank-sum test, Student’s t-test and Mood’s median
+test) we, in Table 5, investigate whether the cumulative abnormal returns realized around the rumor
+publication differ between true and false rumors. The tests show that no significant difference in the
+period preceding the publication can be established. While CAR(-30, -1) is significant in the rank sum
+test it is not in the other tests, and can thus not with confidence be said to show any difference between
+the two groups. Additionally, all three tests confirm what we have already seen in the figures; there is
+a significant difference in the reaction in the stock price on the day of publication between the true and
+the false rumors. There may also be differences in abnormal return in the few days following the rumor
+publication, but the tests do not all agree that the difference is significant. CAR(-10, 10) and CAR(-20,
+20) both show statistically significant differences between true and false rumors, but primarily because
+the periods both include the rumor day.
+
+In Table 6, we perform t-tests again, but now testing whether there is a significant reaction in the
+stock prices for the whole sample in the periods before and after the rumor publication. We find that
+starting 14 days prior to the rumors publication, there is a statistically significant run-up of about two
+percentage points. To reduce any possible effects regarding the exact timing of the publication of the
+rumor we redo the difference test for a period ending two days before the date of publication. Even with
+this correction we find a statistically significant run-up in the period starting 14 days before the
+publication. The most obvious explanation to this run-up is that someone with insider information is
+trading on the target firm before the rumor is published. In that case, however, we would expect a
+trader with such an information advantage to only trade on true rumors, or at least to trade more on
+
+true rumors than on false rumors.
+
+28
+
+Table 4. Descriptive accounting data for the rumored firms divided on the validity of the rumor
+
+This table provides an overview of the characteristics of the falsely rumored firms and the ones that were eventually taken over in a first attempt to distinguish any
+differences between the two groups. Some items are shown as they appear in the annual reports while others are calculated financial ratios or measures of bankruptcy.
+Betas and alphas are estimated using the three-factor model.
+
+False rumors True rumors
+
+Variables Obs. Mean SD Min Ist Q__ Median 3rd Q Max Obs. Mean SD Min Ist Q_— Median 3rd Q Max
+
+Market Cap 248 8 047.82 27 209.48 0.34 509.56 1 707.87 6 211.79 371 743.10 113 4 137.26 10 216.20 1.30 321.04 1190.39 3 496.10 90 695.58
+
+Balance sheet. items
+Total Assets 241 13 602.27 56 429.27 0.81 593.68 2 204.09 7 296.00 775 410.00 102 8 494.56 27019.34 11.48 337.10 1 246.66 3 799.67 199 946.20
+Total Liabilites 241 10 425.53 51 974.11 0.70 279.09 1051.20 4 443.47 747 204.00 102. 6957.26 24 652.45 0.54 151.92 715.382 2 632.43 185 628.40
+
+Income statement items
+Revenue 241 5 752.32 19 526.14 0.00 332.76 1307.08 4552.40 263 989.00 102 2 862.85 5 479.89 0.00 233.51 765.18 2 394.58 34 115.00
+EBIT 239 843.13 3042.34 — -759.50 9.00 149.86 507.07 35 872.00 101 455.22 1517.88  -190.77 7A 81.60 283.86 13 467.82
+Net Income 241 423.84 1836.98 — -973.69 -3.29 66.30 259.75 25 330.00 102 145.20 553.94 -1 627.60 -4.40 19.29 135.50 2 769.00
+
+Ratios
+Return on Assets 241 -3.43% 32.66% — -375.09% -1.16% 2.48% 6.42% 39.12% 102 -1.42% 23.42% -173.09% -0.89% 2.14% 5.79% 64.92%
+Return on Equity 226 -2.89% 68.33% — -637.10% 0.22% 8.72% 16.75% 247.29% 97 0.08% 56.55%  -408.74% -0.74% 7.21% 12.78% — 270.55%
+Sales growth 236 14.12% 40.53% —-96.61% = -1.73% 10.16% 23.90% — 395.24% 101 10.83% 26.22% 42.94% 0.00% 7.76% 21.10% — 160.55%
+Log of Sales Growth 213 10.78% 26.40% — -234.50% 1.58% 9.98% 20.46% — 142.54% 93 11.64% = 21.27% = -26.48% 1.27% = 6.22% = 19.67% ~~ 132.29%
+
+Solvency 241 0.41 0.30 -0.88 0.22 0.41 0.62 0.98 102 0.36 0.39 -1.82 0.16 0.39 0.60 1.00
+
+Leverage 241 2.23 11.07 -60.45 0.49 1.31 2.56 134.17 102 3.46 6.52 -9.10 0.54 1.42 3.68 37.50
+
+Current Ratio 203 2.82 4.74 0.22 1.13 1.62 2.86 AT.86 86 2.59 2.73 0.34 1.31 1.88 2.61 15.30
+
+Interest Coverage 183 15.59 113.23 -920.03 1.16 3.87 13.98 89 21.43 107. -141.98 1.19 3.31 7.4L 922.82
+Dividend Payout Ratio 239 ~-0.04 3.97 102 0.23 1.47 -9.89 0.00 0.00 0.17 8.26
+
+0.00 0.00 0.28
+
+Price/Earnings 241 11.04 125.56 -0.33 13.75 25.04 102 57.00 385.71  -568.13— -1.46 17.62 30.71 3 671.82
+Profit margin 235 -15.54% 165.94% -1784.32% 2.88% 10.86% — 20.85% 89.73% 100 -5.70% = 118.02% -947.85% 3.19% 8.62% — 19.90% 77.74%
+
+Market-to-Book 241 1.51 1.98 0.00 0.44 0.93 1.79 14.46 102 1.37 1.38 0.00 0.42 0.96 1.69 6.15
+
+st Turnover 241 0.84 0.74 0.00 0.32 0.62 1.20 4.28 102 0.85 0.76 0.00 0.34 0.66 1.18 4.70
+
+Bankruptcy likelihood
+Altman Z-score 200 4.74 12.30 -57.05 1.50 3.06 5.48 119.02 85 3.18 3.77 -13.66 1.66 2.56 AAT 20.39
+Zimjewskij probability 203 29.10% — 27.53% 0.49% 7.22% 20.50% 41.52% — 100.00% 86 33.08% 27.15% 0.44% = 10.41% 28.76% 52.68% — 100.00%
+Ohlson probability 201 55.21% — 28.61% 0.01% 31.46% 56.00% 80.20% — 100.00% 86 62.23% — 27.31% 2.33% 38.71% 66.39% 83.66% — 100.00%
+
+Betas and alphas
+Market Beta 246 1.034 0.925 -2.319 0.625 0.994 1.345 6.650 113 0.968 0.829 4.554 0.545 1.000 1.373 2.560
+Beta SMB 246 0.551 1.580 -11.692 -0.076 (0.387 1.007 12.677 113 0.300 1.231 -6.364 — -0.158 0.312 0.842 3.531
+Beta HML 246 0.159 2.094 -7.883 -0.727 0.022 0.665 20.906 113 -0.041 1.322 -5.041 — -0.687 —-0.022 0.560 3.264
+Alpha 246 -0.001 0.006 -0.068 -0.002 0.000 0.001 0.034 113 0.000 0.004 -0.020 -0.002 0.000 0.001 0.009
+
+Rumor Year Sales ‘Total Current Assets
+
+3Y Before Rumor Sales
+
+Net Income Net Income Rumor Year §
+
+. Total Equity Total Liabiliti
+; Return on Equity: —_—_——
+Tol Amas’ Return on Equity: 7 rauity
+
+; Leverage:
+Total Assets) “°VETABC! To equity
+
+. . , > . 1 J
+Ratio calculations: Return on Assets: ; Sales Growth: ; Log of Sales Growth: 3° In¢, ) ; Solvency: ‘urrent Ratio:
+
+Provious Year Sales ‘Total Current Liabilities
+
+EBIT
+
+Interest Expenses
+
+a . EBIT 7, a
+; Dividend Payout Ratio: —+"'" _ ; price/Earnings:
+” Interest Expenses
+
+‘Total Sales
+
+Market Capitalizat
+Total Assets
+
+ion
+
+EBIT
+Total Sales
+
+Market C
+Total
+
+alization
+
+Interest Coverage: ; Profit Margin: ; Market-to-Book: ; Asset Turnover:
+
+Net Income
+
+Table 5. Tests for significant difference between true and false rumors in CAR during various periods
+
+This table shows, using three different tests (the Wilcoxon rank-sum test, Student’s t-test and Mood’s median test), whether or not the stock price reactions in the true and false
+sample differ during various time periods around the rumor publication date. The mean values for both true and false rumors are presented together with each standard deviation
+and their combined standard deviation. For the rank-sum test the z-statistic is presented both as its true value and recalculated as the probability of the CAR of the two samples
+
+being the same. For the t-tests, we included both one-sided and two-sided p-values as well as the standard error and the t-statistic. The t-tes me equal variances, an
+
+assumption that seems to hold reasonably well (assuming unequal variances give approximately the same results). The median test is presented as chi-squared values and its
+corresponding p-values, and complemented with continuity corrected values of both.
+
+Rank Sum Test Student's T-test Median Test
+Obs Obs Std. Dev Std. Dev Combined Mean Mean One-sided p- Two-sided — Std. : Chi- Chi-squared Cont.-corr.
+CAR . . . Z-statistic  P-valuc ; T-statistic P-valuc
+(False) (True) (False) (True) Std. Dev (False) (True) value (lower) p-value Error squared. (cont.-corr.) p-value
+242 103 18.22% 24.68% 20.34% 1.49% 0.27% -1.867 0.03** 0.695 0.610 2.39% 0.510 3.239 0.072* 2.830 0.093*
+242 103 15.22% 17.04% 15.76% 1.63% = 1.19% -0.873 0.19 0.593 0.814 1.86% 0.225 0.737 0.391 0.549 0.459
+242 103 13.35% 13.23% 13.30% 2.11% 1.71% -0.015 0.49 0.601 0.799 1 a 0.255 0.007 0.934 0.001 0.972
+242 103 11.17% 9.53% 10.69% 2.09% 1.63% 0.208 0.42 0.643 0.714 1.26% 0.366 0.389 0.533 0,256 0.613
+242 103 8.59% 8.47% 8.55% 1.87% 1.33% 0.553 0.71 0.704 0.593 1.01% 0.536 0.007 0.934 0.001 0.972
+242 103 7.55% 7.85% 7.63% 1.80% 1.38% 0.346 0.64 0.681 0.639 0.90% 0.470 0.007 0.934 0.001 0.972
+242 103 7.13% 7.38% 7.19% 1.55% 1.44% -0.106 0.46 0.548 0.904 0.85% 0.120 0.151 0.698 0.073 0.787
+242 103 6.44% 7.12% 6.64% 1.24% = 1.51% -0.846 0.367 0.734 0.78% -0.340 1.767 0.184 1.468 0.226
+242 103 4.60% 6.10% 5.10% 0.81% 1.53% -0.372 0.115 0,229 0.60% -1.205 1.310 0.252 1.052 0.305
+242 103 3.97% 5.49% 4.47% 0.72% 1.18% -0.240 0.41 0.189 0.377 0.53% -0.884 0.669 0.413 0.486 0.486
+242 103 6.06% 10.92% 8.14% 2.99% 7.95% -A117 0.00*** 0.000*** 0.000*** -5.382 5.155 0.023** 4.635 0.03 1**
+242 103 413% 6.36% 4.93% -0.04% 1.26% -0.204 0.42 0.013** 0.025** -2.251 0.083 0.773 0.028 0.867
+242 103 5.51% 7.38% 6.16% 0.17% 1.66% -0.212 0.42 0.020** 0.039** -2.072 0.095 0.759 0.035 0.851
+242 103 6.57% 8.04% 7.06% 0.27% 1.72% -0.576 0.28 0.041** 0.082* -1.747 0.003 0.954 0.004 0.952
+CAR(-1,1) 242 103 7.71% 13.55% 10.28% 3.67% — 10.38% -4.609 0.00*** 0.000*** 0.000*** -5.815 11.881 0.001*** 11.084 0.001***
+CAR(-2,2) 242 103 8.83% 13.56% 10.95% 3.97% 11.13% 1.633 0.00*** 0.000*** 0.000*** -5,.824 0.003*** 8.172 0.004***
+CAR(-3,3) 242 103 12.51% 13.71% 13.22% 4.50% 11.17% ~4.553 0.00*** 0.000*** 0.000*** -4.400 0.000*** 12.706 0.000***
+CAR 242 103 13.34% 15.87% 14.42% 4.75% 11.15% -4.063 0.00*** 0.000*** 0.000*** -3.849 0.001*** 9.573 0.002***
+CAR(-10,10) 242 103 19.36% 21.04% 19.99% 3.59% 8.85% -2.512 0.01*** 0.013** 0.025** -2.247 0.012** 5.703 0.017**
+CAR(-20,20) 242 103 23.20% 28.51% 25.18% 3.47% 12.24% -3.734 0.00*** 0.001*** 0.003*** -2.994 0.000*** 12.706 0.000***
+CAR(-30,30) 242 103 29.27% 37.00% 31.82% 2.64% 8.17% ~3.413 0.00*** 0.070* 0.139 3.74% -1.481 0.000*** 12.706 0.000***
+
+Stars indicating signficance levels: *** p<0.01, ** p<0.05, * p<0.1
+
+However, as we just showed in Table 5, there does not appear to be any difference between true and
+false rumors during the period running up to the rumor publication. This therefore makes it more likely
+that what we are seeing is how the rumor is diffusing throughout the market by word-ofmouth and
+similar channels. Of course, insider information leaking out could still very well be the initial spark of
+
+the true rumors.
+
+5.5 Regressions on difference in rumor day reaction based on veracity
+
+Table 7 is a simple univariate regression showing that the abnormal return on the rumor publication
+day is statistically different from zero, as well as how the rumor day return differs between true and
+false rumors on average. True rumors have approximately 4.95% higher return on average than false
+rumors, effectively confirming the results seen in Figure 5. The average return created as an effect of
+false rumors, without winsorizing applied, is 2.99% on the rumor day, whilst true rumors induce a
+reaction of 7.94%. When the regression is restricted to rumors where the rumor reaction is positive, as
+is shown in Table 8, true rumors result in a stock price hike of approximately 10.16% and false rumors
+a reaction of 5.13%, about the same difference as in the unrestricted regression. In other words, the
+difference in reaction between the true and false rumors is not an effect of the stock market more
+frequently reacting positively to rumors that later prove to be true than to false rumors. This is an
+important finding as we attempt to create a model to determine if a rumor is true or false using the size
+of the rumor day price reaction as one of the determinants. For this to work there has be a way, on
+average, to tell the reaction of a true rumor apart from that of a false rumor even if both react positively,
+which Table 8 suggests is possible. Table 9 reveals that when controlling for the reputation of the source
+and the level of detail of the rumor report, the difference in reaction between true and false rumors does
+not change, a confirmation of what Figure 6 and 7 show. That only one of the variables (in this case
+“Major News Source”) is significant in the regression is due to the fact that both variables serve as
+different proxies for the same aspect — the credibility of the rumor.
+
+In Table 10 the abnormal return on the day of publication is regressed on the categorical variable
+indicating whether a rumor is true or not while controlling for numerous different factors that could
+be the real causes of the difference. Despite controlling for these different firm-specific factors we are
+unable to further explain the difference in the stock price jump on the rumor publication day. The
+difference in reaction caused by a rumor being true still remains at about five percent, virtually the
+same as with no control variables. The other variables that are statistically significant (leverage and
+price-to-earnings ratio) have coefficients so small that they do not add much explanatory power. This
+serves as evidence that the market also uses other more abstract or non-quantifiable factors than the
+ones suggested by the theories in Barnes (1998), and the level of detail and source of the rumor itself,
+when it appraises the probability of a rumor being true. While we are unable to determine what these
+factors are we can still use the rumor day reaction in order to, indirectly, include the information in
+the classification of rumors as true or false and subsequently to determine whether the market reacts
+
+efficiently to rumors.
+
+Table 6. Test for difference from zero in CAR for all rumors during various time periods
+
+This table shows, using Student’s t-test, whether or not the stock price reactions in all rumors in our dataset differ from zero during various time periods around the rumor
+
+publication date. The mean values for all rumors are presented together with the standard deviation for each of the time periods. Both one-sided and two-sided p-values as well
+
+as the standard error and the t-s > are included. Two different run-up periods are included, one ending one day before the publication of the rumor and one ending two days
+
+prior to publication.
+
+One-sided p- ‘Two-sided
+CAR Obs Std. Dev Mean Std. Error — T-statistic
+value (upper) p-value
+
+CAR(-30,-1) 358 22.28% 1.26% 0.142 0.285 1.18% 1.071
+CAR(-21,-1) 358 17.82% 1.42% 0.066* 0.132 0.94% 1.509
+CAR(-14,-1) 358 15.37% 2.04% 0.006*** 0.013** 0.81% 2.509
+CAR(-7,-1) 358 12.54% 1.88% 0.002*** 0.005*** 0.66% 2.835
+5-1) 358 9.68% 1.80% 0.000*** 0.001*** 0.51% 3.510
+
+) 358 7.92% 1.52% 0.000*** 0.000*** 0.42% 3.621
+
+) 358 7.46% 1.38% 0.000*** 0.001*** 0.39% 3.489
+
+) 358 6.91% 1.17% 0.001*** 0.001*** 0.36% 3.203
+
+) 358 4.91% 0.96% 0.000*** 0.000*** 0.26% 3.684
+CAR(-1,-1) 358 6.26% 0.63% 0.029** 0.059* 0.33% 1.896
+AR(0) 358 8.00% 4.31% 0.000*** 0.000*** 0.42% 10.199
+CAR(1,1) 358 6.50% 0.66% 0.029** 0.057* 0.34% 1.909
+CAR(1,2) 358 7.51% 0.93% 0.010*** 0.020** 0.40% 2.342
+CAR(1,3) 358 8.23% 1.04% 0.009*** 0.017** 0.44% 2.388
+CAR(-1,1) 358 10.34% 5.60% 0.000*** 0.000*** 0.55% 10.239
+CAR(-2,2 358 11.56% 6.20% 0.000*** 0.000*** 0.61% 10.150
+CAR(-3,3) 358 13.12% 6.52% 0.000*** 0.000*** 0.69% 9.407
+CAR(-5,5) 358 14.46% 6.88% 0.000*** 0.000*** 0.76% 9.006
+CAR(-10,10) 358 19.77% 5.39% 0.000*** 0.000*** 1.04% 5.159
+CAR(-20,20) 358 25.33% 6.44% 0.000*** 0.0U0*** 1.34% 4.808
+CAR(-30,30) 358 33.95% 5.11% 0.002*** 0.005*** 1.79% 2.849
+CAR(-30,-2) 358 21.38% 0.63% 0.287 0.575 1.13% 0.561
+CAR(-21,-2) 358 16.45% 0.79% O18] 0.362 O.87% 0.913
+CAR(-14,-2) 358 13.47% 1.41% 0.024** 0.048** 0.71% 1.983
+CAR(-7,-2) 358 9.91% 1.25% 0.009*** 0.017** 0.52% 2.390
+CAR(-6,-2) 358 8.70% 1.17% 0.006*** 0.012** 0.46% 2.540
+CAR(-5,-2) 358 6.84% 0.89% 0.007*** 0.014** 0.36% 2.460
+CAR(-4,-2) 358 6.29% 0.75% 0.012** 0,025** 0.33% 2.252
+CAR(-3,-2) 358 5.74% 0.54% 0.038** 0.075* 0.30% 1.786
+CAR(-2,-2) 358 5.31% 0.33% 0.121 0.248 0.28% 1.171
+
+Stars indicating signficance levels: *** p<0.01, ** p<0.05, * p<0.1
+
+32
+
+Table 7. Regression of abnormal return
+difference on rumor day
+
+This regression shows the difference in abnormal
+return between true and false rumors on the rumor
+day. (This is equivalent to running a t-test on the
+difference, but is included in this format to allow
+
+comparison to table 9.)
+
+Variables AR(0)
+True 0.0495***
+(0.0114)
+Constant 0.0299***
+(0.00390)
+Observations 345
+R-squared 0.078
+
+Robust standard errors in parentheses
+
+*** D<0.01, ** p<0.05, * p<0.1
+
+Table 8. Regression of abnormal return
+difference on rumor day contingent on
+positive rumor day abnormal return
+
+This regression shows the difference in abnormal
+return between true and false rumors on the rumor
+day, contingent on the market reacting favorably
+to the rumor. (This is equivalent to running a t-
+test on the difference, but is included in this format
+to allow comparison to table 9.)
+
+Variables AR(O)
+True 0.0503***
+(0.0121)
+Constant 0.0513***
+(0.00390)
+Observations 263
+R-squared 0.093
+
+Robust standard errors in parentheses
+
+** D<0.01, ** p<0.05, * p<0.1
+
+Table 9. Regression of abnormal return on
+rumor day with control for news source and
+level of detail
+
+This regression shows the difference in abnormal
+return between true and false rumors on the rumor
+day, with controls for the source and the level of
+detail of the rumor.
+
+Variables AR(0)
+True 0.0485***
+(0.0114)
+Major News Source 0.0272***
+(0.0102)
+Detailed Rumor -0.00124
+(0.0116)
+Constant 0.0180***
+(0.00464)
+Observations 358
+R-squared 0.103
+
+Robust standard errors in parentheses
+
+*** D<0.01, ** p<0.05, * p<0.1
+
+Table 10. The abnormal return on the rumor day as a function of the veracity of the rumor while controlling for various factors
+
+This table shows the regression result when the the abnormal return on the rumor day is regressed on the categorical variable True while controlling for a large number of
+
+level of detail of the rumor, a number of different <
+
+factors, including credibility of the source punting ratios and the likelihood of the firm going bankrupt. In the different
+
+), size (Log of Total Assets and Log of Market
+
+models we vary the variables used to represent bankruptcy probability (Altman’s Z-score, Zmijewskij and Ohlson probability
+
+Capitalization) and profitability (Return on Assets and Return on Equity).
+
+Dependent variable: Abnormal return on rumor day
+
+Variables Model 1 Model 2 Model 2 Model 4 Model 5 Model 6 Model 7 Model 8 Model 9 Model 10 Model 11 Model 12
+True 0.05193" — 0.05286" —0.05270"* 0.05310" 0.05342" 0.05327" 0.05325" 0.05431" 0.05408" 00884" 0.05365" 0.05402
+(0.01561) (0.01522) (0.01516) (0.01483) (0.01459) (0.01467) (0.01548) (0.01496) (0.01490) (0.01476) (0.01435) (0.01456)
+Major News Source 0.01245 0.01352 0.01298 0.01637 0.01657 0.01677 0.01138 0.01191 0.01541 0.01610 0.01581
+(0.01450) (0.01424) (0.01417) (0.01426) (0.01406) (0.01407) (0.01421) (0.01389) (0.01395) (0.01372) (0.01378)
+Detailed Rumor 0.02314* 0.02182 0.01159 0.01521 (1.0112. 0.02221 1.02305 0.02134 0.01112 0.01581 0.01086
+(0.01399) (0.01399) (0.01372) (0.01360) (0.01355) (0.01441) (0.01400) (0.014104 (0.01389) (0.01354) (0.01367)
+Market-to-Book -0.00101 0.00362 -0.00259 0.00587 ~0.00490 0.00423 0.00352 0.00067 0.00116 0.00192 -0.00033 -0.00041
+(0.00843) (0.00533) (0.00528) (0.0070) (0.00498) (0.00510) (0.00725) (0.00523) (0.00521) (0.00690) (0.00501) (0.00519)
+Sales Growth 0.02953 0.02675 0.02728 0.01634 0.01889 0.01640 0.02963 9.02639 0.02721 0.01748 0.01977 0.01744
+(0.02290) (0.02221) (0.02267) (0.02366) (0.02174) (0.02310) (0.02351) (0.02253) (0.02319) (0.02434) (0.02199) (0.02378)
+Leverage -0.00297** 0.00256" -0.00316** —--0.00155** ——-0.00155** 0.00147" 0.00312" 0.00256" ——-0.00330""* —-0.00159** ——-0.00160** —-0.00152**
+(0.00118) (0.00140) (0.00127) (0.00078) (0.00074) (0.00077) (0.00115) (0.00137) (0.00124) (0.00078) (0.00075) (0.00077)
+Profit Margin 0.00283 0.00002 0.00219 0.00133 -0.00095 0.00161 0.00336 0.00038 0.00239 0.00158 -0.00173 0.00170
+(0.00681) (0.00708) (0.00680) (0.00604) (0.00582) (0.00542) (0.00692) (0.00725) (0.00697) (0.00609) (0.00598) (0.00554)
+Asset Turnover 0.00607, 0.00440, 0.00391 0.00011 0.00216 0.00232 0.00669 ).00448 0.00400 0.00065 0.00201 0.00255
+(0.00715 (0.00604) (0.00604) (0.00700) (0.00550) (0.00569) (0.00734) (0.00621) (0.00618) (0.00709) (0.00569) (0.00586)
+Dividend Payout -0.00509 0.00513 -0.00556 0.00443 -0.00501 0.00444 -0.00530 0.00522 -0.00578 ~0.00464 -0.00491 -0.00463
+(0.00488) (0.00494) (0.00490) (0.00462) (0.00481) (0.00463) (0.00473) (0.00483) (0.00473) (0.00449) (0.00472) (0.00448)
+Current Ratio -0.0016 0.00350 0.00179 0.00247 -0.00430 0.00241 -0.00116 0.00332 -0.00128 0.00184 -0.00436 0.00189
+(0.00347) (0.00293) (0.00305) (0.00345) (0.00265) (0.00275) (0.00343) (0.00300) (0.00315) (0.00332) (0.00267) (0.00277)
+Interest Coverage Ratio 0.00001 0.00000 0.00001 0.00002 ~0.00002 0.00001 0.00001 0.00001 0.00000 0.00002 -0.00003 -0.00001
+(0.00004) (0.00003) (0.00003) (0.00005) (0.00004) (0.00004) (0.00004) (0.00003) (0.00003) (0.00005) (0.00004) (0.00004)
+Price-to-Earnings Ratio -0.00003"** — -0.00003"** — -0.00003** — -0.00002*** — -0.00003*** —-0.00002*** —-0,00003°"" 0.00003" — -0.00003*** —-0.00002*** — -0.00003*** —~0.00002***
+(0.00001) (0.00001) (0.00001) (0.00001) (0.00001) (0.00001) (0.00001) (0.00001) (0.00001) (0.00001) (0.00001) (0.00001)
+Altman's Z-score -0.00171 0.00154 0.00212 0.00129
+(0.00429) (0.00380) (0.00421) (0.00369)
+Zmijewski Probability 0.01449 -0.05353** 0.02067
+(0.03953) (0.02625) (0.04127)
+Ohlson Probability 0.01640 0.01375 0.01786 0.01204
+(0.02339) (0.02263) (0.02326) (0.02241)
+Return on Equity 0.01194 0.01104 0.01126 0.01272 0.01181 0.01192
+(0.00847) (0.00819) (0.00856) (0.00882) (0.00842) (0.00891)
+Return on Assets 0.04241 0.02720 0.04526 0.04149 0.02835 0.04423
+(0.03524) (0.03577) (0.03531) (0.03546) (0.03528) (0.03528)
+Log of Total Assets: -0.00681 -0.00734 -0.00643 0.00628, -0.00698 -0.00648
+(0.00523) (0.00495) (0.00502) (0.00532) (0.00489) (0.00511)
+Log of Market Capitalization -0.005 0.00641 -0.00529 0.00505 -0.00679 -0.00529
+(0.00454) (0.00446) (0.004371 (0.00435) (0.00421) (0.00420)
+Constant 0.07923* 0.08859" 0.0657: 0.07442 0.10060** 0.08413* 0.06387" 0.07672* 0.05024 0.05866 0.09487** 0.06811
+(0.04478) (0.04753) (0.04982) (0.04601) (0.04505) (0.05075) (0.03736) (0.04298) (0.03563) (0.03881) (0.04156)
+Observations 220 221 221 236 237 237 220 221 221 236 237 237
+
+R-squared 0.17621 O.AT61A 0.17702 0.13838 0.15530 0.13936. 0.17392 0.17408 OATATA 0.13672 0.15763
+
+0.13779
+
+Robust standard errors in parcutheses
+PF D<0.01, ** p<0.05, * p<O.1
+
+5.6 Logit regressions and trading model specification
+
+Table 11 shows the three logit model specifications that have the best joint explanatory power. The
+signs of the coefficients are consistent with what theory suggests; larger firms appear to have a smaller
+likelihood to be taken over, and rumors with a higher level of detail are more likely to be true. Of the
+three bankruptcy measures, only Altman’s Z-score has a significant impact on the probability of a rumor
+being true, but all measures have signs consistent with theory. Thus, rumors where the target firms
+have a high risk of bankruptcy are more likely to be true than other rumors. A higher level of leverage
+also increases the chance of being taken over; a factor that in part captures the same qualities as the
+bankruptcy measures. While the price-to-earnings ratio is barely statistically significant the miniscule
+coefficient renders the factor effectively economically insignificant. This indicates a smaller effect than
+suggested by the theories presented in Barnes (1998), which state that either resource-constrained firms
+with high growth or resource-rich firms with low growth (captured by the price-to-earnings ratio) are
+more probable takeover targets. It can be added that extending the model to include sales growth,
+another factor relevant to the resourcegrowth mismatch theory, did not result in any significant
+improvement. The fact that the abnormal return on the rumor day is highly significant even with all
+other variables included tells us again that the market has access to additional information that we
+have been unable to identify, and that is not captured by the other variables in the logit regression.
+
+Although Figure 9 seems to indicate that the trading volume on the day of the rumor would be a
+valuable element to consider when trying to discern true rumors from false, we find that including it in
+the logit regression contributes little (not shown). This is most likely due to the difference in volume
+between the two rumor types mirroring the information inherent in the market price reaction, thus
+making the inclusion of both redundant. Another aspect that could have been relevant to include in the
+model is a potential run-up before the rumor publication but, consistent with Table 5 where we found
+no statistically significant difference in the run-up between true and false rumors as well as the similar
+findings of Barnes (1998), including the run-up does not contribute to the model.
+
+Table 12 shows a logit regression using the model with the best explanatory power in Table 11,
+Model 1, but excluding the market reaction to the rumor. The regression aims to see if it is possible to
+categorically identify true and false rumors using only observable information (firm- and rumor-specific
+properties). While this model performs worse than the model in Table 11, a significant portion of the
+R-squared value (12%) is retained and most variables are still significant to the same extent as in Table
+11. This shows that the identified variables are factors that actively contribute to whether a firm is a
+likely takeover target or not, and hence factors that can be used, independently and collectively, to
+estimate the veracity of an acquisition rumor.
+
+Table 11 and 12 both paint a clear picture: apart from the level of detail in the rumor and the
+unobservable information contained in the price jump the relevant factors to classify rumors as true or
+false are the size of the firm, its profitability and the likelihood of it going bankrupt. To a smaller extent
+the indebtedness of a firm the price-to-earnings ratio also hold some explanatory power. The differing
+signs on the bankruptcy measurements and the return on equity, suggesting that at the same time
+profitable firms and firms on the verge of bankruptcy are likely takeover candidates, indicate that it is
+impossible to describe a typical target firm and that there are several reasons to why a firm is more or
+
+less likely to be taken over.
+
+35
+
+Table 11. Logit regression to identify factors determining the veracity of rumors
+
+This table shows the results of a logit regression aiming to find variables that explain whether
+a rumor is true or false. The specification of the regression is as follows, where BANKRUPT
+is Altman’s Z-score, Zmijewski probability or Ohlson probability in each of the three models.
+
+Size is the natural logarithm of the total assets of the firm.
+
+True = By + B,ARo + ByDETAIL + B,SIZE + ByROE + Bs;BANKRUPT + BgLEVER + BPE + €
+
+As the standard R-squared measure is not defined for logit regressions, the commonly used
+alternative McFadden’s R-squared and Adjusted R-squared are instead presented.
+
+Dependent variable: True
+
+Variables Model 1 Model 2 Model 3
+AR (0) T.ITT2Q*** 8.41956*** 8.26838***
+(-2.42733) (-2.35292) (-2.3421)
+Detailed rumor 0.94759*** 0.88857*** 0.88739***
+(-0.33166) (-0.31918) (-0.31938)
+Size -0.25012** -0.19512** -0.18777**
+(-0.10192) (-0.09345) (-0.09317)
+Return on Equity 0.42044* 0.36400 0.25633
+(-0.24731) (-0.23945) (-0.22365)
+Altman's Z-score -0.13481***
+(-0.04700)
+Zmijewski probability 0.95871
+(-0.78606)
+Ohlson probability 0.33203
+
+(-0.54938)
+
+Leverage 0.06573* 0.05912* 0.07432**
+(-0.03634) (-0.03530) (-0.03530)
+Price/Earnings 0.00067* 0.00067* 0.00064
+(-0.00039) -0.00039 (-0.00039)
+Constant 0.51922 -0.63118 -0.63715
+(0.79672) (-0.68007) (-0.71932)
+Observations 269 272 271
+McFadden's R-squared 0.169 0.153 0.150
+McFadden's Adjusted R-squared 0.12 0.104 0.101
+
+Robust standard errors in parentheses
+
+*** D<0.01, ** p<0.05, * p<0.1
+
+36
+
+Table 12. Logit regression excluding abnormal return
+
+This table shows the results of repeating the logit regression in Table 11
+but excluding the abnormal return on the rumor day.
+
+True = By + B,DETAIL + B,SIZE + ByROE + ByZSCORE + BsLEVER + BcPE +
+
+Since Altman’s Z-score proved to be the best bankruptcy measure in the
+regression in Table 11 it is the only one used in this one. Size is the
+natural logarithm of the total assets of the firm.
+
+Variables True
+Detailed rumor 1.24814***
+-0.31851
+Size -0.33291***
+(-0.10034)
+Return on Equity 0.54331*
+(-0.28224)
+Altman's Z-score -0.13790***
+(-0.04289)
+Leverage 0.04821
+(0.03661)
+Price/Earnings 0.00051
+(-0.00038)
+Constant 1.47965**
+(-0.73677)
+Observations 269
+McFadden's R-squared 0.118
+McFadden's Adjusted R-squared 0.075
+
+Robust standard errors in parentheses
+
+** D<0.01, ** p<0.05, * p<0.1
+
+5.7 Classification of rumors and outcome of trading strategy
+
+Using the model specified in Table 11, we divide the sample into a training set and a validation set as
+explained in the methodology section, estimate the coefficients of the model using the training set, and
+then use the coefficients on the validation set to calculate probabilities of the different rumors being
+true. Doing this repeatedly we arrive at the distribution seen in Table 13. By examining the t-statistics
+presented it is apparent that the model performs significantly better than picking takeover targets at
+random for all probability cutoffs above 0.3 (when the probability of a rumor being true estimated by
+the logit regression is higher than 0.3). On average, with a cutoff of 0.5, we select 8.31 true rumors and
+5.36 false rumors in the hold-out sample consisting of 75 rumors. Buying these rumors and holding them
+for one year would yield, on average, a return of 4.16%, or about equal to the market return during the
+same period. The 0.5 cutoff is the cutoff that maximizes the percentage of rumors correctly identified.
+However, a slightly better return can be achieved using a 0.6 probability cutoff with only a minute
+reduction of the success rate and the t-statistic. For any level higher than 0.6 the number of rumors
+traded on becomes so low that the strategy can no longer be considered viable. While the numbers in
+Table 13 only represent a third of the total dataset, one must keep in mind that the rumors are spread
+out over a twelve-year period. For example, applying the 0.7 cutoff would entail investing in, on average,
+only 1.4 stocks each year whereas a strategy using the 0.5 cutoff represents investments in 3.4 stocks
+
+every year.
+
+Table 13. Results from using the logit model including rumor day price reaction with repeated
+random sub-sampling
+
+This is the results from estimating the coefficients in the logit model
+True = Bo + ByARy + ByDETAIL + B3SIZE + B,ROE + B;BANKRUPT + BLEVER + B,PE +€
+
+on two thirds of the total U.S. sample and then creating estimated probabilities using these coefficients for the
+
+last third of the sample. This is done a total of 200 times, and the holding period return and the e s holding
+period return for a year after the rumor publication as well as the number of false and true rumors found
+above a certain cutoff is averaged over all iterations. The C-ratio is the fraction of true rumors above a cutoff
+level divided by the total number of rumors above the cutoff level, and is a measure of the accuracy of the
+
+model. It can also be used determine the most accurate cutoff level. Type I error lists the number of true
+
+rumors not included above the cutoff, while the type II column lists the number of false rumors that are,
+
+incorrectly, included above the cutoff (a negative value indicates that the classification performs worse than
+
+by chance). The number of rumors in the validation set is 75 each time, with 174 rumors in the training set.
+
+Cutoff — False True C-ratio Type 1 Error Type II Error % Correct HPR(1;365) Ex.HPR(1;365) — T-stat
+
+0.1 - A7.89 32.76% 1.42 A7.89 40.91% 1.26% 0.22% -3.71
+0.2 - 26.42 18.86 41.66% 5.23 26.42 61.73% 3.23% 2.40% 0.62
+0.3 - 15.11 15.12 50.02% 8.80 15.11 71.14% 4.12% 1.58% 2.10
+0.4 - 9.60 10.45 52.11% 13.91 9.60 71.57% 2.11% 0.82% 2.64
+0.5 - 5.36 8.31 60.81% 16.14 5.36 74.17% 4.16% 0.07% 3.71
+0.6 - 2.96 6.06 67.18% 18.40 2.96 74.00% 6.32% 1.64% 3.65
+0.7 - 1.67 3.96 70.31% 19.85 1.67 73.89% 9.82% 2.93% 3.53
+0.8 - 0.87 2.30 72.63% 21.99 0.87 72.32% 10.46% -0.51% 3.15
+0.9 - 0.43 1.28 TA.85% 0.43 71.74% 10.02% -0.38% 3.04
+1- 0.00 0.00 - 0.00 70.51% - - 2.74
+
+
+Table 14 shows what the same technique yields using the model specification in Table 12, excluding the
+abnormal return on the rumor day. By examining the number of firms above the different cutoffs and
+the respective t-statistics it is clear that the model performs slightly worse than the model in Table 13,
+but is still able to predict takeover targets significantly better than chance. A portfolio where the 0.4
+probability cutoff is used earns a better return than any of the portfolios in Table 13, however the
+returns are not statistically different from zero (as the standard deviation is larger than 40 percent most
+iterations, resulting in a standard error of above 10 percent.) While insignificant, a larger return could
+be caused by the exclusion of the rumor day return as a determining factor. Some firms that were
+included in the portfolios in Table 13 because of their strong rumor day reaction rebound, due to the
+rumor being proven false or for some other reason, during the following year and hence reduce the return
+of the investment portfolio. Table 15 investigates a short selling strategy where all firms below a certain
+cutoff are sold instead of bought. This strategy aims at identifying false firms instead of true firms,
+which it manages to do with some accuracy. Below the 0.3 cutoff the model identifies 43.47 false rumors
+and 9.25 true rumors on average, significantly better than chance, which allows us to make a non-risk
+adjusted average HPR of 2.51% and an average excess return of 2.03%, none of which are statistically
+different from zero (as standard errors here too are above 10 percent for nearly all iterations.) Figure
+12 and 11 provide a more visual presentation of the classification results in Table 12 and 13, clearly
+showing that a larger fraction of true rumors are identified at higher cutoffs.
+
+All three model variants perform very well at classifying rumors into true or false categories.
+However, the returns one can earn from trading on these rumors are far too modest (especially since
+transaction costs are not considered) to justify it as a viable trading strategy, suggesting that the
+efficient market hypothesis holds for takeover rumors. We have been able to identify factors that
+contribute to the likelihood of a firm being taken over in addition to the information inherent in the
+stock market reaction to the rumor. However, that we cannot profit on this ostensible information
+advantage indicates that the market has already internalized this increased likelihood even before the
+
+rumor publication through a higher pre-rumor stock price.
+
+39
+
+Table 14. Results from using the logit model excluding rumor day price reaction with repeated
+random sub-sampling
+
+This is the results from estimating the coefficients in the logit model
+
+True = By + B,DETAIL + B,SIZE + B,ROE + B,BANKRUPT + B,LEVER + BPE + €
+
+on two thirds of the total U.S. sample and then creating estimated probabilities using these coefficients for the
+last third of the sample. This is done a total of 200 times, and the holding period return and the excess holding
+period return for a year after the rumor publication as well as the number of false and true rumors found
+above a certain cutoff is averaged over all iterations. Firms above the C-ratio is the fraction of true firms
+above a cutoff level divided by the total number of rumors above the cutoff level, and is a measure of the
+accuracy of the model. It can also be used determine the most accurate cutoff level. Type I error lists the
+
+number of true rumors not included above the cutoff, while the type IT column lis
+
+the number of false rumors
+
+c measures whether the cl cations above the
+
+y, included above the cutoff. The t-stat
+
+that are, incorre s
+cutoffs are significantly more accurate than by chance (a negative value indicates that the classification
+performs worse than by chance). The number of rumors in the validation set is 75 each time, with 174 rumors
+
+in the training set.
+
+Cutoff — False True C-ratio Type I Error Type II Error % Correct HPR(1;365) Ex.HPR(1;365)  T-stat
+
+0.1 - 51.54 22.96 30.81% 1.23 51.54 36.42% 0.59% -0.65% -4.73
+0.2 - 32.53 19.24 37.16% 4.93 32.53 54.97% 1.30% 0.24% -0.78
+0.3 - 18.52 15.63 45.78% 8.32 18.52 67.46% 2.68% 1.46% 1.91
+0.4 - 10.61 11.27 51.52% 13.25 10.61 71.20% 5.36% 4.02% 2.95
+0.5 - 5.54 6.07 52.26% 18.48 5.54 71.35% 2.01% -0.01% 2.61
+0.6 - 2.97 2.33 43.96% 21.59 2.97 69.90% 0.37% 2.54
+0.7 - 1.39 0.72 34.20% 23.75 1.39 69.70% 0.21% 2.53
+0.8 - 0.87 0.26 24.08 0.87 70.15% 0.91% -3.99% 2.59
+0.9 - 0.41 0.13 24.25 0.41 70.29% 13.92% 4.43% 2.65
+1- 0.00 0.00 - 24.12 0.00 70.92% - - 2.79
+
+Table 15. Results from using the logit model including rumor day price reaction with repeated
+random sub-sampling when shorting firms
+
+This is the results from estimating the coefficients in the logit model
+
+True = By + B:ARy + B,DETAIL + B3SIZE + B,ROE + B;BANKRUPT + B.LEVER + B,PE +
+
+on two thirds of the total U.S. sample and then creating estimated probabilities using these coefficients for the
+last third of the sample. The firms below different cutoffs are then sold (shorted). This is done a total of 200
+times, and the holding period return and the excess holding period return for a year after the rumor publication
+as well as the number of false and true rumors found below a certain cutoff is averaged over all iterations. The
+C-ratio is the fraction of true firms above a cutoff level divided by the total number of rumors above the cutoff
+level, and is a measure of the accuracy of the model. It can also be used determine the most accurate cutoff
+level. Type I error lists the number of false rumors not included below the cutoff, while the type I] column
+lists the number of true rumors that are, incorrectly, included below the cutoff. The t-statistic measures
+whether the classifications below the cutoffs are significantly more accurate than by chance (a negative value
+indicates that the classification performs worse than by chance). The number of rumors in the validation set
+is 75 each time, with 174 rumors in the training set.
+
+Cutoff — False True C-ratio Type I Error Type II Error % Correct HPR(1;365) Ex.HPR(1;365)  T-stat
+
+- 01 11.26 1.24 90.12% 47.86 1.24 41.14% 5.51% 1.56% -3.70
+- 0.2 31.79 5.08 86.22% 26.60 5.08 61.76% ] 2.29% 0.66
+- 0.83 43.47 9.25 82.46% 14.59 9.25 71.05% 2.51% 2.86
+-04 A8.89 13.29 78.63% 9.79 13.29 72.13% -0.57% 3.09
+- 0.5 52.65 16.19 5.89 16.19 73.32% -0.77% -1.82% 3.44
+- 0.6 55.78 17.77 3.15 17.77 74.72% -0.49% -1.66% 3.75
+- 0.7 57.20 20.83 1.62 20.83 73.11% -1.07% -2.25% 3.46
+- 0.8 58.23. 22.25 0.91 22.25 72.35% -0.62% 1.83% 3.14
+- 0.9 58.64 23.20 0.53 23.20 71.62% -0.75% -2.04% 2.99
+-1 59.18 24.54 70.69% 0.00 24.54 70.69% -0.54% -2.17% 2.72
+
+40
+
+Figure 12. Estimated probabilities of rumors being true using
+the logit model including rumor day price reaction and a single
+representative random sample
+
+This is the results from estimating the coefficients in the logit model
+
+True = By + B:ARo + B,DETAIL + B3SIZE + B,ROE + B;BANKRUPT + BgLEVER + B,PE +€
+
+on two thirds of the total U.S. sample and then creating estimated
+probabilities using these coefficients for the last third of the sample. This
+is based on only one such random sampling of the U.S. data that
+approximated the distribution in table 14. The total number of firms in
+the validation set shown is 75.
+
+T T T T T T T
+0 a 2 3 4 5 6 7 8 9 1
+Estimated p(True)
+
+False
+HE True
+
+Figure 13. Estimated probabilities of rumors being true using
+the logit model excluding rumor day price reaction and a single
+representative random sample
+
+This is the results from estimating the coefficients in the logit model
+
+True = Bo + ,DETAIL + B,SIZE + B,ROE + B,BANKRUPT + B,LEVER + B,PE + €
+
+on two thirds of the total U.S. sample and then creating estimated
+probabilities using these coefficients for the last third of the sample. This
+is based on only one such random sampling of the U.S. data that
+approximated the distribution in table 15. The total number of firms in
+the validation set shown is 75.
+
+pret
+
+a4
+
+0 A 2 3 4 5 6 7 8 9 1.0
+Estimated p(True)
+
+False
+HE True
+
+Al
+
+5.8 Robustness tests
+
+For robustness, we redo some of the steps done for the U.S. on a U.K. dataset as well as on an out-of
+sample U.S. dataset from Bloomberg to see if our findings hold when using other data. Table 16 is the
+regression in Table 7 reproduced on the U.K. data, and shows that there is no statistically significant
+difference in the rumor day reaction between true and false rumors in the U.K. Contingent on the
+abnormal return being positive, however, the difference is statistically significant and firms subject to
+true rumors gain on average 12.81%, more than in the U.S., while falsely rumored firms gain 5.5%
+(compare with Table 9 for the U.S.). In other words, if the market reacts with positive abnormal returns,
+as is expected since being named a potential takeover target is usually good news, it is possible to tell
+a difference in the reaction for true and false rumors in the U.K market as well. Table 18, a regression
+with a country dummy variable for the U.K. and an interaction term between a True dummy variable
+and the U.K. dummy variable is included, tells us that there does not appear to be, on average, any
+statistically significant difference between the U.S. and the U.K. when it comes to rumor reactions. This
+is a first indication that we cannot reject that our findings from the U.S. dataset do not hold in the
+
+U.K. market as well.
+
+Table 16. U.K. data: regression of abnormal
+
+return difference on rumor day
+
+This regression shows the difference in abnormal
+return between true and false rumors on the rumor
+day for a U.K. sample, also from Zephyr, selected
+
+in similar fashion to the U.S. sample. (This is
+
+equivalent to running a t-test on the difference, but
+is included in this format to allow comparison to
+table 18.)
+
+Variables AR(0)
+True 0.0307
+(0.0251)
+Constant 0.026 1***
+(0.00680)
+Observations 273
+R-squared 0.010
+
+Robust standard errors in parentheses
+
+** D<0.01, ** p<0.05, * p<0.1
+
+Table 17. U.K. data: regression of abnormal
+return difference on rumor day contingent
+on positive rumor day abnormal return
+
+This regression shows the difference in abnormal
+return between true and false rumors on the rumor
+day for the U.K. contingent on the market reacting
+favorably to the rumor. (This is equivalent to
+running a t-test on the difference, but is included
+
+in this format to allow comparison to table 18.)
+
+Variables AR(O)
+True 0.0731**
+(0.0303)
+Constant 0.0550***
+(0.00566)
+Observations 185
+R-squared 0.065
+
+Robust standard errors in parentheses
+
+** D<0.01, ** p<0.05, * p<0.1
+
+Table 18. U.K. and U.S. data: regression of
+abnormal returns on rumor day with
+country dummy and interaction term
+
+This regression tests whether we can reject the
+hypothesis that the U.K. rumor reaction differs
+
+from the U.S. rumor reaction.
+
+Variables AR(0)
+True 0.0502***
+(0.0115)
+Uk -0.00373
+(0.00783)
+True and UK -0.0111
+(0.0311)
+Constant 0.0298***
+(0.00388)
+Observations 609
+R-squared 0.034
+
+Robust standard errors in parentheses
+
+** D<0.01, ** p<0.05, * p<0.1
+
+Figure 14 shows the rumor day reaction for U.K. market, as Figure 5 illustrated for the U.S. Here, the
+run-up appears to be distinct for true rumors, but not for false rumors, the 14 days preceding the rumor
+publication. The U.K. also shows a more distinct upward-sloping ACAR trend after the rumor
+publication compared with in the U.S. The U.S. sample exhibits a similar trend but only over a longer
+period. These two differences are difficult to explain, and could be due to structural differences between
+the markets. It also cannot be ruled out that it is caused by impurities in the U.K. sample or that
+Zephyr's rumor collection process differs between the U.K. and the U.S. The U.K. reaction is more in
+line with the diffusion process described by Kimmel (2004), who states that true rumors should become
+more and more credible with time while the credibility of false rumors deteriorate. The exact causes of
+this difference remain to be explored, something that is left to future research.
+
+The data for the Bloomberg sample is even more imprecise, and we have reason to believe that the
+rumor date present in the dataset is in many cases not the first publication date of the rumor but rather
+the date when it was recorded by Bloomberg. As a consequence, the timing of the reaction is inexact
+for some rumors and a graph showing the difference between the reaction for true and false rumors may
+be misleading. Due to the large size of the Bloomberg dataset we have been unable to correct for these
+imprecisions and therefore choose to not present a graph like Figure 14 for Bloomberg. The imprecise
+timing also explains the smaller difference for the Bloomberg dataset between the model including the
+
+rumor day reaction and the one that does not, compared to the other two datasets.
+
+43
+
+Figure 14. U.K.: Winsorized ACAR for rumored target firms day -30
+to +30 relative to rumor publication, divided by veracity
+
+This figure shows the average cumulative abnormal return (ACAR) for the days
+-30 to +30 around the rumor publication day for both rumors that are followed
+by an acquisition (true) and rumors that are not (false). The figure is based on
+79 true rumors and 212 false rumors, where the CARs are winsorized on the 5%
+level every day before the average is calculated.
+
+1 1
+-30 -20 -10 0 10 20 30
+Day relative to rumor day
+
+True rumors
+
+TTT False rumors
+
+To test the classification model, we estimate the coefficients in the logit model in Table 11 (including
+the rumor day reaction) on the full U.S. main data sample, and use the resulting coefficients to estimate
+a probability for the rumors being true or not in our two external datasets, on U.K. rumors and on
+other U.S. rumors provided by Bloomberg. Figure 15 and 16 show the distribution of true and false
+rumors both including and excluding the rumor day reaction on the U.K. dataset, while Figure 17 and
+18 give the same graphical presentation for the Bloomberg sample. The model including the rumor day
+reaction does noticeably better than the one excluding it for both samples, but both still perform
+decidedly better than chance. The distribution of true rumors is still distinctly skewed toward the right
+compared to the distribution of false rumors, indicating that the models are able to identify true rumors
+in these samples as well. The difference in the classification results of the two models is, however, smaller
+for the Bloomberg sample due to the imprecision of the data causing some rumor day reactions to not
+
+be included.
+
+44
+
+Figure 15. U.K.: probabilities of rumors being true from logit model
+including rumor day price reaction estimated on U.S. data
+This is the results from estimating the coefficients in the logit model
+True = By + B:ARo + B2SIZE + B;ROE + B,BANKRUPT + BsLEVER + BoPE +€
+on the full U.S. sample of 249 rumors and then using these coefficients to
+
+estimate the probability of a rumor being true in the U.K. sample of 199 rumors.
+Detail is not included as it was not recorded for U.K. rumors.
+
+A
+Ao | lites a...
+
+1 1
+0 at 2 3 4 5 6 7 8 9 1
+Estimated p(True)
+
+&
+
+False
+
+HE Ire
+
+Figure 16. U.K.: probabilities of rumors being true from the logit
+model excluding rumor day price reaction estimated on U.S. data
+This is the results from estimating the coefficients in the logit model
+
+True = By + B,SIZE + B,ROE + B3BANKRUPT + B,LEVER + BPE +
+on the full U.S. sample of 249 rumors and then using these coefficients to
+
+estimate the probability of a rumor being true in the U.K. sample of 199 rumors.
+Detail is not included as it was not recorded for U.K. rumors.
+
+3
+24
+= l fa a
+
+A
+27
+3
+
+T 1 T 1
+
+0 Jl 2 3 A 5 6 7 8 9 1
+Estimated p(True)
+False
+HE True
+
+45
+
+Figure 17. Bloomberg U.S.: probabilities of rumors being true using
+the logit model including rumor day price reaction estimated on U.S.
+data
+This is the results from estimating the coefficients in the logit model
+
+True = By + B:ARy + B,SIZE + B3ROE + By,BANKRUPT + BsLEVER+ BPE +€
+on the full U.S. (Zephyr) sample of 249 rumors and then using these coefficients
+to estimate the probability of a rumor being true in the Bloomberg U.S. sample
+
+of 783 rumors. DETAIL is not included as it cannot be determined for
+
+Bloomberg U.S. rumors.
+
+otttddndl... . .
+
+0 1 2 3 4 5 6 7 8 9 J
+Estimated p(True)
+
+False
+
+HE True
+
+Figure 18. Bloomberg U.S.: probabilities of rumors being true using
+the logit model excluding rumor day price reaction estimated on
+U.S. data
+This is the results from estimating the coefficients in the logit model
+
+True = By + B,SIZE + B,ROE + B3BANKRUPT + B,LEVER + BsPE+€
+on the full U.S. (Zephyr) sample of 249 rumors and then using these
+coefficients to estimate the probability of a rumor being true in the Bloomberg
+
+U.S. sample of 783 rumors. DETAIL is not included as it cannot be determined
+for Bloomberg U.S. rumors.
+
+34
+
+0 1 2 3 4 5 6 7 8 9 1
+Estimated p(True)
+
+False
+GE Truc
+
+46
+
+The t-statistics in Table 16 show that all U.K. rumors with an estimated probability of being true that
+is above 0.4 have been selected significantly better than at random. The model performs, for most
+cutoffs, significantly better than chance would in the Bloomberg dataset as well, as is shown in Table
+17. While the model outperforms chance in the Bloomberg dataset it only manages to classify very few
+rumors correctly and at very conservative probability levels, most likely due to the reduction of the
+impact of the rumor day reaction caused by the imprecision of the dates provided in the dataset. As
+expected, though, both the U.K. sample and the U.S. Bloomberg sample perform worse than the same
+model does in the U.S. sample. This is partly because of the somewhat lower quality of data in these
+samples. In particular, Bloomberg’s standards for what is required from a rumor in terms of credibility
+in order for it to be reported appears to be lower than Zephyr’s. This is also apparent in the ratio of
+false to true rumors, where Bloomberg is closer to 10-to-1, compared to the ratio in the Zephyr samples
+and the distributions seen in papers such as Zivney et al. (1996) and Pound and Zeckhauser (1990)
+where the ratio is approximately 3-to-1. It is also almost inevitable that differences exist between the
+U.S. and U.K. markets in some form. Generally, however, it is encouraging to see how well one can
+classify firms into targets and non-targets using only simple accounting ratios. Holding period returns
+were not calculated for the Zephyr U.K. and Bloomberg U.S. samples, however, as the stock prices in
+those datasets required more data processing.
+
+As a last robustness test on both the main U.S. and the U.K. data, we ascertain that the difference
+in the rumor day reaction between true and false rumors is not solely due to differences in target firm
+size or other firm characteristics but due to other information available to the market. This was done
+by matching the true and false rumors on a number of firm characteristics and the results of this
+procedure can be seen in tables Al and A2 in the appendix. The difference in rumor day reaction
+between true and false rumors in the U.S. remains statistically significant while the difference for the
+U.K. is still statistically insignificant.
+
+Descriptive statistics for the U.K. and Bloomberg datasets are included for sake of comparison with
+
+the main dataset in tables A3 and A4 in the appendix.
+
+AT
+
+Table 16. U.K.: results from using the logit model including rumor day price reaction
+estimated on U.S. data
+This is the results from estimating the coefficients in the logit model
+
+True = By + B,ARy + BySIZE + B3ROE + B,BANKRUPT + B;LEVER+ BPE +€
+
+on the full U.S. (Zephyr) sample of 249 rumors and then using these coefficients to estimate the
+probability of a rumor being true in the U.K. sample. DETAIL is not included as it was not recorded for
+U.K. rumors. The C-ratio is the fraction of true firms above a cutoff level divided by the total number
+of rumors above the cutoff level, and is a measure of the accuracy of the model. It can also be used
+determine the most accurate cutoff level. Type I error lists the number of false rumors included above
+the cutoff, while the type II column lists the number of true rumors that are not included above the
+
+cutoff. The t-statistic measures whether the clas: tions below the cutoffs are significantly more
+accurate than by chance (a negative value indicates that the classification performs worse than by
+
+chance). The model is run on 199 rumors, of which 56 are true and 143 are false.
+
+Cutoff False True C-ratio Type 1 Error Type Il Error % Correct T-stat
+0.1 - 136.00 56.00 29.17% 0.00 136.00 31.66% ~-10.56
+0.2 - 102.00 49.00 32.45% 7.00 102.00 45.23% -5.22
+0.3 - 52.00 27.00 34.18% 29.00 52.00 59.30% -0.40
+0.4 - 25.00 21.00 45.65% 35.00 25.00 69.85% 3.50,
+0.5 17.00 14.00 45.16% 42.00 17.00 70.35% 3.70
+0.6 - 9.00 12.00 57.14% 44.00 9.00 73.37% 4.99
+0.7 - 5.00 8.00 61.54% 48.00 5.00 73.87% 4,99
+0.8 - 3.00 6.00 66.67% 50.00 3.00 73.37% 4.99
+0.9 - 1.00 3.00 75.00% 53.00 1.00 72.86% 4,76
+1- 0.00 0.00 - 56.00 0.00 71.86% 4,33
+
+Table 17. Bloomberg U.S.: results from using the logit model estimated on U.S. data including
+rumor day price reaction
+This is the results from estimating the coefficients in the logit model
+
+True = By + B,SIZE + B,ROE + B,BANKRUPT + B,LEVER + B;PE +¢€
+
+on the full U.S. (Zephyr) sample of 249 rumors and then using these coefficients to estimate the probability
+of a rumor being true in the Bloomberg U.S. sample. DETAIL is not included as it cannot be determined
+for Bloomberg U.S. rumors. The C-ratio is the fraction of true firms above a cutoff level divided by the
+total number of rumors above the cutoff level, and is a measure of the accuracy of the model. It can also
+be used determine the most accurate cutoff level. Type I error lists the number of false rumors included
+above the cutoff, while the type I column lists the number of true rumors that are not included above the
+cutoff. The t-statistic measures whether the classifications below the cutoffs are significantly more accurate
+
+than by chance (a negative value indicates that the classification performs worse than by chance). Out of
+the 1520 rumors in the Bloomberg dataset, the required data to run the model was only available for 783
+
+rumors (112 true and 671 false).
+
+Cutoff False True C-ratio Type 1 Error Type Il Error % Correct T-stat
+0.1 - 574.00 102.00 15.09% 10.00 574.00 25.42% -32.18
+0.2 - 279.00 68.00 19.60% 44.00 279.00 58.75% -9.51
+0.3 - 91.00 33.00 26.61% 79.00 91.00 78.29% 1.90
+0.4 - 36.00 15.00 29.41% 97.00 36.00 83.01% 5.61
+0.5 10.00 4.00 28.57% 108.00 10.00 84.93% 7.39
+
+0.6 - 4.00 2.00 33.33% 110.00 4.00 85.44% 7.90
+0.7 - 0.00 1.00 100.00% 111.00 0.00 85.82% 8.29
+0.8 - 0.00 0.00 - 112.00 0.00 85.70% 8.16
+0.9 - 0.00 0.00 - 112.00 0.00 85.70% 8.16
+1- 0.00 0.00 - 112.00 0.00 85.70% 8.16
+
+48
+
+6. CONCLUSION
+
+We have examined different hypotheses concerning rumors in financial markets, both in the U.S. and
+in the U.K. Using rumors between 2000 and 2012, we have studied whether financial markets can tell
+the difference between true and false rumors; whether markets react efficiently to rumors; whether it is
+possible to use book values to tell the difference between true and false rumors; and whether the markets
+have internalized this information or not.
+
+First, we find a statistically significant difference between true and false rumors, where the market
+reacts, on average, 4.95% stronger to the publication of true rumors than to false rumors. This result
+stands even when controlling for the source reporting the rumor and the level of detail of the rumor.
+We find that a rumor from a larger news source induces a rumor day reaction that is around 2.72%
+stronger than for smaller news sources. This agrees with our first hypothesis, that markets can tell the
+difference between true and false rumors. We can however only partially explain the information that
+the market uses to distinguish between the two.
+
+Second, we also find that it is not possible to profit by buying and holding rumors on average, as
+one would expect; such a strategy would yield a return not statistically different from zero due to the
+high volatility associated with trading on rumors. This is evidence that markets do appear to react
+efficiently to rumors, in accordance with our second hypothesis.
+
+Third, using logit models, we find that we are able to successfully classify rumored target firms both
+in- and out-of-sample using the coefficients estimated in-sample. We find that smaller firms, firms with
+high return on equity, and firms with high bankruptcy risk are all more likely to be taken over than
+other firms. We, however, also find that there is a significant amount of information that we are unable
+to control for that the market uses to distinguish between true and false rumors. We therefore establish
+that the stock price abnormal return on the rumor publication day has strong explanatory power when
+added to our model, serving as a proxy for information that cannot be readily observed. This information
+could be information Zephyr missed to record, such as SEC filings on insider trading or block purchases
+or further statements by the rumored target or acquiring firm. It could also be due to nuances in the
+original news report that cannot be captured in a summary of a rumor, in line with how Tetlock (2004)
+concludes that the way a news item is reported, and not only the content of the report, can make a
+great difference in what effect it has on the market.
+
+Despite the observed correlation between the rumor day abnormal return and some of the other
+variables included in the sample, causing some concern about multicollinearity, the inclusion of the
+rumor day return still contributes significantly to the classification of rumors as true or false. Other
+statistically significant variables provide explanatory power to the model even when return is included,
+which leads us to hypothesize that markets perhaps do not take into account all the information
+available in some of the financial key ratios when judging the veracity of rumors. We therefore try
+classifying firms by dividing our main sample into a training set and a validation set and can by using
+this method classify rumors better than at random. While this result is unsurprising when the rumor
+reaction is included in the logit model, considering the difference in reaction between true and false
+rumors, the model still does better than chance when only financial key ratios are included. This agrees
+
+with our third hypothesis and with the findings of for example Palepu (1986), Barnes (1998) and others
+49
+
+that have investigated the differences in characteristics between targets and non-targets (but not in
+conjunction with rumors). The downfall is that only a fraction of the rumors can be classified, which
+translates to very few identified rumors if the method were to be applied on future rumors as a trading
+strategy.
+
+Fourth, we find that it is not possible to profit using either of the two classification strategies in our
+main sample. The reaction on the rumor publication day appears to be sufficient to capture any potential
+profits on the rumor day rendering trading of targets after this reaction an unprofitable venture, both
+in terms of normal and abnormal holding period returns. It is assumed that the stock market reacts
+nearly instantly to the rumor. If the reaction is not instant, however, profits may be achievable if the
+model (excluding the rumor day price reaction) is applied before the full reaction has materialized. All
+strategies were shown unprofitable even without taking transaction costs into account; when controlling
+for transaction costs, the ability to profit using these methods diminishes even further. These results
+agree with our last hypothesis.
+
+We compare our findings on the U.S. dataset with another sample of U.S. rumors as well as a sample
+of U.K. firms and find that the same estimated logit model used in the main U.S. dataset also manages
+to classify firms significantly better than chance in both the two other datasets. Due to the noisiness of
+these datasets we have been unable to calculate returns to a buy-and-hold strategy using rumors with
+any reasonable degree of certainty, but preliminary calculations show a lack of abnormal returns in
+these markets as well.
+
+We therefore find evidence for weak as well as semi-strong market efficiency in conjunction with
+rumors. We also find no evidence to contradict strong-form market efficiency for rumors in the U.S., as
+we do not find any statistically significant differences in the run-up between true and false rumors. We
+believe that the difference between true and false rumors is likely to be due to public information that
+we are unable to capture using the summaries available through Zephyr and annual report data. Finally,
+we have also been able to show that the run-up prior to announcements caused by the rumors in our
+dataset largely corresponds with the run-up observed in the market as a whole, demonstrated by for
+example Betton et al. (2008). This finding suggests that rumors may be a large contributing factor to
+the pre-announcement stock price run-ups and that the part played by insider trading may be
+
+overstated.
+
+50
+
+7. LIMITATIONS AND SUGGESTIONS FOR FUTURE RESEARCH
+
+In the process of selecting the samples used, some assumptions have had to be made. These include that
+Zephyr is not disproportionately reporting true rumors ahead of false rumors, and that the likelihood of
+firms being dropped due to missing annual report data or missing stock data is independent of whether
+the rumors are true or false. While these assumptions are unlikely to hold perfectly, we do not believe
+that they invalidate the conclusions of this thesis.
+
+Abnormal holding period returns for strategies are calculated by subtracting the market return for
+the year from the holding period returns. This is done because the estimated daily alphas become
+severely biased when added up over a period of 365 days as compared to a period of 60 days (the event
+window used). It is also believed that the systematic risk is very likely to have changed for the target
+firm with the event, and no period exists to re-estimate the factor betas as the holding period return is
+calculated starting the day after the rumor publication. An alternative approach would have been to
+use the pre-rumor factor betas and not include alphas in the normal return calculation, but we instead
+choose to use the market return as a benchmark (equivalent to assuming market betas of one for all
+target firms) since this method is less prone to error and provides satisfactory estimates of the abnormal
+holding period returns.
+
+Since the market reaction to a rumor publication differ quite significantly depending on the source
+reporting it, controlling more closely for the initial source of the rumor could reveal interesting
+information about how the market weighs similar news depending on which news outlet the report
+originates from. Zephyr does not, in most cases, provide enough information to make such research
+feasible. One way to investigate this better is to collect the rumors manually. Categorizing the rumors
+further by the exact content and wording of the rumor report would also be possible if the rumors were
+collected this way. Ideally, the existence of SEC filings concerning toeholds and insider trades in
+conjunction with the rumor publications would also be manually verified.
+
+Due to the relatively small amount of acquisition rumors, and the high volatility seen for the stocks
+of rumored target firms, standard errors become very large for any buy-and-hold returns. This is one of
+the reasons we cannot refute any of the hypotheses that markets react efficiently to takeover rumors.
+Particularly so since only a small number of true rumors can be identified with confidence, making it
+difficult to prove that the returns one can earn from trading on them are statistically different from
+zero. A larger sample would allow for smaller standard errors and consequently improve the investigation
+of market efficiency in conjunction with rumors. A larger sample could be collected by either manually
+aggregating rumors, or by increasing the time span investigated.
+
+Henderson (1989) presents common problems with event studies, and solutions to most of them.
+Some of them include problems common to all regression models that involve stock prices, such as the
+non-normality and serial correlation of stock returns. As he states, even though returns may not be
+normally distributed, residuals often end up close enough to normal to ensure that a null hypothesis of
+normality cannot be rejected. He also exposes the common problems of serial correlation and
+nonsynchronous trading, which one partially could overcome by averaging leading, lagging and
+contemporaneous beta values. He states, though, that these methods generally do not manage to
+
+overcome the problem of autocorrelated residuals. Other problems could emerge from a larger correlation
+
+51
+
+between the daily residuals in the market model and the market return if the market was in a bear
+market when betas were estimated and is in a bull market when the event occurs. Some of these matters
+are not causes of too much concern in our study, while others could potentially introduce biases. Future
+research could test for these biases and test whether any of them have a noticeable impact on our
+findings.
+
+In recent years, other techniques have shown that they might do a better job at a task such as the
+one at hand than the logit model applied in this thesis. Both support vector machines (SVMs) and
+artificial neural networks have shown to be at least as good as the simpler dichotomous probit? or logit
+regression techniques at tasks such as estimating bankruptcy risk and identifying or classifying merger
+and acquisition targets (Tan and Dihardjo, 2001; Min and Lee, 2005). Applying the same techniques to
+this more niche topic of rumors could potentially provide even more promising results. The advantage
+to using probit and logit regressions is their relative simplicity and how the estimated coefficients have
+a simpler economic interpretation, while neural networks and support vector machines can be harder to
+translate into relationships that can easily be explained.
+
+Further investigations into other characteristics of the firms involved could also be conducted, such
+as changes in the volatility of the stock before and after the rumor, and whether the systematic risk or
+alpha of the firm shift with the rumor. Since the ability to profit from the rumor depends on how
+efficiently, and especially how quickly, markets adjust to new news, examining intra-day stock reaction
+to the rumor could reveal, for example, whether the market instantly reacted to the new information or
+
+whether the adjustment takes place over a longer timespan.
+
+4 Probit: regression models are very similar to logit models and serve, effectively, the same purpose. Instead of a using a logistic
+function, probit is based on the normal cumulative distribution function.
+
+52
+
+8. REFERENCES
+
+Altman, E.I. 1968, "Financial Ratios, Discriminant Analysis and the Prediction of Corporate
+Bankruptcy", Journal of Finance, vol. 23, no. 4, pp. 589-609.
+
+Bajo, E. 2010, "The Information Content of Abnormal Trading Volume", Journal of Business Finance
+and Accounting, vol. 37, no. 7-8, pp. 950-978.
+
+Barnes, P. 1998, "Can Takeover Targets be Identified by Statistical Techniques?: Some UK
+Evidence", Journal of the Royal Statistical Society: Series D (The Statistician), vol. 47, no. 4, pp. 573.
+
+Bettis, C. 1995, "A Test of the Validity of Friendly Takeover Rumors", Financial Analysts Journal,
+vol. 51, no. 6, pp. 53-57.
+
+Betton, S., Eckbo, B-.E. & Thorburn, K.S. 2007, "Chapter 15 - Corporate Takeovers" in Handbook of
+Empirical Corporate Finance, ed. B. Espen Eckbo, Elsevier, San Diego, pp. 291-429.
+
+Branch, B. & Yang, T. 2003, "Predicting Successful Takeovers and Risk Arbitrage", Quarterly Journal
+of Business & Economics, vol. 42, no. 1, pp. 3-18.
+
+Castagna, A.D. & Matolesy, Z.P. 1981, "The Prediction of Corporate Failure: Testing the Australian
+Experience", Australian Journal of Management (University of New South Wales), vol. 6, no. 1, pp.
+23.
+
+Chou, H., Yuan Tian, G. & Yin, X. 2010, "Rumors of Mergers and Acquisitions: Market Efficiency
+and Markup Pricing", 23rd Australasian Finance and Banking Conference 2010 Paper.
+
+Clarkson, P.M., Joyce, D. & Tutticci, I. 2006, "Market reaction to takeover rumour in Internet
+Discussion Sites", Accounting & Finance, vol. 46, no. 1, pp. 31-52.
+
+Comment, R. & Jarrell, G.A. 1987, "Two-tier and negotiated tender offers: The imprisonment of the
+free-riding shareholder", Journal of Financial Economics, vol. 19, no. 2, pp. 283-310.
+
+Dietrich, J.K. & Sorensen, E. 1984, "An Application of Logit Analysis to Prediction of Merger
+Targets", Journal of Business Research, vol. 12, no. 3, pp. 393-402.
+
+DiFonzo, N. & Bordia, P. 1997, "Rumor and Prediction: Making Sense (but Losing Dollars) in the
+Stock Market", Organizational behavior and human decision processes, vol. 71, no. 3, pp. 329-353.
+
+Dougal, C., Engelberg, J., Garcia, D. & Parsons, C.A. 2012, "Journalists and the Stock Market",
+Review of Financial Studies, vol. 25, no. 3, pp. 639-679.
+
+Engelberg, J.E. & Parsons, C.A. 2011, "The Causal Impact of Media in Financial Markets", Journal of
+Finance, vol. 66, no. 1, pp. 67-97.
+
+Fama, E.F. 1970, "Efficient Capital Markets: A Review of Theory and Empirical Work", Journal of
+
+Finance, vol. 25, no. 2, Papers and Proceedings of the Twenty-Eighth Annual Meeting of the
+American Finance Association New York, N.Y. December, 28-30, 1969, pp. 383-417.
+
+53
+
+Gao, Y. & Oler, D. 2012, "Rumors and pre-announcement trading: why sell target stocks before
+acquisition announcements?", Review of Quantitative Finance and Accounting, vol. 39, no. 4, pp. 485-
+508.
+
+Hair, J.F., Anderson, R.E., Tatham, R.L. & Black, W.C. 1995, Multivariate Data Analysis,
+Macmillan, New York.
+
+Henderson, G.V.,Jr. 1990, "Problems and Solutions in Conducting Event Studies", The Journal of risk
+and insurance, vol. 57, no. 2, pp. 282-306.
+
+Holland, K.M. & Hodgkinson, L. 1994, "The Pre-Announcement Share Price Behaviour of U.K.
+Takeover Targets", Journal of Business Finance & Accounting, vol. 21, no. 4, pp. 467-490.
+
+Jarrell, G.A. & Poulsen, A.B. 1989, "Stock Trading before the Announcement of Tender Offers:
+Insider Trading or Market Anticipation?", Journal of Law, Economics, & Organization, vol. 5, no. 2,
+pp. 225-248.
+
+Kimmel, A.J. 2004, "Rumors and the Financial Marketplace", Journal of Behavioral Finance, vol. 5,
+no. 3, pp. 134-141.
+
+Kohavi, R. 1995, "A Study of Cross-Validation and Bootstrap for Accuracy Estimation and Model
+Selection", Morgan Kaufmann, , pp. 1137.
+
+Kosfeld, M. 2005, "Rumours and Markets", Journal of Mathematical Economics, vol. 41, no. 6, pp.
+646-664.
+
+Kyle, A.S. 1985, "Continuous Auctions and Insider Trading", Econometrica, vol. 53, no. 6, pp. 1315-
+1335.
+
+MacKinlay, A.C. 1997, "Event Studies in Economics and Finance", Journal of Economic Literature,
+vol. 35, no. 1, pp. 13-39.
+
+Manne, H.G. 1965, "Mergers and the Market for Corporate Control", Journal of Political Economy,
+vol. 73, no. 4, pp. p. 351.
+
+Meulbroek, L.K. 1992, "An Empirical Analysis of Illegal Insider Trading", Journal of Finance, vol. 47,
+no. 5, pp. 1661-1699.
+
+Min, J.H. & Lee, Y., 2005, "Bankruptcy prediction using support vector machine with optimal choice
+of kernel function parameters", Expert Systems with Applications, vol. 28, no. 4, pp. 603-614.
+
+Monroe, R.J. & Simkowitz, M.A. 1971, "Investment Characteristics of Conglomerate Targets: A
+Discriminant Analysis", Southern Journal of Business, vol. 15, pp. 1-16.
+
+Oberlechner, T. & Hocking, S. 2004, "Information sources, news, and rumors in financial markets:
+Insights into the foreign exchange market", Journal of Economic Psychology, vol. 25, no. 3, pp. 407-
+424,
+
+Ohlson, J.A. 1980, "Financial Ratios and the Probabilistic Prediction of Bankruptcy", Journal of
+Accounting Research, vol. 18, no. 1, pp. 109-131.
+
+54
+
+Palepu, K.G. 1986, "Predicting Takeover Targets: A Methodological and Empirical Analysis", Journal
+of Accounting and Economics, vol. 8, no. 1, pp. 3-35.
+
+Peress, J. 2012, "The Media and the Diffusion of Information in Financial Markets: Evidence from
+Newspaper Strikes", INSEAD Working Papers Collection, , no. 36, pp. 1-53.
+
+Pound, J. & Zeckhauser, R. 1990, "Clearly Heard on the Street: The Effect of Takeover Rumors on
+Stock Prices", The Journal of Business, vol. 63, no. 3, pp. 291-308.
+
+Rose, A.M. 1951, "Rumor in the Stock Market", The Public Opinion Quarterly, vol. 15, no. 3, pp. 461-
+486.
+
+Sanders, R.W.,Jr. & Zdanowicz, J.S. 1992, "Target Firm Abnormal Returns and Trading Volume
+Around the Initiation of Change in Control Transactions", The Journal of Financial and Quantitative
+Analysis, vol. 27, no. 1, pp. 109-129.
+
+Tan, C.N.W. & Dihardjo, H. 2001, "A study of using artificial neural networks to develop an early
+warning predictor for credit union financial distress with comparison to the probit model", Managerial
+
+Finance, vol. 27, no. 4, pp. 56-77.
+
+Tetlock, P.C. 2007, Giving Content to Investor Sentiment: The Role of Media in the Stock Market,
+Wiley-Blackwell.
+
+Tumarkin, R. & Whitelaw, R.F. 2001, "News or Noise? Internet Postings and Stock Prices", Financial
+Analysts Journal, vol. 57, no. 3, pp. 41-51.
+
+Van Bommel, J. 2003, "Rumors", Journal of Finance, vol. 58, no. 4, pp. 1499-1519.
+Walter, R.M. 1994, "The Usefulness of Current Cost Information for Identifying Takeover Targets and
+Earning Above-Average Stock Returns", Journal of Accounting, Auditing & Finance, vol. 9, no. 2, pp.
+
+349-377.
+
+Wang, J. & Branch, B. 2009, "Takeover Success Prediction and Performance of Risk Arbitrage’,
+Journal of Business & Economic Studies, vol. 15, no. 2, pp. 10-25.
+
+Zivney, T.L., Bertin, W.J. & Torabzadeh, K.M. 1996, "Overreaction to Takeover Speculation",
+Quarterly Review of Economics and Finance, vol. 36, no. 1, pp. 89-115.
+
+Zmijewski, M.E. 1984, "Methodological Issues Related to the Estimation of Financial Distress
+Prediction Models", Journal of Accounting Research, vol. 22, pp. 59-82.
+
+55
+
+A. APPENDIX
+
+Table Al. Using matching to confirm the difference in reaction between true
+and false rumors
+
+Matching of the two samples (true and false) using as firm-specific variables: Major News
+Source, Return on Equity, Size (Log of Total Assets), Leverage, Sales Growth and
+Probability of Bankruptcy (Zmijewskij). ATT (“Average Treatment Effect on the
+Treated”) is the matched sample, “Treated” are the true rumors and “Controls” are the
+false rumors. “Difference” is the difference between the two.
+
+Variable Sample Treated Controls Difference — Std. Error T-stat
+AR (0) Unmatched — 0.08823 0.02940 0.05883 0.01070 5.5
+ATT 0.08823 0.03323 0.05501 0.01556 3.54
+
+Table A2. Using matching to confirm the difference in reaction between true
+and false rumors
+
+Matching the two samples (true and false) using as firm-specific variables: Major News
+Source, Return on Equity, Size (Log of Total Assets), Leverage, Sales Growth and
+Probability of Bankruptcy (Zmijewskij). ATT (“Average Treatment Effect on the
+Treated”) is the matched sample, “Treated” are the true rumors and “Controls” are the
+false rumors. “Difference” is the difference between the two.
+
+Variable Sample Treated Controls Difference Std. Error T-stat
+
+AR(0) Unmatched — 0.07192 0.02656 0.04536 0.02655 1.71
+ATT 0.07192 0.04440 0.02752 0.03822 0.72
+
+
+Table A8. Descriptive accounting data for the rumored firms divided on the veracity of the rumor for the U.K. dataset
+
+This table provides an overview of the characteristics of the falsely rumored firms and the ones that were eventually taken over. Some items are shown as they appear in
+
+the annual reports while others are used to calculate ratios or measurements of bankruptcy. Betas and alphas are calculated using the CAPM. All book values and the
+
+market capitalization are expressed in GBP.
+
+False rumors
+
+True rumors
+
+Variables Obs. Mean sD Min Ist Q Median 3rd Q Max Obs. Mean sD Min Ist Q Median 3rd Q Max
+Market Cap 194 3540.97 8 254.75 1.48 110.74 624.92 3041.45 76 030.63 TO 1946.88 2 943.93 0.46, T7386 574.42 1 878.70 25 649.97
+Balance sheet items
+4778.27 20 536.29 0.08 127.92 633.60 2 320.00 235 968.00 57 2017.29 3 294.20 3.04 140.78 2009.40 15 205.00
+2753.05 11 611.61 0.16 61.49 390.30 1 242.74 133 855.00 57 1176.62 1 847.22 0.10 76.31 1 466.¢ 9 213.00
+Income statement items
+Revenue 153 4 277.63 20 036.49 0.00 96.62 582.30 2075.10 239 272.00 57 1499.75 2310.15 0.00 542.00 1 889.80 10 140.00
+EBIT 153 470.60 2006.60 -1 298.70 4.89 47.40 201.70 22 004.00 57 138.74 225.23 -202.81 50.77 182.20 1 039.00
+Net Income 151 28 1476.14 -1 188.90 -0.84 15.10 148.10 16 576.00 57 64.41 -400.50 21.80 84.60 .00
+Ratios
+Return on As: 150 -3.26% 34.60% — -295.07% — -1.60% 4.59% 7.50% 33.43% 57 5.07% 48.68% -359.11% 0.76% 3.81% 5.11% 23.47%
+Return on Equity 143 1% -765.16% -1.09% 10.52% 19.10% — 427.02% 53 46% 30.07% —-166.02% 2.15%  — 8.98% 42.50%
+Sales growth 142 15.30% - -98.85%  -0.80% 6.86% — 18.96% — 849.87% 54 28.87% 82.02% = -37.77% = —-1.89% — 5.42% 438.16%
+Log of sales growth 120 10.51% 26.61% — -161.89% — 1.00% 9.25% 18.69% — 159.59% 39 9.41% 16.48%  -41.18% 1.51% 7.28% 59.44%
+Solvency 153 0.38 0.38 -2.91 0.27 0.41 0.53 57 0.44 0.24 -0.44 0.30 0.47 0.97
+Leverage 153 2.57 12.93 -69.24 0.85 2.34 57 3.25 14.19 23.69 0.65, 1.14 99.99
+Current Ratio 153 2.24 5.13 0.21 0.93 1.22 1.72 ¢ 57 1.59 1.62 0.17 0.85, 1.13 9.27
+Interest Coverage 144 9.06 84.14 -649.50 2.06 4.68 9.28 561.29 54 -0.49 56.25 -368.71 2.00 3.80 105.38
+Dividend Payout Ratio 112 0.71 3.30 -5.00 0.16 0.38 0.57 32.72 46 0.41 2.66 -13.33 0.23 0.42 11.46
+Price/Earnings 151 14.36 94.79 -350.40 -0.86 10.85 19.10 730.04 57 5.72 74.19 -526.78 6.51 15.39 90.67
+Profit margin 147 -12.91%  103.20% -624.17% — 3.44% 9.12% 16.97% — 100.00% 55 0.75% 52.54%  -302.76% 3.10% 8.21% 47.25%
+Market-to-Book 153 1.88 4.54 0.01 0.47 0.89 151 41.92 57 0.96 0.85 0.02 0.54 0.79 5.59
+Asset Turnover 153 1.13 1.15 0.00 0.47 0.89 1.58 10.90 57 1.05 0.87 0.00 0.41 0.79 3.44
+Bankruptcy likelihood
+Altman Z-score 153 4.42 28.99 -160.29 1.57 2.67 3.93 284.56 57 3.48 8.83 -11.37 1.64 2.45 3.51 66.28
+Zimjewskij probability 151 31.41% — 25.57% 0.19% = 11.95% 22.90% 44.95% — 100.00% 57 28.15% = 24.96% = 3.19% =— 9.27% ~— 20.54% ~—- 37.93% — 100.00%
+Ohlson probability 145 65.38% — 28.44% 1.16% 46.07% 75.22% 89.14% — 100.00% 56. 67.55% 25.10% 5.78% 50.61% 74.84% 85.86% — 100.00%
+Betas and alphas
+Market Beta 194 0.871 0.933 -0.895 0.447 0.814 1.083 10.676 69 0.666 1.470 -2.602 0.214 0.605 0.997 10.2523
+Alpha 194 -0.001 0.010 -0.030 -0.002 0.000 0.002 0.107 69 -0.005, 0.033 -0.271 -0.004 -0.001 0.001 0.020
+Ratio calculations: Return on Assets: SP" ; Return on Equity: A" ; Sales Growth: PSS | Log of Sales Growth: $+ nA) ; Solvency: PEM ; Leverage: SAMS 5 Current Ratio: =
+
+* EBIT 7 5
+Interest Coverage: ——————_§ ; Dividend Payout Ratio:
+Interest Expenses .
+
+EBIT
+Interest
+
+=xpenses
+
+; Price/Earnings:
+
+Market Capitalization
+Net Income
+
+; Profit Margin: =" >> ; Market-to-Book:
+
+Market Capitalization
+Total
+
+1s
+
+; Asset Turnover:
+
+‘Total Sales
+Total Assets
+
+Table A4. Descriptive accounting data for the rumored firms divided on the veracity of the rumor for the U.S. Bloomberg dataset.
+
+This table provides an overview of the characteristics of the falsely rumored firms and the ones that were eventually taken over in. Some items are shown as they appear
+in the annual reports while others are used to calculate ratios or measurements of bankruptcy. Betas and alphas are calculating using the three-factor model. All book
+values and the market capitalization are expressed in GBP.
+
+Rumor and no acquisition Rumor and acquisiton
+
+Variables Obs. __ Mean. SD Min Ist Q__ Median 3rd Q Max Obs. Mean SD Min Ist Q__ Median 3rd Q Max
+
+Market Cap 1285 7 509.78 27 786.85 41.10 1 246.98 3 142.32 7 562.71 858 353.10 235 3532.82 6 531.56 18.20 910.74 2191.31 4 105.63 79 956.04
+
+Balance sheet items
+Total As
+
+is 1285 12 507.17 74 466.56 8.46 705.08 2 460.20 7 239.00 2364 452.00 227 9 886.22 73 779.68 26.51 498.26 1304.31 2953.20 782 896.00
+Total Liabilites
+
+1285 9 708.30 69 951.90 0.98 231.85 1139.08 3 959.30 2228 791.00 218 8 452.09 67 629.11 4.28 179.67 747.47 1 485.47 702 689.00
+
+Income statement
+Revenue 1285 4 629.40 7 679.83 -288.95 455.70 1614.09 5577.60 89 328.00 227 = 2730.69 7 461.70 3.10 193.09 774.00 1974.55 55
+EBIT 1281 496.05 1396.97 -8 851.00 15.93 146.80 658.50 30 156.35 227 = 317.53 1225.76 = -461.04
+
+528.00
+0.14 76.01 318.76 12 531.00
+
+Net Income 1285 187.82 800. -6 453.29 -6.84 76.67 328.00 7 438.00 227 170.92 713.99 -73 -7.20 46.78 206.00 6 312.00
+Ratios
+
+Return on Assets 1285 1.07% 19.52%  -156.89% -0.43% = 4.41% 8.96% 52.45% 227 -1.86% — 27.09% = -138.33% -0.81% — 4.15% 8.57% 43.13%
+Return on Equity 1238 4.20% 92% 9.39% -0.93% 8.80% 18.55% 292.98% 200 6.19% 50.12% 320.12% 1.21% 8.31% 22.45% — 200.25%
+Sales growth 1275 16.34% 50.29% — -230.71% -5.64% = 8.94% —- 29.19% 722.27% 226 40.37% = 95. -63.26% 1.59% = 12.28% = 37.82% —514.26%
+
+Log of sales growth 1240 16.38% — 29.10% —-153.19% 1.79% — 11.78% — 28.40% 197.31% 219 23.15% 28.59% —-25.44% 6.63% 18.25% 33.47% ~— 24.27%
+
+Solvency 1285 0.48 0.28 -1.84 0.32 0.50 0.70 0.96 218 0.46 0.29 -0.48 0.29 0.51 0.69 0.97
+
+Leverage 1285 1.07 17.91 -592.56 0.39 0.91 1.84 50.84 218 111 3.68 -15.13 0.36 0.84 1.50 17.56
+
+Current Ratio 1177 3.00 2.95 0.21 1.34 2.16 3.53 42.01 210 3.24 2.78 0.50 1.84 2.54 3.79 19.14
+
+Interest Coverage 1032 29.39 113.62 -932.20 1.10 5.48 19.26 998.59 182 23.87 69.19 -248.80 0.12 7.59 49.06 350.13
+Dividend Payout Ratio 1283 0.04 2.16 -52.20 0.00 0.00 0.10 9.65 227 0.06 0.28 -1.78 0.00 0.00 3.14
+
+Price/Earnings 1285 60.65 729.95 -3 169.09 -2.44 14.99 29.87 12 504.52 227 40.75 216.97 -1 178.11 -1.56 14.58
+Profit margin 1244 5.44% 56.71%  -669.28% 3.67% 10.62% — 20.25% 517.40% 225° -20.96%  124.40% -757.06% 1.16% 7.82%
+
+1 364.63
+74.51%
+
+Market-to-Book 1285 2.91 21.23 0.01 0.69 1.48 2.87 744.26 227 2.39 2.44 0.03 0.95, 1.64 17.17
+
+Asset Turnover 1285 0.83 0.66 -0.01 0.40 0.63 1.12 4.05 227 0.88 0.96 0.06 0.37 0.63 6.73
+Bankruptcy
+
+Altman Z-score 1177 8.02 34.48 -28.83 2.25 4.03 6.84 999.63 201 5.28 10.12 -6.69 1.89 3.33 6.67 95.86
+
+Zimjewskij probability 1177 23.02% — 23.41% 0.40% 4.88% 15.53% — 33.33% 100.00% 201 25.68% 29.87% 0.75% 5.25% 14.53% 32.60% 99.94%
+
+Ohlson probability 1176 47.96% — 27.58% 0.57% 22.22% 47.81% 71.40% 100.00% 201 47.92% 28.55% 0.81% 22.67% 44.86% 71.30% — 99.45%
+
+Betas and alphas
+
+Market Beta 1285 14151 0.706. 5.505 O.815.—s1.134.—«1.470 9.273 235° 1137) 0.724. 3.274727 529 3.549
+Beta SMB 1285 0.479 0.998 —-7.249- 0.077 (0.389 0.926 10.551 235 0.565 «1.094. 2.388 0.051 0.454. 1.074. 7.765
+Beta HML 1285 -0.094 - L417—-11.069 0.740 -0.131 0.598 7.246 235° 0.110 1.342 4.141 0.817 0.181 0.454 «5.298
+Ratio calculations: Return on Assets: S““"" ; Return on Equity: a Sales Growth: #** Log of Sales Growth: $+ In( RB VS - Sotvoncy: BABY : Leverage: Mt a“ ; Current Ratio: ren Ast
+Interest Coverage: ime ; Dividend Payout Ratio: ; Price/Earnings: Motes Coptetaation ; Profit Margin: a ; Market-to-Book: Market Coptetztion : Turnover: eal Sas
+
+
+Table A5. False rumors in the U.S. main dataset
+
+Target Name
+
+Rumor date
+
+CAR(-1;1)
+
+HPR (1;365)
+
+Market Cap (M$)
+
+99 Cents Only Store
+Adobe Sys
+Akamai Technologies Inc.
+
+All-American Sportpark Inc.
+
+Allegheny Technologies Inc.
+
+America First Apartment Investors Inc.
+Ameristar Casinos Inc.
+
+Asiainfo Holdings Inc
+
+Bally Technologies Inc.
+
+Bally Total Fitness Holding Corporation
+Bj's Wholesale Club Inc.
+
+Bib Munai Inc
+Boise Cascade Corporation
+
+Boyd Gaming Corporation
+
+Brink's Company, The
+
+Bristol-Myers Squibb Company
+Bristol-Myers Squibb Company
+Brocade Communications Systems Inc.
+Cabg Medical h
+Cadence Design Systems Inc.
+Cal-Maine Foods Inc
+
+Cambridge Heart Ine.
+
+Capital One Financial Corporation
+Capital Senior Living Corporation
+Capisalsource Inc.
+
+Choe Holdings Inc.
+
+Cedar Fair Lp
+
+Cedar Shopping, Centers Tne.
+
+ems Ine.
+
+Charles & Colvard Ltd
+
+Charles River Laboratories International Inc.
+Children's Place Retail Stores Inc, The
+Ciphergen Biosystems Inc.
+
+Cit Group Inc.
+
+ions Company
+
+Cnet Networks
+Coinstar Inc
+Colgate-Palmolive Company
+
+Comerica Inc.
+
+Commervial Metals Company
+
+Compass Minerals International Inc.
+Comtech Telecommunications Corporation
+Comverse Technology In
+Consolidated Freightways Corporation
+Cooper Tire & Rubber Company
+Cousins Properties Inc
+
+Cullen/Frost: Bankers Inc.
+
+agen Corporation
+
+Da Consulting Group Inc
+Devon Energy Corporation
+Diamond Foods Inc
+
+Dick's Sporting, Goods Tne
+Dillard's Inc.
+
+Dish Network Corporation
+Dish Network Corporation
+Dow Chemical Company, The
+E*Trade Financial Corporation
+Earthlink Ine
+
+Eastman Kodak Company
+
+Ebay Inc.
+Edgar Online Inc.
+Electronic Arts Inc
+
+Eli Lilly And Company
+Eme Corporation
+Endologix hi
+Entertainment Distribution Company Ine.(Old)
+EstB Lauder Companies Inc
+
+Euronet Worldwide Inc.
+
+Kuroweb International Corporation
+
+Exelixis In
+
+Expedia h
+Extreme Networks Inc.
+
+Exxon Mobil Corporation
+
+Fair Isaac Corporation
+
+Falconstor Software Inc.
+
+Federal-Mogul Corporation
+
+Fifth Third Bancorp
+
+First Community Bancorp Inc. (California)
+Fomntain Powerboat Industries Ine
+Freeport-Memoran Copper & Gold Inc
+Gap Inc.
+
+General Mills Inc
+
+Genzyme Corporation
+
+Jeorgia Gulf Corporation
+
+Gramercy Capital Corporation
+
+Granite City Food & Brewery Ltd
+Greenbrier Companies Inc., The
+
+Harley Davidson Inc.
+
+Health Net In
+Herley Industries Inc.
+
+Hershey Company. The
+
+Hollywood Casino Corporation
+Home Depot Inc., The
+
+Honeywell International Inc.
+Hudson United Bancorp
+
+Humana Ine.
+
+Huntington Bancshares Inc.
+
+Impax Laboratories Inc.
+Independence Federal Savings Bank
+Instinet Group Inc
+
+International Coal Group Inc.
+
+June 30, 2005
+October 7, 2010
+October 12, 2011
+
+April 24, 2002
+
+April 4, 2008
+
+April 12, 2007
+October 22, 2007
+Feoruary 3, 2003
+
+February 22, 2007
+January 27, 2003
+April 11, 2003
+September 9, 2005
+November 10, 2003
+November 22, 2008
+November 22, 2008
+
+April 1, 2002,
+March 22, 2006
+October 5, 2009
+Feoruary 9, 2006
+
+June 4, 2007
+
+July 14, 2003
+October 19, 2007
+
+November 25, 2002
+March 24, 2008
+January 5, 2011
+Veoruary 9, 2011
+
+July 2, 2007
+January 23, 2008
+
+March 4, 2008
+December 9, 2010
+October 12, 2007
+November 2, 2001
+
+September 25, 2012
+
+April 28, 2004
+
+September 28, 2005
+
+May 14, 2007
+
+May 11, 2001
+August 16, 2012
+
+November 18, 2009
+
+June 23, 2003
+
+July 31, 2006
+
+March 3, 2009
+Qetober 5, 2011
+
+July 10, 2007
+
+December 11, 2002
+October L1, 2012
+
+September 7, 2007
+
+March 18, 2003
+
+July 11, 2005
+
+Aine 19, 2007
+
+May 13, 2003
+
+May 16, 2003
+
+April 5, 2007
+October 9, 2007
+
+October 18, 2007
+pruary 26, 2007
+July 20, 2011
+August 6, 2007
+July 14, 2005
+May 26, 2006
+November 11, 2002
+August 25, 2004
+
+2002
+2011
+September 29, 2006
+May 3, 2007
+September 21, 2007
+September 10, 2007
+April 3, 2002
+April 12, 2011
+Jue 15, 2007
+March 20, 2006
+October 31, 2005
+July 6, 2007
+April 11, 2007
+March 7, 2011
+March 6, 2008
+September 10, 2007
+Jume 11, 2009
+Jue 27, 2007
+January 6, 2006
+June 4, 2004
+November 15, 2007
+December 20, 2006
+September 14, 2011
+January 23, 2009
+February 4, 2008
+June 22, 2007
+July 7, 2005
+September 2, 2008
+April 14, 2008
+March 18, 2002
+December 1, 2006
+May 6, 2005
+August 5, 2003
+July 7, 2005
+April 26, 2005
+January 6, 2005
+May 28, 2003
+‘April 2. 2002
+December 6, 2006
+
+~5.1d%
+1.59%
+1.09%
+
+80%,
+
+8.57%
+
+1.64%
+1.94%
+0.67%
+4.65%
+10.90%
+10.36%
+8%
+5.4%
+10.89%
+9%
+7 AMG
+
+37%
+%
+1.34%
+0.81%
+5.13%
+8.05%,
+3.75%
+3.51%
+14.47%
+5%
+0.92%
+3.14%
+2.60%,
+
+2.01%
+i
+
+%
+4.75%
+5.02%
+17.33%
+1.27%
+2.67%
+3.19%
+0.22%
+12.9206
+13.63%
+6.10%
+LB81%
+3.64%
+2.99%
+-1.44%
+0.91%
+2.57%
+4.10%
+17.71%
+8.83%
+4.17%
+9.68%,
+14.04%
+1.01%
+0.77%
+2.01%
+1.67%
+7.67%
+3.27%
+1.60%
+1.02%
+7.30%
+3.14%
+2.22%
+-1.31%
+0.20%
+0.27%
+8.11%
+0.49%
+L71%
+15.30%
+0.14%
+0.96%
+4.41%
+
+4.25%
+
+4.07%
+
+10.42%
+3.26%
+1.96%
+
+12.47%
+
+127%
+
+9.18%
+
+871%
+
+-17.70%
+-11.89%
+62.13%
+18.18%
+68.90%
+A.OT%
+-76.79%
+
+79.28%
+-26.95%
+
+-70.02%
+9.00%
+3.76%
+6.60%
+13.95%
+
+7.57%
+~0.31%
+
+28.70%
+69.08%
+-1
+16.88%
+
+41.42%
+-22.86%
+
+11.42%
+35.35%
+
+-T7.72%
+19.68%
+1.47%
+31.48%
+56.05%
+-15.49%
+-18.34%
+27.22%
+1 RH%
+4.56%
+4.28%,
+-94.06%
+13.64%
+
+65.53%
+-22.85%
+-76.61%
+40.46)
+
+20.25%
+-26.71%
+19.73%
+10.13%
+31%
+1.03%
+9.26%,
+20.26%
+45.06%
+2.08%
+
+827.7172
+14800.32
+
+TT08.139
+232.7726
+1661.223
+216.1471
+1123.451
+225.9763
+9271
+
+207.1705
+2070.856
+3716.683
+2737.898
+
+3412.342
+23.2118
+6211.558
+69117
+8348
+7125.485
+211.4895
+2335.473
+117.945
+1526.724
+490.1977
+26.1897
+2060.866
+759.1672
+119.286
+7734.171
+3690.385
+1120.048
+3027.086
+1345.519
+1695.717
+40248.06
+8167.474
+2682.92
+1814.84
+721.1029
+4147.75
+0.2941695
+1345.401
+1442.824
+1600.574
+
+1.642707
+31536.29
+304.1201
+3153.071
+1931.282
+5762471
+9205.26
+41451.65
+
+3712.02
+917.7663
+7626.689
+45330.13
+27.05318
+
+164.526
+148.0772
+4845.849
+1371494
+10.64495,
+1367.934
+7282.587
+581.3388
+
+2182941
+520.8777
+
+1621.655
+905
+5461896
+908.4077
+24.08214
+1784.564
+
+763.969
+
+
+Table A5 continued. False rumors in the U.S. main dataset
+
+Target Name
+
+Rumor date
+
+CAR(-151)
+
+HPR (1;365)
+
+Market Cap (M8)
+
+Interplay Entertainment Corporation
+Penney Company Inc.
+
+Jds Uniphase Corporation
+
+Jefferies Group Inc
+
+Jetblue Airways Corporation
+
+Jo-Ann Stores Inc.
+
+Jones Lang Lasalle Ine
+
+Journal Register Company
+
+Juniper Networks Inc.
+
+Krispy Kreme Doughnuts Inc.
+Laboratory Corporation Of America Holdings
+Leap Wireless International Inc
+
+> Wireless International Inc
+
+Ligand Pharmaceuticals Inc.
+
+Lighting Science Group Corporation
+Local.Com Corporation
+
+Longs Drug Stores Corporation
+
+MT Bank Corporation
+
+Macromedia Ine:
+
+Magna-Lab Inc
+
+Marriott International Inc.
+
+Marsh & Mclennan Companies Inc
+
+Mccormick & Schmi
+Meristar Hospitality Corporation,
+ay Games Ine,
+
+Monster Beverage Corporation
+Monster Worldwide Inc.
+
+Morgan Stanley
+
+Morgans Hotel Group Company
+Motorola Mobility Holdings Inc.
+Mpe, Office Trust Tne
+Nanometries Inc.
+
+Nasdaq Omx Group Inc., The
+Nbty Inc
+
+Net Perceptions Inc.
+
+New York Community Bancorp Inc.
+y York Times Company, The
+y York Times Company, The
+ymont Mining Corporation
+Nitromed Inc.
+
+North Coast Energy Inc.
+Nui Corporation
+
+Nyse Euronext, Inc.
+Officemax Inc
+
+Optical Communication Produ:
+Optionsxpress Holdings Inc
+Overseas Shipholding Group Inc.
+
+Palm Inc.
+
+Par Pharmaceutical Companies Inc.
+Parametric Technology Corporation
+Peabody Energy Corporation
+
+asus Communications Corporation
+Pennichuck Corporation
+
+Pennsylvania Real Estate Investment Trust
+Pep Boys - Manny, Moe And Jack, The
+Pioneer Raileorp
+
+Plains Exploration & Production Company Lp
+Planet Hollywood International Inc.
+Playboy Enterprises Inc.
+
+Pne Financial Services Group Inc., The
+Polaris Industries Ine,
+
+Polycom Inc
+
+Pricesmart Inc.
+
+Pride International Inc
+
+Primedia Inc.
+
+Protalix Biotherapeutics Inc.
+
+Publix Super Markets Inc.
+
+Quest Diagnostics Inc.
+
+Quest Software Inc.
+
+Quicksilver Resources Inc
+Quicksilver Resources Inc
+
+Rackable Systems Inc.
+
+Radioshack Corporation
+Radioshack Corporation
+
+Rambus Inc
+
+Ramco-Gershenson Properties Trust
+Resmed Inc
+
+Rockwood Holdings Inc.
+
+Rpe Inc
+
+Saks Inc.
+
+ks Inc.
+
+lesforce.Com Inc.
+
+Sangamo Biosciences Tne
+
+ntarus Ine.
+
+Sara Lee Corporation
+
+Scientific Atlanta Lle
+erwin-Williams Company, The
+Siebel Systems Inc
+
+ebel Systems Inc
+
+Signature Bank
+
+Skechers Usa Ine.
+
+Smithfield Foods Ine.
+
+Sonicblue In
+nus Networks Inc.
+uithern Union Company Inc
+
+Ine.
+
+af
+
+Sprint Nextel Corpor:
+St Jude Medical Inc.
+aples Ine.
+arwood Hotels &
+arwood Hotels &
+cel Dynamics Inc.
+
+s Worldwide Inc.
+s Worldwide Inc.
+
+afood Restaurants Inc.
+
+29, 2001
+5 2005
+January 20, 2004
+April 18, 2007
+July 10, 2012
+May 31, 2007
+February 26, 2007
+June 19, 2008
+August 18, 2006
+June 23, 2003
+
+October 4, 2004
+July 31, 2012
+Februa
+
+October 27, 2010
+July 2, 2007
+May 19, 2003
+May 19, 2010
+December 26, 2002
+March 17, 2003
+October 16, 2007
+July 8, 2005
+December 14, 2007
+January 2, 2008
+June 19, 2002
+June 9, 2004
+April 30, 2012
+January 6, 2006
+March 31, 2005
+August 13, 2008
+April 10, 2012
+August 21, 2012
+August 17, 2010
+February 23, 2011
+March 28, 2007
+February 24, 2003
+May 18, 2004
+October 19, 2006
+May 12, 2009
+March 19, 2007
+March 22, 2006
+February 14, 2003
+October 28, 2003
+December 8, 2008
+October 26, 2005
+September 29, 2003
+
+21, 2007
+h 25, 2008
+aber 8, 2005
+September 18, 2007
+September 10, 2008
+September 7, 2007
+May 20, 2003
+Fedruary 6, 2003
+May 30, 2007
+January 21, 2011
+February 4, 2005
+September 21, 2010
+December 20, 2001
+July 24, 2007
+June 23, 2003
+October 4, 2007
+March 17, 201)
+June 20, 2005
+April 23, 2008
+October 24, 2005,
+November 2, 2009
+January 7, 2002
+July 5, 2007
+March 12, 2003
+July 19, 2010
+May 6, 2004
+April 11, 2007
+March 26, 2010
+May 14, 2007
+September 12, 2007
+April 7, 2008
+June 30, 2008
+March 7, 2008
+August 8, 2011
+August 30, 2010
+October 16, 2007
+February 11, 2008
+November 22, 2008
+July 2, 2007
+October 4, 2006
+December 19, 2005
+smber 26, 2007
+Mareh 31, 2005
+July 15, 2003
+Mareh 15, 2005
+21, 2007
+June 29, 2010
+January 17, 2003
+July 20, 2007
+July 24, 2006
+Jamuary 4, 2008
+November 10, 2008
+January 27, 2006
+Sept 3, 2012
+January 2, 2009
+
+anber
+
+9.12%
+
+5%
+0.70%
+149%
+156
+
+5.73%
+0.92%
+
+0.62%
+0.96%
+6%
+
+-0.06%
+2.69%
+0.08%
+
+70%
+2.16%
+1%
+20.42%
+3.39%
+2.22%
+7.05%
+
+16.47%
+3.84%
+3%
+-11.65%
+1.45%
+0.01%
+8.04%,
+2.48%
+0.38%
+6.26%
+44.73%
+9.92%
+0.07%
+
+3.60%
+6.80%
+3.46%
+9.70%
+3.17%
+9.50%
+RAG
+12.35%
+15.38%
+LLB1L%
+41.06%
+3.00%,
+5.92%
+L.78%
+
+36.49%
+
+16.35%
+
+97.50%
+126.16%
+18.18%
+
+51.03%
+
+14.66%
+26.55%,
+8.68%
+9.73%
+70.33%
+1.55%
+
+12.12%,
+-72.26%
+-19.40%
+-20.05%
+7.77%,
+17.69%
+60.74%
+115.86%
+-20.76%
+
+9.26%
+64.05%
+42.83%
+7.60%
+32.28%
+
+18.16%
+51.02%
+
+43.04%
+-19.58%
+9.52%
+0.27%
+%
+56.15%
+11.95%
+14.74%
+47.80%
+%
+~A8.55%
+~AR.G1%,
+4.12%
+
+2.25%
+65.89%
+10.60%
+16.40%
+0.50%
+39.53%
+51.12%
+-T.60%
+7.73%
+3.96%
+85.27%,
+28.60%
+47.88%
+-72.90%
+51.00%
+67.15%
+59%
+L.78%
+
+0.42%
+0.36%
+
+60.10%
+21.84%
+52.78%
+-19.93%
+-17.90%
+12.21%
+75.82%
+-17.85%
+27.73%
+
+76.89841
+1117.53
+
+1448.721
+718.5946
+3747
+6.483086
+8526.784
+10971.94
+745.699
+8558.503
+1203.52
+542.5701
+612.8802
+
+601.1633
+10057.28
+751.7538
+O.8686644
+14946.64
+15176.46
+767.3744
+
+6478
+663.1859
+707.4907
+1172
+5107.8
+6027.12
+418.6651
+11709.9,
+164.6775,
+263.5624
+4908.56.
+3421245
+38.21073
+6565.139
+3: 193
+801.9557
+18449.45
+315.3832
+7741266
+261.7609
+6614.749
+2083.497
+117.0242
+1579.728
+2168.522
+1455.535
+729.8829
+2039.829
+12457.75
+120.8541
+5863042
+1667.452
+692.7322
+13.59446,
+3643.589
+(1.24644
+312.5003
+13519.62
+1676.567
+2410.148
+190.8445,
+6761.249
+763.8406
+664.8285
+4.01
+
+2087.56
+1178.474
+418.0634
+2665.941
+4156.162
+
+1784.35
+412.4045
+3061.929
+1.097
+
+2651.849
+
+6793.792
+
+207.6969
+252.765
+
+8512.926
+4587.599
+4841.158
+817.3923
+1026.485,
+2640.729
+45.2246
+1892.055
+2950.5)
+126.5971
+52489.19
+17928.54
+S8081.014
+
+2915.87
+13251.65
+2729.219
+
+
+Table A5 continued. False rumors in the U.S. main dataset
+
+Target Name
+
+Rumor date
+
+CAR(-1;1)
+
+HPR (1;365)
+
+Market Cap (M$)
+
+Stillwater Mining, Company:
+gic Hotels & Resorts Inc
+Student Loan Corporation, The
+
+1 Corporation
+ive Software Inc.
+
+Teco Energy Inc.
+Tellabs Inc.
+
+‘Textron Inc.
+
+Tibco Software Inc.
+
+Tiffany & Company International Inc.
+Timberland Company Inc., The
+
+Tivo Inc.
+
+Todhnnter International Ine
+Transmeta Corporation
+
+‘Travelzoo Inc
+
+Travelzoo Inc
+
+Travelzoo Inc.
+
+True Religion Apparel Inc.
+
+Tyson Foods Inc.
+
+Unisys Corporation
+
+United Bancshares Inc.
+
+United Industrial Corporation
+
+United States Cellular Corporation
+Unumprovident Corporation
+
+s 1 Industries Inc,
+
+s Bancorp
+
+Valassis Communications Inc.
+Valnecliek Tne
+
+Valucelick Inc
+
+Valuevision Media Inc
+
+Verint Systems Inc.
+
+Verint Systems Inc.
+
+Verizon Communications Inc.
+Vitacost.Com In
+Vsi Holdings Ine
+Websense Inc.
+Wellcare Management Group Inc., The
+Wendy's/Arby's Group Inc
+
+Whole Foods Marke: Inc.
+
+Wr Grace & Company
+
+Zimmer Holdings Inc.
+
+Zonagen Inc.
+
+April 7, 2010
+March 9, 2007
+December 28, 2007
+May 12, 2003
+October 15, 2008
+August 6, 2007
+February
+March 19, 2007
+April 12, 2002
+July 20, 2007
+
+il 9, 2009
+
+© 25, 2008
+June 25, 2007
+November 15, 2006
+February
+Mareh 19, 2003
+February 7, 2005
+May 12, 2005
+September 9, 2011
+April 11, 2012
+October 10, 2012
+June 21, 2007
+February 16, 2001
+May 30, 2002
+January 31, 2002
+September 13, 2011
+October 16, 2006
+September 15, 2010
+June 23, 2003
+June 27, 2006
+Jamary 5, 2011
+June 14, 2007
+November 26, 2008
+August 22, 2007
+November 20, 2006
+July 16, 2007
+May 26, 2010
+February 25, 2002
+h 17, 2011
+17, 2002.
+June 10, 2010
+August 17, 2011
+July 30, 2008
+July 17, 2007
+Mareh 17, 2006
+
+4.02%
+8.65%
+2.12%
+6.60%
+12.63%
+4.64%
+3.64%
+10.73%
+0.50%
+2.29%
+31.61%
+4.77%
+10%
+0%
+13.80%
+22.59%
+
+4.69%
+2.20%
+
+24.33%
+18.95%
+OAS
+7.40%
+0.79%
+7.82%
+
+70%
+20.49%
+0.21%
+-10.82%
+0.04%
+0.59%
+10.16%
+10.70%
+5.07%
+1.74%,
+5.64%)
+1.06%
+9.05%
+
+4.89%
+8.10%
+3.99%
+0.19%,
+
+56.61%
+9.05%
+68.45%
+10.93%
+22.66%
+43.38%
+-20.00%
+
+58.67%
+8.53%
+
+8.21%
+36.81%
+17.11%
+-20.80%
+3.18%
+15.05%
+35.00%
+17.92%
+-26.59%
+1.53%
+-39.60%
+
+-13.84%
+40.04%
+-18.05%
+43.40%
+90.00%
+1%
+
+0.00%
+
+32.50%
+-19.96%
+2.98%
+
+1347.312
+164
+2495.395,
+13164.13
+4102.687
+28806.78
+2082.122
+1429.898
+3714.397
+4759.812
+2215.653
+
+387.
+50.68347
+226.583
+578.8002
+A885
+388.0479
+616.4705
+
+2132.667
+6800.871
+03491
+
+45935.8
+1161.617
+
+1244.97
+2840.617
+
+21.7552
+953.8877
+
+8.002:
+
+1723.122
+19678.79
+89.55711
+
+
+Table A6. True rumors in the U.S. main dataset
+
+Target Name Rumor date CAR(-1;1) _HPR (1;365) Market Cap (M8)
+24/7 Real Media Inc. April 25, 2007 19.48% 38.84%) 529.7132
+7-Eleven Inc February 22, 2005 0.75% 3261.596
+Abgenix Inc. November 29, 2005 4.54% 5 1473.393
+Accredited Home Lenders Holding Company April 3, 2007 2.18% 38.689 318.0284
+American Community Bancshares Inc September 6, 2007 6.27% 41.38% 69.24164
+Aierus Group Company January 11, 2006 -1.15% 10.88%) 2351.761
+Aviat, Networks Inc.'S Wimax Business May 5, 2011 4.94% 42.68% 232.6627
+Bj's Wholesale Club Inc. November 10, 2010 9.80% 21.91% 2572.945
+Blockbuster Inc. September 19, 2003 2.22% “64.47% 605.1014
+Burlington Industries Inc. March 6, 200 1% -77.50% 09659
+Catalina Marketing Corporation December 8, 2006 18.12% 4.019% 2.061
+China Security And Surveillance Technology Inc. January 28, 2011 92% 1.15% 434.7623
+Collateral Therapeutics Inc March 1, 2002 44Y, 9.87% 102.3452
+Commerce Bancorp Inc June 29, 2007 10.66% 3.52% 7024.56
+Compellent Technologies In October 26, 2010 4.01% 56.16% 754.3556
+Concord Efs Inc March 10, 200:i =21.41% A 6391.829
+Continental Airlines Inc. April 15, 2010 0.68% 3015.974
+Countrywide Financial Corporation (Old) January 26, 2007 347% -85.06% 7014.09
+Crown American Realty Trust Mareh 19, 2003 1.63% 28.95%) 320.4267
+Csk Auto Corporation February 1, 2008 49% 81.18%) 396.9593
+Deltek Inc July 18, 2012 13.42% 3578
+
+Dobson Communications Corporation June 25, 2007 T.B5%, 715.528
+
+Double-Take Software Inc. April 12, 2010 16.92%
+
+Drs Technologies Inc. May 8, 2008 17.71% 26.06%
+Efunds Corporation May 9, 2007 9.88% 28.049
+Encysive Pharmaceuticals Inc. Tune 26, 2007 -10.09% 24.34%)
+
+Equity Inns Inc June 6, 2007 9.90% A
+
+Genentech Inc. July 21, 2008 12.78% 16.07%
+
+Grey Global Group Ine. June 28, 2004 5.48% 12.30%
+
+Juitar Center Ine. 1, 2007 1.97% ITA
+
+Heelys Inc. 2012 20.58% 56.50957
+Heritage Property Investment ‘Lrust Inc. September 15, 2005 1ay 2.76% 1655.168
+Hilton Hotels Corporation November 22, 2006 5.36% 45% 910.64
+Hollywood Casino Corporation Mareh 18, 2002 6% -20.20% 316.
+Hughes Communications Inc January 20, 2011 30.79 1142.5
+Hughes Supply Ini December 1, 2005 -2.91% 2662.952
+Human Genome Scie October 18, 2011 28.94% 944.901
+village Inc. February 15, 2006 7.70% 591.015
+J Jill Group Ine. August 24, 2005 5.27% 380.7249
+John Hancock Financial Services Inc. May 16, 2003 0.33% 9048.035
+Kinetic Concepts Inc. July 6, 2011 7.84%
+
+Kraft, Foods Inc August 30, 2006 2.74%
+
+Legato Systems Inc. 4.57%
+
+Lincare Holdings Ine 24.95%
+
+Lucent Technologies Inc. 8.77% 9.57%
+
+Lyondell Chemical Company July 12, 2007 3.50% 24.66%
+
+Macdermid Inc. September 18, 2006 1.04%
+
+Main Street Restaurant Group Inc. October 12, 2005 9.26%
+
+Marketwatch Inc. November 1, 2004 6.81%
+
+Massey Energy Comp October 18, 2010 6.40% 4994.943
+May Department Stores Company, The January 19, 2005 9621.99
+Meadow Valley Corporation November 20, 2007 22.55% 57.67405
+Medimmune Inc. December 13, 2006 75.40% 9452.
+
+Mercury Interactive Corporation May 1, 2006 T.89% 36% 3.498.368
+Meristar Hospitality Corporation November 11, 2005 15.17% 20.23%) 841.6212
+Mgi Pharma Inc. November 29, 2007 41.76% 2828.419
+Microislet Inc. March 1, 2002 20.26605
+
+Millipore Corporation: 5020.498
+
+Mips Technologies Inc 19.88% 64.6586
+Mission Resources Corporation July 20, 2004 3.65% 256.216
+National City Corporation March 13, 2008 9.98% 5947.
+Nautica Enterprises Inc June 20, 2003 8.90% 458.4:
+Neuberger Berman Inc.(Old) 2003 14.10% 2627.812
+Nextel Communications Ine. 9, 2004 4.10% 30601.6
+Nextel Partners Inc 2005, 2.62%
+
+Nicor In December 2, 2010 0.15%
+
+North Coast Energy Inc. May 22, 2003 5.16%
+
+Nymex Holdings In June 15, 2007 4.88% 20481.93
+Optical Communication Products Inc. April 25, 2007 1.66%, TAS
+Pactiv Corporation Inc. May 17, 2010 16.09% 38.63%) 3909.882
+Pegasus Solutions Inc. June 30, 2005 3.95% -10.21% 198.6401
+Pharmaceutical Product Development Inc. July 18, 2011 10.44% 19.31% 372.207
+Pixar Animation Studios Inc. January 19, 2006 0.72%
+
+Polymer Group Ine, April 7, 2010 15.89%
+
+Pride International Inc November 2, 2010 5.23%
+
+Protection One Inc. January 27, 2003 2.84% 24%
+
+Pulitzer Ine. December 9, 2004 0.44% 0.99% 608.7298
+Pyr Energy Corporation January 29, 2007 16.79% 36.17% 42,56527
+Raleorp Holdings Inc. August 23, 2012 2.82% 4126.
+Rawlings Sporting Goods Co. Inc. December 11, 2002 0.97% 63.0660
+Remington Oil And Gas Corporation October 6, 2005 3.99% 19.91% 119.058
+Renaissance Worldwide Inc. August 28, 2001 6.91% 56.09%) TTATISS
+Ribapharm Inc March 10, 2003 0.21% 820.2964
+Riskmetries Group Ine. January 22, 2010 13.7% 1194.208
+
+2005.99
+226.762
+37.06828
+22.54502
+585.955
+
+Savvis Inc. March 4, 2011 -1.33%
+‘or Inc. October 22, 2003 21.20%
+tek Corporation. y 4, 2008 3.24%,
+lar Power Inc.
+nosite Inc
+
+earns & Lehman Ine. December 20, 2001 45.10%
+erling Bancshares Inc January 14, 2011 14%
+
+a Microsystems Inc. March 18, 2009 57.30% T1531
+Talbots Inc., The Anpust 2, 2011 16.19% 82.92%, 202.0084
+Ticketmaster Entertainment Inc. February 4, 2009 18.42% 150.81% 300.808
+Timco Aviation Services Inc. June 30, 2006 49.94% 56.08% 67.1414
+Tpc Group Inc, July 25, 2012 6.40% 4.0045
+Unocal Corporation March 3, 2005 11.10% 15469.92
+Usf Corporation February 23, 2005 1157.896
+
+st Ine. September 4, 2008 2 Fy 8882.869
+Wendy's International Inc. April 25, 2007 17.79% 2896.495
+Wfs Financial Inc. August 23, 2005 14.61% 37.19% 2597.492
+Whitehall Jewelers Inc. September 29, 2005 53.00% 16.18% 30.48585
+Williams Pipeline Partners Lp January 19, 2010 17.60% 36.45% 645.9511
+Wilmington Trust Corporation October 22, 2010 8.22%, 14.86%, 595.9098
+
+Zaxeba Systems Inc. September 10, 2009 18.39% 127.27%
+
+

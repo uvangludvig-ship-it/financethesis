@@ -1,0 +1,1614 @@
+   Empirical evidence of stock return predictability
+          using macroeconomic variables
+
+                                                                                                       *
+                            Carl Ferm and Jonatan Gustafsson
+
+                             Bachelor Thesis in Finance
+
+                            Stockholm School of Economics
+
+                                         May 14, 2018
+
+                           ABSTRACT
+We investigate whether macroeconomic variables can predict returns of the OMXS30 index in the short run, and if
+an investor can generate abnormal profits from using the variables with significant predictive power. Granger causality
+tests, along with a predictive OLS regression framework show that the first difference of the repo rate and the log
+difference in exchange rates significantly Granger cause stock returns on the Swedish market. The findings confirm
+that changes in the repo rate affect stock returns in line with the transmission mechanism effect of monetary policy
+and supports that currency depreciation negatively affects future stock returns. We also show that an investor could
+have generated abnormal returns using macroeconomic variables by deploying a regression based rolling window
+trading strategy, that yielded statistically significant four-factor alpha between 1998-2008 (without considering
+transaction costs) - although generating lower returns going forward. The strategy’s worsened performance is further
+linked to the negative interest rate regime, creating difficulties to estimate its recent linear interdependency with stock
+returns that is used to trade on - indicating that the effectiveness of the repo rate as a monetary policy tool affects
+strategy returns.
+
+KEYWORDS: Granger Causality, Predictive Regressions, Trading Strategies, Macroeconomic Variables, Repo Rate
+
+ACKNOWLEDGEMENTS: We would like to kindly thank our supervisor Irina Zviadadze and Per-Olov Edlund for providing
+valuable information and advice throughout the process.
+
+*
+ Kindly address correspondence to Jonatan Gustafsson (23596@student.hhs.se) or Carl Ferm (23553@student.hhs.se)
+Table of content
+
+1 Introduction 7
+
+2 Literature review 7
+    2.1 Macroeconomic variables and stock return predictability 4
+    2.2 Investment strategies and stock return predictability 5
+
+3 Description of data and variable selection 7
+    3.1 Stock return data 7
+    3.2 Macroeconomic data and variable selection 7
+    3.3 Variable formatting 9
+    3.4 Descriptive statistics of the data 11
+
+4 Methodology 11
+    4.1 The vector autoregressive model 11
+    4.2 The Granger causality test 12
+    4.3 Lag selection 13
+    4.4 OLS regression framework 14
+    4.5 The trading strategy 14
+       4.5.1 Static regression trading strategies 15
+       4.5.2 Dynamic regression trading strategies 16
+    4.6 Evaluation of trading strategy results 17
+
+5 Evaluation of model assumptions 19
+    5.1 Test for stationarity and unit roots 19
+    5.2 Heteroscedasticity 19
+    5.3 Multicollinearity 19
+    5.4 Autocorrelation of residuals 20
+    5.5 Omitted variable bias 20
+    5.6 Normally distributed residuals 20
+
+6 Empirical findings 20
+    6.1 Evidence of macroeconomic variable’s effect on stock returns 20
+    6.2 Trading strategy results 22
+       6.2.1 Trading strategy variable selection 22
+        6.2.2 Characteristics of the different strategies 23
+       6.2.3 Comparing the dynamic strategies’ performance over time 24
+        6.2.4 Strategy returns under a negative interest rate regime 25
+       6.2.5 Linking strategy returns to macroeconomic phenomena 26
+
+7 Conclusion 26
+
+8 Limitations and suggestions for further research 27
+
+9 References 27
+
+10 Appendix 32
+
+                                                                                                1
+1 Introduction
+
+The stock market is considered a useful tool for mirroring the state of the economy, and prices should
+reflect the present value of stock returns. Knowing that macroeconomic variables carry information about
+the state of the economy, these variables would also in theory hold predictive power with respect to future
+consumption and investment opportunities, which in turn would affect firms’ ability to generate future cash
+flow. Over the last decades, several studies have tried to investigate the relationship between stock returns
+and macroeconomic variables. Authors do, however, still not come to conform conclusions regarding
+which macroeconomic variables that have significant predictive power over stock market returns. The
+selection of time horizon, country, econometric models and choice of macroeconomic variables are just
+some of the factors that play a decisive role in what conclusions that have been drawn in previous research,
+with most papers focusing on U.S. data (e.g. Fama & French (1989), Geske & Roll (1983) and Campbell
+(1987).
+        Interestingly, Pesaran and Timmermann (1995) brought the topic of predictability one step further
+and tested whether predictability could have been exploited by investors in the U.S. using a wide range of
+financial and economic variables. Later, Marquering & Verbeek (2004) expanded the work and showed that
+investors could have profited from active asset allocation trading strategies, however with decreasing returns
+over time, also considering U.S. data. Furthermore, Rapach et al. (2005) studied international stock return
+predictability using macroeconomic variables and suggested in their conclusions that a potential area for
+future research would be to test whether an investor could have used one or more significant
+macroeconomic variables to earn abnormal returns in real time - as opposed to only test for return
+predictability. This highlights the relevance to elaborate on results of predictability in a way that is
+specifically aimed at investors in terms of gains from such knowledge. Thus, previous empirical studies and
+results have paved the way for further assessment of how macroeconomic factors can predict stock returns,
+and to what extent this information can be exploited by an investor. To extend the previous research, we
+consider Sweden, which is a small open economy that is less subject to extensive macroeconomic research.
+Building on the papers of Marquering & Verbeek (2004) and Rapach et al, leads us to the following
+questions that are to be examined:
+
+   I. Do macroeconomic variables have predictive power with respect to stock returns in Sweden?
+  II. Can an investor earn abnormal returns from using macroeconomic variables to predict stock returns in Sweden?
+
+To answer the questions, we specifically investigate if certain macroeconomic variables can predict Swedish
+stock index returns, and if the predictive ability can be exploited to generate abnormal returns by developing
+trading strategies based on the initial findings. Our data comprises monthly measurements of price levels
+of the Swedish stock index OMXS30 and macroeconomic factors, including the production value index,
+the repo rate, inflation, the relative strength of the Swedish krona to other currencies, the slope of the yield
+curve and money supply. The time period observed is 1998-2018.
+
+                                                                                                2
+        Initially, a vector autoregressive (VAR) framework is used to examine the individual relationships
+between the macroeconomic variables at a given time lag and stock returns, where one lag represents one
+month. The time lags to be investigated are chosen as suggested by the established Akaike and Schwartz
+Bayesian information criteria. To be able to interpret the relationships in the VAR model, the Granger
+causality test is used to test whether any of the variables Granger causes stock returns, i.e. if they have
+significant predictive power. To complement the analysis, predictive multivariate OLS regressions between
+future OMXS30 returns and macroeconomic variables will further validate their predictive ability in terms
+of linear dependences. The outcome of the regressions enables examination and interpretation of the linear
+relationship between the variables, also considering the direction of the effect of a given variable.
+        The variables that significantly Granger cause stock returns, and also have a significant linear
+relationship with future stock returns are selected for the trading strategies, with the aim to investigate if
+investors can benefit from using these as predictors. To test for the robustness of a given macroeconomic
+variable as a predictor, two dynamic and two static regression-based strategies are evaluated, where the beta
+and intercept for the dynamic strategies are re-estimated each month as new information becomes available.
+All strategies enter a long position in the index if positive returns are predicted in the future period(s) and
+a short position if negative returns are predicted. The holding period of the strategies correspond to the
+time lag indicated by the lag selection criteria, which the dependent variable in the regression is also based
+on. Strategy returns are evaluated based on the extent to which they generate statistically significant and
+thereby risk adjusted positive Carhart four-factor alpha over the studied period, complemented with mean-
+variance oriented analysis using the Sharpe ratio.
+        We find that the first difference in repo rate Granger causes stock returns at a 5% significance level
+at 7 lags and 1 lag. Also, the change in exchange rate Granger causes the stock returns at a 5% significance
+level at 7 lags. Heteroscedasticity-robust OLS regressions further confirm statistical causality for the repo
+rate with respect to both a 1 and 7 month return horizon, for which the variable has a statistically significant
+negative coefficient. The results are in line with previous findings and suggest that the first difference in
+repo rate is an appropriate predictor of stock returns, which also is in accordance with the monetary
+transmission effect, although our results only can confirm statistical significance. The findings on the log-
+difference in exchange rate are consistent with previous findings in other countries, e.g. Mookerjee & Yu
+(1997), indicating that depreciation of the currency could be interpreted as increased inflation expectations.
+         When evaluating the trading strategy results, only the in-sample strategy generated abnormal
+returns throughout the entire dataset, while no out-of-sample strategy (that would have been practically
+feasible for an investor to execute in real time) did so. More specifically, the only alpha generated from a
+realistically feasible trading strategy - using past information to predict and trade on future returns - was
+generated by a rolling window strategy during the first half of the data sample. The strategy generated 9.16%
+annualized alpha during that period, although underperforming the other strategies during the second half
+of the sample. This provides evidence that it has been historically possible to generate risk-adjusted
+abnormal returns using macroeconomic variables, when not considering transaction costs (which would
+
+                                                                                                3
+partly reduce the abnormal return), but that future abnormal return generation using macroeconomic
+variables is limited.
+        Furthermore, the general findings include that the rolling window strategy is outperforming the
+expanding window strategy over time. In addition, it is seen to better predict returns in more volatile
+periods, which is line with Pesaran & Timmermann (1995), who suggest that the predictability of excess
+returns is larger at times when volatility is high. However, when the repo rate turns negative, the rolling
+window strategy sharply underperforms other strategies. This indicates that the fixed linear relationship
+between lagged repo rate changes and stock returns used in the static strategies better predict stock returns
+when there is a negative interest rate regime, as opposed to the dynamic rolling window strategy that
+constantly re-estimates the same relationship over a rolling 12 month period and fails to predict returns
+when the monetary policy shift to negative rates. Further analysis suggests that the performance of the
+rolling window trading strategy is affected by the effectiveness of the repo rate as a monetary policy tool,
+forcing the repo rate to remain at extraordinary low levels due to its recent inability to stimulate inflation.
+         The conclusions drawn from our findings might contribute with insights to policy makers in terms
+of highlighting the impact of monetary policy decisions on stock returns, with respect to potential side
+effects of using the repo rate as a monetary policy tool, given its significant impact on stock returns. Also,
+we may provide investment managers with insight into methods of predicting stock market returns and
+executing automated regression based trading strategies – a frequently discussed topic in the modern and
+increasingly digitized economy. Lastly, the thesis also allows for evaluation of how the negative interest rate
+environment potentially affects trading strategies.
+
+2 Literature review
+
+2.1 Macroeconomic variables and stock return predictability
+Macroeconomic variables’ effect on stock returns has previously been studied individually, although
+primarily in the U.S. This includes variables such as the inflation rate (e.g. Fama 1981 and Geske & Roll
+1983), money supply (Hamburger & Kochin 1971), aggregate output (Balvers et al. 1990), interest rates
+(Campbell 1987) and term spreads on bonds (e.g. Chen 2008 and Bauer 2018). Other papers have also
+investigated other countries than the U.S., although less extensively. Furthermore, the early papers studying
+the relationship between stock returns and macroeconomic variables has mainly focused on the
+contemporaneous relationship, as opposed to a predictive. Since then, many papers have extended the
+research to more explicitly explore predictive power and forecasting, predominantly so by using predictive
+regression models and tests based on vector autoregressive models. For example, Rapach et al. (2005)
+studied macroeconomic variables and stock return predictability across countries using a predictive
+regression framework with out-of-sample tests based on Granger Causality, finding different results for
+different economies, likely driven by country specific differences. In the Netherlands, the U.S. and Norway,
+Rapach et al. found strong evidence of predictive ability using the inflation rate, while not being able to
+
+                                                                                                4
+draw conform conclusions for other considered industrial countries. However, a conclusion to bring from
+the paper is that interest rates were the most consistent and reliable forecasting variables.
+        Mookerjee & Yu (1997), on the other hand, found that money supply and exchange rates have an
+impact on future stock returns in Singapore by using the techniques of cointegration and causality together
+with forecasting equations in the long run as well as the short run. Tripathy (2011) also investigated this
+certain topic and found that changes in exchange rate and interest rate significantly influence the Indian
+stock market by using an Autoregressive Integrated Moving Average (ARIMA) time series process and
+Granger causality tests. Recently, Gupta & Mampho (2013) examined both in and out-of-sample
+predictability of South African stock returns using macroeconomic variables, and found that interest rates
+and money supply show short term predictive ability, employing a predictive regression framework for in-
+sample and MSE-F and the ENC-NEW test statistics for out-of-sample predictability.
+        Although many papers have been able to find significant relationships between macroeconomic
+variables and stock returns, there are, however, also papers concluding that the relationship between certain
+markets and macroeconomic factors is not always definite. For example, Hamburger & Kochin (1971) came
+to the conclusion that even if changes in monetary growth seem to affect the stock market, a long-term
+sustainable relationship is unclear. Findings like this open up for further investigation under different
+macroeconomic conditions and/or in different markets. This was specifically mentioned by e.g. Ferreira &
+Santa Clara (2011) who predicted stock returns using financial metrics. They concluded that “...the
+predictability of stock market returns is therefore still an open question”.
+        Although there is lack of focus on smaller open economies, Gjerde & Saettem (1999) focused on
+the Norwegian market and causal relations between stock returns and macroeconomic variables. They
+found that real interest rate plays a major role in the Norwegian economy. In that paper, it is also said that
+“a certain degree of inefficiency seems to be present in the sense that stock returns respond positively and
+delayed to changes in industrial production”. Gjerde & Saettem further suggest that similar studies using a
+VAR framework should be applied on other small open economies, suggesting Sweden as a suitable
+candidate given its differences in industry structure compared to Norway.
+        Lastly, the Swedish market has previously been studied by Ljungstedt (2015), who specifically
+considers macroeconomic variables impact on the stock market. He finds statistically significant long-term
+relationships between several macro variables and the stock market using cointegration analysis, including
+positive long-run relations between inflation, the 10 year Swedish government bond, the SEK/USD
+exchange rate and the stock market. Therefore, analysis of the Swedish market using a combination of other
+methods for identifying predictive power remains undone and might provide new insights to the previous
+research on smaller open economies.
+
+2.2 Investment strategies and stock return predictability
+The question of whether macroeconomic variables can predict stock returns naturally leads in to the
+question whether an investor can gain from such knowledge by earning abnormal returns. This topic was
+
+                                                                                                5
+particularly addressed by Rapach et al. (2005) in their conclusions, as a suggestion for future research -
+questioning whether an investor in real time could have used one or more macro variables to earn extra-
+normal profits, and to examine whether some variables perform significantly better if one allows for time-
+varying effects of macro variables on stock returns. This highlights the importance to assess results of
+forecasting results in a way that is presentable for investors in terms of highlighting how they can increase
+their utility based on the information.
+       Pesaran & Timmermann (1995) examined predictability of U.S. stock returns and whether
+predictability could have been exploited by investors in excess of a buy and hold strategy in the market
+index, by using recursively estimated regressions over the period 1960-1992. They found that predictive
+power of various economic variables over stock returns varies over time and that it tends to vary with
+volatility. Also, they find that it appears to be decreasing strategy returns over time, which is consistent with
+incomplete learning in the aftermath of a large shock to the economy or alternatively that the predictability
+of excess returns is reflecting time-varying risk premia.
+        Marquering & Verbeek (2004) builds on the research of Pesaran & Timmermann, and evaluate
+different out-of-sample trading strategies on the S&P 500 index using monthly data over the period 1970-
+2001, with trading rules based on coefficients from lagged regressions on financial and macroeconomic
+variables (price to earnings ratio, dividend yield, inflation, industrial production, monetary growth,
+commercial paper-Treasury yield and the 12 month Treasury bill). They also find that predictability of
+returns is higher when volatility is high, and that asset allocation based active trading strategies outperform
+static strategies in terms of Jensen’s alpha, Sharpe ratios and the Treynor-Mazuy test. They also suggest that
+the profitability of the strategy was higher in the past, and that decreasing levels of predictability are
+consistent with “learning in the marketplace” (Pesaran & Timmermann 1995), but may also reflect that
+there is no stable relationship between asset returns and forecasting variables over time. Furthermore,
+Narayan et al. (2014) provide evidence of in-sample predictability of stock returns when examining a range
+of macroeconomic and institutional factors. They used a multivariate predictive regression framework for
+which coefficients of the model are re-estimated each month when new information becomes available.
+Their results show that investors could profit substantially from this by using static and dynamic trading
+strategies based on these factors, estimating returns using a portfolio that purely bases investment decisions
+on information from their predictive regression model.
+        Our thesis builds on the work of Marquering & Verbeek (2004) and Rapach et al. (2005) by
+extending previously used methods to a new economy and explore both stock return predictability and
+combining it with a pragmatically oriented investor utility based framework in terms of abnormal return
+generation by applying a framework that is similar to what has previously been used internationally and
+extending the research to a small open economy, that being Sweden. More specifically, we consider the
+suggestions of Rapach et al. to consider an investors’ possibilities to generate abnormal profits based on
+analysis of macroeconomic variables’ predictive power, by employing an investor based framework (as
+suggested by Marquering & Verbeek) but using different methods to evaluate the possibilities for an
+
+                                                                                                6
+investor to generate abnormal returns. By doing this, we hope to contribute to the existent research both
+in terms of predictive power with respect to macroeconomic variables as well as in how they specifically
+can be applied to generate risk adjusted returns using regression based trading strategies in Sweden, which
+also allows for evaluation of how the negative interest rate environment potentially affects trading strategies.
+
+3 Description of data and variable selection
+
+3.1 Stock return data
+Stock return is used as a dependent variable when investigating whether a macroeconomic variable has
+return predictability, and the data has been collected from Thomson Reuters Eikon. The change in the
+Swedish OMXS30 index is used as proxy for stock returns, since it has easily accessible historical data and
+includes many of the largest publicly traded companies, which likely are exposed to effects of
+macroeconomic factors. More precisely, the OMXS30 index comprises a value weighted portfolio of the
+30 most traded companies on the Swedish stock exchange. By choosing an index which only includes the
+most traded companies, being frequently followed by equity analysts and very liquid, we optimize the
+selection with regards to investigating stocks that are correctly priced based on all available information.
+
+3.2 Macroeconomic data and variable selection
+All macroeconomic data has been collected from Sveriges Riksbank, Statistics Sweden and Thomson
+Reuters Eikon. The selection of variables is mainly based on what has been found in previous international
+research of macroeconomic variables’ predictive power with respect to stock returns, and variables are
+selected on an individual basis. Thereby, we aim to evaluate traditional macroeconomic variables that
+preferably are uncorrelated, with the aim to take into account a broad spectra of potential effects
+considering only a few variables. The variables selected are the repo rate, inflation, exchange rate, money supply,
+yield curve slope and aggregate output. In the following body of text, arguments for the variable selection are
+presented - supporting our choices and each variable’s importance in explaining stock returns.
+         Campbell (1987) mentions that short-term interest rates have tended to be negatively correlated
+with stock returns in the U.S. The relationship between interest rates and stock price development is further
+confirmed in several papers, including Alam & Uddin (2009). Therefore, we use the Swedish repo rate since
+it is strongly correlated with market interest rates and is set directly by the central bank. The repo rate
+further affects asset prices via the transmission mechanism of monetary policy (European Central Bank
+2018), which has a positive relationship with market rates and thereby directly affects discount rates for
+financial assets. Also, it indirectly affects stock returns via increasing borrowing costs of financial
+institutions, effects of future consumption and firm investment decisions in the economy
+(Finansdepartementet 2014).
+        The first difference of the repo rate is chosen to represent this macroeconomic factor, as opposed
+to using the variable without considering change. The reason for that is both to have consistency in the
+
+                                                                                                7
+model and to get more comparable results, since all other variables in the model are based on change data.
+Also, formatting by logarithmic difference is not appropriate given its small values measured in this dataset,
+overstating the percentage change, and given that the variable is already stationary since it is not a cumulative
+index such as e.g. OMXS30. The data considering the repo rate comprises historical values on a monthly
+basis which are collected from the Swedish Riksbank’s webpage.
+         We will also use the change in the slope of the yield curve (i.e. the difference between a long and
+short maturity government bond) as a factor used for prediction of stock returns, since it has been proven
+to have explanatory power of the stock market in, for example, the U.S. (Chen 2008). Wide spreads between
+short-term and long-term bonds lead to an upward sloping yield curve, which can indicate healthy economic
+prospects - most likely faster growth and inflation in the future. On the other hand, narrower spreads lead
+to a flatter or even negatively sloped yield curve, which can indicate poor economic prospects which likely
+implies decreased growth and inflation. The term spread predictability over stock returns was further
+confirmed by Bauer (2018), who defined the variable as the difference between U.S. 10 year and 1 year
+government bonds. However, given that Sweden does not issue 1 year government bonds, but only 2 year
+maturity bonds and longer, we will define the spread as the difference between the 10 year and the 2 year
+government bond.
+        Another macroeconomic variable that has been proved to have predictive power regarding stock
+returns is aggregate output. For example, Balvers (1990) proves this relationship to be positive and
+significant. A widely used definition of aggregate output for a country is Gross Domestic Product (GDP).
+However, the GDP of Sweden is only available on a quarterly basis, and since monthly data will be used
+throughout the study, a proxy has to be used instead. A proven output factor that has been investigated in
+several papers is industrial production, which is used in Balvers (1990). Due to the relatively poor availability
+of monthly output data regarding industrial production, and given the cyclical characteristics of the
+construction industry, growth in the Production Value Index (PVI) for the construction industry will instead
+be used as a proxy for GDP growth. It is assumed to have a positive relationship with stock returns since
+it can be seen as an indicator of how the economy is performing. Furthermore, this variable may inherently
+have more predictive power for the stock market compared to GDP given the construction industry’s
+cyclical characteristics.
+        Inflation is another factor that has been frequently investigated regarding its capabilities to
+predictive stock returns, and previous research has concluded that it has significant predictive power. Based
+on the results from e.g. Fama (1981) and Gupta & Mampho (2013), inflation is found to have a strong
+negative correlation with future stock returns in the U.S. and South Africa respectively. Based on these
+findings, amongst others, high inflation is assumed to indirectly increase the discount rate of stocks, thereby
+showing an inverse relationship. When inflation increases, purchasing power declines, and each unit of
+currency can buy fewer goods and services. For investors interested in income-generating stocks, or stocks
+that pay dividends, the impact of high inflation makes these stocks less attractive than during low inflation,
+since dividends tend to not keep up with inflation levels.
+
+                                                                                                8
+        Gupta & Mampho (2013) and Mookerje & Yu (1997) investigated which macroeconomic variables
+that affect South Africa’s and Singapore’s stock markets respectively. Both papers found that money supply
+has predictive power. The effect of money supply has been shown to positively impact growth rates of
+dividends, and negatively impact the discount rate and risk premium, e.g. documented by Homa and Jaffee
+(1971). Thereby, we will include money supply as an independent variable in this study as well. We have
+defined money supply as M3 in Sweden, since that is the broadest measure, including additional
+components mainly relatable to financial institutions and larger corporations.
+        Since Sweden and its stock market is heavily dependent on exports, the exchange rate is of high
+importance for company and stock performance. This idea is supported by findings from e.g. Tripathy
+(2011) who founds that the exchange rate significantly influences stock market performance by affecting
+companies’ overseas performance. Therefore, the Swedish central bank’s Total Competitiveness Weight-
+index (TCW) is selected to study the change in the value of the Swedish Krona over time. More specifically,
+the TCW-index weights different bilateral exchange rates to create an effective (or average) exchange rate.
+It is a geometric index and its weights are based on the average aggregate flows of processed goods for 21
+countries. A higher value in the index means that the krona has depreciated and a lower value means that
+the krona has appreciated.
+
+3.3 Variable formatting
+Given that time series data is analysed, several potential problems emerge, including heteroscedasticity,
+autocorrelation and stationarity. Therefore, the independent macro variables are formatted by considering
+the monthly percentage change, except for the variables already presented in percentage when collected.
+The latter are only transformed by considering the first difference, i.e. subtracting the previous period’s
+value from the current period’s value. The data is further transformed to have a more linear development
+by logarithmic transformation of some of the variables’ change. This logarithmic transformation is useful
+for smoothening of the changes and tailor the variables to better suit linear regressions of the data -
+increasing their linear characteristics and thereby the explanatory power. Finally, all variables are expressed
+in percentage-form, as opposed to decimal-form, hence the multiplication by 100.
+       For the dependent variable, the monthly change in closing prices of the OMXS30 stock index
+obtained from Thomson Reuters Eikon, Return, is observed and transformed by dividing the index value in
+period 𝑡 by the index value in period 𝑡 − 1. The change is logarithmically transformed to create a more
+linear data set, and multiplied by 100 to obtain the percentage change. Going forward, new return variables
+using different time lags, ReturnFW(j), will be defined where j is the lags selected. This formatting is further
+elaborated on in the methodology. However, the calculation of the Return variable can be described as
+presented in the following equation:
+
+                                                         𝑂𝑀𝑋𝑆30𝑡
+                               𝑅𝑒𝑡𝑢𝑟𝑛𝑡 = 𝑙𝑛 (            ) ⋅ 100
+                                                 𝑂𝑀𝑋𝑆30𝑡−1
+
+                                                                                                9
+The repo rate is collected from the Riksbank, and the dRepo variable is the nominal change between monthly
+time periods. Thus, dRepo is calculated as follows:
+
+                                𝑑𝑅𝑒𝑝𝑜𝑡 = (𝑅𝑒𝑝𝑜𝑡 − 𝑅𝑒𝑝𝑜𝑡−1) ⋅ 100
+
+The exchange rate variable used, dTCW, is obtained from the TCW index available at the Riksbank website.
+The logarithmic percentage change of the TCW index between two following months is calculated as
+described in the equation below:
+
+                                                                                𝑇𝐶𝑊𝑡
+                                  𝑑𝑇𝐶𝑊𝑡 = 𝑙𝑛 (        ) ⋅ 100
+                                                       𝑇𝐶𝑊𝑡−1
+
+The logarithmically transformed difference in consumer price index, Inflation, comprises all items for
+Sweden. The underlying data is collected from Thomson Reuters Eikon, and Inflation is calculated as follows:
+
+                                                                                                      𝐶𝑃𝐼𝑡
+                                 𝐼𝑛𝑓𝑙𝑎𝑡𝑖𝑜𝑛𝑡 = 𝑙𝑛 (       ) ⋅ 100
+                                                              𝐶𝑃𝐼𝑡−1
+
+The change in the slope of the yield curve, dSlope, is calculated as the nominal difference between the
+Swedish 10 year and 2 year government bonds (GVB) in period 𝑡 and period 𝑡 − 1. The difference is
+presented in percentage, thereby being multiplied by 100. Data is collected from the Riksbank. The variable
+is calculated as follows:
+
+                                          10𝑌         2𝑌           10𝑌         2𝑌
+                  𝑑𝑆𝑙𝑜𝑝𝑒𝑡 = ((𝐺𝑉𝐵𝑡   − 𝐺𝑉𝐵𝑡  ) − (𝐺𝑉𝐵𝑡−1 − 𝐺𝑉𝐵𝑡−1)) ⋅ 100
+
+Money supply is defined as the M3 amount as mentioned above. This dataset is collected from the Thomson
+Reuters Eikon database. The growth in money supply is logarithmically transformed, creating gMS, and
+calculated in the following way:
+
+                                                           𝑀3
+                                                                                 𝑀𝑆𝑡
+                                   𝑔𝑀𝑆𝑡 = 𝑙𝑛 (   𝑀3 ) ⋅ 100
+                                                        𝑀𝑆𝑡−1
+
+The production value index (PVI) growth, gPVI, is collected from Statistics Sweden and is calculated in
+accordance with the equation below:
+
+                                                                                                𝑃𝑉𝐼𝑡
+                                     𝑔𝑃𝑉𝐼𝑡 = 𝑙𝑛 (       ) ⋅ 100
+                                                           𝑃𝑉𝐼𝑡−1
+
+                                                                                               10
+3.4 Descriptive statistics of the data
+
+                                        TABLE 3.1
+
+                          DESCRIPTIVE STATISTICS OF THE SELECTED VARIABLES
+
+                    Descriptive statistics of the dependent variable Return and the independent macroeconomic variables that are to be
+                                                                              investigated
+                    Obs. Mean Std.Dev Min Max
+     Return 239 0.327 5.713 -18.466 16.178
+     dRepo 239 -0.020 0.153 -1.105 0.357
+    Inflation 239 0.098 0.407 -1.352 1.021
+      gPVI 238 0.228 12.371 -46.954 41.837
+     dTCW 239 0.042 1.345 -5.797 4.544
+      gMS 239 0.576 1.334 -3.446 5.183
+     dSlope 239 0.003 0.143 -0.634 0.531
+                      Note: All values are presented in percentage.
+
+4 Methodology
+
+4.1 The vector autoregressive model
+Using a vector autoregressive (VAR) model enables the capturing of linear dependencies between multiple
+time series and at different lags. This is obtained by describing the evolution of a variable as a linear function
+of its own lagged values, other variables’ lagged values and an error term. The model allows for multivariate
+time series, which is the case in the investigation regarding the relationship between different
+macroeconomic factors at different lags and stock returns. Furthermore, it is particularly useful for
+describing the dynamic behaviour of economic and financial time series as well as for forecasting, according
+to e.g. Zivot & Wang (2006).
+       The VAR model thereby provides us with the linear relationship between one of the n variables,
+independent as well as dependent, and its own lagged values as well as the other variables’ lagged values at
+all lags up until the maximum lag 𝑗. All variables are arranged into a single (n x 1) vector 𝑦𝑡, from which the
+lagged macroeconomic variables’ ability to forecast stock market returns can be investigated.
+
+In its unrestricted form, the VAR(j) model is specified as follows:
+
+                                                                                                                      𝑗
+                                    𝑦𝑡 = 𝛼0 + ∑ 𝐴𝑖𝑦𝑡−𝑖 + 𝜀𝑡
+                                                       𝑖=1
+
+The model comprises the following variables, where
+
+                                                                                               11
+𝛼0 is the intercept term
+𝐴𝑖 is an (n x n) matrix of unknown coefficients
+𝑗 is the number of lags
+𝜀𝑡 is an error term with zero mean and no serial correlation
+
+The vector autoregression is, as earlier mentioned, conducted to investigate the linear interdependencies
+between, and dynamics of, lagged values of the macroeconomic variables and OMXS30 returns over time.
+Since the VAR compares the variables individually, it is not necessary to specify dependent and independent
+variables. However, this model cannot be used to adequately interpret the relationship between multiple
+variables. Therefore, a Granger causality test will be the main test for investigating macroeconomic
+variables’ predictive power for stock returns. It is commonly used within the research area of predictability
+as it structurally summarizes and analyzes the VAR model. Since the VAR model provides a natural
+framework of all variables’ linear interdependencies, it enables the Granger causality test to investigate
+whether any of the macroeconomic variables have predictive ability over stock returns at a certain lag.
+Thereby, performing the VAR is necessary for conducting Granger causality tests, although not being the
+optimal test to interpret results from.
+
+4.2 The Granger causality test
+The Granger causality test is a statistical test that is useful for testing whether one time series is useful in
+forecasting another. This characteristic makes the test suitable for empirical investigations regarding
+statistical cause-effect relationships, i.e. whether a time series’ values precede another time series’ values,
+thus making it suitable for this study. As mentioned previously, the test structurally summarizes properties
+of the VAR model. If values of 𝑋 provides statistically significant information about future values of 𝑌, 𝑋
+is said to Granger cause 𝑌. The following fundamental principles of causality as described by Granger (1969,
+1980) as:
+
+   I. The effect does not precede its cause in time
+  II. The causal series contains unique information about the series being caused that is not available
+        otherwise
+
+Given these assumptions about causality, the following proposition is made to test the following hypothesis
+for identification of a causal effect of 𝑋 on 𝑌:
+
+                         𝑃𝑟𝑜𝑏(𝑌𝑡+1 ∈ 𝐴 | Ω𝑡) ≠ 𝑃𝑟𝑜𝑏(𝑌𝑡+1 ∈ 𝐴 | Ω𝑡 − 𝑋𝑡)
+
+Where
+
+                                                                                               12
+A is an arbitrary non-empty set
+𝑌 & 𝑋 are two random variables in the universe
+Ω𝑡 denotes all information available in the entire universe at time t
+Ω𝑡 − 𝑋𝑡 denotes all information available in the entire universe at time 𝑡 when 𝑋 is excluded
+
+If the above hypothesis is accepted, 𝑋 is said to Granger cause 𝑌. The test investigates whether any of the
+macroeconomic factors used in the VAR model, as well as throughout this paper, significantly add value to
+predict future stock returns compared to only using lagged stock returns for prediction as the variable
+evolves. That is, if past values of 𝑋(back until time 𝑡 − 𝑗) at time 𝑡 contains unique information that
+increases the predictability of 𝑌𝑡+1, 𝑋 is said to granger cause 𝑌. If the null hypothesis that no explanatory
+power is added by considering the additional time series is rejected, implying that the alternative hypothesis
+is accepted and that the time series thereby add predictive power, i.e. variable 𝑋 Granger causes 𝑌.
+
+4.3 Lag selection
+The VAR model and Granger causality tests are sensitive to the number of lags (e.g. Thornton and Batten
+1985), therefore, the lag selection is of high importance to avoid misleading statistical evidence when testing
+for Granger causality. In previous papers, both the Akaike Information Criterion (AIC) and the Schwarz’s
+Bayesian Information Criterion (SBIC) are frequently used. The criteria are defined as the equations shown
+below, where LL is the log likelihood for a VAR(j), T is the number of observations, 𝑡𝑗 is the number of
+estimated parameters when considering j lags.
+
+                                                                            𝐿𝐿      2𝑡𝑗
+                               𝐴𝐼𝐶 = −2 (  ) +
+                                                            𝑇       𝑇
+                                                              𝐿𝐿     𝑙𝑛(𝑇)
+                               𝑆𝐵𝐼𝐶 = −2 (  ) +      𝑡𝑗
+                                                      𝑇        𝑇
+
+When using these criteria, the lag with the lowest AIC or SBIC value is the best fitting selection of lags
+according to each model. The AIC is often less penalising (i.e. increasing the score with a lower amount)
+when it comes to including additional lags to fit an optimal explanatory model for the data, often suggesting
+a higher number of lags as the optimal selection for creating a “true” model. This is particularly important
+when having a fair amount of observations because of the replacement of 2 in the penalizing factor of AIC
+with ln(T) in the SBIC, giving the criterion a higher value when increasing the number of lags for the SBIC
+relative to the AIC.
+
+The AIC criterion has been shown by Shibata (1976) to balance well between the problems of generating
+biased estimates due to too few lags included and increased complexity due to too many lags, thereby having
+too many regressors included. Shibata (1976) also mentions that when the correct number of lags is unclear,
+
+                                                                                               13
+thus being hard to decide, the consistency of a model selection criterion is not as important - opening up
+for the usage of the AIC. On the other hand, it is sometimes preferred to use the most parsimonious model,
+i.e. the model with the lowest number of lags, given that all models specified are correct. When it comes to
+taking this issue into consideration, the SBIC is often preferred as it penalizes additional lags to a higher
+extent compared to AIC. Thus, it however requires that the relationship fits relatively well to a simple model
+using a small amount of parameters.
+
+According to Kuha (2004), both criteria are useful for finding a correct model. He further mentions that
+AIC is a popular criteria within econometrics. To be able to come up with a conclusion and results based
+on a solid foundation, suggestions from both the popular, yet sometimes overfitting, AIC and the more
+prudent SBIC will be used to find the optimal number of lags according to each criteria.
+
+4.4 OLS regression framework
+The Granger causality test is primarily used to find which variables that cause stock returns. However, to
+estimate the direction and magnitude of macroeconomic variables’ ability to predict stock returns,
+multivariate predictive OLS regressions are conducted for stock returns 𝑟 between time 𝑡 and 𝑡 + 𝑗 and
+the macroeconomic variables at time 𝑡, to further assess the predictive ability over the time horizons
+suggested by the AIC and SBIC. New variables thereby have to be defined, given the indication of the lag
+selection criteria, to be able to explore the predictability of stock returns over the different horizons. The
+new return variable(s) will be defined as follows:
+
+                                                                𝑂𝑀𝑋𝑆30𝑡+𝑗
+                          𝑅𝑒𝑡𝑢𝑟𝑛𝐹𝑊(𝑗) = 𝑟𝑡,𝑡+𝑗 = 𝑙𝑛 (             ) ⋅ 100
+                                                                  𝑂𝑀𝑋𝑆30𝑡
+
+The predictive multivariate regressions are undertaken in the following way:
+
+ 𝑟𝑡,𝑡+𝑗 = 𝛽0 + 𝛽𝑑𝑅𝑒𝑝𝑜 ⋅ 𝑑𝑅𝑒𝑝𝑜𝑡 + 𝛽𝐼𝑛𝑓𝑙𝑎𝑡𝑖𝑜𝑛 ⋅ 𝐼𝑛𝑓𝑙𝑎𝑡𝑖𝑜𝑛𝑡 + 𝛽𝑔𝑃𝑉𝐼 ⋅ 𝑔𝑃𝑉𝐼𝑡 + 𝛽𝑔𝑃𝑉𝐼 ⋅ 𝑔𝑃𝑉𝐼𝑡 + 𝛽𝑑𝑇𝐶𝑊
+                  ⋅ 𝑑𝑇𝐶𝑊𝑡 + 𝛽𝑔𝑀𝑆 ⋅ 𝑔𝑀𝑆𝑡 + 𝛽𝑑𝑆𝑙𝑜𝑝𝑒 ⋅ 𝑑𝑆𝑙𝑜𝑝𝑒𝑡 + 𝜀𝑡
+
+The beta coefficients generated in the predictive regressions are used to investigate which variables that
+significantly contributes to the estimated linear relationship between future stock returns and the
+macroeconomic variables. These coefficients will further indicate whether each variable has a negative or
+positive effect on future stock returns, and to what extent a change in a certain variable affects returns.
+
+4.5 The trading strategy
+To evaluate to what extent an investor can earn abnormal risk adjusted returns based on predictions of
+stock returns, we use trading strategies based on macroeconomic variables. The variables used in the trading
+
+                                                                                               14
+strategy will be the ones that both Granger cause stock returns and show evidence of a statistically
+significant coefficient in the OLS regression. The actual trading strategy is based on a bivariate regression
+framework between stock returns and lagged values of the macroeconomic variables on a stand-alone basis
+- generating a 𝑏0 and 𝑏1 that explain their interdependencies. This method enables the prediction of stock
+returns by creating a linear function which uses the intercept and beta from the regression, and the selected
+macroeconomic factor as independent variable. Depending on if the predictive function predicts a positive
+or negative return, a long or short position respectively is entered in period t and held until period t+j. More
+specifically, the separate trading strategies are set up based on the following rules:
+
+                     Long position in period t until t+j if: 𝑟𝑡,𝑡+𝑗 = 𝑏0 + 𝑏1 ⋅ 𝑥𝑡 > 0
+                     Short position in period t until t+j if: 𝑟𝑡,𝑡+𝑗 = 𝑏0 + 𝑏1 ⋅ 𝑥𝑡 < 0
+Where:
+𝑟𝑡,𝑡+𝑗 is the stock returns between period t and t+j
+𝑏0 is the intercept in a lagged regression with j lags
+𝑏1 is the beta value in a lagged regression with j lags
+𝑥𝑡 is a statistically significant macro variable in time period t.
+
+The return is realized in period t+j, that is a period in the future with respect to j lags. Excess returns from
+the different trading strategies are then regressed against the Carhart four factors to identify potential pricing
+errors and assess if an investor could have generated abnormal profits using trading rules based on the
+statistical tests. To test the robustness of the macroeconomic variable as a predictor, two different types of
+trading strategies are tested: static and dynamic.
+
+4.5.1 Static regression trading strategies
+
+The static trading strategies are conducted in two ways; in-sample and out-of-sample. In general, in-sample
+tests imply that the regression which generates the 𝑏0 and 𝑏1 factors is based on the same data sample as
+the trading strategy is applied on, i.e. the total time series. Thereby we consider a historical relationship and
+explore whether this relationship could have been used to trade on during the same period. Out-of-sample
+trading strategies instead perform a regression on historical data to use the generated 𝑏0 and 𝑏1 for
+predicting returns and trading on the predictions in future periods.
+         For the static out-of-sample strategy, we estimate the intercept and coefficients by regressing the
+chosen lagged macroeconomic variable against stock returns in the first half of the time series to predict
+stock returns during the second half. This method assumes that the relationship estimated in the first half
+between the macroeconomic variable and future stock returns will remain in the second half and that returns
+can be predicted using it. Considering the in-sample static trading strategy, the total time series is used to
+regress the chosen variable against future stock returns, and the generated coefficient and intercept are used
+to predict stock returns throughout the same period.
+
+                                                                                               15
+4.5.2 Dynamic regression trading strategies
+
+To capture how investors can profit from more dynamic trading rules based on regressions on single
+macroeconomic variables, out-of-sample regressions with changing time windows are developed so that
+intercepts and coefficients are continuously re-estimated every time period. Two approaches of rolling
+bivariate regressions are applied for the dynamic trading strategies, being:
+
+i) Rolling window regressions, with a window of 12 months, where intercepts and coefficients used for
+prediction are recalculated every period, based on the previous 12 months in the time series, including the
+current time period, impacting the trading decision in every period. Using a rolling 12-month time window
+thereby allows for time varying dynamics in the relationship between stock returns and lagged changes in
+either of the selected macroeconomic variables.
+
+Under a basic bivariate regression framework
+
+                                         𝑟𝑡,𝑡+𝑗 = 𝑏0 + 𝑏1 ⋅ 𝑥𝑡 + 𝜀𝑡
+
+The estimate for 𝑦𝑡 = 𝑟𝑡,𝑡+𝑗 will be given as
+
+                                                    𝑅     𝑅
+                                             𝑦̂ 𝑡 = 𝑏0,𝑡 + 𝑏1,𝑡 ⋅ 𝑥𝑡 + 𝜀𝑡
+
+                                                                                                         𝑡
+                                          ∑𝑖 =𝑡−11(𝑥𝑖−𝑗 − ̅𝑥)(𝑦𝑖 − 𝑦̅  )
+                                         𝑅
+                                    𝑏1,𝑡 =                          2
+                                                                                                                   𝑡
+                                              ∑𝑖 =𝑡−11(𝑥𝑖−𝑗 − ̅𝑥)
+
+                                                  𝑅           𝑅
+                                                   𝑏0,𝑡 = 𝑦̅  − 𝑏1,𝑡 ⋅ 𝑥̅
+
+Figure 4.1 shows how the rolling window strategy is executed for returns with a time lag of j months, for
+which j corresponds to 7 months in the example given.
+
+                                                                                               16
+                                       FIGURE 4.1
+
+                        EXECUTION OF THE ROLLING WINDOW STRATEGY
+
+ii) Expanding window regressions is the second dynamic strategy, developed to capture a more realistic
+version of in-sample trading strategies that an investor could technically not implement in reality. This
+method dynamically captures the accumulation of data from previous periods and approximates a feasible
+version of the in-sample method.
+
+The estimate for 𝑦𝑡 = 𝑟𝑡,𝑡+𝑗 will be given as
+
+                                                     𝐸      𝐸
+                                             𝑦̂ 𝑡 = 𝑏0,𝑡 + 𝑏1,𝑡 ⋅ 𝑥𝑡 + 𝜀𝑡
+
+                                                                                                          𝑡
+                                           ∑𝑖 =𝑡0+𝑗(𝑥𝑖−𝑗 − ̅𝑥)(𝑦𝑖 − 𝑦̅  )
+                                         𝐸
+                                    𝑏1,𝑡 =                         2
+                                                                                                                    𝑡
+                                                ∑𝑖 =𝑡 +𝑗(𝑥𝑖−𝑗 − ̅𝑥)
+                                                        0
+
+                                                   𝐸           𝐸
+                                                   𝑏0,𝑡 = 𝑦̅  − 𝑏1,𝑡 ⋅ 𝑥̅
+
+Both dynamic trading models still follow the initial trading rules as the static models use, and assumes that
+coefficients and intercepts are known at a certain date (since changes in a certain variable becomes public
+on that date) and that an investor can trade that same day, as he will know the relevant parameters for
+updating the regression and will therefore trade simultaneously.
+
+4.6 Evaluation of trading strategy results
+To evaluate the returns of the trading strategies, the Carhart four-factor model is used (Carhart 1997), which
+is an extension of the Fama-French three-factor model. The factors are constructed by the Swedish House
+of Finance, calculated over every Swedish stock and aggregated by month. The trading strategies’ returns
+in excess of the 1-month Swedish treasury bill, 𝐸𝑋𝑅𝑡, are regressed against the factors in the following
+Carhart four factor-model:
+
+                                                                                               17
+                        𝑐
+         𝐸𝑋𝑅𝑡 = 𝛼  + 𝛽𝑅𝑀𝑅𝐹 ⋅ 𝑅𝑀𝑅𝐹𝑡 + 𝛽𝑆𝑀𝐵 ⋅ 𝑆𝑀𝐵𝑡 + 𝛽𝐻𝑀𝐿 ⋅ 𝐻𝑀𝐿𝑡 + 𝛽𝑀𝑂𝑀 ⋅ 𝑀𝑂𝑀𝑡 + 𝜀𝑡
+
+Where
+𝐸𝑋𝑅𝑡 is the excess returns of the strategy being tested
+
+  𝑐
+𝛼                  is the pricing error, alpha
+𝑅𝑀𝑅𝐹 is the excess returns of the market, i.e. 𝑅𝑚 − 𝑅𝑓
+𝑆𝑀𝐵 is a self-financing portfolio that takes a long position in stocks with low market
+                capitalization and takes a short position in stocks with high market capitalization
+𝐻𝑀𝐿 is a self-financing portfolio that takes a long position in high book-to-market stocks and
+                  a short position in low book-to market stocks
+𝑀𝑂𝑀 a self-financing portfolio that takes a long position in previous 12-month return winner
+                and short previous 12-month loser stocks.
+
+The regression results reveal the trading strategies’ monthly premium of the different factors and to what
+extent a given strategy generates statistically significant four-factor alpha, i.e. whether the investment
+strategy has a return in excess of the reward for the assumed risk. For strategies predicting returns more
+than one month ahead, the corresponding Carhart four factor returns in the model are recalculated to
+correspond to the same period so that monthly discrete returns for factor X used in a regression based
+trading strategy lagged by j months is defined as:
+
+                                                 𝑋𝑡            𝑋𝑡+1               𝑋𝑡+𝑗
+                     𝑋𝑡+𝑗 = (1 +    ) ⋅ (1 +     ) ⋅. . .⋅ (1 +     ) ⋅ 100
+                            100       100          100
+
+The Sharpe ratio is also commonly used to measure risk adjusted returns when taking diversification and
+portfolio construction into consideration.
+
+                                                           𝐸[𝑟𝑝]−𝑟𝑓
+                                    𝑆𝑅 =
+                                                                                 𝜎𝑝
+
+The diversification aspect is, however, not an issue when evaluating the strategies against each other as well
+as against the market, due to that the “portfolios” comprise similar underlying assets, although RMRF
+enjoys marginally increased diversification benefits from holding more than 30 stocks in the underlying
+portfolio. The ratio enables us to consider excess return in comparison to total risk, measured as volatility,
+of the different returns although not focusing on the construction of the portfolios used. Hence, this
+measure will also be used for evaluating the different strategies under a mean-variance framework.
+
+                                                                                               18
+5 Evaluation of model assumptions
+
+Several assumptions are underlying the statistical models used, which are needed to be fulfilled to generate
+reliable results and enable us to draw correct conclusions from the tests. For example, the VAR model
+requires variable stationarity, further discussed below. For the purpose of valid statistical analysis based on
+OLS regressions, evaluation of OLS assumptions is also conducted below. When estimating the predictive
+regression models for trading, OLS assumptions are, however, assumed to hold. However, these
+assumptions are not evaluated explicitly, because of the fact that intercepts and coefficients only are used
+for trading decisions, and that the trading results are evaluated separately in the Carhart four factor
+framework.
+
+5.1 Test for stationarity and unit roots
+To be able to use the VAR model, the time series data has to be stationary. For a stochastic process to be
+considered stationary, the time series must have constant mean, variance and autocorrelation structure that
+are constant over time. Before variables are formatted by calculating the first log-differences, non-
+stationarity is likely to persist because of behaviours such as random walks, trends and cycles or the
+combination of them in a time series, for which relationships between variables are likely to be spurious.
+However, by using the log-difference for a majority of the variables, further motivated in the methodology
+part, the presence of non-stationary variables is inhibited. This is illustrated for the OMXS30 variable before
+and after being formatted to Return in Figure A. Furthermore, the Augmented Dickey-Fuller test tests the
+null hypothesis that the variable contains a unit root, with the alternative hypothesis that it is stationary. We
+can clearly reject the null hypothesis in accordance with Table A. The rejection implies that the time series
+is stationary, thus being useful for time series analysis.
+
+5.2 Heteroscedasticity
+A heteroscedasticity test using the Breusch–Pagan test for linear regression models is conducted for the
+different regressions. For the regression of the dependent variable for 1 lag, it can be seen in Table B that
+the null hypothesis of constant variance cannot be rejected, thus confirming that the data is homoscedastic
+and that all coefficients are correctly estimated. However, for 7 lags heteroscedasticity is not rejected,
+meaning that coefficients in a multiple regression for 7 lags would not be correctly measured. Therefore,
+heteroscedasticity-robust standard errors are instead used to allow for the fitting of a model that does not
+contain heteroscedastic residuals and hence obtain correctly estimated coefficients, using the Newey-West
+regression.
+
+5.3 Multicollinearity
+By observing correlations between the independent variables, the possible problem of multicollinearity in
+the test statistics is investigated. If independent variables are highly correlated, it is hard to entangle which
+
+                                                                                               19
+effect on the dependent variable that is attributable to a certain independent variable - thus making it hard
+to get reliable results from the regression. However, it does not appear to be a problem with
+multicollinearity, given that no variables are highly correlated with each other as can be seen in table C1 and
+C2 which show a correlation table and variance inflation factor test respectively.
+
+5.4 Autocorrelation of residuals
+To test for autocorrelation in the residuals, Durbin-Watson tests are conducted, with the output shown in
+table D. The tests are based on the residuals of the regressions on future values of the Return variable and
+the macroeconomic variables. For the regressions using 1 and 7 lags, the d-statistic is 1.844 and 0.338
+respectively. This shows that there may be positive autocorrelation - implying that after an increase in stock
+return, another increase will follow in the next period. To still have valid test statistics and standard errors,
+we correct the predictive regression by running a regression with Newey-West standard errors, which is in
+accordance with what Newey and West (1987) suggested.
+
+5.5 Omitted variable bias
+The purpose of this paper is not to perfectly explain future stock market development in terms of modelling
+and obtaining a maximum R-squared in a regression, but rather to determine the predictability of traditional
+macro variables individually. Therefore, the robustness of the models used is potentially subject to omitted
+variable bias in the regressions, however, the problem does not have any condemning impact on the
+relevance of the results.
+
+5.6 Normally distributed residuals
+Although the residuals from the regressions on future stock returns appear to be normally distributed when
+observing Figure B1 and B2, we learn from the Jarque-Bera test that we must reject the null hypothesis of
+normally distributed residuals. This can be seen in the output in Table E. However, the t-tests and linear
+regressions are not deemed invalid simply because of non-normally distributed residuals. While the t-tests
+and linear regressions are valid even in very small samples if the outcome variable is normally distributed,
+their major usefulness comes from the fact that in large samples they are valid for any distribution. This
+validity is demonstrated by Lumley et al. (2002) who simulate extremely non-normal data. Given the
+relatively large sample size of more than 200 observations, we therefore assume that the OLS assumptions
+hold.
+
+6 Empirical findings
+
+6.1 Evidence of macroeconomic variable’s effect on stock returns
+Since the AIC suggests a selection of 7 lags for the full dataset and the SBIC suggests 1 lag according to
+Table D, Granger causality tests are conducted for both 7 and 1 lags of the macroeconomic variables.
+
+                                                                                               20
+                                         TABLE 6.1
+
+                                GRANGER CAUSALITY WALD TEST
+
+                                              𝐻0: the variable does not Granger cause           𝐻0: the variable does not Granger cause
+                                   OMXS30 returns at 1 month lag             OMXS30 returns at 7 months lag
+
+     Equation Excluded chi2 df Prob > chi2 chi2 df Prob > chi2
+
+      Return dRepo 4.1883 1 0.041* 18.015 7 0.012*
+
+      Return Inflation 2.6046 1 0.107 13.818 7 0.055
+
+      Return gPVI 2.577 1 0.108 7.4085 7 0.388
+
+      Return dTCW 0.40064 1 0.527 15.891 7 0.026*
+
+      Return gMS 0.17712 1 0.674 7.7632 7 0.354
+
+      Return dSlope 2.4567 1 0.117 7.3994 7 0.389
+
+      Return ALL 10.43 6 0.108 91.68 42 0.000***
+
+                       *p-value < 5% **p-value < 1% ***p-value < 0.1%
+                        Note: The Granger causality tests indicate which macroeconomic variables that have predictive ability regarding stock
+                         market returns. The significant variables are shaded
+
+As indicated by the Granger causality tests in Table 6.1, the change in repo rate Granger causes stock returns
+at a 5% significance level at 7 lags and 1 lag. Also, the change in exchange rate Granger causes stock returns
+at a 5% significance level at 7 lags. The predictive regressions (shown in tables G1 and G2) confirms the
+statistical significance of the repo rate change but does not indicate the same result for change in exchange
+rates - supporting the usefulness of the first difference in repo rate as a macro variable predicting future
+changes in equity prices. The strong statistical causality of the change in repo rate further confirms the
+findings of Rapach et al. (2005), who highlight that relative change in both short term interest rates and
+money market rates stand out as reliable in-sample predictors compared to other macro variables in
+explaining stock returns. They also specifically confirm the statically significant negative coefficient for the
+relative money market rate in Sweden. The direction of the effect is in line with theories regarding the
+transmission mechanism effect of monetary policy on equity prices (which mainly occurs through the
+interest rate channel), given that the predictive regressions over both horizons generate negative
+coefficients. Evidence suggests that stock returns are effected through the link to market rates, as well as
+the indirect effect of increased borrowing costs of financial institutions, effects of future consumption and
+firm investment decisions in the economy. Furthermore, the negative coefficient also supports the idea that
+higher interest rates in terms of monetary policy restrict investor risk appetite, e.g. documented by Lian et
+al. (2018).
+         Regarding the statistical causality of the effect of change in the exchange rate on stock returns, the
+coefficient for the variable is not statistically significant in the predictive regression, which limits strong
+conclusions of the linear relationship. Thereby, there is not enough evidence to reject the null hypothesis
+that the coefficient is equal to zero at a given significance level, although one cannot claim with certainty
+that there is no effect, because of the possibility of a type II error to incorrectly accept a false null hypothesis.
+
+                                                                                               21
+However, since the exchange rate changes Granger causes stock returns over the longer horizon, we still
+consider the variable to establish the direction of the effect. The negative coefficient for the variable implies
+that domestic currency depreciation has a negative relationship with stock returns in the following period.
+This finding is consistent with Hwang (2003), who finds that domestic currency depreciation in Korea has
+a negative short run effect on stock prices, which also is in line with the findings of Mookerjee & Yu (1997).
+The latter find that the unanticipated component of exchange rate changes has a positive effect on stock
+returns in Singapore, suggesting that higher exchange rates lead to higher profit projections, presumably
+because of lower import costs - which most likely would be a similar effect applicable for Sweden, given
+the similarities with Singapore in terms of being a small open economy. Another potential reason for the
+sign of the coefficient could be that a depreciation of the currency could be interpreted as increased inflation
+expectations in the market stemming from e.g. imported inflation (Federal Reserve Bank of St Louis 1989),
+increased domestic demand and less incentives to cut costs for domestic manufacturers, thereby negatively
+influencing the stock market.
+        The Granger causality tests and predictive regressions widely confirm previous international
+research on macro variables’ effect on equity prices considering short term interest rate changes and changes
+in the exchange rate. Meanwhile, the other variables assessed do not show any statistical significance in
+terms of Granger causality. However, the 7 month stock return regression, presented in table G2, shows
+that inflation and change in the production value index are statistically significant on the 5% level, meaning
+that monthly changes in these variables have a linear relationship with 7 month stock returns on a monthly
+rolling basis - although this does not reflect predictability to the same extent as Granger causality. In essence,
+this widely confirms the general findings of Rapach et al. (2005), as well certain findings on a country
+specific level, including Tripathy (2011).
+
+6.2 Trading strategy results
+
+6.2.1 Trading strategy variable selection
+
+The lag selection information criteria AIC and SBIC suggested that the macroeconomic variables best
+predict stock returns under lags of 7 and 1 months respectively. Following that, the Granger causality tests
+at these lags indicated that the first difference in repo rate for both horizons and change in Exchange rate
+for 7 lags significantly Granger cause stock returns - making them good predictors of future returns. To
+further determine the direction and magnitude of the statistical causality, multivariate predictive OLS
+regressions based on future OMXS30 returns at a 1 and 7 month horizon accompany the Granger causality
+analysis. In accordance with tables G1 and G2, the regressions showed evidence of a significant beta
+coefficient between the repo rate and the stock returns at both 1 and 7 months, but no statistical significance
+was established for changes in exchange rate. Since no significant linear relationship is found for the
+exchange rate variable, limiting the accuracy of predicting future returns using a linear model, only the repo
+rate variable is to be used for the trading strategies at 1 lag and 7 lags respectively.
+
+                                                                                               22
+6.2.2 Characteristics of the different strategies
+
+                                        TABLE 6.2
+
+        REGRESSIONS ON THE 7 MONTH TRADING STRATEGIES USING THE CARHART FOUR FACTORS
+
+                           Regression on the trading strategies’ excess returns when predicting stock market excess returns for the next 7
+                                                           months
+
+                   OutStatRepo7m InStatRepo7m ExpRepo7m RollRepo7m
+
+                              0.348***                    0.420***                    0.312***                    -0.00403
+   RMRF7m
+                                    (3.95)                           (7.13)                           (4.73)                          (-0.07)
+
+                                  0.206                       -0.203***                     -0.328***                     -0.293***
+   HML7m
+                                      (1.21)                           (-3.42)                           (-4.96)                           (-4.74)
+
+                                 -0.255                        -0.104                        -0.144                        0.0446
+    SMB7m
+                                     (-1.94)                           (-1.34)                           (-1.68)                           (0.55)
+
+                                 -0.0552                       -0.122**                      -0.116**                      0.327***
+   MOM7m
+                                     (-0.47)                           (-3.13)                           (-2.71)                           (8.46)
+
+                              2.035                     4.140***                     0.246                       2.109
+     _cons
+                                  (1.42)                         (3.36)                         (0.18)                         (1.67)
+
+                     *p-value < 5% **p-value < 1% ***p-value < 0.1%
+                      Note: The values in the parentheses are the test statistics, and the other values are the beta exposure to each
+                      portfolio. All portfolios are value weighted. Due to that the Carhart four factors only are available on a monthly basis
+                  until January 2017, the regression is only conducted using data until that date
+
+                                        TABLE 6.3
+
+        REGRESSIONS ON THE 1 MONTH TRADING STRATEGIES USING THE CARHART FOUR FACTORS
+
+                      Results from the regression on the trading strategies’ excess returns when predicting stock market excess returns for
+                                                                 the next month
+
+                   OutStatRepo1m InStatRepo1m ExpRepo1m RollRepo1m
+
+                             0.274**                    0.429***                   0.341***                    0.0241
+ RM_RF_monthly
+                                  (2.92)                         (6.45)                         (4.63)                         (0.33)
+
+                                  -0.184                         -0.117                        -0.0669                        -0.107
+   HML_vw
+                                      (-1.15)                           (-1.70)                           (-0.88)                           (-1.44)
+
+                                -0.408***                     -0.249***                      -0.0785                       0.0672
+   SMB_vw
+                                     (-3.61)                           (-3.44)                           (-0.98)                           (0.87)
+
+                               -0.114                      0.0233                     0.221***                    0.331***
+   MOM_vw
+                                    (-1.03)                          (0.49)                           (4.14)                           (6.45)
+
+                                0.819                        0.490                       -0.209                       0.590
+     _cons
+                                    (1.94)                           (1.44)                          (-0.55)                          (1.60)
+
+                     *p-value < 5% **p-value < 1% ***p-value < 0.1%
+                      Note: The values in the parentheses are the test statistics, and the other values are the beta exposure to each
+                      portfolio. All portfolios are value weighted. Due to that the Carhart four factors only are available on a monthly basis
+                      until January 2017, the regression is only conducted using data until that date
+
+By regressing the Carhart four factors on strategy returns, it can be observed that only the in-sample strategy
+for the 7 month horizon generated statistically significant alpha over the full sample, whilst the rolling
+window strategy generated significant alpha in the first half of the dataset (seen in table I2). The outcome
+
+                                                                                               23
+of the regressions of strategy returns against the Carhart four factors are displayed in tables 6.2 and 6.3,
+along with descriptive statistics in table H1.
+        Considering the in-sample static trading strategies, they are expected to generate the most
+significant alphas as well as betas, given that they are developed based on the same time series for which
+their predictive power is tested. Therefore, it is not surprising that the 7 month static in-sample strategy has
+the highest alpha, which is statistically significant. However, Marquering & Verbeek (2004) mention that
+in-sample strategies often overstate out-of-sample predictability because of overfitting, finite sample biases
+and data snooping. The in-sample strategy thus confirms strong predictive ability, but cannot realistically
+simulate how an investor could trade on the information in real-time.
+         Regarding the out-of-sample static strategy, we observe that alpha is particularly high for trading
+on the 1 month horizon, but it is not statistically significant on the 5% level, although being just above that
+threshold. This suggests that an investor would not have generated abnormal returns using this strategy.
+However, the lack of significance could be the result of a shorter sample period of data regressed to find
+the intercept and coefficient used for predicting returns - potentially implying a less accurate approximation
+of the linear relationship.
+       With respect to the dynamic strategies, the rolling window strategy has a higher and more
+significant alpha for both the 1 and 7 month return horizons compared to the expanding window. However,
+alpha is only significant in the first half of the sample on the 7 month horizon, being the only realistically
+feasible trading strategy generating statistically significant four-factor alpha in the first half - indicating that
+an investor could have earned abnormal risk adjusted returns by following this strategy - translating to
+9.16% on an annualized basis. Thereby, we can conclude that the more dynamic rolling window strategy is
+outperforming the expanding window strategy in the first half, and while the opposite is true in the second
+half - indicating that there are different characteristics of the strategies over time.
+        An important issue to consider is that transaction costs are not included in the excess return of the
+trading strategies. In comparison with only holding the benchmark index for the whole sample period
+(represented by RMRF), additional transaction costs have to be considered. This is partly due to that the
+strategy is assumed to change its position for each period which generates costs. In addition we use long-
+short strategies, as opposed to long-only strategy, which may imply increased transaction costs. To control
+for this, we used a transaction cost of 1%, which is classified as “high” according to Pesaran & Timmermann
+(1995). This effect was approximated by subtracting 1% from each period’s return in the full sample and
+regressing Carhart four factors against the new returns. This resulted in an alpha of 3.14% instead of 4.14%
+for the 7 month in-sample static strategy, still being statistically significant.
+
+6.2.3 Comparing the dynamic strategies’ performance over time
+
+When dividing the time series into two halves of equal length, we get two samples with different
+characteristics. For the first half, ranging between March 1998 and March 2008, we observe larger
+fluctuations of stock returns with higher realized volatility, as can be seen when comparing the variable’s
+
+                                                                                               24
+standard deviations in Table H2 and H3. The second half includes relatively smaller fluctuations, including
+the European sovereign debt crisis, with otherwise relatively steady increasing stock returns over time.
+Regarding the performance of the dynamic strategies, the rolling window strategy outperforms the
+expanding window strategy in the first half of the sample both with respect to 1 month and 7 months of
+stock returns, when considering both Sharpe ratio and risk adjusted returns in terms of higher alpha for the
+respective strategies. On the other hand, the expanding strategy clearly outperformed the rolling strategy in
+the second half of the dataset.
+        There is no clear reason for the initial outperformance and subsequent underperformance of the
+rolling strategy, but it could be related to the fact that stock returns were more volatile in the first half
+(23.2% and 18.0% standard deviation of excess returns for the first and second half of the dataset
+respectively for 7 month returns). This suggests that a more dynamic strategy (i.e. the rolling window
+strategy) is superior in generating abnormal returns when stock market volatility is higher, which is in line
+with Pesaran & Timmermann (1995), who suggest that the predictability of excess returns is larger at times
+when volatility is high, although there might not be a not a one-to-one relationship between abnormal
+returns and predictability.
+         Although the Sharpe ratio is higher in the first half for the rolling strategy in comparison with the
+expanding window strategy, it is still lower in comparison to excess market returns for the same period,
+indicating that a mean-variance investor who seeks to maximize his mean-variance efficient frontier would
+not prefer the strategy. Furthermore, the alpha for the rolling window strategy is generated when the stock
+market is experiencing a recession - indicating that the strategy is capable of predicting the bear market and
+profiting from it (seen in figure C). That ability is in line with findings in previous research, e.g. Chen (2008),
+showing that macroeconomic variables are particularly useful predictors of bear markets.
+
+6.2.4 Strategy returns under a negative interest rate regime
+
+When interest rates turn negative, the rolling window strategy is clearly performing worse in comparison
+with both its historical average performance as well as compared to other strategies, reflected in a 27 month
+period of consecutive negative returns starting in 2015. The inability to predict returns during the negative
+interest rate regime could be due to the less frequent changes in the repo rate during the past 12 months,
+making it harder to find a linear relationship between the change in repo rate and stock market returns.
+This indicates that the fixed linear relationship between lagged repo rate changes and stock returns used in
+the static strategies better predicts stock returns when there is a negative interest rate regime, as opposed
+to the dynamic rolling window strategy that continuously re-estimates the same linear relationship and fails
+to predict returns during this period (see graph H4). This also seems to be consistent with the fact that the
+rolling window strategy has a positive and statistically significant four-factor alpha of 5.25% (translating to
+9.16% annually) in the first half, while having a negative and insignificant alpha in the second, less volatile
+half of the dataset.
+
+                                                                                               25
+        Furthermore, the static strategies and the expanding window strategy seem to perform relatively
+well during the last years of the time series in terms of Sharpe ratio (can be seen in table H3). Towards the
+end of the time series, the expanding window strategy’s beta becomes increasingly similar to the static in-
+sample trading strategy, since it is regressed using almost the same time window (except for the subsequent
+periods which only are included in the in-sample strategy’s window). The similar betas explain that the
+expanding window strategy becomes more of a static strategy towards the end as a larger time series is
+regressed.
+
+6.2.5 Linking strategy returns to macroeconomic phenomena
+
+To connect the statistical observations with reality, the inability for the rolling window strategy to predict
+stock returns under a negative interest rate regime may in turn be related to the relationship between
+changes in repo rate and inflation. As documented by Panizza & Wyplosz (2016), there is a claimed
+decreasing effectiveness of interest rates as a monetary policy tool internationally - in Sweden characterized
+by the fact that inflation has remained below the target for a prolonged period of time despite a low and
+even negative repo rate (How monetary policy affects inflation, Sveriges Riksbank, 2018). This could potentially
+translate into less frequent and/or delayed changes (increases) of the repo rate by the central bank to avoid
+the risk of inhibiting inflation, which would in turn be translated into difficulties for a rolling regression
+model to predict stock returns based on the linear relationship between lagged changes in the repo rate and
+stock returns. However, deeper and more extensive research has to be conducted to confirm the economic
+causality between repo rate changes and stock market returns.
+
+7 Conclusion
+
+This thesis investigates whether certain macroeconomic variables have predictive power with respect to
+Swedish stock returns and if an investor can generate abnormal returns using macroeconomic variables.
+Predictive power is affirmed for changes in the repo rate and changes in the exchange rate, confirming
+findings in previous research on macroeconomic variables’ predictive power. The results imply that changes
+in the repo rate impacts future stock returns negatively and that currency depreciation negatively affects
+future stock returns, which is line with previous international findings.
+         An investor constructing his portfolio with the aim of certain four-factor exposure would have
+benefited from the positive statistically significant, annualized four-factor alpha of 9.16% generated by the
+dynamic rolling window strategy in the first half of the time series - providing evidence that it has been
+historically possible to generate risk-adjusted abnormal returns using macroeconomic variables, when not
+considering transaction costs (which would partly reduce the abnormal return). However, the recent poor
+performance of the rolling dynamic strategy is at the same time suggesting issues with the model, and
+thereby we conclude that it is unlikely that an investor can generate abnormal returns going forward, given
+the prevailing negative interest rate environment.
+
+                                                                                               26
+         When interest rates turn negative and changes in the repo rate are less frequent, the rolling window
+strategy is sharply underperforming other strategies. Thereby, the fixed linear relationship between lagged
+repo rate changes and stock returns used in the static strategies better predict stock returns when there is a
+negative interest rate regime, as opposed to the dynamic rolling window strategy that continuously re-
+estimates the same linear relationship over a rolling 12 month period. Further analysis suggests that the
+performance of the rolling window trading strategy is affected by the effectiveness of the repo rate as a
+monetary policy tool, forcing the repo rate to remain at extraordinary low levels due to its recent inability
+to stimulate inflation.
+        Our analysis brings relevant implications for portfolio managers in terms of how stock index
+returns can be predicted using methods based on macroeconomic variables that have previously not been
+explicitly used in the Swedish stock market. In turn, the findings considering the first difference in repo
+rate further provides insights for policy makers with respect to potential side effects of using the repo rate
+as a monetary policy tool, given its significant impact on stock returns. Also, it gives an idea of how investors
+can exploit the predictive power and use it to construct trading strategies, as well as the advantages and
+caveats of different regression based trading strategies using individual macroeconomic variables.
+
+8 Limitations and suggestions for further research
+
+The purpose of the thesis is to explore the explanatory power of macroeconomic variables on a general
+basis and not other potential variables that might explain the stock market such as traditional financial
+ratios, correlations with other international markets or other variables. We limit this paper to evaluation of
+macroeconomic variables’ significance in forecasting, as opposed to constructing a forecasting model and
+assessing its predictive power. Thus, the R-squared value in the linear regression is not maximized, but the
+significance of individual variables is focused on instead. Including financial ratios together with the
+macroeconomic variables with significant predictive ability in this paper, as well as in other papers referred
+to, would thereby be an interesting area to further examine - to increase the R-squared value in a predictive
+regression. Also, while the statistical causality can be determined through the tests undertaken, it does not
+provide an answer that explain economic causality.
+        Throughout this paper, the predictive power of the change of the repo with respect to OMXS30
+stock returns is investigated. This is something that has to be considered by the Swedish central bank that
+decides the repo rate, given that it is used as a tool to create a certain economic environment in Sweden.
+However, to be able to make decisions based on the probable effects on stock returns, it would be
+interesting, and contribute with added value to the discussion if investigating what factors in the economy
+that OMXS30 return in turn can predict. Particularly, this topic is interesting since the prevailing negative
+interest rate environment might lead to a structural break which could disrupt current forecasting models
+used by both policy makers and investors.
+
+                                                                                               27
+9 References
+
+Sharpe, W. (1964). “Capital Asset Prices: A Theory of Market Equilibrium under Conditions of Risk”. The
+Journal of Finance, 19(3), pp. 425-442.
+
+Lintner, J. (1965). “The Valuation of Risk Assets and the Selection of Risky Investments in Stock
+Portfolios and Capital Budgets”. Review of Economics and Statistics, 47:1, pp. 13-37.
+
+Fama, E & French, K. (1993). “Common risk factors in the returns on stocks and bonds”. Journal of
+Financial Economics, 33(3), pp. 3-56
+
+Fama, E. F., & French, K. (1989). “Business conditions and expected returns on stocks and bonds”.
+Journal of Financial Economics, 25(23), pp. 23–49.
+
+Rapach, D, Wohar, M, Rangvid. (2005), “Macro variables and international stock return predictability”.
+International Journal of Forecasting, 25, pp. 137-166.
+
+Mookerjee, R, Yu, Q. (1997). “Macroeconomic variables and stock prices in a small open economy: The
+case of Singapore”. Pacific-Basin Finance Journal, 5, pp. 337-388.
+
+Pesaran, M.H, Timmermann, A. (1995). “Predictability of Stock Returns: Robustness and Economic
+Significance”. The Journal of Finance, 50(4), pp. 1201-1228.
+
+Gjerde, Ø and Saettem, F. (1999). “Causal relations among stock returns and macroeconomic variables in
+a small, open economy”. Journal of International Financial Markets Institutions and Money, 9, pp. 61-74.
+
+Campbell, J. Y. (1987). “Stock returns and the term structure”. Journal of Financial Economics, 18(2), pp.
+373–399.
+
+Alam, M, Uddin, G.S. (2009). “Relationship between Interest Rate and Stock Price: Empirical Evidence
+from Developed and Developing Countries”. International Journal of Business and Management, 4(3), pp. 43-
+51.
+
+Ljungstedt, N. (2015). “Macroeconomic and Stock Market Relationships in Sweden During 2000 to 2015:
+a Co-integration Analysis of the OMXS30 and Macroeconomic Variables”. Bachelor thesis in Economics,
+Lund University, Lund.
+
+                                                                                               28
+European Central Bank. (2018). “Transmission mechanism of monetary policy”. Available at:
+https://www.ecb.europa.eu/mopo/intro/transmission/html/index.en.html. Accessed at 12 May, 2018.
+
+Ekonomiska avdelningen vid Finansdepartementet. (2014). “Transmissionsmekanismen och finansiell
+stabilitetspolitik”. Available at: http://www.regeringen.se/rapporter/2014/06/transmissionsmekanismen-
+och-finansiell-stabilitetspolitik. Accessed at 12 May, 2018.
+
+Chen, S. (2008). “Predicting the bear stock market: Macroeconomic variables as leading indicators”.
+Journal of Banking & Finance, 33(2), pp. 211-223
+
+Federal Reserve Bank of San Fransisco (2018). “Economic Forecasts with the Yield Curve”. Available at:
+https://www.frbsf.org/economic-research/publications/economic-letter/2018/march/economic-
+forecasts-with-yield-curve/. Accessed at 12 May, 2018.
+
+Balvers, R., Cosimano, T., & McDonald, T. (1990). “Predicting stock returns in an efficient market”. The
+Journal of Finance, 45(4), pp. 1109–1128.
+
+Fama, E.F. (1981). “Stock Returns, Real Activity, Inflation and Money”. American Economic Review, 71(4),
+pp. 545-65.
+
+Gupta, R., & Mampho, P. M. (2013). “Macroeconomic Variables and South African Stock Return
+Predictability”. Economic Modelling, 30, pp. 621-622.
+
+Homa, K.E, Jaffee, D.M. (1971). “The Supply of Money and Common Stock Prices”. The Journal of
+Finance, 26(5), pp. 1045-1066.
+
+Tripathy, N. (2011). “Causal Relationship between Macro-Economic Indicators and Stock Market in
+India”. Asian Journal of Finance & Accounting, 3(1), pp. 208-226.
+
+Zivot, E & Wang, J. (2006). Modelling Financial Time Series with S-PLUS. 2nd Edition. New York: Springer-
+Verlag.
+
+Granger, C.W.J. (1969). “Investigating Causal Relations by Econometric Models and Cross-spectral
+Methods”. Econometrica, 37(3), pp. 424-438.
+
+Granger C.W.J. (1980). “Testing for causality: A personal viewpoint”. Journal of Economic Dynamics and
+Control, 2, pp. 329-352
+
+                                                                                               29
+Hornton, D.L. & Batten, D.S. (1985) “Lag-Length Selection and Tests of Granger Causality between
+Money and Income”. Journal of Money, Credit, and Banking, 17, 164-178.
+
+Shibata, R. (1976). “Selection of the order of an autoregressive model by Akaike's information criterion”.
+Biometrika, 63(1), pp. 117–126.
+
+Kuha, J. (2004). “AIC and BIC - Comparisons of Assumptions and Performance”. Sociological Methods &
+Research, 33(2), pp. 188-229.
+
+Carhart, M. M. (1997). "On Persistence in Mutual Fund Performance". The Journal of Finance, 52(1), pp.
+57–82.
+
+Newey, W & West, K. (1987). “A Simple, Positive Semi-definite, Heteroskedasticity and Autocorrelation
+Consistent Covariance Matrix”. Econometrica, 55(3), pp. 703-08.
+
+Lumley, T, Diehr, P, Emerson, S and Chen, L. (2002). “The Importance of the Normality Assumption in
+Large Public Health Data Sets”. Annual Review of Public Health, 23, pp. 151-169.
+
+Lian, C, Ma, Y and Wang, C. (2018). “Low Interest Rates and Risk Taking: Evidence from Individual
+Investment Decisions”. (Working paper). Retrieved from Harvard University:
+https://scholar.harvard.edu/yueranma/publications/low-interest-rates-and-risk-taking-evidence-
+individual-investment-decisions. Accessed at 12 May, 2018.
+
+Hwang, J-K. (2003). “Cointegration and the Causality between Stock Prices and Exchange Rates of the
+Korean Economy”. International Business and Economics Research Journal.
+
+Federal Reserve Bank of St Louis. (1989). Does Dollar Depreciation Cause Inflation? Available at
+https://files.stlouisfed.org/research/.../Dollar_Jul_Aug1989.pdf. Accessed at 12 May, 2018.
+
+Marquering and Verbeek. (2004), “The Economic Value of Predicting Stock Index Returns and
+Volatility”. The Journal of Financial and Quantitative Analysis, 39(2), pp. 407-429.
+
+Narayan, P.K, Narayan, S and Thuraisamy, K.S. (2014). “Can institutions and macroeconomic factors
+predict stock returns in emerging markets?” Emerging Markets Review, 17, pp. 77–95.
+
+                                                                                               30
+Panizza, U & Wyplosz, C. (2016). “The Folk Theorem of Decreasing Effectiveness of Monetary Policy:
+What Do the Data Say?”. Russian Journal of Money and Finance, 77(1), pp. 71-107
+
+Geske, R. and R. Roll (1983). "The fiscal and monetary linkage between stock returns and inflation". The
+Journal of Finance, Vol. 38, No. 1, pp. 1-33.
+
+A. Ferreira, M and Santa-Clara, P. (2011). “Forecasting stock market returns: The sum of the parts is
+more than the whole” Journal of Financial Economics, 100, pp. 514-537
+
+Swedish House of Finance. (2018). Fama and French factors for the Swedish market. Available at:
+https://data.houseoffinance.se/otherDB/famaFrench. Accessed at 12 May, 2018.
+
+Sveriges Riksbank. (2018). How monetary policy affects inflation. Available at: https://www.riksbank.se/en-
+gb/monetary-policy/what-is-monetary-policy/how-monetary-policy-affects-inflation/. Accessed at 12
+May, 2018.
+
+                                                                                               31
+10 Appendix
+
+                                   TABLE A
+
+                               DICKEY FULLER TEST FOR UNIT ROOT
+
+                                                                  𝐻0: the variable contains a unit root
+                                                                                Interpolated Dickey-Fuller
+
+                     Test Statistic 1% Critical Value 5% Critical Value 10% Critical Value
+        Return -13.475 -3.464 -2.881 -2.571
+        dRepo -7.484 -3.464 -2.881 -2.571
+        Inflation -15.349 -3.464 -2.881 -2.571
+         gPVI -16.945 -3.464 -2.881 -2.571
+        dTCW -12.283 -3.464 -2.881 -2.571
+         gMS -18.913 -3.464 -2.881 -2.571
+        dSlope -11.262 -3.464 -2.881 -2.571
+                          MacKinnon approximate p-value for Z(t) = 0.0000
+                        Note: The p-value is applicable for all variables. Being able to reject 𝐻0 implies that the data is stationary
+
+                                    TABLE B
+
+                  BREUSCH-PAGAN /COOK-WEISBERG TEST FOR HETEROSKEDASTICITY
+
+                                                                     𝐻0: constant variance
+                                       chi2 (1) Prob > chi2
+    ReturnFW1 0.70 0.4041
+    ReturnFW7 6.90 0.0086
+
+                                    TABLE C1
+
+                                  CORRELATION TABLE
+
+                              The correlation between all independent variables used in the regressions are presented below
+                 dRepo Inflation gPVI dTCW gMS dSlope
+    dRepo 1.0000
+   Inflation 0.1979 1.0000
+    gPVI 0.1050 0.2663 1.0000
+    dTCW -0.2355 -0.1260 0.0118 1.0000
+     gMS -0.1400 -0.1640 0.2219 0.0963 1.0000
+    dSlope -0.3417 -0.1088 0.0681 0.1692 0.0295 1.0000
+
+                                                                                               32
+                                  TABLE C2
+
+                           VARIANCE INFLATION FACTOR TEST
+
+                         VIF factors are displayed below, used for testing for multicollinearity between the independent variables
+                                VIF 1/VIF
+   dRepo 1.24 0.806
+    gPVI 1.20 0.832
+  Inflation 1.18 0.847
+   dSlope 1.17 0.856
+    gMS 1.14 0.876
+   dTCW 1.08 0.925
+  Mean VIF 1.17
+                   Note: VIF < 10 indicates no multicollinearity, in accordance with e.g. Neter et al. (1996)
+
+                                TABLE D
+
+                          DURBIN-WATSON TEST FOR AUTOCORRELATION
+
+                               > 2 = negative autocorr. 2 = no autocorr. < 2 = positive autocorr.
+                                                                 Durbin-Watson d-statistic
+regresid_lag1 1.844
+regresid_lag7 0.338
+                   Note: The tests are conducted on the residuals of each of the regressions conducted on 1 and 7 months future
+                   stock returns using the macroeconomic variable
+
+                                 TABLE E
+
+                                  JARQUE-BERA NORMALITY TEST
+
+                                                             𝐻0: Normally distributed residuals
+                                   chi2 Prob > chi2
+regresid_lag1 24 6.2e-06
+regresig_lag7 13.5 0.0012
+                Note: The tests are conducted on the residuals of each of the regressions conducted on 1 and 7 months future
+                   stock returns using the macroeconomic variable
+
+                                                                                           33
+                                   TABLE F
+
+                                    SELECTION ORDER CRITERIA
+
+       The Akaike Information Criterion (AIC) and Schwarz Bayesian Information Criterion (SBIC) are used to determine the number
+                               of lags that are to be investigated in the VAR model and the Granger causality test
+lag LL LR df p FPE AIC HQIC SBIC
+ 0 -2233 0.806 19.649 19.692 19.754
+ 1 -2060.01 345.98 49 0 0.272 18.562 18.901* 19.404*
+ 2 -2008.54 102.94 49 0 0.266 18.540 19.177 20.119
+ 3 -1946.01 125.06 49 0 0.237 18.421 19.356 20.738
+ 4 -1860.30 171.44 49 0 0.173 18.099 19.331 21.152
+ 5 -1793.61 133.37 49 0 0.149 17.944 19.473 21.734
+ 6 -1740.50 106.21 49 0 0.146 17.908 19.735 22.435
+ 7 -1674.08 132.84 49 0 0.128* 17.755* 19.879 23.020
+ 8 -1640.47 67.23 49 0.043 0.150 17.890 20.311 23.891
+ 9 -1609.82 61.284 49 0.112 0.182 18.051 20.770 24.790
+10 -1563.58 92.49* 49 0 0.194 18.075 21.091 25.551
+      Endogenous: Return dRepo Inflation gPVI dTCW gMS dSlope
+      Exogenous: _cons
+       Note: Both the dependent and independent variables are set as endogenous since the VAR model and Granger causality test
+       (which the lags suggested above will be used for) examines the causal lagged relationship between all variables
+
+                                  TABLE G1
+
+      REGRESSION ON 1 MONTH FUTURE STOCK RETURNS USING THE MACROECONOMIC VARIABLES
+
+                                                   Predictive regression on stock returns 1 month ahead
+ ReturnFW1 Coef. Std.Err t P > t [95% Confidence Interval]
+   dRepo -5.662 2.675 -2.12 0.035* -10.931 -0.392
+   Inflation -1.719 0.981 -1.75 0.081 -3.652 0.214
+    gPVI 0.049 0.033 1.51 0.132 -0.015 0.114
+   dTCW -0.295 0.284 -1.04 0.300 -0.855 0.265
+    gMS 0.112 0.294 0.38 0.705 -0.468 0.691
+    dSlope -4.366 2.781 -1.57 0.118 -9.846 1.113
+    _cons 0.321 0.424 0.76 0.450 -0.515 1.156
+                      Number of observations 238 R-squared 0.0459
+                            F(6, 231) 1.85 Adjusted R-squared 0.0212
+                         Prob > F 0.0000 Root MSE 5.6639
+                  *p-value < 5% **p-value < 1% ***p-value < 0.1%
+
+                                                                                             34
+                                   TABLE G2
+
+       REGRESSION ON 7 MONTHS FUTURE STOCK RETURNS USING THE MACROECONOMIC VARIABLES
+
+                                                   Predictive regression on stock returns 7 months ahead
+
+ReturnFW7 Coef. Newey-West Std.Err t P > t [95% Conf. Interval]
+    dRepo -41.991 7.528 -5.58 0.000*** -56.824 -27.157
+    Inflation -7.568 3.152 -2.40 0.017* -13.779 -1.358
+     gPVI 0.201 0.091 2.21 0.028* 0.022 0.380
+    dTCW -0.693 0.738 -0.94 0.349 -2.148 0.762
+     gMS -0.573 0.853 -0.67 0.502 -2.254 1.108
+    dSlope -1.551 8.422 -0.18 0.854 -18.148 15.046
+     _cons 2.682 1.608 1.67 0.097 -0.486 5.850
+
+                        Number of observations 232 R-squared -
+
+                               F(6, 225) 7.12 Adjusted R-squared -
+
+                           Prob > F 0.0000 Root MSE -
+
+                   *p-value < 5% **p-value < 1% ***p-value < 0.1%
+                    Note: This regression produces Newey-West standard errors, for which the error structure is assumed to be
+                    heteroskedastic and autocorrelated. No R-squared, adjusted R-squared nor root MSE values are generated
+
+                                   TABLE H1
+
+                          DESCRIPTIVE STATISTICS OF THE TRADING STRATEGIES
+
+                       Descriptive statistics for the return of all trading strategies’ excess returns and the stock market excess returns at 1 and 7
+                                                           month horizons
+                   Obs. Mean Std.Dev SR Min Max
+   RMRF7m 220 6.214 20.836 0.298 -41.881 64.829
+  InStatRepo7m 219 6.027 19.405 0.311 -45.924 72.082
+ OutStatRepo7m 99 6.547 14.376 0.455 -37.734 46.046
+   RollRepo7m 201 0.912 18.585 0.049 -40.489 73.049
+  ExpRepo7m 210 0.997 20.418 0.049 -45.924 72.082
+ RM_RF_montly 227 0.689 5.754 0.120 -18.153 21.638
+  InStatRepo1m 225 0.857 5.848 0.147 -15.595 19.898
+ OutStatRepo1m 105 1.257 4.896 0.257 -14.989 19.898
+   RollRepo1m 213 0.634 5.816 0.109 -14.593 19.898
+  ExpRepo1m 222 0.087 5.943 0.015 -15.102 19.898
+
+                  Note: All results are presented in percentage, e.g. the RMRF7m has an average return of 6.214%. Due to that the Carhart
+                      four factors only are available on a monthly basis until January 2017, the regression is only conducted using data until that
+                    date
+
+                                                                                               35
+                                   TABLE H2
+
+                DESCRIPTIVE STATISTICS OF THE FIRST HALF OF THE TRADING STRATEGIES
+
+                   Descriptive statistics for the return of all trading strategies’ excess returns and the stock market excess returns at 1 and 7
+                                           month horizons between March 1998 and March 2008
+
+                   Obs Mean Std.Dev SR Min Max
+
+   RMRF7m 114 6.070 23.210 0.262 -40.634 64.829
+ InStatRepo7m 113 4.869 22.804 0.214 -45.924 72.082
+ OutStatRepo7m 0
+  RollRepo7m 95 2.644 21.115 0.125 -40.489 73.049
+  ExpRepo7m 104 -4.110 23.429 -0.175 -45.924 72.082
+RM_RF_monthly 121 0.526 6.280 0.084 -15.381 15.951
+ InStatRepo1m 119 0.543 6.585 0.083 -15.595 17.280
+ OutStatRepo1m 0 - - - - -
+  RollRepo1m 107 1.041 6.515 0.160 -14.593 17.645
+  ExpRepo1m 116 -0.719 6.661 -0.108 -15.102 17.645
+
+                     Note: All results are presented in percentage, e.g. the RMRF7m has an average excess return of 6.214%. Due to that the
+                      Carhart four factors only are available on a monthly basis until January 2017, the regression is only conducted using data
+                  until that date. However, the data is split between March 2008 and April 2008 since the regressions conducted on the
+                       static out-of-sample trading strategy begins in March 2008. Hence, no statistics are available for the static out-of-sample
+                       strategy during the first half
+
+                                   TABLE H3
+
+               DESCRIPTIVE STATISTICS OF THE SECOND HALF OF THE TRADING STRATEGIES
+
+                  Descriptive statistics for the return of all trading strategies’ excess returns and the stock market excess returns at 1 and 7
+                                          month horizons between April 2008 and January 2017
+                 Obs Mean Std.Dev SR Min Max
+  RMRF7m 106 6.370 18.046 0.353 -41.881 53.855
+ InStatRepo7m 106 7.261 14.969 0.485 -37.734 46.134
+OutStatRepo7m 99 6.547 14.376 0.455 -37.734 46.046
+  RollRepo7m 106 -0.641 15.926 -0.040 -35.787 50.839
+ ExpRepo7m 106 6.008 15.500 0.388 -37.734 46.134
+RM_RF_montly 106 0.875 5.110 0.171 -18.153 21.638
+ InStatRepo1m 106 1.209 4.897 0.247 -14.989 19.898
+OutStatRepo1m 105 1.257 4.896 0.257 -14.989 19.898
+ RollRepo1m 106 0.224 5.010 0.045 -14.593 19.898
+ ExpRepo1m 106 0.968 4.924 0.197 -14.989 19.898
+
+                   Note: All results are presented in percentage, e.g. the RMRF7m has an average excess return of 6.214%. Due to that the
+                    Carhart four factors only are available on a monthly basis until January 2017, the regression is only conducted using data
+                    until that date. However, the data is split between March 2008 and April 2008 since the regressions conducted on the static
+                    out-of-sample trading strategy begins in March 2008
+
+                                                                                              36
+                                   TABLE H4
+
+               DESCRIPTIVE STATISTICS OF THE LAST TWO YEARS OF THE TRADING STRATEGIES
+
+                 Descriptive statistics for the return of all trading strategies’ excess returns and the stock market excess returns at 1 and 7
+                                         month horizons between January 2015 and January 2017
+                 Obs Mean Std.Dev SR Min Max
+   RMRF7m 25 6.715 10.816 0.621 -12.712 24.543
+ InStatRepo7m 25 1.613 12.150 0.133 -16.219 22.404
+OutStatRepo7m 25 1.613 12.150 0.133 -16.219 22.404
+  RollRepo7m 25 -3.919 11.102 -0.353 -18.547 19.990
+  ExpRepo7m 25 1.613 12.150 0.133 -16.219 22.404
+RM_RF_montly 25 0.880 4.212 0.209 -7.136 8.064
+ InStatRepo1m 25 0.279 4.241 0.066 -7.091 7.454
+OutStatRepo1m 25 0.279 4.241 0.066 -7.091 7.454
+  RollRepo1m 25 -0.578 4.199 -0.138 -7.091 7.454
+  ExpRepo1m 25 0.279 4.241 0.066 -7.091 7.454
+
+                   Note: All results are presented in percentage, e.g. the RMRF7m has an average excess return of 6.214%.
+
+                                       TABLE I1
+
+REGRESSIONS ON THE FIRST AND SECOND HALF OF THE 1 MONTH DYNAMIC TRADING STRATEGIES USING THE
+                                  CARHART FOUR FACTORS
+
+                   Regression on the trading strategies’ excess returns when predicting stock market excess returns for the following
+                              month between March 1998 - March 2008 and April 2008 - January 2017 respectively
+
+                             March 1998 - March 2008 April 2008 - January 2017
+
+                    ExpRepo1m RollRepo1m ExpRepo1m RollRepo1m
+                               0.355**                       0.161                        0.164                       -0.235*
+ RM_RF_monthly  (3.26)                       (1.49)                       (1.57)                      (-2.18)
+
+                                  -0.111                        -0.0694                       -0.0158                        -0.122
+     HML_vw (-1.10)                        (-0.72)                        (-0.09)                        (-0.67)
+
+                                 -0.0337                        0.131                        -0.254*                        -0.147
+     SMB_vw (-0.31)                        (1.29)                        (-2.03)                        (-1.14)
+
+                              0.281***                    0.370***                     -0.0579                       0.137
+    MOM_vw  (4.28)                      (6.00)                     (-0.48)                     (1.11)
+
+                                -0.92                        0.876                        0.666                        0.328
+      _cons (-1.61)                       (1.59)                       (1.43)                       (0.68)
+
+                     *p-value < 5% **p-value < 1% ***p-value < 0.1%
+                      Note: The values in the parentheses are the test statistics, and the other values are the beta exposure to each
+                      portfolio. All portfolios are value weighted. Due to that the Carhart four factors only are available on a monthly basis
+                      until January 2017, the regression is only conducted using data until that date
+
+                                                                                              37
+                                     TABLE I2
+
+REGRESSIONS ON THE FIRST AND SECOND HALF OF THE 7 MONTHS DYNAMIC TRADING STRATEGIES USING
+                               THE CARHART FOUR FACTORS
+
+                      Regression on the trading strategies’ excess returns when predicting stock market returns for the next 7 months
+                               between March 1998 - March 2008 and April 2008 - January 2017 respectively
+                           March 1998 - March 2008 April 2008 - January 2017
+                  ExpRepo7m RollRepo7m ExpRepo7m RollRepo7m
+                             0.008                       -0.0026                     0.237**                       0.010
+  RMRF7m (0.07)                      (-0.02)                     (2.850)                     (0.110)
+
+                            -0.422***                    -0.339***                      0.284                        -0.413
+  HML7m
+                                  (-4.80)                           (-4.08)                           (1.440)                           (-1.92)
+
+                              0.289*                       0.00432                      -0.297*                       -0.057
+  SMB7m
+                                  (2.30)                           (0.03)                           (-2.49)                          (-0.43)
+
+                             -0.0928*                     0.330***                      -0.0592                       0.273*
+  MOM7m  (-2.01)                      (7.78)                      (-0.48)                      (2.01)
+
+                             -0.812                      5.246**                       1.933                       -0.838
+   _cons
+                                  (-0.38)                           (2.64)                           (1.18)                           (-0.47)
+
+                   *p-value < 5% **p-value < 1% ***p-value < 0.1%
+                   Note: The values in the parentheses are the test statistics, and the other values are the beta exposure to each
+                   portfolio. All portfolios are value weighted. Due to that the Carhart four factors only are available on a monthly basis
+                   until January 2017, the regression is only conducted using data until that date
+
+                                                                                             38
+                       FIGURE A
+
+          OMXS30 AND RETURN DEVELOPMENT OVER TIME
+
+                       FIGURE B1
+
+RESIDUALS FROM THE REGRESSION ON 1 MONTH FUTURE STOCK RETURNS
+
+                                                                               39
+                               FIGURE B2
+
+         RESIDUALS FROM THE REGRESSION ON 7 MONTH FUTURE STOCK RETURNS
+
+                               FIGURE C
+
+DEVELOPMENT OF THE ROLLING WINDOW 7 MONTH STRATEGY AND EXCESS MARKET RETURNS
+
+                                                                                        40

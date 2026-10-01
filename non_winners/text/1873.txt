@@ -1,0 +1,2078 @@
+   Stockholm School of Economics
+
+            B.Sc. Thesis in Finance
+                  Spring 2013
+
+    An Equal Risk Contribution
+   Portfolio Approach Using VIX
+              Futures
+
+          Rickard Gunnvald         Andreas Lagerqvist
+     B22344@student.hhs.se   B22287@student.hhs.se
+
+                              Tutor:
+                      Kathryn Kaminski
+                       September 12, 2013
+
+                               Abstract
+
+As an eect of the unusually volatile nancial markets the past few years, new asset allo-
+cation strategies such as the equal risk contribution (ERC) approach has been developed.
+This report examines the eect on portfolio performance of adding VIX Futures contracts
+to an ERC portfolio consisting of positions in long-term government bonds and S&P 500
+equities. The investigation is conducted through simulations using a model based on
+data from 2004-2008, and is supplemented by a study of the tail event in 2008-2009.
+The results suggest that the inclusion of VIX Futures positions substantially improves
+portfolio performance in terms of Sharpe ratio, and is also shown to remain signicant
+when adjusting for transaction costs and diversication eects. Thus, investors and asset
+managers using the ERC approach could benet from adding VIX Futures positions to
+their portfolios.
+Acknowledgement
+
+We would like to thank our tutor Kathryn Kaminski for valuable input and en-
+couragement. Furthermore, we are thankful to Stefan Bergsten at Sarissa Asset
+Management and Daniel Eskilsson and Philip Hansen at J.P. Morgan for insightful
+comments.
+
+        Rickard Gunnvald and Andreas Lagerqvist
+
+                                   1
+Contents
+
+1 Introduction 4
+
+2 Theory 7
+   2.1 Asset Allocation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+         2.1.1 Equal Weights . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+         2.1.2 Minimum Variance Portfolio . . . . . . . . . . . . . . . . . . 8
+         2.1.3 Most Diversied Portfolio . . . . . . . . . . . . . . . . . . . 8
+         2.1.4 Equal Risk Contribution . . . . . . . . . . . . . . . . . . . . 9
+   2.2 Performance Statistics . . . . . . . . . . . . . . . . . . . . . . . . . 11
+   2.3 VIX and VIX Futures . . . . . . . . . . . . . . . . . . . . . . . . . 12
+   2.4 Mathematical Theory . . . . . . . . . . . . . . . . . . . . . . . . . . 13
+         2.4.1 Stochastic Processes . . . . . . . . . . . . . . . . . . . . . . 13
+
+3 Methodology 17
+   3.1 Stochastic Modelling . . . . . . . . . . . . . . . . . . . . . . . . . . 17
+   3.2 Limitations and Assumptions . . . . . . . . . . . . . . . . . . . . . 20
+         3.2.1 Turnover and Transaction Costs . . . . . . . . . . . . . . . . 25
+   3.3 Simulation in Matlab . . . . . . . . . . . . . . . . . . . . . . . . . 25
+         3.3.1 Allocation of Capital . . . . . . . . . . . . . . . . . . . . . . 26
+         3.3.2 Rebalancing Decision Rule . . . . . . . . . . . . . . . . . . . 28
+   3.4 Performance on Hist. Data . . . . . . . . . . . . . . . . . . . . . . . 28
+   3.5 Portfolio Performance . . . . . . . . . . . . . . . . . . . . . . . . . . 30
+
+                                   2
+CONTENTS CONTENTS
+
+Results 31
+
+4 Results 31
+   4.1 Simulated Processes . . . . . . . . . . . . . . . . . . . . . . . . . . . 31
+   4.2 Predetermined Rebalancing Freq. . . . . . . . . . . . . . . . . . . . 33
+         4.2.1 Transaction Costs Estimation . . . . . . . . . . . . . . . . . 35
+         4.2.2 Robustness of Results . . . . . . . . . . . . . . . . . . . . . 36
+   4.3 Test of Performance on Hist. Data . . . . . . . . . . . . . . . . . . 38
+
+5 Discussion 39
+   5.1 Interpretation of Results . . . . . . . . . . . . . . . . . . . . . . . . 39
+   5.2 Implications and Conclusions . . . . . . . . . . . . . . . . . . . . . 41
+   5.3 Suggestions for Further Studies . . . . . . . . . . . . . . . . . . . . 42
+
+Appendices 43
+
+A Results - Graphs 43
+
+B Results - Tables 46
+
+C Mathematics 49
+   C.1 Short on Arbitrage Theory . . . . . . . . . . . . . . . . . . . . . . . 49
+   C.2 VIX Index Calculation . . . . . . . . . . . . . . . . . . . . . . . . . 50
+
+D Matlab Code 51
+   D.1 Main Program . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 51
+   D.2 Simulations . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 58
+   D.3 Function Files . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 62
+         D.3.1 Futuresprices.m . . . . . . . . . . . . . . . . . . . . . . . . . 62
+        D.3.2 Fun.m . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 63
+         D.3.3 optFUN.m . . . . . . . . . . . . . . . . . . . . . . . . . . . . 63
+         D.3.4 constraints.m . . . . . . . . . . . . . . . . . . . . . . . . . . 64
+        D.3.5 constraintsWO.m . . . . . . . . . . . . . . . . . . . . . . . . 64
+         D.3.6 b.m . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 64
+
+                                   3
+Chapter 1
+
+Introduction
+
+During the past decade, the nancial markets have been unusually volatile. As
+a result, investors have started to rethink their asset allocation strategies. Alter-
+native approaches based on volatility exposure, such as risk parity or equal risk
+contribution (ERC), have exhibited good past performance and become increas-
+ingly popular [19]. An ERC portfolio typically consists of dierent asset classes,
+such as Developed Equity, Emerging Equity, Commodities, REITs (Real Estate
+Investment Trust) and Treasuries. These portfolios usually have large bond posi-
+tions (or similar), and leverage is often used to increase return. Higher leverage
+might increase the exposure to tail risk, and during times of economic downturns
+or prolonged economic crises investors may nd it hard to get a sucient yield on
+bonds.
+         A natural hedge for equity portfolios is positions in volatility because of
+their negative correlation. One such alternative is long positions in VIX Futures,
+which are Futures contracts written on the VIX Index; the implied volatility of
+S&P 500. The index generally responds with a fast and strong upward reaction to
+bad market news, and Futures are used to access the movements since the index
+itself is not traded and there is no underlying asset or replicating portfolio. A key to
+capitalize on these reactions is to actively manage the position, since VIX Futures
+are prone to fall very sharply when market conditions improve. Furthermore, these
+characteristics make the VIX Index hard to predict.
+        An interesting question is if introducing VIX Futures as an asset class
+
+                                   4
+                                    CHAPTER 1. INTRODUCTION
+
+in an equal risk contribution portfolio increases the overall portfolio performance.
+Contributing factors could be that a well-managed VIX position has positive hedg-
+ing eects and the fact that the VIX Index has a oor. In practice the oor is
+greater than zero, which suggests that holding a VIX position in good times does
+not have to give large negative returns if the position is entered at a suciently low
+level. Moreover, the underlying intuition behind the ERC approach is to maintain
+equal risk (volatility) shares between all assets. That is, lower the exposure to an
+asset class as the volatility in the asset increases and vice versa. E.g. the rapid
+response in VIX Futures to bad market news is characterised by increasing Futures
+prices and spiking volatility, and thus an ERC investor should decrease the VIX
+position. This might be a method to capitalize on the VIX's movements, since
+the relative position in VIX Futures is lowered over the whole volatility spike and
+invested in e.g. S&P that most likely turned down at the same time. The purpose
+of this paper is to investigate if ERC investors could benet from entering a VIX
+Futures position using simulations.
+        The simulations are based on stochastic representations of the S&P 500
+Index, VIX Futures contracts, long term government bonds and a roll over equal
+risk contribution reallocation decision rule. Using dierent rebalancing frequencies
+ranging from daily to yearly, a large sample of portfolio values over one year is
+generated. From this, the returns and other performance metrics such as the
+Sharpe ratio are calculated. To investigate VIX's impact, accessed through rolled
+over Futures positions, two portfolios are compared. The rst consisting only
+of a S&P 500 position and government bonds, while the second includes VIX
+Futures as well. In collaboration with a calibrated model by Zhu and Lian (2012),
+the portfolio simulations starts at a hypothetical July 11, 2008 and terminates
+one year later, using simulated data. For reference, the corresponding portfolio
+performance using real data will be examined.
+        Literature on the benets of adding VIX Futures positions to an equal
+risk contribution portfolio is limited, and to our knowledge this paper is the rst
+to examine this approach. The fact that VIX Index products were introduced in
+2004 and that the equal risk contribution asset allocation was rst considered in the
+aftermath of the 2008 nancial crisis might contribute to the absence of previous
+studies. Nevertheless, Black (2006) has shown that adding small positions in VIX
+
+                                   5
+                                    CHAPTER 1. INTRODUCTION
+
+Index products would eliminate hedge funds' higher-moment risks while keeping
+equity returns and bond-like risks. Moreover, Maillard et al (2009) conclude that
+an equal risk portfolio strategy would be a good trade-o between a minimum
+variance portfolio and an equal weights portfolio in terms of absolute level of risk,
+risk budgeting and diversication.
+        This paper shows that adding VIX Futures to an ERC portfolio consisting
+of S&P 500 and government bonds substantially increases portfolio performance.
+Sharpe ratios based on yearly average returns increases within a range of 30 % to
+128 % (corresponding to a range between 0.09 and 0.40) for rebalancing frequencies
+spanning from annually to daily, respectively. The results also suggest that higher
+Sharpe ratios can be achieved by rebalancing the porfolio including VIX Futures
+more frequently using the ERC allocation rule, and that VIX Futures have hedging
+benets during tail events. A statistical test of the dierence between Sharpe
+ratios for the portfolio including VIX and the portfolio without VIX shows that
+the results hold signicantly. A further examination concludes that this still is
+true when eects due to transaction costs and diversication are accounted for.
+        As an implication, the results suggest that investors could benet from
+adding VIX Futures to an ERC portfolio.
+
+                                   6
+Chapter 2
+
+Theory and Previous Studies
+
+In this chapter, the theoretical framework and previous studies will be presented.
+This includes a historical review of dierent asset allocation decision rules, with
+the equal risk contribution as one of the most recent suggestions. Performance
+measures to be used in the portfolio evaluation in this report and some charac-
+teristics of VIX Index products as investment assets are stated. Finally, a brief
+mathematical background on stochastic modelling of assets is conferred.
+
+2.1 Asset Allocation
+
+There is a wide consensus in the nancial markets that strategic asset allocation
+is important for overall portfolio performance. Asset allocation is based on the
+fundamental idea that dierent types of asset classes perform dierently across
+dierent types of economic and market conditions. Given that asset classes are
+not perfectly correlated, the investor can diversify a portfolio to remove asset-
+specic/idiosyncratic risk. The asset allocation should also take into account an
+investor's specic risk preferences, time horizon or other goals.
+
+2.1.1 Equal Weights
+
+This asset allocation strategy is perhaps the most basic one and is often termed
+"the 1/N heuristic". The investor simply puts equal capital weights on the dierent
+assets and rebalances when appropriate (given transaction costs etc.). On the
+
+                                   7
+2.1. ASSET ALLOCATION CHAPTER 2. THEORY
+
+positive side, it is so simple that almost anyone can do it. The dicult part for an
+ordinary investor might be nding a suitable rebalancing rule/frequency. On the
+negative side, this method has not taken into account any information regarding
+the individual assets' characteristics; return, volatility and correlation with other
+assets. This means that the portfolio probably is not well-diversied and therefore
+the investor takes on risk that he or she is not paid for.
+
+2.1.2 Minimum Variance Portfolio
+
+The Minimum Variance Portfolio approach was introduced by Harry Markovitz
+in a famous article published 1952 in the Journal of Finance. Using historical
+data, the average returns and the covariances between the assets are calculated,
+and the Ecient Frontier is constructed by xing an expected return under the
+condition that variance should be minimized. Given a risk-free return the investor
+can choose portfolios along the Capital Allocation Line at any desired level of risk.
+        An advantage of this method is that it accounts for the individual assets'
+mutual correlations and assigns weights to minimize portfolio variance, and hence
+risk. On the negative side, investment decisions are taken based on historical data,
+and past performance is not a guarantee for similar future results.
+
+2.1.3 Most Diversied Portfolio
+
+The Most Diversied Portfolio (MDP) was introduced by Choueifety and Coignard
+(2008) and builds upon a measure called the Diversication Ratio (DR). The
+DR is dened as the ratio of the portfolio's weighted average volatility to the
+portfolio's overall volatility. Since assets are not perfectly correlated, this ratio
+will typically be greater than one. Thus, the DR measures the diversication
+gained by holding non-perfectly correlated assets. By maximizing this measure,
+the Most Diversied Portfolio is obtained. Maximizing the measure implies that
+the individual assets have as high volatility but as low correlation as possible,
+conditional on the maximization of the quotient.
+        The measure experiences critique since the authors want to maximize the
+distance between two dierent volatility measures of the same portfolio. As Lee
+(2010) points out, the weighted average volatility of the portfolio is not a measure
+
+                                   8
+2.1. ASSET ALLOCATION CHAPTER 2. THEORY
+
+that really exists in the real world, whilst the portfolio's overall volatility clearly
+is a real world property. More specic, the weighted average implies that there
+is no diversication at all, which of course is not true in reality. The lack of an
+underlying economic theory, or an underlying utility function of the DR, makes it
+a bit unclear to why investors should maximize this measure. Also, for the MDP
+to end up on the ecient frontier, all assets must have identical Sharpe ratios.
+The assets are typically not required to be identically correlated, but the lack of
+this assumption at the ecient frontier implies arbitrage opportunities. However,
+when assets are identically correlated, it can be shown that the MDP and ERC
+portfolios are the same [14].
+
+2.1.4 Equal Risk Contribution
+
+In a Risk Contribution (RC) portfolio an investor determines asset class weights
+based on their contribution to portfolio risk (volatility). In the special case where
+the investor wants the assets to contribute equally much to the portfolio risk, an
+asset allocation approach known as risk parity or equal risk contribution (ERC) is
+obtained. Equal risk contribution has over the past decade gained attention since
+it has shown to outperform several classical types of asset allocation strategies [19].
+        One of the reasons that the ERC approach emerged was that in the stan-
+dard institutional portfolio consisting of 60 % equity and 40 % bonds/xed income,
+the equity part stands for over 90 % of the risk [19]. This, combined with the fact
+that e.g. a minimum variance approach is based on forecasts of future returns
+from historical data give rise to a lack of robustness that the ERC approach seems
+to mitigate [16]. However, the underlying economic theory supporting an ERC
+approach is somewhat vague. E.g. that all assets must be identically correlated
+and have identical Sharpe ratios for the portfolio to end up on the ecient frontier
+[14].
+
+Recent Views on ERC
+
+As the equal risk contribution approach has become increasingly popular and
+caught the attention of both academics and the nancial industry, some studies
+have explored it in further detail. Romahi and Santiago (2012) have investigated
+
+                                   9
+2.1. ASSET ALLOCATION CHAPTER 2. THEORY
+
+data in various time periods from 1927 to the present day, and suggest that a
+factor premium risk parity approach outperforms the traditional ERC approach.
+The idea behind the risk factor approach is to use risk factors (and their premia)
+instead of asset classes dened in a more traditional way (commodities, equities
+etc.). The factors are e.g. small cap premium, momentum, REITs and merger
+arbitrage. One concern with traditional equal risk contribution is the increasing
+correlation between asset classes. Remember that for the ERC portfolio to be on
+the ecient frontier, one would like the asset correlation to be zero (or identical).
+Romahi and Santiago (2012) show that the rolling correlation between risk factors
+are much lower (less than 25%) when compared to traditional asset classes (about
+80%), mitigating this concern. A concern regarding the risk factor approach is that
+some of the risk factors might be dicult to capture and/or illiquid for investors
+to access. Another problem is that much of the benets are lost if the investor
+does not have mandate to use leverage or short sell. Nevertheless, according to
+Romahi and Santiago, the market is moving in a direction that makes the risk
+factors more liquid, and that a long-only risk factor approach still would be more
+benecial than a traditional equal risk contribution approach [19].
+         As mentioned above, equal risk contribution is a special case of a risk con-
+tribution portfolio. Lee (2010) sees it as a starting point for an investor without
+a clear view of the markets. This approach is also taken further in the article by
+Rappoport and Nottebohm (2012). Their conclusion is that an equal risk contri-
+bution approach has performed well during the recent periods of great uncertainty,
+but that equal risk shares is meaningless as an objective in itself. They argue that
+if an investor knows that a certain asset will have a return of 8 %, it would be wise
+not to ignore it. But if the investor is a bit uncertain, then he or she might tone
+down his or her reliance on this forecast. Given that an investor is very uncertain
+about the forcast, it might be wise to ignore it. Rappoport and Nottebohm (2012)
+argue that this is exactly what the risk parity/equal risk contribution approach
+does, and hence consider it to be a starting point, just as Lee (2010).
+         The question is of course whether an ERC portfolio will be protable in the
+future. To take into account the investor's level of uncertainty in the asset weight
+assessment, Rappoport and Nottebohm (2012) suggest a "Forecast Uncertainty
+Hedge" rule. The method "is a hybrid of a number of asset allocation proposals
+
+                                   10
+2.2. PERFORMANCE STATISTICS CHAPTER 2. THEORY
+
+that have appeared in the nance literature over the last twenty years" [18] and is
+out of scope for this report. However, according to their simulations, this extension
+of equal risk contribution has outperformed traditional ERC in 70 % of the cases.
+
+2.2 Performance Statistics
+
+By rational economic reasoning, it is obvious that investors seek high returns on
+investments and simultaneously prefer to take on an as low risk as possible. In basic
+portfolio theory, the risk is often measured as the volatility (standard deviation)
+of the portfolio returns, and a fundamental relationship is the trade o between
+return and volatility. Already in 1966, William Sharpe presented a theoretical
+measure that relates the excess return with its volatility. This was later called the
+Sharpe ratio (SR) and is dened by:
+
+                                  E[R] − rf
+                     SR = √                          (2.1)
+                                   V ar(R − rf )
+
+where R is the return of the portfolio and rf the risk-free rate. In this report,
+rf is assumed to be constant and hence vanishes from the denominator. One of
+the objectives of this report is to measure the performance of dierent investment
+portfolios in terms of the Sharpe ratio. To be able to make appropriate statis-
+tical inferences, further assumptions has to be made on the distribution of the
+returns. Following the approach by Lo (2002), assuming independent and iden-
+tically distributed (i.i.d) returns (which would be the case for the returns of the
+simulated portfolios in this report), one can show that the standard errors (SE) of
+the estimates of the SR is given by:
+                    √(     )
+                                                1    2
+                          SE(SR̂   ) =     1 +  SR̂                           (2.2)
+                                            2
+
+        The i.i.d. assumptions gives an asymptotic normal distribution, which
+could be used to test for signicant dierences in Sharpe ratios. Moreover, for
+completeness and as investigation of the tails of the distribution of returns, worst
+drawdown and the highest return is also considered as performance statistics.
+
+                                   11
+2.3. VIX AND VIX FUTURES CHAPTER 2. THEORY
+
+2.3 VIX and VIX Futures
+
+On the Chicago Board Option Exchange, contracts on the Volatility Index (ticker:
+VIX) have been traded since March 26, 2004. The VIX is based on averaging
+weighted prices on put and call options traded on the S&P 500 Index for a large
+range of strike prices, see Appendix C.2 for the exact calculation. Therefore, the
+VIX Index is the level of volatility implied by option prices and is regarded as a
+measure of expected future market volatility. Thus, taking VIX positions is often
+regarded as a pure volatility exposure on the S&P 500 Index.
+         Historically, VIX is negatively correlated with the S&P 500 Index (correla-
+tion coecient about −0.8). This suggests a diversication benet when including
+VIX products in an investment portfolio [5]. A study performed by Black (2006)
+suggests that an inclusion of a small position in VIX Index products as a part of
+a hedge fund investment portfolio would be preferable. It would eliminate some
+parts of the higher-moment risks (e.g. skewness and kurtosis) while keeping a
+desirable portfolio with equity returns and bond-like risks. One objective of this
+report is to investigate if this, in some manner (e.g. in terms of Sharpe ratio), could
+be transferred to hold for equity and bond positions in an equal risk contribution
+portfolio.
+        One concern often stated when investing in VIX Index products is that
+there are no underlying assets traded. Consequently, one could not replicate the
+performance of the index. Therefore, contracts written on the VIX Index are
+only settled with cash ows at time of maturity. Futures contracts are traded in
+terms of the volatility (not in $) and a change of a 0.01 tick changes the balance
+on the margin account with $10 [4]. The initial margin for a contract is $5,500.
+VIX Futures contracts are often characterized by the property that contracts with
+longer maturity time are more expensive.
+
+                                   12
+2.4. MATHEMATICAL THEORY CHAPTER 2. THEORY
+
+2.4 Mathematical Theory
+
+In this section, the crucial mathematical properties of stochastic processes used
+in the simulations in this report are presented. The theory regarding Wiener
+Processes and the Geometric Brownian Motion is the most fundamental building
+blocks to get the stochastic representations needed for simulations (and pricing).
+For more technical details on arbitrage-free pricing see Appendix C.
+
+2.4.1 Stochastic Processes
+
+Stochastic processes are fundamental in mathematical nance since they can be
+used to model e.g. bonds and stocks. Representations of stochastic processes is
+also required to be able to analytically calculate arbitrage-free prices of nancial
+derivatives (contingent claims). The classical example is the mathematical deriva-
+tion of the well-known Black-Scholes-Merton formula. In this theory, asset prices
+are described as continuous time stochastic processes, using diusion processes
+and stochastic dierential equations (SDEs).
+        A stochastic process X is a diusion if its local dynamics can be approx-
+imated by a stochastic representation of the following type:
+
+   {
+        X(t + ∆t) − X(t) = μ(t, X(t))∆t + σ(t, X(t))(W (t + ∆t) − W (t))
+       X(0) = x0
+
+where x0 is a constant, μ and σ are deterministic functions and W is a Wiener
+process. Making the increments innitesimal, i.e.letting ∆t → dt, yields the SDE:
+          {
+                     dX(t) = μ(t, X(t))dt + σ(t, X(t))dW (t)
+                  X(0) = x0
+where μ is called the drift term and σ is called the diusion term.
+
+                                   13
+2.4. MATHEMATICAL THEORY CHAPTER 2. THEORY
+
+Wiener Processes
+
+The choice of Wiener processes as the driving random component in many SDEs
+is based on the good properties for analytical calculations, inherited from the
+Normal distribution. Informally, a Wiener process's non-overlaping increments
+are independent. This is of course a convenient when it is desirable to add pure
+randomness to some other process. As seen in condition 3 below, every time
+increment of a Wiener process has a normal distribution, with expected value
+zero and variance linearly increasing with the length of the time interval. It is
+reasonable that a large sample of processes that essentially are "random walks"
+will have an increased variance when the time considered increases. Formally, a
+stochastic process W is called a Wiener process if the following conditions hold:
+
+  1. W (0) = 0
+
+  2. The process W has independent increments, i.e if r < s ≤ t < u, then
+     W (u) − W (t) and W (s) − W (r) are independent stochastic variables.
+
+  3. For s < t the stochastic variable W (t) − W (s) has a Normal distribution
+     N (0, t − s).
+
+   4. W has continuous trajectories. (P-a.s.)
+
+                                  2                                           2
+Note: The notation N (μ, σ ) refers to mean μ and variance σ . P-a.s. means
+almost surely convergent.
+
+                                   14
+2.4. MATHEMATICAL THEORY CHAPTER 2. THEORY
+
+        One trajectory of a Wiener process is visualized below:
+
+Figure 2.1: Graph of a Wiener process with dynamics σdW (t) with σ = 0.1 over 1
+              year.
+
+Geometric Brownian Motion
+
+Another fundamental part of asset pricing and modelling is stochastic processes
+that follow a geometric Brownian motion (GBM). The GBM is a type of SDE and
+has the dynamics:
+              {
+                         dXt = αtXtdt + σtXtdWt
+                        X(0) = x0
+
+The solution to this stochastic dierential equation is given by (see [1]):
+                {(     )             }
+                                      1  2
+             Xt = x0 · exp   αt −  σt  (t − 0) + σt(Wt − W0)           (2.3)
+                                2
+
+                                   15
+2.4. MATHEMATICAL THEORY CHAPTER 2. THEORY
+
+Using the properties of Wiener processes, we know that
+
+                      Zt = (Wt − W0) ∈ N (0, t − 0)
+
+hence the GBM follows a log-normal distribution which is one of the key assump-
+tions in the famous Black-Scholes-Merton pricing formula. One simulation of a
+stock price given by a GBM is presented in Figure 2.2.
+        In the simulations in this report, a GBM-approach with both stochastic
+drift and stochastic diusion term will be used. For more information, see Ch. 3.
+
+Figure 2.2: Graph of a geometric Brownian motion with dynamics dSt = αStdt +
+            σStdWt, where α = 0.2 and σ = 0.1 over 1 year. The green line is the
+             solution to the corresponding ODE with dynamics dSt = αStdt.
+
+                                   16
+Chapter 3
+
+Methodology
+
+The approach used to investigate equal risk contribution portfolios' performance
+is based on simulations and statistical examination of the generated outcomes. To
+simulate the dierent assets that are included in the portfolios, a joint model of
+the assets' dynamics is needed. The building blocks used are stochastic repre-
+sentations of S&P 500 equities, VIX Futures contracts and long term government
+bonds. Simulations are made using the stochastic representations together with a
+rebalancing rule that allocates capital in accordance with the ERC theory.
+        For dierent rebalancing frequencies, yearly returns of the portfolios are
+generated and the performance statistics presented in Sec. 2.2 are calculated. The
+models used to simulate these investment assets will be presented in this chapter.
+Moreover, necessary limitations and simplications are stated as well as the tech-
+nicalities of asset allocation and rebalancing. Lastly, a method to investigate the
+performance of these portfolios on actual data will be considered.
+
+3.1 Stochastic Modelling
+
+To allow for an integrated simulation of the assets in the equal risk contribution
+approach a comprehensive model for the asset prices is needed. The model for
+stocks and VIX Futures used is a simplied version of the more general presentation
+in Zhu and Lian (2012). As in their approach, let the stocks St describe the S&P
+500 Index and Vt be the stochastic diusion component. Under the objective
+
+                                   17
+3.1. STOCHASTIC MODELLING CHAPTER 3. METHODOLOGY
+
+probability measure P these are assumed to have the following dynamics:
+         {             √
+                                                   S
+                   dSt = St(rt + γ)dt + St  VtdWt  , S0 = s0
+                                  √    V                   (3.1)
+                   dVt = κ(θ − Vt)dt + σV  VtdWt  , V0 = v0
+
+where rt is the spot interest rate, γ the equity premium and κ, θ and σV are,
+respectively, the mean-reverting speed parameter, the long-term mean and the
+                                              S         V
+variance coecient of the diusion Vt, and dWt  and dWt  are two standard Wiener
+processes under P with correlation ρ. This implies that the S&P 500 Index is
+described as a geometric Brownian motion with a stochastic diusion term, and
+that the diusion term is a mean-reverting stochastic process. Mean-reverting
+meaning that the diusion term uctuates around, in this case, θ. Following the
+standard approach in arbitrage theory, the dynamics could be expressed under the
+risk-neutral martingale measure Q as:
+        {         √
+                                           S
+                  dSt = Strtdt + St  VtdWt,Q   , S0 = s0
+                                   √    V                  (3.2)
+                 dVt = κQ(θQ − Vt)dt + σV  VtdWt,Q   , V0 = v0
+
+where ηV = κQ − κ is the volatility risk premium and σV , ρ and κθ are preserved
+under the (Girsanov) measure transformation from P to Q. From this, Duan and
+Yeh (2007) have shown that an explicit formula for the VIX Index is given by:
+
+                                             2
+                               V IXt = (aVt + b) (3.3)
+
+where 
+                                       −κQ τ¯
+                       1 − e
+                           a =          , τ¯ = 30/365
+                                 κQ τ¯                                (3.4)
+            
+                         b = θQ(1 − a)
+        Using this and the standard approach for pricing Futures contracts, Zhu
+and Lian (2012) have shown that the VIX Futures price at time t is given by:
+
+                                      (          2   )
+                                               −sb            V IXt − b
+                                   ∫ ∞ 1 − e  f  −sa; t, τ,
+                Q             1                          a
+ F (t, T, V IXt) = E  [V IXT |Ft] = √                      1.5 ds
+                                2  π  0                s
+                                                                                  (3.5)
+
+                                   18
+3.1. STOCHASTIC MODELLING CHAPTER 3. METHODOLOGY
+
+where T is the maturity time of the VIX Futures contract, τ = T − t time to
+maturity and:
+                                                C(φ,τ )+D(φ,τ )Vt
+                            f (φ; t, τ, Vt) = e                                    (3.6)
+
+with              (             )
+                                                         2
+                       −2κθ       σV φ  −κQτ
+                C(φ, τ ) =      ln  1 +     (e    − 1)
+                      2
+                       σV        2κQ
+                                                                                  (3.7)
+         
+                         2κQφ
+                 D(φ, τ ) = 2            2   κ τ
+                          σ φ + (2κ  − σ φ)e Q
+                                V        Q     V
+
+Hence, solving the system of stochastic dierential equations (3.1) and calculating
+the integral (3.5) gives the values for the S&P 500 and Futures prices on VIX.
+        Furthermore, to be able to use this approach a specication of the short
+rate rt is needed. In the literature, there exists a large number of dierent short
+rate models. A fairly general alternative is the Hull-White model (3.8), which ts
+theoretical bond prices to the observed yield curve. The dynamics under the risk
+neutral probability measure Q is given by:
+
+                                                               r
+                      drt = (Θ(t) − ar˜ t) + σdWt,Q   , r0 = ˜r0 (3.8)
+
+where Θ(t) is a deterministic function of time to be specied by the observed
+                                                                   r
+forward yield curve, a˜ and σ are constants and W t is a Q-Wiener process (at this
+point with no restrictions).
+        Hull and White (1990) have shown that this model yields the zero coupon
+bond prices p(t, T ) at time t maturing at time T as:
+             ∗          [                  2                                ]
+             p (0, T )               ∗        σ   2            −2˜at
+  p(t, T ) =  ∗      exp  B(t, T )f  (0, t) −   B (t, T )(1 − e   ) − B(t, T )r(t)
+            p (0, t)                      4˜a
+                                                                                  (3.9)
+          ∗                                                                ∗              ∗
+where f  (0, t) is the observed t-forward rate at time zero, p (0, t) and p (0, T )
+the observed zero coupon bond prices at time zero with maturity time t and T
+respectively, and with:
+                                         1 [     −a˜(T −t)]
+                         B(t, T ) =   1 − e                          (3.10)
+                                 a˜
+
+                                   19
+3.2. LIMITATIONS AND ASSUMPTIONS CHAPTER 3. METHODOLOGY
+
+Using the notation in Björk (2009), it can be shown that:
+
+                                         ∗             ′             ∗
+                    Θ(t) = f T (0, t) + g (t) + ˜a (f  (0, t) + g(t)) (3.11)
+
+where the subscript T indicates partial derivative with respect to the time to
+maturity and:
+                                                 2
+                                     σ   2
+                                g(t) =    B (0, t) (3.12)
+                                      2
+Moreover, a useful relationship for calculating bond prices from the forward rate
+curve is given by:
+                                                        ∗
+                              ∗           ∂ ln(p (0, T ))
+                         f  (0, T ) = −                                (3.13)
+                                       ∂T
+The consequences of adjoining this model to the specication in (3.1) will be
+examined in Sec. 3.2.
+        Consequently, the approach chosen to model stocks, bonds and VIX Fu-
+tures prices consists of the solution to the stochastic dierential equation (3.1)
+for S&P 500, the values of the integrals in (3.5) and the bond prices given by
+(3.9). The model uses the parameters: γ, s0, κ, θ, σV , v0, ηV ,τ¯ , a˜, σ, r˜0 and the
+                ∗
+yield curve f  (0, T ) to determine the variables: St, F (t, T, V IXt) and p(t, T ) as
+functions of t and T .
+
+3.2 Limitations and Assumptions
+
+The model for the S&P 500 Index and the Futures prices on VIX found in Zhu
+and Lian (2012) used and presented in this report is already a simplication of the
+most general model presented in their paper using e.g. stochastic jump processes in
+both the underlying and the diusion term. A more general model is out of scope
+for this paper, and the simplication is justied by Zhu and Lian's conclusion that
+this model yields a sucient and reasonable t with the historical data on VIX
+Futures prices. The model in this report limits the VIX Index modelling, which
+in practice is characterized by volatility spikes which often are modelled by jump
+processes. However, since the equal risk contribution portfolio consists of Futures
+on the VIX Index rather than VIX Index positions directly, the model serves the
+desired purpose of usage.
+
+                                   20
+3.2. LIMITATIONS AND ASSUMPTIONS CHAPTER 3. METHODOLOGY
+
+        Further simplications used in this report regard model parameter esti-
+mations. As suggested and performed by Zhu and Lian (2012), the solution to the
+system of stochastic dierential equations (3.1), (3.3) and Futures prices (3.5) is
+tted to historical data on the S&P 500 and the VIX Index using Markov chain
+Monte-Carlo simulation and parameter estimation. Since the scope of this report
+is focused on asset allocation in portfolio management rather than mathematical
+model estimation, the estimates found in Zhu and Lian (2012) is used and shown
+in Table 3.1. These parameters are estimated from daily close levels on S&P 500
+and VIX as well as daily VIX Futures settlement prices over the period March 26,
+2004 to July 11, 2008. The date March 26, 2004 is when the trading with VIX
+Futures started and July 11, 2008 is presumably chosen as to match with the time
+frame of their research.
+        Moreover exclusion lters are used, e.g. removal of Futures with less
+than ve days to maturity and Futures with less than 200 contracts traded to
+avoid liquidity-related biases. One implication for this report of choosing the
+parameters in Table 3.1 rather than up-to-date estimations is that the results of
+the simulations regarding rebalancing frequency can be compared to the actual
+market performance for the time period July 12, 2008 and onwards. Moreover,
+choosing this period of time for parameter estimation seems rather benecial in
+the sense that the markets were fairly stable during this period, as could be seen
+in Figure 3.1. I.e. the conclusions made from these simulations could be said to
+hold in a more general setting than if post 2008 nancial crisis parameters are
+used, since these would be biased on a market suering from distress. In addition,
+using parameters from a stable market period to examine the performance using
+actual data from a crisis would give an indication on the portfolio performance in
+tail events. This is further examined in Section 3.4.
+
+Table 3.1: Estimates of model parameters from Zhu and Lian (2012). The table re-
+            ports annualized means and standard deviations within parentheses for each
+            estimator.
+
+                    θ κ σV ηV ρ
+                   0.0444 2.2680 0.3856 -2.0160 -0.7533
+                  (0.0071) (0.2520) (0.0504) (0.5040) (0.0231)
+
+                                   21
+3.2. LIMITATIONS AND ASSUMPTIONS CHAPTER 3. METHODOLOGY
+
+Figure 3.1: Historical data on S&P 500, VIX Index and 10 year government zero coupon
+             bonds from March 26, 2004 to July 11, 2008.
+
+                                   22
+3.2. LIMITATIONS AND ASSUMPTIONS CHAPTER 3. METHODOLOGY
+
+        Extending the model used by Zhu and Lian (2012) with the Hull-White
+short rate model in a general setting generates a model examined by Grzelak,
+Ooseterlee and van Weeren (1990), with correlations among all the driving Wiener
+processes. In that approach, it can be shown that there does not exist ane
+solutions, which means that e.g. the bond prices could not be calculated using
+equation (3.9), and more sophisticated pricing formulas are necessary. In the
+scope of the simulations in this report, and as a rst approximation, an ane
+term structure is considered. The consequence of this simplication is that the
+short rate will be modelled independently of the processes described in (3.2). One
+should also note that the bond positions are assumed to be in terms of zero coupon
+bonds with face value $1. The zero coupon bond is a theoretical construction that
+is not traded in the bond market. However, the zero coupon bond yields could
+easily be derived from actual government (coupon) bonds and vice versa. Zero
+coupon bonds are thus used in this report for transparency.
+        Moreover, a corresponding simplication regarding parameters estimation
+for the short rate model is used. If an explicit calibration is to be made, either
+caplet or swaption prices could be used. The estimates to be used in this report are
+values that are frequently used in simulations in the literature, e.g. by Schulmerich
+(2010), and are shown in Table 3.2.
+
+Table 3.2: Estimates of short rate model parameters by Schulmerich (2010). The table
+            reports annualized means.
+
+                                  σ a˜
+                                      0.01 0.02
+
+        The initial parameters and the equity premium have to be stated or es-
+timated. The initial values s0, v0 and r˜0 are taken from S&P 500 Index value at
+July 11, 2008, Zhu and Lian's report and U.S. Department of the Treasury yield
+curve from July 11, 2008 (by linear extrapolation) respectively. The equity pre-
+mium γ is taken from the research of Graham and Harvey (2008). Moreover, VIX0
+is adjusted to the data above. All values are shown in Table 3.3, and the U.S.
+Department of the Treasury forward rates on July 11, 2008 are shown in Table
+3.4.
+
+                                   23
+3.2. LIMITATIONS AND ASSUMPTIONS CHAPTER 3. METHODOLOGY
+
+Table 3.3: Initial parameters and the equity risk premium γ. The table reports annu-
+             alized values.
+
+                         s0 v0 r˜0 γ VIX0
+                      1239.49 0.0225 0.0126 0.037 0.22
+
+Table 3.4: Forward rates quoted by the U.S. Department of the Treasury on July 11,
+            2008.
+
+ Maturity 1 m 3 m 6 m 1 y 2 y 3 y 5 y 7 y 10 y
+           1.38% 1.62% 2.02% 2.30% 2.59% 2.88% 3.27% 3.55% 3.96%
+
+        Furthermore, the parameters are assumed to be xed during the simula-
+tions. In practice, an ERC investor would update the parameters gradually as
+time passes by. This would require parameter estimation and is thus out of the
+scope of this report. Moreover, the simulations are on a one year horizon (252
+trading days) due to the non-updated parameters, since longer time periods would
+require higher model and estimation accuracy.
+        The time to maturity of the Futures contracts and the bonds simulated
+in this report uses a roll over simplication, i.e. the Futures contracts to be
+traded are assumed to always have a maturity time of three months and the long-
+term government bonds are equally assumed to have a maturity of 10 years. A
+maturity time of three months for the Futures is used since a short maturity is
+preferred due to higher VIX Index dependence in pricing, and a shorter maturity
+time would not be transferable to real life investment decisions since Futures with
+shorter maturities are also experiencing liquidity related eects. In practice, the
+settlement of the VIX Futures is thirty days prior to the maturity of S&P 500
+options. Thus, the assumption of Futures with maturity time of three months
+gives a dierence in time to maturity compared to real Futures of at most two
+weeks, and on average no dierence.
+        Long term government bonds are used to match the return prole of an
+equal risk contribution investor, i.e. increase both expected returns and risk ex-
+posure. Furthermore, some simplications regarding the margin account for the
+
+                                   24
+3.3. SIMULATION IN MATLAB CHAPTER 3. METHODOLOGY
+
+Futures contracts are used. There is no interest gained or paid and the investor
+does not get any margin calls. The implication is that there is a little less return
+in the simulated portfolio including VIX Futures than what it should be. This is
+because either a small return is given due to interest on the margin account, or
+that the investor believes that a higher return could be achieved by using lever-
+age and investing the "margin account money" elsewhere. In practice, the terms
+of these accounts vary among investors, and it is easily adapted to the model if
+desired.
+
+3.2.1 Turnover and Transaction Costs
+
+Another simplication used is regarding transaction costs, which at a rst approx-
+imation are ignored. The reason is mainly for simplicity of the results presented in
+this report. Moreover, the transaction costs vary over time and is dierent among
+investors. An investor interested in this approach could add his or her transaction
+costs into the simulation.
+        For robustness, a review of the dierence in transaction costs between
+portfolios with and without VIX Futures positions, the total net reallocation of
+each simulation is calculated and shown (in average for each rebalancing frequency)
+in Ch. 4. The denition of net total reallocation (turnover) used is the sum of the
+absolute change in each portfolio weight for each reallocation over the whole year of
+investment. From this, an estimate of the eect on portfolio performance from the
+total aggregated transaction costs can be calculated. In Ch. 4, a transaction cost
+of 0.05 percent is assumed, and the impact on the dierent portfolios is calculated.
+This does not take care of the eect of continuously settling the transaction costs
+and thus the eect of compounding, which for these purposes can be considered
+to be negligible.
+
+3.3 Simulation in Matlab
+
+The Matlab-simulation implements the models stated in Sec. 3.1 with parameters
+from Sec. 3.2 using time-discretization with equal time-steps corresponding to
+                                                                        S        V
+daily values. The Wiener increments are normally distributed, with W   and W
+
+                                   25
+3.3. SIMULATION IN MATLAB CHAPTER 3. METHODOLOGY
+
+                                                   r
+correlated by ρ and independent of W  . Modelling is preferably performed under
+the objective measure P , but for uniqueness the short rate model must be simulated
+under the risk-neutral measure Q. Note that the trajectories of r used in e.g. (3.1)
+is the risk-neutral values, hence the modelling will be consistent. The log-return
+of the S&P 500 is modelled in analogue with Zhu and Lian (2012), and denoted
+Yt = ln(St/St−1). The term arising from the diusion could be neglected when
+applying Itô's formula.
+       The discretization used with time-increments ∆t is given by:
+                  √ √
+                                               S
+            Yt+1 = (rt + γ)∆t +   Vt  ∆tZt , S0 = s0
+                       √ √
+                                                          V
+               Vt+1 = Vt + κ(θ − Vt)∆t + σV  Vt  ∆tZt , V0 = v0       (3.14)
+                      √
+                                                                       r
+               rt+1 = rt + (Θ(t) − ar˜ t) ∆t + σ  ∆tZt , r0 = ˜r0
+
+         S    V        r                                           S        V
+where Zt , Zt and Zt are standard normal distributed and Zt and Zt have cor-
+relation ρ. Subsequently, the Futures prices are calculated using the numerical
+integration function quadgk and the bond prices are calculated using (3.9). More-
+over, a total of 1000 simulations of each trajectory is used. The number 1000
+is chosen as a trade-o between precision (size of standard errors of estimates),
+needed computational power and for easy reference. As could be seen in Ch. 4, the
+precision is satisfactory for the purposes of this report. I.e. the precision is enough
+to conclude that the estimates of the portfolios' Sharpe ratios are signicantly
+dierent when including VIX Futures positions.
+
+3.3.1 Allocation of Capital
+
+With the dierent trajectories simulated for the S&P 500, the VIX Futures and
+the bonds, the asset allocation will be according to an equal risk contribution
+approach. Using the methodology presented by Maillard et. al. (2009), the
+capital will be allocated based on volatilities and correlations as risk measures.
+This gives an allocation rule for the weights wS&P , wV IX and wbond in form of a
+minimization problem. The desired allocation is such that wi(Σ · w)i = wj (Σ · w)j
+for all i, j = S&P, VIX, bond and where Σ is the covariance matrix between the
+assets' returns. This implies that all assets contribute equally to the total portfolio
+risk.
+
+                                   26
+3.3. SIMULATION IN MATLAB CHAPTER 3. METHODOLOGY
+
+        The optimization problem to be solved in order to get portfolio weights
+could be written as:
+      ∑ ∑             2
+       min   i   j (wi(Σ · w)i − wj (Σ · w)j ) , i, j = S&P, VIX, bond
+           ∑                                (3.15)
+       subject to   i wi = 1, wi ≥ 0
+
+                                 T
+where w = (wS&P , wV IX , wbond)  represents the vector of portfolio weights. The
+optimization constraints is interpreted as that no short-selling is allowed, that all
+the weights should sum up to one means that the portfolio is unlevered. By inspec-
+tion, the objective function equals zero only if the desired allocation is fullled.
+The covariance matrix Σ has to be estimated using historical data, which in the
+context of this report is done by using previous values in the simulated trajectories.
+The chosen backward time is set to seven days, as a trade-o between sample-size
+and importance of historic events. A larger sample will give a higher accuracy on
+the estimates, while the importance of past events will be present for a longer time
+when more data points are used.
+         According to Maillard et. al. (2009), the intuitive allocation problem
+presented in equation (3.15) could be rewritten as a convex optimization problem
+with a unique solution, which is why the rewritten version is used in the simulations
+made in this report. The optimization problem could then be formulated as:
+            √
+                      min   yT Σy
+                     ∑                      (3.16)
+                         subject to   i ln(yi) ≥ 0, yi ≥ 0
+where y is the un-normalized analogue of w. Consequently, the portfolio weights
+are given by:
+                                  yi
+                   wi = ∑   where i = S&P, VIX, bond (3.17)
+                                     i yi
+         Furthermore, the initial capital is assumed to be $1, 000, 000 and given the
+weights of the allocation, the number of positions in each asset can be determined.
+The size of initial investment is irrelevant for this study, but is important if real
+costs (such as a lower bound in dollars of a transaction cost) are implemented.
+The initial value is easily changed to a chosen number in the Matlab-code. For
+S&P 500 and the government bonds, the number of positions is simply determined
+as the value of total allocation divided by the price of one position in S&P 500 and
+
+                                   27
+3.4. PERFORMANCE ON HIST. DATA CHAPTER 3. METHODOLOGY
+
+in bonds respectively. For the Futures contracts, the allocation is determined in
+terms of the initial margin for one contract. In particular, the number of Futures
+contracts held is the amount allocated to VIX Futures divided by the initial margin.
+This rule is plausible since it would not require any further assumptions on the
+terms of the margin account, as described in Sec. 3.2.
+
+3.3.2 Rebalancing Decision Rule
+
+The rule for rebalancing is simply a xed rebalancing frequency, based on a roll over
+strategy. With Σ̂   estimated from returns over the past seven time points, equation
+(3.16) is used to assign weights between the asset classes in the portfolio. In this
+report daily, weekly, monthly, quarterly, semi-annually and annually rebalancing
+frequencies are investigated. A roll over strategy means that for each time of
+rebalancing, an updated covariance matrix is used to calculate the new weights.
+This yields that a calibration of the model is needed for the rst seven days,
+which is realized by starting the simulations seven days before the capital is rstly
+allocated.
+
+3.4 Performance on Historical Data
+
+Using the same approach as in Sec. 3.3.2 and Sec. 3.3.1, the performance of the
+equal risk contribution portfolio could be examined on historical data from July
+11, 2008 to July 10, 2009. The data used is the actual values of the S&P 500
+Index, the zero coupon bond prices calculated from the forward rate curve and
+VIX Futures with 2.5 to 3.5 months to maturity (uniformly distributed). Note
+that since it is assumed that there always exists Futures maturing in three months
+in the simulations, the maturity for the actual data is chosen as close to three
+months as possible. The realizations could be seen in Figure 3.2. Another note on
+the performance on historical data is that there is only one realization, hence the
+only measure that is meaningful is the returns of the dierent portfolios. E.g. the
+Sharpe ratio would be undened since the variance of one observation is zero.
+
+                                   28
+3.4. PERFORMANCE ON HIST. DATA CHAPTER 3. METHODOLOGY
+
+Figure 3.2: Graphs showing the actual outcome of S&P 500, VIX Index, 3-month VIX
+             Futures and 10-year U.S. government zero coupon bond price during the
+              time period 11 July, 2008 - 10 July, 2009.
+
+                                   29
+3.5. PORTFOLIO PERFORMANCE CHAPTER 3. METHODOLOGY
+
+3.5 Portfolio Performance
+
+Given the simulations of the portfolios with and without VIX Futures positions
+for dierent rebalancing frequencies, the performance statistics presented in Sec.
+2.2 are calculated. The simulation generates the yearly return of each of the 1000
+portfolios with and without VIX Futures, respectively. The arithmetical mean
+is used to estimate the average yearly return and the square root of the sample
+variance estimates the annualized volatility of returns. Moreover, the risk-free rate
+used to calculate the Sharpe ratio is 2.25%, which was the 1-year U.S. government
+bond rate at 10-11 July, 2008. The 1-year risk-free rate is chosen because of the
+1-year horizon on the investments. The Sharpe ratios' sensitivity to the risk-free
+rate is examined in Sec. 4.2. The other portfolio statistics follow immediately
+from the realization of the simulations.
+        Examining performance using real data from July 11, 2008 to July 10, 2009
+could be regarded as a study of ERC performance when including VIX Futures
+during a tail event, and is more of supplemental character. However, the reason
+for not looking at real data from the years following 2009 is that the estimation of
+the model parameters should be considerably skewed (outdated) when taking the
+nancial crisis into account. The comparability would therefore be lost.
+
+                                   30
+Chapter 4
+
+Results
+
+In this chapter, the results from the Matlab simulations are presented, with
+some details deferred to Appendix A and Appendix B. The chapter is divided
+into a rst part showing a (partial) realization of the simulations, followed by
+performance statistics for portfolios with and without VIX Futures positions for
+dierent rebalancing frequencies. Finally, the roll over equal risk contribution
+portfolios' performance on historical data is presented.
+
+4.1 Simulated Processes
+
+Performing simulations using the code presented in Appendix D gives trajectories
+for the evolution of the S&P 500 Index, the VIX Index, VIX Futures maturing in
+three months and 10-year zero coupon bond prices over one year starting from a
+hypothetical July 11, 2008. As stated in Ch. 3, 1000 simulations are used for each
+rebalancing frequency. In Figure 4.1, ve realizations of the simulations are shown
+to get the reader an overview of the realized processes used to allocate capital with
+the equal risk contribution approach.
+
+                                   31
+4.1. SIMULATED PROCESSES CHAPTER 4. RESULTS
+
+Figure 4.1: Graphs showing an example of 5 simulated S&P 500 processes, VIX pro-
+             cesses, VIX Futures processes and bond price processes. Parameters are as
+              stated in Ch. 3.
+
+                                   32
+4.2. PREDETERMINED REBALANCING FREQ. CHAPTER 4. RESULTS
+
+4.2 Predetermined Rebalancing Frequency
+
+In this section, the performance statistics of the simulated portfolios with and
+without VIX Futures positions are presented for dierent roll over rebalancing
+frequencies. Simulations are performed in accordance with the approach presented
+in Ch. 3. Table 4.1 shows the performance statistics for portfolios including
+allocation to VIX Futures, while Table 4.2 is without VIX Futures positions. The
+asset allocation weights are presented in Table B.1 and Table B.2 in Appendix B.
+
+Table 4.1: One year performance parameters for equal risk weights unlevered portfo-
+            lio including VIX Futures, predetermined rebalancing frequency. Based on
+             yearly return of 1000 simulations.
+
+ Rebalancing Frequency Daily Weekly Monthly Quarterly Semi-annually Annually
+ Avg yearly return 7.82% 7.08% 6.70% 6.63% 6.13% 5.50%
+ Annualized vol of ret 7.67% 7.62% 7.82% 8.02% 8.26% 8.42%
+ Sharpe ratio 0.73 0.63 0.57 0.55 0.47 0.39
+ SE(Sharpe ratio) 0.036 0.035 0.034 0.034 0.033 0.033
+ Worst drawdown -15.47% -14.59% -14.45% -18.06% -20.66% -33.20%
+ Highest return 31.32% 30.18% 30.73% 31.92% 30.81% 33.69%
+ Skewness 0.06 0.10 0.09 -0.11 -0.14 -0.16
+ Kurtosis 3.16 3.06 2.95 2.94 2.96 3.64
+
+Table 4.2: One year performance parameters for equal risk weights unlevered portfolio
+            without VIX Futures, predetermined rebalancing frequency. Based on yearly
+            return of 1000 simulations.
+
+ Rebalancing Frequency Daily Weekly Monthly Quarterly Semi-annually Annually
+ Avg yearly return 4.85% 4.91% 4.92% 5.06% 5.10% 4.99%
+ Annualized vol of ret 8.03% 8.00% 8.13% 8.49% 8.72% 9.15%
+ Sharpe ratio 0.32 0.33 0.33 0.33 0.33 0.30
+ SE(Sharpe ratio) 0.032 0.033 0.033 0.033 0.033 0.032
+ Worst drawdown -21.08% -20.38% -17.59% -21.33% -19.46% -40.16%
+ Highest return 31.95% 31.07% 28.48% 28.46% 30.17% 32.00%
+ Skewness -0.02 0.01 0.02 -0.13 -0.17 -0.28
+ Kurtosis 3.02 2.98 2.77 2.80 2.89 3.73
+
+                                   33
+4.2. PREDETERMINED REBALANCING FREQ. CHAPTER 4. RESULTS
+
+        A comparison between the performance of the portfolios with and without
+VIX Futures positions shows that an inclusion of VIX Futures seems credible. For
+all rebalancing frequencies considered, the ERC portfolio including VIX Futures
+has more preferable performance statistics. In particular, the average yearly return
+is higher and the annualized volatility of return is lower consistently when including
+VIX Futures contracts. In turn, this results in a higher Sharpe ratio. Moreover, the
+worst drawdown is less negative when using VIX Futures apart from rebalancing
+at a semi-annual basis and the highest yearly returns are fairly equal between the
+two portfolios. In addition, for a normal distribution, the skewness is zero and the
+kurtosis equals three. By construction of the simulated asset classes using Wiener
+processes this is expected to hold for the returns, and is veried in Table 4.1 and
+Table 4.2.
+        Using the normal properties of the asymptotic distribution of the Sharpe
+ratio gives a possibility to perform a hypothesis testing of the null hypothesis
+H0: "the Sharpe ratio with VIX Futures is less than or equal to the Sharpe ratio
+without VIX Futures" against the alternative hypothesis H1: "the Sharpe ratio
+with VIX Futures position is higher than without VIX Futures positions". Forming
+the dierence between the Sharpe ratios with VIX Futures SRV IX and without
+VIX Futures SRW O gives again a normal distributed variable. The variance of
+                                                                  2                 2
+this variable has an upper bound given by SE(SRV IX ) + SE(SRW O) , since
+the covariance between the Sharpe ratios is positive. Under H0, this yields the
+test variable zobs for the null hypothesis H0: SRV IX − SRW 0 ≤ 0 against H1:
+SRV IX − SRW 0 > 0 given by:
+
+                               SR̂   V IX − SR̂   W 0 − 0
+                 zobs = √                                    (4.1)
+                             SE( SR̂      )2 + SE(SR̂      )2
+                                        V IX              W O
+         The values of the test statistics and the corresponding p-values calculated
+from the fact that the asymptotic distribution of the test variable is standard
+normal is given by Table 4.3
+
+                                   34
+4.2. PREDETERMINED REBALANCING FREQ. CHAPTER 4. RESULTS
+
+Table 4.3: Values of test variables zobs and corresponding p-values for test of the null
+            hypothesis H0: "the Share ratio with VIX Futures is less than or equal to
+             the Sharpe ratio without VIX Futures" against H1: "the Sharpe ratio with
+            VIX Futures positions is higher than without VIX Futures positions".
+
+ Rebalancing Frequency Daily Weekly Monthly Quarterly Semi-annually Annually
+ zobs 8.51 6.23 5.07 4.64 3.00 1.96
+                            −10     −10     −7     −6     −3
+ p-value <10      2·10       2·10       2·10          1·10          0.025
+
+        As seen in Table 4.3, the null hypothesis is rejected in favour of the al-
+ternative hypothesis. I.e. the Sharpe ratio of the portfolio including VIX Futures
+position is signicantly higher than the Sharpe ratio of the portfolio without VIX
+Futures contracts.
+
+4.2.1 Transaction Costs Estimation
+
+In this section, an estimate of the eect of including transaction costs when re-
+balancing the portfolios is examined. In Table 4.4 and Table 4.5, the total yearly
+rebalancing turnover is presented for the portfolios containing VIX Futures con-
+tracts and the portfolios without VIX Futures contracts respectively.
+
+Table 4.4: One year average reallocation as a multiple of initial capital for equal risk
+            weights unlevered portfolio including VIX Futures, predetermined rebalanc-
+            ing frequency. Standard deviation within parenthesis. Based on yearly re-
+            turn of 1000 simulations.
+
+ Rebalancing Frequency Daily Weekly Monthly Quarterly Semi-annually Annually
+ S&P 500 10.19 4.67 1.44 0.44 0.17 -
+                           (1.07) (0.71) (0.40) (0.21) (0.11) -
+ Government bonds 10.28 4.81 1.49 0.46 0.17 -
+                           (1.00) (0.71) (0.41) (0.21) (0.11) -
+ VIX Futures 1.14 0.47 0.13 0.04 0.02 -
+                           (0.16) (0.08) (0.02) (0.02) (0.01) -
+
+                                   35
+4.2. PREDETERMINED REBALANCING FREQ. CHAPTER 4. RESULTS
+
+Table 4.5: One year average reallocation as a multiple of initial capital for equal risk
+            weights unlevered portfolio without VIX Futures, predetermined rebalancing
+            frequency. Standard deviation within parenthesis. Based on yearly return
+             of 1000 simulations.
+
+ Rebalancing Frequency Daily Weekly Monthly Quarterly Semi-annually Annually
+ S&P 500 8.65 4.08 1.30 0.42 0.17 -
+                           (0.87) (0.62) (0.36) (0.20) (0.11) -
+ Government bonds 8.65 4.08 1.30 0.42 0.17 -
+                           (0.87) (0.62) (0.36) (0.20) (0.11) -
+
+        Using the approach in Sec. 3.2.1, in particular the assumption that the
+transaction cost is a fraction of the total transaction amount (0.05 percent) and
+that it is the same for all assets, the aggregated transaction cost is the sum of the
+turnovers of all assets multiplied by the transaction cost brokerage. This yields
+the following eect on returns and Sharpe ratios:
+
+Table 4.6: Estimated eect on average yearly return and Sharpe ratio of portfolios with
+            and without VIX Futures position when including transaction costs.
+
+ Rebalancing Frequency Daily Weekly Monthly Quarterly Semi-annually Annually
+ Avg yearly ret w VIX -1.08% -0.49% -0.15% -0.05% -0.02% -
+ Sharpe ratio w VIX -0.14 -0.06 -0.02 -0.01 -0.00 -
+ Avg yearly ret no VIX -0.87% -0.41% -0.13% -0.04% -0.02% -
+ Sharpe ratio no VIX -0.11 -0.05 -0.02 -0.01 -0.00 -
+
+         As seen in Table 4.6, the inclusion of transaction cost has a slightly larger
+impact on the portfolios with VIX Futures positions than the portfolios without
+VIX Futures.
+
+4.2.2 Robustness of Results
+
+The robustness of the portfolio performance is based on the stability of the simu-
+lation outcomes. In this report this regards returns, standard deviations of returns
+and the risk-free rate. Thus, ideally all parameters in the simulations should be
+tweaked to obtain robust results. However, the assumption of not updating the
+
+                                   36
+4.2. PREDETERMINED REBALANCING FREQ. CHAPTER 4. RESULTS
+
+parameters gradually might be of higher importance. If this method is used in
+reality, the parameters may be updated perhaps every night or every week. This
+would mitigate the need for tweaking, and therefore a study of changes of the input
+parameters is disregarded. Nevertheless, one idea of how this could be done is by
+adding white noise terms to the parameters with variance based on the standard
+errors of the parameter estimation.
+        The parameter that could be changed without tweaking the simulations is
+the risk-free rate used in the calculation of the Sharpe ratio. As could be seen in
+Figure 4.2, the portfolio including VIX Futures has a higher Sharpe ratio than the
+portfolio without VIX Futures positions for a wide range of risk-free rates. Since
+the lines are almost parallel, they are practically equally sensitive to changes in
+the risk-free rate. The graph only shows the sensitivity based on the 1-year daily
+rebalance performance, but the same analogy holds for all rebalance frequencies.
+
+Figure 4.2: Graph showing how the Sharpe ratio of the dierent portfolios with daily
+              rebalancing depend on the risk-free rate.
+
+                                   37
+4.3. TEST OF PERFORMANCE ON HIST. DATA CHAPTER 4. RESULTS
+
+4.3 Test of Performance on Historical Data
+
+Lastly, an equal risk contribution capital allocation approach applied to the actual
+performance of the dierent asset classes starting from July 11, 2008 and one year
+forward is considered. The results are shown in Table 4.7. The reason why only
+yearly returns are stated is because one time series can be considered as a single
+data point. As seen in the table, the yearly return is higher when including VIX
+Futures for all rebalancing frequencies considered. The changes between positive
+and negative returns are due to the timing of the allocation of capital.
+
+Table 4.7: One year performance parameters for equal risk weights unlevered portfolio,
+            predetermined rebalance frequency. Based on actual daily data during the
+             period 11 July, 2008 - 10 July, 2009.
+
+ Rebalancing Frequency Daily Weekly Monthly Quarterly Semi-annually Annually
+ Ret with VIX Fut 8.75% -0.88% 8.46% 4.09% -0.10% -1.88%
+ Ret without VIX Fut 0.58% -2.33% 0.26% -0.62% -4.73% -5.05%
+
+                                   38
+Chapter 5
+
+Discussion
+
+The ndings and results presented in Ch. 4 is analyzed in this chapter. Firstly, a
+thorough examination and interpretation of the results is performed. Thereafter,
+implications and conclusions of this study are reported. Finally, some suggestions
+for further studies are presented.
+
+5.1 Interpretation of Results
+
+The results in Ch. 4 demonstrate the benets of including VIX Futures positions in
+the portfolios considered. The main result is the relatively higher annual returns
+and lower annualized volatilities for the VIX portfolio, yielding higher Sharpe
+ratios. The dierence in Sharpe ratios holds for a wide range of risk-free rates
+as shown in Figure 4.2. Moreover, by forming the dierences between the Sharpe
+ratios and testing the null hypothesis H0: "the Sharpe ratio with VIX Futures is less
+than or equal to the Sharpe ratio without VIX Futures" against H1: "the Sharpe
+ratio with VIX Futures position is higher than without VIX Futures positions",
+the VIX portfolio is shown to have a higher Sharpe ratio with p-values ranging
+       −10      −7
+from 10    to 10   for daily to monthly rebalances and 0.025 at yearly rebalancing
+frequencies. Therefore, the conclusion that including VIX Futures yields a higher
+Sharpe ratio could be said to be statistically signicant.
+        In Sec. 4.2.1, transaction costs were examined to investigate if the pre-
+vious conclusions would turn ambiguous under less restricted assumptions. Natu-
+
+                                   39
+5.1. INTERPRETATION OF RESULTS CHAPTER 5. DISCUSSION
+
+rally, the calculations show that the returns and Sharpe ratios are lowered when a
+transaction cost is introduced. The important part, though, is that they also show
+that the relative dierence in transaction cost is so small that it does not aect
+the interpretation that including VIX Futures increases the portfolio performance.
+Hence the conclusion drawn in the previous paragraph remains reliable.
+        A further note is the impact of the simplications made in regards to mar-
+gin accounts. As mentioned, the negligence of interest rate results in a somewhat
+lower return for the portfolio including VIX Futures. If an investor could receive
+an interest rate of, say, 2 % and the average allocation to VIX Futures (see Ap-
+pendix B) is roughly 2 %, then the impact is a lowered return of 0.04 % annually.
+Including this eect would slightly increase the Sharpe ratio of the VIX portfolio.
+        The results on historical data again show that the portfolio including VIX
+Futures clearly outperforms the portfolio without VIX Futures for all rebalancing
+frequencies. As year 2008-2009 can be regarded as a tail event, the results show
+the hedging benets from including VIX in a portfolio. This can be seen by
+comparing the average return of the VIX portfolio with the average return of the
+portfolio without VIX, for both simulations and historical data. Across rebalancing
+frequencies, the average return of the VIX portfolio on historical data was 5.06
+% higher than the portfolio without, compared to the corresponding gure of
+1.67 % for the simulations. Hence, this suggests that the eect of including VIX
+Futures is more benecial when extreme events such as the crisis in 2008-2009
+occur. Note however that the returns for weekly rebalance is considerably lower
+than for monthly and daily, which breaks a pattern of returns decreasing with
+rebalancing frequency. This is due to unlucky market timing, since the weekly
+rebalances contains all the rebalancing points used in monthly rebalancing, and a
+subset of the 20 % of the points used in daily rebalancing.
+        A noteworthy result is how the Sharpe ratio depends on reallocation fre-
+quency when VIX Futures is added. As can be seen in Ch. 4, the Sharpe ratio
+increases with rebalancing frequency for the VIX portfolio but is relatively con-
+stant for the portfolio consisting of only S&P 500 and government bonds. There
+is still an increase in Sharpe ratio with rebalancing frequency for the VIX port-
+folio when transaction costs are added. This shows the importance of an actively
+managed portfolio when VIX is included in the ERC approach.
+
+                                   40
+5.2. IMPLICATIONS AND CONCLUSIONS CHAPTER 5. DISCUSSION
+
+        If an investor holds a well-diversied portfolio (which could be assumed
+to hold approximately in real life examples), the diversication benet of adding
+another asset class should be zero. Since the considered portfolios contains two
+and three asset classes respectively, an important discussion is to try to estimate
+to what extent the benets are purely attributable to diversication. Logically, the
+VIX Index and thereby VIX Futures should not have a positive expected return, in
+fact it should be costly to hold. Therefore, it should be safe to say that the expected
+return of VIX Futures is at least not larger than the expected return of a bond
+investment, or the expected return of S&P 500. Since the same amount is invested
+in both portfolios, no extra expected return should be gained from including the
+VIX Futures. Hence, the benets from diversication should be in the form of (at
+best) the same return, but with lower volatility. For diversication purposes, the
+asset added should ideally be negatively correlated with the portfolio, which it is.
+An upper limit of the diversication benet is thus the total decrease in volatility,
+roughly 0.40 %. This will have an impact on the Sharpe ratios of at most 0.03,
+which is not enough to alter the interpretation that including VIX Futures have a
+signicant positive eect on portfolio performance.
+
+5.2 Implications and Conclusions
+
+The economic interpretation and conclusion of the results is that: Including VIX
+Futures as an asset class in an equal risk contribution portfolio consisting of
+S&P 500 and government bonds substantially enhances the portfolio performance.
+Based on yearly returns, this study shows that the Sharpe ratio when including
+VIX Futures increases within a range of 30 % to 128% (corresponding to a range
+between 0.09 and 0.40) for rebalancing frequencies spanning from annually to daily,
+respectively. The conclusion holds signicantly when eects from transaction costs
+and diversication benets are accounted for.
+        The conclusion that VIX Futures increases the portfolio performance is
+also shown to be true when historical data of the corresponding period is examined.
+The study on historical data suggests that inclusion of VIX Futures has hedging
+benets when tail events occur.
+        The practical implication is therefore that investors and asset managers
+
+                                   41
+5.3. SUGGESTIONS FOR FURTHER STUDIES CHAPTER 5. DISCUSSION
+
+using the equal risk contribution approach could benet from including VIX Fu-
+tures as an asset class in their portfolio.
+
+5.3 Suggestions for Further Studies
+
+An extension of this analysis is to build models and include other types of asset
+classes that could be relevant for investors using an equal risk contribution ap-
+proach. Another highly relevant extension is to examine how often the parameters
+are needed to be re-estimated to better capture the movements of the market, and
+then run new simulations with these updated parameters.
+        A further extension is to investigate some of the new views on ERC, e.g.
+the "Forecast Uncertainty Hedge" rule, and examine what impact VIX Futures
+could have on these approaches. One rst step would be to simply add VIX
+Futures and see how the portfolio performance changes. The forecast uncertainty
+approach also requires development of a new rebalancing rule depending on the
+assessed uncertainty in the investments considered. Thus, a second step could be to
+investigate what role the VIX Index and VIX Futures could have in a reallocation
+or forecast rule, as it is an instrument indicating the implied market volatility in
+the near future.
+
+                                   42
+Appendix A
+
+Results - Graphs
+
+For reference, histograms over average annual returns for dierent rebalancing
+frequencies are presented below. Each histogram is based on 1000 data points,
+and performance statistics on every simulation can be found in Chapter 4.2.
+        For each specic rebalancing frequency both a portfolio including VIX
+Futures and without VIX Futures was simulated simultaneously. This means that
+they have the same underlying 1000 processes of S&P 500, government bonds and
+VIX Futures.
+
+                                   43
+                                 APPENDIX A. RESULTS - GRAPHS
+
+        (a) Daily rebalance incl. VIX (b) Weekly rebalance incl. VIX
+
+       (c) Monthly rebalance incl. VIX (d) Quarterly rebalance incl. VIX
+
+     (e) Semi-annual rebalance incl. VIX (f ) Annual rebalance incl. VIX
+
+Figure A.1: Histogram over returns for S&P 500, government bond and VIX Futures
+               portfolio using 1000 simulations, initial value $ 1 million.
+
+                                   44
+                                 APPENDIX A. RESULTS - GRAPHS
+
+       (a) Daily rebalance without VIX (b) Weekly rebalance without VIX
+
+     (c) Monthly rebalance without VIX (d) Quarterly rebalance without VIX
+
+    (e) Semi-annual rebalance without VIX (f ) Annual rebalance without VIX
+
+Figure A.2: Histogram over returns for S&P and government bond portfolio using 1000
+               simulations, initial value $ 1 million.
+                                   45
+Appendix B
+
+Results - Tables
+
+In this part, weight statistics of the dierent assets for both portfolios with and
+without allocation to VIX Futures are shown. In Table B.1, the minimum, average
+and maximum allocation of the average position taken during each investment year
+is presented for S&P 500, VIX Futures and 10 year government bonds. Likewise,
+Table B.2 regards the portfolios when investing in S&P 500 and government bonds
+only. Moreover, Table B.3 and Table B.4 show the corresponding weights when
+historical data is used instead of simulated data.
+
+                                   46
+                                  APPENDIX B. RESULTS - TABLES
+
+Table B.1: Yearly weight data for equal risk weights unlevered portfolio including VIX
+            Futures, predetermined rebalancing frequency. Based on yearly return of
+             1000 simulations.
+
+ Rebalancing Frequency Daily Weekly Monthly Quarterly Semi-annually Annually
+ Min w S&P 18.12% 19.32% 19.49% 16.53% 13.77% 8.06%
+ Avg w S&P 34.55% 34.60% 34.92% 35.60% 36.59% 37.46%
+ Max w S&P 54.19% 55.33% 55.82% 64.11% 67.14% 72.71%
+ Min w VIX Fut 1.83% 1.79% 1.52% -0.81% 0.54% 0.28%
+ Avg w VIX Fut 2.54% 2.50% 2.32% 1.96% 1.55% 1.05%
+ Max w VIX Fut 3.57% 3.64% 3.65% 4.41% 3.69% 3.30%
+ Min w Bonds 42.02% 41.82% 40.90% 33.75% 31.48% 26.20%
+ Avg w Bonds 62.91% 62.90% 62.77% 62.44% 61.86% 61.49%
+ Max w Bonds 79.31% 78.35% 78.70% 81.46% 84.66% 90.64%
+
+Table B.2: Yearly weight data for equal risk weights unlevered portfolio without VIX
+            Futures, predetermined rebalancing frequency. Based on yearly return of
+             1000 simulations.
+
+ Rebalancing Frequency Daily Weekly Monthly Quarterly Semi-annually Annually
+ Min w S&P 19.39% 20.09% 20.40% 18.93% 16.51% 12.72%
+ Avg w S&P 36.42% 36.48% 36.85% 37.44% 38.42% 39.87%
+ Max w S&P 58.96% 58.47% 58.24% 63.51% 70.22% 71.72%
+ Min w Bonds 41.04% 41.53% 41.76% 36.49% 29.78% 28.28%
+ Avg w Bonds 63.58% 63.52% 63.15% 62.56% 61.58% 60.13%
+ Max w Bonds 80.61% 79.91% 79.60% 81.07% 83.49% 87.28%
+
+                                   47
+                                  APPENDIX B. RESULTS - TABLES
+
+Table B.3: Daily weight data for equal risk weights unlevered portfolio including VIX
+            Futures, predetermined rebalancing frequency. Based on actual daily data
+             during the period 11 July, 2008 - 10 July, 2009.
+
+ Rebalancing Frequency Daily Weekly Monthly Quarterly Semi-annually Annually
+ Min w S&P 7.01% 10.17% 11.35% 11.35% 23.96% -
+ Avg w S&P 27.57% 27.54% 27.67% 26.65% 31.58% 35.39%
+ Max w S&P 53.85% 49.67% 38.12% 36.31% 36.31% -
+ Min w VIX Fut 1.04% 1.15% 1.43% 1.43% 1.43% -
+ Avg w VIX Fut 3.57% 3.58% 3.59% 2.29% 2.19% 2.58%
+ Max w VIX Fut 8.40% 7.53% 5.70% 2.61% 2.61% -
+ Min w Bonds 41.31% 45.60% 57.29% 61.08% 61.08% -
+ Avg w Bonds 68.87% 68.88% 68.73% 71.05% 66.23% 62.03%
+ Max w Bonds 91.62% 88.03% 86.06% 86.05% 74.61% -
+
+Table B.4: Daily weight data for equal risk weights unlevered portfolio without VIX
+            Futures, predetermined rebalancing frequency. Based on actual daily data
+             during the period 11 July, 2008 - 10 July, 2009.
+
+ Rebalancing Frequency Daily Weekly Monthly Quarterly Semi-annually Annually
+ Min w S&P 9.85% 9.85% 11.32% 11.32% 23.75% -
+ Avg w S&P 28.18% 28.38% 29.12% 25.42% 30.04% 33.18%
+ Max w S&P 58.97% 57.86% 40.08% 33.78% 33.78% -
+ Min w Bonds 41.03% 42.14% 59.92% 66.22% 66.22% -
+ Avg w Bonds 71.82% 71.62% 70.88% 74.58% 69.96% 66.82%
+ Max w Bonds 90.15% 90.50% 88.68% 88.68% 76.25% -
+
+                                   48
+Appendix C
+
+Mathematics
+
+In this part, more details of the fundamental mathematics are presented. Moreover,
+a technical note about the calculation of the VIX Index is given.
+
+C.1 Short on Arbitrage Theory
+
+In nancial mathematics; probability theory in general and martingale theory
+in particular is crucial for the understanding of how to determine arbitrage-free
+prices of nancial derivatives (contingent claims). Using martingale theory, e.g.
+as in Björk (2009), one can show that:
+
+In order to avoid arbitrage, the contingent claim X maturing at time T must be
+priced at time t according to the formula:
+                                          [     ∣   ]
+                                Q   X  ∣
+                       Π(t; X) = S0(t)E         ∣ Ft                    (C.1)
+                                            S (T )∣
+                                                         0
+
+where Q is a martingale measure for [S0, S1, .., SN ], with S0 as the numeraire.
+
+        Especially, one can choose the money market account (the bank account)
+B(t) or some stock traded in the market, say S1(t), as numeraire. Informally, the
+numeraire is a way to quote the prices. Ft is called a ltration, and can basically
+be thought of as the information at hand at time t. I.e. the time t price of the
+
+                                   49
+C.2. VIX INDEX CALCULATION APPENDIX C. MATHEMATICS
+
+derivative with payo X at time T is dependent on the market information known
+at time t.
+        Another crucial part of the pricing of contingent claims is probability
+measures. In practice one observes the real world, which in probability theory
+is called the subjective probability measure P . However, in pricing formula (C.1)
+with S0(t) = B(t) one calculates under the probability measure Q, which is referred
+to as the risk-neutral martingale measure. This is because Q is formed by removing
+the market price of risk from the subjective probability measure P . Informally,
+Q assigns zero probability to the same events as P (is equivalent) and has the
+characteristic that "one prefer more to less" (there is no free lunch with vanishing
+risk).
+
+C.2 VIX Index Calculation
+
+As Stated by the CBOE [5], the calculation of the VIX Index is based on prices of
+options written on S&P 500 stocks. The formula used is given by:
+           √
+                    √                    [      ]2
+               √ 2 ∑ ∆Ki        1  F
+            VIX = 100√         eRT Q(K ) −       − 1          (C.2)
+                                                       2             i
+                      T    Ki           T  K0
+                                                          i
+where T is the time to maturity, F the forward index level derived from index
+option prices, K0 the rst strike price below F , Ki the strike price of the i:th
+out-of-the-money option, ∆Ki the interval between strike prices, R the risk-free
+interest rate and Q(Ki) the midpoint of the bid-ask spread for each option with
+strike Ki. For a further description of how to calculate the variables consult the
+white paper by CBOE [5].
+
+                                   50
+Appendix D
+
+Matlab Code
+
+In this chapter, the Matlab code used in the simulations in the report is presented.
+
+D.1 Main Program - parameters.m
+
+This program runs the simulations and calculates the rebalances.
+
+clear,clc
+warning off;
+
+% Parameters from Zhu & Lian SV−model
+global theta kappa sigmav etav rho
+theta=0.0444;
+kappa=2.2680;
+sigmav=0.3856;
+etav=−2.016;
+rho=−0.7533;
+
+%Parameters for short rate model
+global ahat sigmar
+ahat=0.02;
+sigmar=0.01;
+
+                                   51
+D.1. MAIN PROGRAM APPENDIX D. MATLAB CODE
+
+% Time parameters
+T=1;
+n=252; % Trading days on a year
+
+% Initial conditions
+SP0=1239.49;%July 11,2008
+VIX0=0.22;% A reasonable starting point for the ...
+   considered time period
+vol0=0.0225; % −"−
+
+% Stock parameters
+gamma=0.037; %Gramham and Harvey
+r0=0.0126;
+
+% Yield curve July 11, 2008
+maturity=[0 1/12 1/4 .5 1 2 3 5 7 10 20 30];
+yield = [r0 0.0138 0.0162 0.0202 0.023 0.0259 0.0288 ...
+   0.0327 0.0355 0.0396 ...
+             0.0457 0.0453];
+
+finalValuesVIX = [];
+finalValuesWO = [];
+reallocVIX = zeros(3,nrsims);
+reallocWO = zeros(2,nrsims);
+wavgVIX = [];
+wavgWO = [];
+for simulationnr=1:nrsims
+    simulationnr
+    % Simulate S&P 500, VIX−Futures prices and bond prices
+    [t,SP,SPr,VIX,Futures,Bonds]= ...
+
+     simulateSPaVIX(SP0,VIX0,gamma,r0,vol0,maturity,yield,T,n);
+
+                                   52
+D.1. MAIN PROGRAM APPENDIX D. MATLAB CODE
+
+    % Allocations
+     wVIX = [];
+     wWO = [];
+
+     % Risk Parity allocation
+     Futret = zeros(1,n);
+     Bondret = zeros(1,n);
+    for i=2:length(t)
+        Futret(i−1) = ...
+          (Futures(i)−Futures(i−1))*100*1000/5500;
+         %100 for right price, 1000 multiplier, 5500 ...
+            initial margin
+       Bondret(i−1) = (Bonds(i)−Bonds(i−1))/Bonds(i−1);
+    end
+
+     % Length of time interval for estimation of ...
+        covariance matrix
+     estParam = 7;
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     %%%% With VIX %%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+     % First week is for calibration
+     estimates = [SPr(1:estParam); Futret(1:estParam); ...
+       Bondret(1:estParam)]';
+    global estSigma
+     estSigma = cov(estimates);
+
+     % Finding the weight for the risk parity portfolio
+     w0=[0.4 0.2 0.7];
+
+     w = fmincon(@optFUN,w0,[],[],[],[],[],[],@constraints);
+
+                                   53
+D.1. MAIN PROGRAM APPENDIX D. MATLAB CODE
+
+     w = w/sum(w);
+
+     wVIX = [wVIX w'];
+
+     % Initial Capital
+     V = 1000000;
+
+     % Stock allocation
+    nrStocks=V*w(1)/SP(estParam);
+
+    % Futures specificatoions
+     initialMargin = 5500;
+     nrFutures = V*w(2)/initialMargin;
+     oldFuturesPrice = Futures(estParam);
+
+     % Bond allocation = V(3)
+     nrBonds = V*w(3)/Bonds(estParam);
+
+    % Rolling−over rebalancing
+     rebalancefq = 1;
+     reallocloopVIX = zeros(3,1);
+
+    for j=estParam+1:rebalancefq:length(t)−1
+        estimates = [SPr(j−estParam:j); ...
+          Futret(j−estParam:j); ...
+           Bondret(j−estParam:j)]';
+         global estSigma
+         estSigma = cov(estimates);
+
+         % Time j value
+         V = nrStocks*SP(j)+((Futures(j) ...
+          −*100*nrFutures*1000+w(2)*V)+nrBonds*Bonds(j);
+         % *1000 for Futures contract since $10/tick
+
+                                   54
+D.1. MAIN PROGRAM APPENDIX D. MATLAB CODE
+
+         oldFuturesPrice = Futures(j);
+
+         % Finding the weight for the risk parity portfolio
+        w0=w;
+
+         w = fmincon(@optFUN,w0,[],[],[],[],[],[],@constraints);
+
+         w = w/sum(w);
+
+         % Measuring average reallocation
+        reallocloopVIX = reallocloopVIX + abs(w0−w)';
+
+         wVIX = [wVIX w'];
+
+         % Rebalancing
+         nrStocks = w(1)*V/SP(j);
+         nrFutures = w(2)*V/initialMargin;
+         nrBonds = w(3)*V/Bonds(j);
+    end
+
+    V = nrStocks*SP(length(t))+((Futures(length(t))− ...
+        oldFuturesPrice)*100*nrFutures*1000+w(2)*V)+...
+        nrBonds*Bonds(length(t));
+
+     % Final Value without transaction costs
+     finalValuesVIX = [finalValuesVIX V];
+     wavgVIX = [wavgVIX [mean(wVIX(1,:)) ...
+        mean(wVIX(2,:)) mean(wVIX(3,:))]'];
+    reallocVIX(:,simulationnr) = reallocloopVIX;
+
+                                   55
+D.1. MAIN PROGRAM APPENDIX D. MATLAB CODE
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     %%%% Without VIX %%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     % First week is for calibration
+     estimates = [SPr(1:estParam); Bondret(1:estParam)]';
+    global estSigma
+     estSigma = cov(estimates);
+
+     % Finding the weight for the risk parity portfolio
+    w0=[0.4 0.7];
+
+     w = fmincon(@optFUN,w0,[],[],[],[],[],[],@constraintsWO);
+
+     w = w/sum(w);
+
+     reallocloopWO = zeros(2,1);
+     wWO = [wWO w'];
+
+     % Initial Capital
+     V = 1000000; % Initial capital
+
+     % Stock allocation
+    nrStocks=V*w(1)/SP(estParam);
+
+    % Bond allocation
+     nrBonds = V*w(2)/Bonds(estParam);
+
+    for j=estParam+1:rebalancefq:length(t)−1
+        estimates = [SPr(j−estParam:j); ...
+          Bondret(j−estParam:j)]';
+         global estSigma
+         estSigma = cov(estimates);
+
+                                   56
+D.1. MAIN PROGRAM APPENDIX D. MATLAB CODE
+
+         % Time j value (no leverage)
+         V = nrStocks*SP(j)+nrBonds*Bonds(j);
+
+         % Finding the weight for the risk parity portfolio
+        w0=w;
+
+         w = fmincon(@optFUN,w0,[],[],[],[],[],[],@constraintsWO);
+
+         w = w/sum(w);
+
+        reallocloopWO = reallocloopWO + abs(w0−w)';
+         wWO = [wWO w'];
+
+         % Rebalancing
+         nrStocks = w(1)*V/SP(j);
+         nrBonds = w(2)*V/Bonds(j);
+    end
+
+    V = nrStocks*SP(length(t))+nrBonds*Bonds(length(t));
+
+     % Final Value without transaction costs
+     finalValuesWO = [finalValuesWO V];
+     wavgWO = [wavgWO [mean(wWO(1,:)) mean(wWO(2,:))]'];
+    reallocWO(:,simulationnr) = reallocloopWO;
+end
+
+% Plotting histrograms over the final values
+figure(1);
+edges=min(min(finalValuesVIX),min(finalValuesWO)):...
+0.01*e+06:max(max(finalValuesVIX),max(finalValuesWO));
+ans = histc(finalValuesVIX, edges);
+bar(edges, ans)
+xlabel('Final Value')
+
+                                   57
+D.2. SIMULATIONS APPENDIX D. MATLAB CODE
+
+ylabel('Frequency')
+
+figure(2);
+edges=min(min(finalValuesVIX),min(finalValuesWO)):...
+    0.01*e+06:max(max(finalValuesVIX),max(finalValuesWO));
+ans = histc(finalValuesWO, edges);
+bar(edges, ans)
+xlabel('Final Value')
+ylabel('Frequency')
+
+% Calculating Sharpe Ratio
+rf = 0.0225;
+(mean(finalValuesVIX/1000000−1)−rf)/std(finalValuesVIX/1000000−1)
+(mean(finalValuesWO/1000000−1)−rf)/std(finalValuesWO/1000000−1)
+
+D.2 Simulations - simulateSPaVIX.m
+
+This program is called to simulate the stochastic processes of VIX Futures, S&P
+500 and 10 year Government bonds.
+
+function[t,SP,SPr,VIX,Futures,bonds] = ...
+    simulateSPaVIX(SP0,VIX0,gamma,r0,Vol0,yieldmaturity,yield,T,n)
+global theta kappa sigmav etav rho ahat sigmar
+global a b kappaQ thetaQ tau
+
+%Parameters
+kappaQ=etav+kappa;
+thetaQ=kappa*theta/kappaQ;
+tau=30/365;
+a=(1−exp(−kappaQ*tau))/(kappaQ*tau);
+b=thetaQ*(1−a);
+
+                                   58
+D.2. SIMULATIONS APPENDIX D. MATLAB CODE
+
+% Time parameters
+dt = T/n;
+t = dt * [0:n];
+
+% Setting up variables
+lSPr = zeros(1,n+1); %S&P returns
+SP = zeros(1,n+1); %S&P value
+SP(1)=SP0;
+lSPr(1) = 0;
+
+VIX = zeros(1,n+1);
+VIX(1) = VIX0;
+
+Vol = zeros(1,n+1);
+Vol(1) = Vol0;
+
+r = zeros(1,n+1);
+r(1) = r0;
+
+% Generate Wiener increments, first row S&P and second ...
+   row volatility V
+dW = zeros(2,n+1);
+covar=[1 rho; rho 1];
+for i = 1:n+1;
+   dW(1:2,i) = mvnrnd(zeros(2,1),covar)*sqrt(dt);
+end
+
+% Generate Wiener increments for short rate
+dWr = zeros(2,n+1);
+for i = 1:n+1;
+   dWr(i) = randn*sqrt(dt);
+end
+
+                                   59
+D.2. SIMULATIONS APPENDIX D. MATLAB CODE
+
+% Calculate forward rates curve using linear ...
+   interpolation, using 10 years
+% for long−term government bonds
+simMat = 10; % 10 years maturity time
+simMatN = simMat/dt;
+obsbonds = zeros(1,simMatN);
+time = [0:dt:simMat];
+
+% Calculate forward rates curve using linear interpolation
+fwdrate = zeros(1,simMatN+1);
+for i = 1:simMatN+1;
+   fwdrate(i) = interp1(yieldmaturity,yield,time(i));
+end
+
+% Approximate the derivative of the forward rate ...
+   curve, (only 1 year needed)
+fwdrateT = zeros(2,n+1);
+for i = 2:n;
+   fwdrateT(i) = (fwdrate(i+1)−fwdrate(i−1))/(2*dt);
+end
+
+% Calculation of log(S&P−returns) and VIX
+for i = 2:n+1;
+  Theta=fwdrateT(i−1)+sigmar^2*B(0,t(i−1))...
+     *exp(ahat*t(i−1))+ahat*(fwdrate(i−1)+sigmar^2...
+     *(B(0,t(i−1)))^2/2);
+  r(i)=r(i−1)+(Theta − ahat*r(i−1))*dt+sigmar*dWr(i−1);
+  Vol(i)=abs(Vol(i−1)+kappa*(theta−Vol(i−1))*dt+...
+     sigmav*sqrt(Vol(i−1))*dW(2,i−1));
+  lSPr(i)=(r(i−1)+gamma)*dt+sqrt(Vol(i−1))*dW(1,i−1);
+  VIX(i)=sqrt(a*Vol(i)+b);
+end
+
+                                   60
+D.2. SIMULATIONS APPENDIX D. MATLAB CODE
+
+% Converting S&P returns to values
+SPr=exp(lSPr);
+SP(1)= SP0;
+for i = 2:n+1
+     SP(i)=SP(i−1)*SPr(i);
+end
+SPr=SPr−1;
+
+% Calculation of observed long−term government bond ...
+   prices, maturing in 10
+% years
+for i = 1:simMatN
+    obsbonds(i)=exp(−trapz(time(i:length(time)),...
+    fwdrate(i:length(fwdrate))));
+end
+obsbonds(length(obsbonds))=1;
+
+% Calculation of simulated bond prices
+bonds = zeros(1,n+1);
+for i=1:length(t)
+   bonds(i) = ...
+     (obsbonds(1)/obsbonds(simMatN−i))*exp(B(t(i),simMat)...
+   *fwdrate(i)−(sigmar^2/(4*ahat))*(B(t(i),simMat))^2...
+   *(1−exp(−2*ahat*t(i)))−B(t(i),simMat)*r(i));
+end
+
+% Calculation of Futures prices F(t,T,VIXt)
+Futures=[];
+for i=1:length(t)
+     timeToM = 3/12;
+
+     Futures = [Futures FuturesPrice(timeToM,VIX(i))'];
+
+                                   61
+D.3. FUNCTION FILES APPENDIX D. MATLAB CODE
+
+%times 100 to get VIX−futures prices as quoted at CBOE
+end
+
+D.3 Function Files
+
+In this section, short les are collected which are used to alleviate the coding of
+the other programs.
+
+D.3.1 Futuresprices.m
+
+This program calculates the Futures price of a VIX contract.
+
+function out=FuturesPrice(timeToMIn,VIX0in);
+global timeToM VIXt
+
+% Parameters
+VIXt=VIX0in;
+
+% Calculation of Futures Price
+out=[];
+for i=1:length(timeToMIn)
+    timeToM=timeToMIn(i);
+
+     out = [out 1/(2*sqrt(pi))*quadgk(@fun,0,inf)];
+
+end
+
+                                   62
+D.3. FUNCTION FILES APPENDIX D. MATLAB CODE
+
+D.3.2 Fun.m
+
+This program calculates the integrand of the Futures price integral.
+
+function output = fun(x)
+global theta kappa sigmav
+global a b kappaQ
+global timeToM VIXt
+
+% Calculation of Integrand of Futures Price
+C=(−2*kappa*theta/(sigmav^2))*log(1+sigmav^2*(−x*a)...
+*(exp(−kappaQ*timeToM)−1)/(2*kappaQ));
+D=2*kappaQ*(−x*a)./(sigmav^2...
+*(−x*a)+(2*kappaQ−sigmav^2*(−x*a))*exp(kappaQ*timeToM));
+f=exp(C+D*(VIXt^2−b)/a);
+output=(1−exp(−x*b).*f)./(x.^1.5);
+
+D.3.3 optFUN.m
+
+This is the function that is minimized when allocation capital according to an
+equal risk contribution approach.
+
+function out=optFUN(win)
+global estSigma
+out = sqrt(win*estSigma*win');
+
+                                   63
+D.3. FUNCTION FILES APPENDIX D. MATLAB CODE
+
+D.3.4 constraints.m
+
+This is the constraints used when optimizing the equal risk contribution portfolio
+including VIX Futures.
+
+function [out, eq]=constraints(win)
+out=[−(log(win(1))+log(win(2))+log(win(3)));
+    −win(1); −win(2); −win(3)];
+eq=[];
+
+D.3.5 constraintsWO.m
+
+This is the constraints used when optimizing the equal risk contribution portfolio
+not including VIX Futures.
+
+function [out, eq]=constraintsWO(win)
+out=[−(log(win(1))+log(win(2)));
+    −win(1); −win(2)];
+eq=[];
+
+D.3.6 b.m
+
+This function is called when calculating the 10 year government bond prices.
+
+function output = B(t,T)
+global ahat
+output = (1/ahat)*(1−exp(−ahat*(T−t)));
+
+                                   64
+References
+
+[1] T. Björk, 2009, Arbitrage Theory in Continuous Time, 3rd edition, Oxford
+   Univ. Press, Oxford.
+
+[2] K. Black, 2006, Improving Hedge Fund Risk Exposures by Hedging Equity Mar-
+   ket Volatility, or How the VIX Ate My Kurtosis, Journal of Trading, Vol 1,
+   No.2, 6-15
+
+[3] Board of Governors of the Federal Reserve System, Historical Data, 10-year
+   U.S. Government Securities, available at http://www.federalreserve.gov/
+   releases/h15/data.htm, accessed April 13, 2013.
+
+[4] Chicago Board Option Exchange, CBOE Volatility Index (VIX) Futures, avail-
+   able at http://cfe.cboe.com/Products/Spec_VIX.aspx, accessed April 14,
+   2013.
+
+[5] Chicago Board Option Exchange, the CBOE Volatility Index - VIX, available
+   at http://www.cboe.com/micro/vix/vixwhite.pdf, accessed April 14, 2013.
+
+[6] Chicago Board Options Exchange, VIX Historical Price Data, available
+   at http://www.cboe.com/micro/vix/historical.aspx, accessed April 15,
+   2013.
+
+[7] Chicago Board Options Exchange, VX - CBOE S&P 500 Volatility Index (VIX)
+   Futures Price and Volume Detail, available at http://cfe.cboe.com/Data/
+   HistoricalData.aspx, accessed April 13, 2013.
+
+[8] Y. Choueifaty, T. Froidure and J. Reynier, 2013, Properties of the Most Diver-
+    sied Portfolio, Journal of Investment Strategies, Vol 2, No.2, 49-70
+
+[9] J. Duan and C. Yeh, 2007, Jump and Volatility Risk Premiums Implied by VIX,
+   Journal of Economic Dynamics and Control, Vol 23, 2232-2244
+
+                                   65
+REFERENCES REFERENCES
+
+[10] Federal Reserve Bank of St.Louis, S&P500 Stock Price Index (SP500),
+   available at http://research.stlouisfed.org/fred2/series/SP500/
+   downloaddata, accessed April 13, 2013.
+
+[11] J.R. Graham and C.R. Harvey, 2008, Equity Risk Premium in 2008: Evidence
+   from the Global CFO Outlook Survey, Corporate Finance: Valuation, Capital
+   Budgeting & Investment Policy eJournal, Vol. 07
+
+[12] L.A. Grzelak, C.W. Oosterlee and S. van Weeren, 1990, Extension of Stochas-
+    tic Volatility Equity Models with Hull-White Interest Rate Process, Quantita-
+    tive, Vol 12, No.1, 89-105
+
+[13] J. Hull and A. White, 1990, Pricing Interest-Rate-Derivative Securities, Re-
+    view of Financial Studies, Vol 3, 573-592
+
+[14] W. Lee, 2010, Risk-Based Asset Allocation: A New Answer to An Old Ques-
+    tion?, Journal of Portfolio Management, Vol 37, No. 4, 11-28
+
+[15] A. Lo, 2002, The Statistics of Sharpe Ratios, Financial Analysts Journal, Vol
+    58, No. 4, 36-52
+
+[16] S. Maillard, T. Roncalli and J. Teiletche, 2009, On the Properties of Equally-
+   Weighted Risk Contributions Portfolios, available at http://papers.ssrn.
+   com/sol3/papers.cfm?abstract_id=1271972, accessed April 3, 2013.
+
+[17] H. Markovitz, 1952, Portfolio Selection, Journal of Portfolio Management, Vol
+    7, No.1, 77-91
+
+[18] P. Rappoport and N. Nottebohm, J.P. Morgan Asset Management, 2012,
+   Improving on Risk Parity, available at http://www.jpmorganinstitutional.
+   com/directdoc/jpmorgan/am/ia/documents/improving_on_risk_full_
+   report, accessed April 3, 2013.
+
+[19] Y. Romahi and K.S. Santiago, J.P. Morgan Asset Manage-
+    ment, 2012, Diversication  still the only free lunch?, avail-
+   able at http://am.jpmorgan.co.uk/institutional/_documents/
+    jpmam-25021-diversification-still-the-only-free-lunch.pdf, ac-
+    cessed April 3, 2013.
+
+[20] M. Schulmerich, 2010, Real Option Valuation: The Importance of Interest
+   Rate Modelling in Theory and Practice, 2nd edition, Springer Verlag, New
+   York
+
+[21] W. Sharpe, 1966, Mutual Fund Performance, The Journal of Business, Vol
+   39, No.1, 119-138
+
+                                   66
+REFERENCES REFERENCES
+
+[22] U.S. Department of the Treasury, Daily Treasury Yield Curve Rates, avail-
+   able at http://www.treasury.gov/resource-center/data-chart-center/
+   interest-rates/Pages/TextView.aspx?data=yield, accessed April 3, 2013.
+
+[23] S.P. Zhu and G.H. Lian, 2012, An Analytical Formula for VIX Futures and
+    Its Applications, the Journal of Futures Markets, Vol. 32, No.2, 166-190
+
+                                   67

@@ -1,0 +1,1843 @@
+TEAM ATTRIBUTES AND
+INVESTOR ATTRACTIVENESS
+
+THE RELATIONSHIP BETWEEN FOUNDER CHARACTERISTICS
+AND STARTUP FUNDING
+
+JULIUS MARTIN
+CLARENCE VON ROSEN
+
+Bachelor Thesis
+Stockholm School of Economics
+2020
+Team Attributes and Investor Attractiveness: The Relationship Between Founder
+Characteristics and Startup Funding
+
+Abstract:
+
+   This paper examines the relationship between professional experience, education
+   and gender diversity of startup founding teams and funding raised. Intuitively,
+   experience and education should have a positive impact on funding in early
+   companies as the founding team is a crucial part of the investment decision for
+   early investors. Data from 317 companies in the information and technology
+   industry based in the Nordic countries and their 675 founders show that while
+   characteristics such as business education, managerial experience and previous
+  founding experience positively impacted the amount of funding a company
+   raised, characteristics such as engineering degrees, software development
+   experience and PhDs did not show a significant relationship. Gender diversity
+   negatively impacted funding raised. The impact of these characteristics did not
+   get weaker between the first and subsequent funding rounds, instead the
+   correlations became stronger, indicating that the importance of founder
+   characteristics is not diminished with time even though more financial data
+  becomes available.
+
+Keywords:
+
+   Startup funding, startup founders, Early stage investing, Entrepreneurship, Venture
+   Capital
+
+Authors:
+
+   Julius Martin (23760)
+
+  Clarence von Rosen (23736)
+
+Tutor:
+
+   Anastasia Gershina, Ph.D. Postdoctoral Researcher, Swedish House of Finance.
+
+Examiner:
+
+   Adrien d’Avernas, Ph.D. Assistant Professor, Department of Finance
+
+Bachelor Thesis
+Bachelor Program in Business & Economics
+Stockholm School of Economics
+© Julius Martin and Clarence von Rosen, 2020
+
+                                    1
+Contents
+
+1. Introduction 4
+   1.1 Thesis Focus 5
+
+2. Background 6
+   2.1 Information and technology companies 6
+   2.2 Early stage startups 6
+   2.3 Crunchbase - database of company funding 6
+   2.4 LinkedIn - individual founder characteristics 7
+
+3. Previous Literature 7
+   3.1 Funding as dependent variable 7
+   3.2 Experience 8
+   3.3 Gender 8
+   3.4 Education 8
+
+4. Data 9
+   4.1 Data collection 9
+      4.1.1 Web Scraping 9
+       4.1.2 Manual collection of founder data from LinkedIn 9
+       4.1.3 Gender data collection 9
+       4.1.4 Adjustments for inflation and currency 10
+   4.2 Company data 10
+       4.2.1 Team characteristics 10
+      4.2.2 Team experience 10
+      4.2.3 Team education 10
+       4.2.4 Measures of time 11
+       4.2.5 Industry 11
+      4.2.6 Geographics 11
+       4.2.7 Equity funding 11
+   4.3 Founder data 12
+      4.3.1 Number of companies founded 12
+      4.3.2 Gender 12
+       4.3.3 Business degree 12
+       4.3.4 Technical degree 12
+      4.3.5 Company leadership experience 12
+       4.3.6 Software experience 12
+      4.3.7 PhD degree 13
+      4.3.8 MBA degree 13
+      4.3.9 Excluded founder data 13
+   4.5 Summary statistics - founder data 13
+
+5. Method 14
+   5.1 Background 14
+
+                                    2
+   5.4 Variables 14
+   5.3 Model definition 15
+   5.4 Regression equations 15
+   5.5 Assumptions of linear regression 16
+       5.5.1 - Conclusions from statistical tests 16
+
+6. Empirical Results 17
+   6.1 Descriptive statistics of independent variables 17
+   6.2 Descriptive statistics dependent variables 18
+   6.3 Regressions - Background 19
+   6.4 Regression - Total equity funding 19
+   6.5 Regression - Total equity funding in first funding round 21
+   6.6 Additional results 23
+
+7. Interpretation & Implications 23
+
+8. Limitations 26
+
+9. Conclusion 26
+       9.1 Suggestions on further research 27
+
+10. References 28
+
+Appendix 1 - Statistical tests 30
+   1. Assumptions of linear regression 30
+   2. Linearity 30
+   3. Random sample 34
+   4. Non-collinearity/multicollinearity 34
+   5. Exogenity 35
+   6. Homoscedasticity 35
+   7. Distribution of dependent variables 35
+   8. Residuals 36
+       8.1 Constant variance of residuals 36
+       8.2 Normality of residuals 37
+      8.3 Independence of residuals 37
+   8.4 Zero (or close to zero) mean of residuals 38
+   9. Summary 38
+
+Appendix 2 - Regression models without control variables 39
+
+                                    3
+1. Introduction
+
+Entrepreneurs, investors and researchers have long argued and discussed the
+importance of founding team characteristics in the entrepreneurial process such as
+previous entrepreneurial success (e.g., Gompers et al, 2006) and competence in the
+field of endeavour (e.g., Khan, 1986). While it is intuitive that previous success and
+competency of the founding team in the field of endeavour will affect a startup’s
+success, research in this area is lacking as tangible connections between founder
+characteristics and financial outcomes have been difficult to quantify. This thesis
+quantifies these connections and finds that startup founder characteristics impact
+funding. Specifically, a connection between the composition of background
+characteristics and experience in the founding team to the amount of investment
+funding their companies raise. The thesis also investigates whether this connection
+gradually fades with time when more financial information becomes available.
+
+While funding is not the same as success for a company the two are closely linked
+and often interchanged in media and literature as few things are as crucial as
+capital to early stage companies increasing their growth, success and survival rate
+(Lerner, et al. 2018). The quest for capital is therefore a hotly debated topic among
+entrepreneurs and while the industry has changed remarkably in the last decade
+and set earth-shattering records for early stage funding, the basics still remain the
+same (Teare, 2020). Investors must base decisions and due diligence on two main
+factors, business model and team characteristics as classic quantitative analysis of
+results, cash flow and balance sheet are nigh meaningless to determine potential for
+early stage companies.
+
+A relationship between founder characteristics and funding amount should exist for
+several reasons. Firstly, founders with characteristics such as degrees in business or
+engineering as well as experience in founding companies and company leadership
+bring valuable resources to early stage companies, Secondly, it provides a basis for
+investors to evaluate the company which is crucial without substantial financial data
+(Beaton, 2013).
+
+Although these relationships are intuitive, systematic research is lacking. Early stage
+investments are by nature almost always private and specific transaction data and
+standardised founder characteristics are difficult to obtain. Researchers have
+historically relied on self-reported data which limit generalisability and of which the
+accuracy suffers from aggrandisement by respondents. (Hoang & Antoncic, 2003,
+Hoang & Yi, 2015).
+
+This thesis aims to empirically assess if startup founder characteristics have a
+statistically significant relationship with equity funding raised. To accomplish this, the
+company network Crunchbase.com was used to identify early stage companies
+who raised funding in the last decade and their respective founders. Characteristics
+of these founders were then gathered on LinkedIn.com. Though studies suggest that
+globalization of angel investment is increasing this study used data on companies
+within the information and technology sector that were located in the Nordic
+countries Sweden, Finland, Norway and Denmark to increase population size while
+maintaining comparable financial systems (Hyytinen & Pajarinen, 2001).
+
+                                    4
+Modern sites such as professional networking site LinkedIn.com and startup
+database network sites like Crunchbase.com provide detailed information on early
+stage companies and their founders, allowing individual classification and
+categorisation of founder characteristics as well as data on each round of capital
+raised. This access provides a rich data source that can be used to analyse the
+relationship between founder characteristics and funding amount.
+
+1.1 Thesis Focus
+
+The thesis focuses on the early investment rounds (up to and including Series A).
+Establishing connections between founder characteristics and early funding
+amounts would be valuable as it gives stakeholders in the startup funding scene
+such as venture capitalists, angel investors and founders an overview of which
+characteristics that statistically seem valuable and therefore possibly guide the
+investment decision-making process.
+
+The amount of equity sold in seed and Series A rounds differs but usually 10 - 15% of
+equity is sold in a seed round and usually 25 - 35% for a Series A round (Henry, 2016).
+This difference in equity is important to take into account since it influences the
+amount of money raised. If possible to obtain, the pre-money valuation at the time
+of the investment would be a better independent variable to track but unfortunately
+pre-money valuations are not publicly disclosed in the same way that money raised
+is and therefore much harder to access.
+
+To further standardise the amount of funding required by companies, the thesis
+scope is companies in the information and technology (IT) industry. Including
+companies that mainly provide physical products would have led to a larger
+variation in capital requirement since these companies typically need funds for
+production and often a larger workforce (Mitroff, 2012). The capital requirement
+within the information and technology sector varies as well but is more standardised
+than if additional industries had been included. An information and technology
+company is in this thesis defined as a company that provides some kind of web
+service, app or other service that requires software development and does not
+produce physical goods as their main product. The service itself may in some cases
+facilitate the exchange of physical products but these are then not produced by
+the company itself.
+
+The thesis is structured in order to answer two main research questions and
+associated sub research questions:
+
+    1. Do founder characteristics impact the amount of equity funding early stage
+      companies raise?
+          a. Does founder education impact funding?
+          b. Does founder professional experience impact funding?
+          c. Does founder team gender diversity impact funding?
+    2. Are team characteristics a better predictor of first round funding than of total
+       funding raised in subsequent rounds?
+
+                                    5
+2. Background
+
+Intuitively, characteristics such as professional experience and education should
+positively impact the amount of funding that founders of a company are able to
+raise for their venture. Although variation exists in each category, investment into
+young companies is usually standardized into a set of rounds, each with specific
+characteristics. The first category of funding is called pre-seed funding (sometimes
+called friends and family funding) in which a company raises a small amount of
+money from people they have a relation to as well as invest in the company
+personally to provide initial capital.
+
+The first funding rounds in a start-up company (outside of friends and family
+investments) are called seed-rounds. Investors in these rounds are traditionally angel
+investors but especially in tech it is also common with venture capital firms (VCs)
+among the investors. A company can take several rounds of seed funding. The
+amount of money raised in a seed round varies but one round usually raises
+somewhere between 10 000 - 1 000 000 dollars and the average equity stake sold is
+around 10 - 15%. The next founding stage is called Series A and constitutes a larger
+investment that usually comes when the company has a proven business model and
+reliable revenue. In these rounds the main investors are VCs but other investors may
+take part as well. In a series A round usually about 25 - 35% of equity is sold. After this
+round the company can take funding in additional rounds that are then called series
+B, C, D etc. (Henry, 2016).
+
+2.1 Information and technology companies
+Companies analyzed in this thesis all provide a software service as their main
+product or provide services to help other companies create software solutions.
+Software services can be apps, websites or software installed on computers and/or
+phones. This was achieved by segmenting companies listed on Crunchbase.com. A
+small number of companies that provide both software services and physical
+products may be included in the data set since companies diversify over time and
+specific activities of each company have not been examined manually.
+
+2.2 Early stage startups
+All companies in the data set have received some form of equity funding. In order to
+standardize company stages the thesis only includes only early stage startups which
+are defined as companies that have received funding up to and including series A.
+Later stages could have been included but this would have led to a greater
+variation in the data and the companies would have been more established and
+more similar to mature companies.
+
+2.3 Crunchbase - database of company funding
+Crunchbase (crunchbase.com) is a commercial directory on innovative companies
+and has become the most important resource for data in the tech/startup world
+(Organisation for Economic Co-operation and Development [OECD], 2018).
+
+                                    6
+        “Breschi, Lassébie and Menon (2018) discuss the coverage of the database, compared to
+        some benchmark data sources that are more commonly used in the literature. The general
+        message of the benchmarking exercise that Crunchbase has a better coverage of VC deals
+        and start-ups than comparable data sources. The country-year comparison with aggregated
+        sources on VC investments also suggests that the coverage of Crunchbase is sufficiently
+        exhaustive across OECD member countries... “ (OECD, 2018, p. 289)
+
+The access to self-reported digital directories like Crunchbase.com gives researchers
+unprecedented insight into connections between companies, founders and
+financial data. This information, as it is private by nature, has previously been difficult
+to obtain and many previous studies have had to rely on company contacts and
+small scale surveys to estimate population trends (Hsu, 2007).
+
+2.4 LinkedIn - individual founder characteristics
+Launched in 2003, LinkedIn (www.linkedin.com) has become the world’s primary
+professional social network with 690 million members worldwide (LinkedIn, 2020).
+Essentially an online resume, the site today is a key tool for employers searching for
+prospective employees with some studies suggesting that more than 70% of
+companies rely on LinkedIn to evaluate which applicants to invite for an interview
+(Caers & Castelyns, 2011). It is equally important for employees looking for
+employment or keeping contact with professional peers and interesting companies.
+
+The site publicly provides the educational and professional background of members,
+allowing for gathering of company founder characteristics. Although resumes are
+subject to some embellishment, Guillory and Hancock (2012) showed that people
+are less likely to lie about their accomplishments online than in private resumes.
+
+Numerous earlier studies used LinkedIn and Crunchbase for data gathering. An
+example of this is the work of Banerji and Reimer (2019) in which financial data from
+Crunchbase and founder data from LinkedIn was used to find a relationship
+between social connectedness and entrepreneurial success.
+
+3. Previous Literature
+
+The science of what makes a successful entrepreneurial team is an area of great
+interest for different business specializations but systematic quantitative research
+regarding founder qualities is still scarce. Studies on other startup characteristics can
+however be analogously adapted to this thesis.
+
+3.1 Funding as dependent variable
+
+Several studies use funding as a dependent variable in order to assess company
+success. Jin, Wu, and Hitt (2017) used funding in order to assess the impact of a good
+social media strategy for early ventures. Kanze and Lyengar (2014) used an
+approach similar to the one used in this thesis and examined founder qualities by
+gathering LinkedIn data and found that founders classifying themselves as disruptors
+received significantly more funding than those who described themselves as
+builders. A study from 2018 showed that the signalling value of a US government
+grant increased the likelihood for an early tech venture to close subsequent funding
+
+                                    7
+rounds (Islam, Fremeth & Marcus, 2018). Another study (Torrisi, Toschi & Zhang, 2014)
+investigated if general media coverage and other variables connected to
+reputation influenced the ability to receive VC-funding.
+
+3.2 Experience
+Investors focusing on early stage companies have a limited set of attributes to
+evaluate a company on and the lack of track record makes the investment, that
+also usually lack securities, very high risk. Investors have to rely on attributes that are
+available and observable at the time and associate them with hidden determinants
+of the quality of the startup. Experience is one such observable attribute and
+becomes an important quality (Stuart, Hoang & Hybels, 1999). Especially since it can
+be valuable both as a productive and quality signal (Hoenig and Henkel, 2015).
+Industry experience also impacts ability to realistically forecast entrepreneurial
+success, especially in high-tech industries (Cassar, 2014).
+
+Experience of founding previous companies can also be used to assess the skill of a
+startup founder. Gompers et al. (2006) showed that entrepreneurs who have
+previously been successful are more likely to succeed than both entrepreneurs who
+have previously failed and entrepreneurs who are starting their first company. Other
+studies indicate that previous entrepreneurial experience is beneficial regardless of
+the success of previous ventures (Lafontaine & Shaw, 2016).
+
+3.3 Gender
+It is a fact that female founders are still underrepresented in the startup world,
+especially among tech companies. A study from 2008 estimated that 7% of founders
+in high tech companies are women (Brush, 2008). Though fresh data from
+crunchbase show that almost 20% of newly founded companies have a female
+founder on the team this number is still likely lower when looking only at information
+and technology companies. Research also suggests that VC investors may ask
+harder questions to women than to men and favour same sex investments. (Kanze et
+al., 2018).
+
+3.4 Education
+Research suggests that a university education is important for entrepreneurship and
+that a vast majority of founders have at least a bachelor's degree (Wadhwa et al.,
+2009). Wilson et al showed in an article published in 2014 that the education of the
+manager-owner impacts the growth rate of a firm (Wilson ,2014). There is also a body
+of research focusing on whether or not entrepreneurship education actually results in
+better entrepreneurs with varied results. An interesting study conducted in
+Mozambique from 2018 showed that entrepreneurship, at least in the market
+studied, was probably more driven by inborn personality traits than by education
+(Sawaya & Bhero, 2018). Other studies supporting this conclusion are Rasmussen et
+al. (2006) and Nagler and Naude (2014) which both argue that the link between
+education and entrepreneurial success is not statistically significant. However these
+studies all have a broad scope and their generalisability to the information and
+technology industry is questionable. The conclusion is that granular research on what
+kind of education is most important in information and technology startups is still
+mostly lacking.
+
+                                    8
+4. Data
+
+The data set consists of 318 information and technology companies based in the
+Nordic Countries (Sweden, Finland, Norway and Denmark) that have raised funding
+in seed rounds up until and including series A rounds and their 675 founders. The
+data set only includes companies founded after and including the year 2000 that
+have raised their first funding round in the last decade (after and including 2010).
+The vast majority (296) of these were also founded in the last decade. The study uses
+two data sets, one for individual founders and one for companies. The data from
+individual founders is aggregated on the company level and the data used in the
+regression models is on a company basis. Of these 318 companies there was one
+missing value on total and first equity funding which resulted in 317 companies used
+in the regression. The data of the main results is not adjusted for any outliers in order
+to properly reflect reality.
+
+4.1 Data collection
+
+4.1.1 Web Scraping
+
+The company data was collected in three steps. The first step encompassed using
+the website CrunchBase.com, a directory of companies mainly used by startups,
+venture capital firms and angel investors, for collection of company related data
+and LinkedIn profiles of all the founders. In order to facilitate this step an application
+programming interface called a web scraper was used which scours and extracts
+certain HTML-code strings from websites.
+
+We used the application programming interface ScraperAPI (ScraperAPI.com) and
+altered it to fit our purposes. The next step after collecting the individual LinkedIn links
+was to collect data on the individual founders.
+
+4.1.2 Manual collection of founder data from LinkedIn
+
+The second step was to gather founder characteristics. Though preferably done
+through a web scraping API as well, LinkedIn collection was done manually as the
+site rigorously protects itself against web scrapers. Characteristics were therefore
+gathered from the professional networking site LinkedIn manually by visiting each of
+the individual founder's pages and recording matches to predetermined
+characteristics. After collection the founder data was aggregated for each
+company.
+
+4.1.3 Gender data collection
+
+In order to assess team gender diversity we used an application programming
+interface, Gender API (Gender-API.com) which predicts the gender of a person
+based on first name. This function helped in automating the data classifying process.
+
+                                    9
+4.1.4 Adjustments for inflation and currency
+OECD data on historic exchange rates and country inflation was used to
+approximate the real value of each funding round in 2019 Euro value (OECD, 2020).
+
+4.2 Company data
+The data gathered from the founders was then summarized on a company basis
+since the aim is to investigate teams of startups and not individual founders.
+Additional data was also collected on a company basis. The section below states
+definitions of all data points collected and aggregated on a company level.
+
+4.2.1 Team characteristics
+The data regarding founder characteristics only includes characteristics achieved
+before starting the company included in the data set. For example when measuring
+the number of founders in a company that have a business degree only founders
+who finished their business degree before founding the company are counted as
+having this characteristic.
+
+Number of founders measures how many founders a particular company has. Team
+gender diversity measures if the team has at least one founder of both genders. The
+majority of startup teams in this study consists of only males (see table 1) which
+means that a non-gender diverse team in most cases is a team with only males.
+However there are a few teams with only women in the data set as well, these
+teams will be coded as non-gender diverse.
+
+4.2.2 Team experience
+Data points regarding team experience are aggregated on a company level.
+Further definitions of specific founder characteristics can be found in section 4.3.
+
+Average founded companies measures how many companies the founders of a
+company on average founded before starting the company, the one in our set, and
+is hence a proxy for earlier startup experience. Only companies started before the
+current company is included which means the current company is not counted. The
+data is not adjusted for the fact that founders of a specific company may have
+founded earlier companies together and therefore the total number of unique
+companies founded before in some cases is less than the data implies. However,
+even if the founders have earlier experience from the same company the founders
+still have individual startup experience.
+
+Total number of founders with earlier company leadership positions provides data on
+how many founders on the team that have earlier company leadership experience.
+Total number of founders with software experience is the corresponding data point
+for software experience.
+
+4.2.3 Team education
+The following data points regarding team education are aggregated on a
+company level. Further definitions of the degrees can be found in 4.3.
+
+                                    10
+   ● Total number of founders with a business degree
+   ● Total number of founders with a technical degree
+   ● Total number of founders with an MBA degree
+   ● Total number of founders with a PhD degree
+
+4.2.4 Measures of time
+Years between founding and first funding round measures the number of years
+between the date the company was founded until it received its first funding and is
+calculated by subtracting the founding year from the year of the first funding.
+Company age quantifies how many years the company has been in business and is
+calculated by subtracting the founding year from the current year (2020).
+
+4.2.5 Industry
+Variables summarized below states which industry a company is in. The industries
+accounted for below do not cover all companies in our set but are the main niches
+besides pure information technology companies. All companies in our set provide
+some sort of software service or app as their main product and the industries listed
+below should therefore be seen as segments within the software industry. It is also
+worth noting that a company can be in more than one industry. Sectors included in
+the analysis are:
+
+   ● Healthcare
+   ● E-commerce
+   ● Machine learning
+   ● Financial services
+   ● Advertising and marketing
+
+4.2.6 Geographics
+In order to assess differences in the startup scene between scandinavian countries
+country data was gathered. The data points state where the company was founded
+and has its HQ. Companies may still be active in other countries as well.
+   ● Sweden
+   ● Denmark
+   ● Finland
+   ● Norway
+
+4.2.7 Equity funding
+Two main data points on funding are tracked on the company level
+
+   ● Total equity funding
+   ● First equity funding
+
+Total equity funding received quantifies how much total equity funding a company
+has received up to and including the series A rounds. All amounts are standardized
+to 2020 euros by correcting for country specific inflation and historical exchange
+rates.
+
+Total amount of equity funding received in the first funding round shows how much
+equity funding a specific company received in its first funding round. All amounts are
+
+                                    11
+standardized to 2020 euros by correcting for country specific inflation and historical
+exchange rates. This data point will for simplicity be called first equity funding.
+
+4.3 Founder data
+The founder data consists of 8 characteristics for each founder regarding the
+founders education, earlier professional experience and gender. The characteristics
+are limited to traits a founder has achieved before the founding of the company. If
+a specific founder for example achieves the criteria for company leadership
+experience after founding the specific company in our analysis the founder will not
+be counted as having this trait. Ergo the characteristics are predetermined and not
+changeable by the dependent variables. First funding or total funding cannot affect
+a founders previous education, professional experience and gender. Below follows
+descriptions and definitions of the founder data.
+
+4.3.1 Number of companies founded
+This variable states how many companies the founder has founded before founding
+the specific company included in the analysis.
+
+4.3.2 Gender
+States whether the founder is male or female based on first name Gender API
+estimates.
+
+4.3.3 Business degree
+States if the founder has a business degree or not. Both MsC and BsC degrees in any
+field of specialization (finance, economics, marketing etc) are included. Shorter
+business programs of one year (often online based) are not included. There is no
+specification on which specific school a founder received the degree from.
+
+4.3.4 Technical degree
+States whether the founder has a technical degree or not. The definition of technical
+degree is a degree in: any type of engineering, computer science, mathematics,
+physics, information technology or chemistry. The main objective with this data point
+is to quantify if a founder has a technical academic background. It should be stated
+that the vast majority of founders that have a technical degree in our data set have
+a degree in either engineering or computer science while mathematics, physics,
+information technology and chemistry degrees are much more uncommon.
+
+4.3.5 Company leadership experience
+States whether the founder has had an earlier C-level or director position before
+founding the company or not. This data point only includes positions in companies
+that are non-self founded. No limitations on company size or age was imposed.
+
+4.3.6 Software experience
+States whether the founder has more than one year of experience working as a
+software developer or a degree in software engineering/computer science before
+founding the company. The reason a degree in software engineering/computer
+science is also included in this metric is that these degrees imply knowledge of
+
+                                    12
+programming. The main idea behind this variable is to quantify whether a startup
+team has programming skills in the founder team or not.
+
+4.3.7 PhD degree
+States if the founder has a PhD in any field before founding the company. Any type
+of PhD degree will be counted even though the nature of these may differ greatly
+between fields.
+
+4.3.8 MBA degree
+States if the founder has an MBA degree before founding the company. All
+MBA-degrees will be counted in the same way regardless of which institution they
+were earned from.
+
+4.3.9 Excluded founder data
+Data points that were gathered but not included in the final set were earlier
+management consulting experience in one of the big three management
+consulting firms (McKinsey, Bain or BCG) or earlier investment banking experience.
+These were excluded because almost no founders with these characteristics were
+found. The number of years the founder worked before starting the company (years
+of professional experience) was also excluded despite being a relevant measure.
+Difficulty in standardizing experience data led to this exclusion as when and where
+you start working and if that is relevant experience becomes subjective.
+
+4.5 Summary statistics - founder data
+
+ Occurrence of different traits at company level           Occurence of different traits at founder level
+
+ Variable Total % of companies    Variable Total % of founders
+
+ Team gender diversity 38 11.95%           Number of founders 675 100%
+
+ Industry - Advertising 22 6.92%            MBA 25 3.7%
+
+ Industry - Financial       12 3.77%             PhD 54 8.0%
+ services
+                                                 Software experience 200 29.6%
+ Country - Norway 44 13.84%
+                                                 Company leadership 259 38.4%
+ Country - Denmark 68 21.38%
+                                                 Technical degree 265 39.3%
+Country - Finland 88 27.67%
+                                                  Business degree 213 31.6%
+Country - Sweden 118 37.10692%
+                                                             Table 2: Lists the occurence of different founder
+ Industry - Machine       44 13.83648%
+                                                             characteristics
+ learning
+Industry - E-commerce 55 17.29560%
+
+Industry - Healthcare 16 5.03145%
+
+ Table 1: Lists the occurence of different company
+ characteristics
+
+                                    13
+5. Method
+
+5.1 Background
+In order to assess which factors that impact the amount of equity funding a startup
+attracts two OLS-regression models with the same independent predictor variables
+based on team characteristics were built. One model used logarithmized total
+funding as the outcome variable and one model used logarithmized funding in the
+ventures first funding round (first funding). Control variables were also included in
+order to control for industry, country and age of the companies. A linear
+OLS-regression model is the best choice in this case since all variables are either
+discrete or continuous, the set contains no time series data and the aim is to assess
+which variables impact funding. The data on funding is also (after being
+logarithmized) fairly normally distributed and not heteroskedastic which makes it
+suitable for an OLS-regression. A full list of statistical tests regarding assumptions of
+linear regression can be found in appendix 1.
+
+5.4 Variables
+Since the regression model includes many variables the following table aims to
+provide a clear overview of variables used. Further definitions on how the data is
+categorized can be found in section 4.2 and 4.3.
+
+ Variable overview
+
+ Variable     Definition Type Log Dependent Independent Control Name in
+ name                                                                             regression
+
+ Total equity   Total equity funding   Continuous Yes Yes No No lntotfund
+ funding       received.
+ (Euro)
+
+ Total first     Total equity funding   Continuous Yes Yes No No lnfirstfund
+ funding       received in the first
+ (Euro)         funding round.
+
+ Total        Total number of      Discrete No No Yes No totbus
+ business       founders with a
+ degrees      business degree
+
+ Total        Total number of      Discrete No No Yes No toteng
+ technical     founders with a
+ degrees      technical degree
+
+ Total PhD    Total number of      Discrete No No Yes No totphd
+ degrees      founders with a PhD
+            degree
+
+ Total        Total number of      Discrete No No Yes No totc
+ company    founders with
+ leadership    company leadership
+ experience   experience
+
+ Total MBA    Total number of      Discrete No No Yes No totmba
+ degrees      founders with an MBA
+            degree
+
+ Number of   Number of founders Discrete No No Yes No nroffound
+ founders
+
+ Average     Average earlier      Discrete No No Yes No avgfound
+ founded     founded companies
+ companies
+
+                                    14
+ Total        Total number of      Discrete No No Yes No totsoft
+ software      founders with
+ experience   software experience
+
+ Team       The team consists of   Discrete     No No Yes No gender
+ gender      both male and       (dummy)
+ diversity       female founders
+
+ Industry -     Provides service      Discrete     No No Yes Yes advert
+ Advertising   related to advertising  (dummy)
+
+ Industry -     Company claims to   Discrete     No No Yes Yes aimach
+ Machine     provide an          (dummy)
+ Learning      AI/machine learning
+                solution
+
+ Industry -     Provides service      Discrete     No No Yes Yes health
+ Healthcare   related to healthcare  (dummy)
+
+ Industry -     Provides service      Discrete     No No Yes Yes ecom
+ E-commerce related to           (dummy)
+            E-commerce
+
+ Industry -     Provides service                  No No Yes Yes finance
+ Financial      related to financial     Discrete
+ services      services              (dummy)
+
+ Country -    Company founded in Discrete     No No Yes Yes swe
+ Sweden     Sweden           (dummy)
+
+ Country -     Company founded in  Discrete     No No Yes Yes fin
+ Finland       Finland               (dummy)
+
+ Country -     Company founded in Discrete     No No Yes Yes nor
+ Norway     Norway            (dummy)
+
+ Country -    Company founded in Discrete     No No Yes Yes den
+ Denmark    Denmark           (dummy)
+
+ Company    Number of years      Discrete No No Yes Yes yearsinbusines
+ age (years)   since company was                                                                  s
+            founded
+
+ Time until first Number of years      Discrete No No Yes Yes yearsbetween
+ funding      between the                                                                 foundingandfi
+ (years)       company was                                                                   rstfund
+               founded and first
+               equity funding
+
+Table 3: Overview of company variables. The following table provides a broad overview of variables used in the
+regression models.
+
+5.3 Model definition
+Our model consists of 20 independent variables of which 9 are predictor variables
+and 11 are control variables. The model uses discrete independent variables and
+continuous dependent variables. The model is log-linear and includes 317
+observations.
+
+5.4 Regression equations
+
+The analysis includes two regression models. One with total equity funding as
+dependent variable and one with first equity funding as dependent variable.
+Independent variables are the same in both equations.
+
+Total equity funding - Regression equation
+
+                                    15
+           l ntotf und = α + ß1 * totbus  + ß2  * t oteng + ß3 * t otphd + ß4  * totc +
+     ß5  * t otmba + ß6 * nrof f ound  + ß7 * avgf ound  + ß8 * totsof t  + ß9 * advert +
+     ß10  * ecom  + ß11  * aimach  + ß12 * healthcare  + ß13 * f inance + ß14 * swe +
+               ß15  * f in + ß16  * den  + ß17  * nor  + ß18  * y earsinbusiness +
+             ß19  * y earsbetweenf oundingandf irstf und + ß20  * g ender + ξ
+
+Equation 1: Total equity funding. The equation shows independent and the dependent variables used in the first
+regression model of the thesis. The dependent variable is the natural log of total equity funding received and the
+independent variables are founder characteristics as well as control variables regarding industry, country and
+company age. In the model α represents the intercept and ε the residuals. In the models run below Sweden is
+omitted due to collinearity with the other country variables and is hence not shown in the regression models in 6.4
+and 6.5.
+
+First equity funding - Regression equation
+
+            l n(f tf ) = α + ß1 * totbus  + ß2  * t oteng + ß3 * t otphd + ß4  * totc +
+     ß5  * t otmba + ß6 * nrof f ound  + ß7 * avgf ound  + ß8 * totsof t  + ß9 * advert +
+      ß10  * ecom  + ß11  * aimach  + ß12 * healtcare  + ß13 * f inance + ß14 * swe +
+               ß15  * f in + ß16  * den  + ß17  * nor  + ß18  * y earsinbusiness +
+             ß19  * y earsbetweenf oundingandf irstf und + ß20 * g ender + ξ
+
+Equation 2: First equity funding. The equation shows independent and the dependent variables used in the second
+regression model of the thesis. The dependent variable is the natural log of total equity funding received in the
+companies first funding round and the independent variables are founder characteristics as well as control variables
+regarding industry, country and company age. In the model α represents the intercept and ε the residuals. In the
+models run below Sweden is omitted due to collinearity with the other country variables and is hence not shown in
+the regression models in 6.4 and 6.5.
+
+5.5 Assumptions of linear regression
+
+In order for a linear regression model to show accurate results certain assumptions
+should be met. In this thesis the Gauss-Markov assumptions are used which are a
+common set of assumptions. In addition to these assumptions other statistical testing
+was also performed. Statistical tests performed show a reasonable linear relationship
+between predictors and dependent variables, no issues with heteroskedasticity or
+multicollinearity likely no issues with endogeneity and reasonable normality of
+residuals and dependent variables). In addition to these the sum of residuals is very
+close to zero and the residuals are likely independent. All statistical tests performed
+on the data set are summarized and interpreted in Appendix 1.
+
+5.5.1 - Conclusions from statistical tests
+Tests performed on variables used in the regressions show no large deviations from
+the assumptions tested. Some small deviations from the assumptions are however
+present. These will likely not have a big impact on the results.
+
+6. Empirical Results
+
+The main empirical results of the thesis are the correlations between the prediction
+variables regarding founding teams and equity funding outcomes and the aim is not
+to build a model which perfectly predicts how much funding a startup will get.
+
+                                    16
+Which variables that impact equity funding the greatest will be determined both by
+the size of coefficients in the regression and by examining significance.
+
+6.1 Descriptive statistics of independent variables
+Table 4 shows summary statistics for the independent variables used in the
+OLS-regressions in 6.4 and 6.5. For the independent variables only the number of
+observations, mean, standard deviation and range will be displayed since the
+variables generally have smaller ranges and standard deviations. The mean values
+shown in column C regarding founder qualities should be interpreted as the average
+number of founders per company that have a certain trait. For info on how common
+a certain trait is on the founder level see table 2. The summary shows no values of
+skewness and kurtosis (or other parameters regarding normality) since linear
+regression does not assume normality for independent variables and since the data
+points are discrete they will not follow a normal distribution.
+
+ Descriptive Statistics of independent variables
+
+ Variable Obs Mean Std. Dev. Min Max
+
+ Number of founders 318 2,12264 1,11233 1 7
+
+ Average founded companies 318 0,67884 0,90214 0 7
+
+ Total business degrees 318 0,66981 0,81456 0 4
+
+ Total company leadership experience 318 0,81447 0,84445 0 4
+
+ Total technical degrees 318 0,83333 1,02056 0 7
+
+ Total software experience 318 0,62893 0,87412 0 6
+
+ Total PhD degrees 318 0,16981 0,60186 0 4
+
+ Total MBA degrees 318 0,07862 0,28102 0 2
+
+ Number of years until first funding round 318 1,85535 1,96768 0 10
+
+ Company age 318 6,16981 2,91024 1 18
+
+ Team gender diversity 318 0,11950 0,32488 0 1
+
+ Industry - Machine learning 318 0,13836 0,34583 0 1
+
+ Industry - Healthcare 318 0,05031 0,21894 0 1
+
+ Industry - E-commerce 318 0,17296 0,37881 0 1
+
+ Industry - Financial services 318 0,03774 0,19086 0 1
+
+                                    17
+ Industry - Advertising 318 0,06918 0,25416 0 1
+
+ Country - Sweden 318 0,37107 0,48385 0 1
+
+ Country - Sweden 318 0,27673 0,44809 0 1
+
+ Country - Denmark 318 0,21384 0,41066 0 1
+
+ Country - Norway 318 0,13836 0,34583 0 1
+
+Table 4: Descriptive statistics of independent variables. The table displays the number of observations, mean,
+standard deviation and range of the dependent variables used in the regression models.
+
+6.2 Descriptive statistics dependent variables
+Table 5 and 6 show descriptive statistics of the outcome variables. The most
+important numbers shown in this table are the skewness and kurtosis values since
+these may affect the outcome of the regression. Regarding skewness the values of
+-0,43763 and -0,10612 show that the data is approximately symmetric and this metric
+will likely not affect outcomes in the regression. The kurtosis values indicate that the
+distribution of the data has slightly heavier tails than a normal distribution but does
+not differ greatly from the kurtosis of a normal distribution which has a kurtosis value
+of 3. One can also note that the standard deviation is slightly higher in total equity
+funding than in first equity funding. Other statistical tests regarding the normality of
+the dependent variables can be found in appendix 1.
+
+ Total equity funding - Descriptive statistics                  First equity funding round - Descriptive statistics
+
+        Percentiles Obs. 317                   Percentiles Obs. 317
+
+1% 9,63933                                   1% 9,63927
+
+5% 10,91139 Mean 13,69543       5% 10,24901 Mean 12,85693
+
+10% 11,77530 Std. Dev. 1,54867         10% 10,89637 Std. Dev. 1,46210
+
+25% 12,81838                                  25% 11,96166
+
+50% 13,73289 Variance 2,39838        50% 12,98310 Variance 2,13775
+
+75% 14,86759 Skewness -0,43763        75% 13,79318 Skewness -0,10612
+
+90% 15,67356 Kurtosis 3,34156         90% 14,55483 Kurtosis 3,22201
+
+95% 16,04143                                  95% 15,18891
+
+99% 16,65518                                  99% 16,06109
+
+ Table 5: Descriptive statistics of dependent                Table 6: Descriptive statistics of dependent variables
+ variables - Total funding. The table displays the            - First equity funding round. The table displays the
+ number of observations, mean, standard deviation,      number of observations, mean, standard deviation,
+ range, percentiles, variance, skewness and kurtosis       range, percentiles, variance, skewness and kurtosis of
+ of the independent variable total equity funding.        the independent variable total equity funding in the
+                                                                              first funding round.
+
+                                    18
+6.3 Regressions - Background
+The regressions are log-linear which means that an x unit increase in a dependent
+                                                             x𝜷
+variable translates into an expected e  change in the dependent variable. For
+smaller changes this is approximately equal to a percentage change. When
+interpreting the coefficients of country variables Sweden is omitted because of
+collinearity and therefore the coefficients of the other country variables should be
+interpreted in relation to Sweden.
+
+6.4 Regression - Total equity funding
+
+ Regression 1 - Total equity funding
+
+ Number of obs 317
+
+ F(19, 297) 6,15
+
+ Prob > F 0
+
+ R-squared 0,2824
+
+ R-squared adjusted 0,2365
+
+ Root MSE 1,3532
+
+ Total funding Coef. Std. Err. t P>|t| [95% Confidence Interval]
+
+ Team gender      -0,54027 0,25246 -2,14000 0,03300 -1,03712 -0,04343
+ diversity
+
+ Industry -          -0,10428 0,31548 -0,33000 0,74100 -0,72514 0,51659
+ Advertising
+
+ Industry -          0,10969 0,41585 0,26000 0,79200 -0,70869 0,92807
+ Financial services
+
+ Industry -          0,42469 0,24535 1,73000 0,08400 -0,05815 0,90753
+ Machine learning
+
+ Country -          -0,49667 0,24761 -2,01000 0,04600 -0,98396 -0,00938
+ Norway
+
+ Country -         0,01273 0,22191 0,06000 0,95400 -0,42400 0,44945
+ Denmark
+
+ Country -         0,26604 0,19811 1,34000 0,18000 -0,12385 0,65592
+ Finland
+
+ Company age 0,01574 0,03386 0,46000 0,64200 -0,05090 0,08238
+
+ Industry -          0,14496 0,21416 0,68000 0,49900 -0,27650 0,56642
+ E-commerce
+
+ Industry -          0,12348 0,35780 0,35000 0,73000 -0,58066 0,82761
+ Healthcare
+
+ Years between    0,09522 0,04913 1,94000 0,05400 -0,00145 0,19190
+ founding and first
+ funding round
+
+ Total number of    -0,77638 0,28332 -2,74000 0,00700 -1,33394 -0,21882
+ MBA-degrees
+
+                                    19
+ Total number of    0,10298 0,15214 0,68000 0,49900 -0,19643 0,40240
+ PhD degrees
+
+ Total software     -0,03833 0,12317 -0,31000 0,75600 -0,28073 0,20407
+ degrees
+
+ Total company    0,57883 0,10193 5,68000 0 0,37823 0,77942
+ leadership
+ experience
+
+ Total number of    0,19487 0,11872 1,64000 0,10200 -0,03877 0,42850
+ technical degrees
+
+ Total number of    0,32144 0,11482 2,80000 0,00500 0,09548 0,54740
+ business degrees
+
+ Average founded  0,25164 0,08669 2,90000 0,00400 0,08103 0,42226
+ companies
+
+ Number of        0,04845 0,10938 0,44000 0,65800 -0,16682 0,26371
+ founders
+
+ Constant 12,33319 0,28865 42,73000 0 11,76514 12,90124
+
+Table 7: OLS-regression - Total equity funding. The table displays results from the thesis first regression model with
+logarithmized total equity funding as the dependent variable.
+
+Results in table 7 show that statistically significant predictors of total funding are: total
+company leadership experience, total number of business degrees, average
+founded companies, total number of MBA degrees, team gender diversity and
+whether the company is founded in Norway or not. Of these, total number of
+business degrees, total company leadership and average founded companies
+correlate with higher funding while Norwegian companies, team gender diversity
+and total number of MBA degrees correlate with lower funding. Variables that are
+almost significant are Industry - Machine learning and the number of years between
+founding and funding. The strongest positive coefficient in the regression is total
+company leadership experience and the strongest negative coefficient is total
+number of MBA-degrees. The R-square adjusted of 0,2365 which indicates that the
+model can explain 23.65% of the variability in total equity funding. In this model with
+quite many independent variables the R-square adjusted value will be more
+accurate (than R-squared) since it adjusts for variables that do not improve the
+predictions of the model more than by chance.
+
+6.5 Regression - Total equity funding in first funding round
+
+ Regression 2 - Total equity funding in
+ the first funding round
+
+ Number of obs 317
+
+ F(19, 297) 5,99
+
+ Prob > F 0
+
+ R-squared 0,2769
+
+ R-squared adjusted 0,2306
+
+ Root MSE 1,2825
+
+                                    20
+Total equity
+funding in the first
+funding round Coef. Std. Err. t P>|t| [95% Confidence Interval]
+
+Team gender      -0,60795 0,23927 -2,54000 0,01200 -1,07883 -0,13708
+diversity
+
+Industry -          -0,25893 0,29899 -0,87000 0,38700 -0,84735 0,32948
+Advertising
+
+Industry - Financial 0,16302 0,39411 0,41000 0,67900 -0,61258 0,93862
+services
+
+Industry - Machine 0,18405 0,23252 0,79000 0,42900 -0,27355 0,64165
+learning
+
+Country - Norway -0,43431 0,23467 -1,85000 0,06500 -0,89613 0,02751
+
+Country -         0,16490 0,21032 0,78000 0,43400 -0,24900 0,57879
+Denmark
+
+Country - Finland 0,14608 0,18776 0,78000 0,43700 -0,22343 0,51558
+
+Company age -0,09196 0,03209 -2,87000 0,00400 -0,15511 -0,02880
+
+Industry -          -0,09277 0,20297 -0,46000 0,64800 -0,49221 0,30666
+E-commerce
+
+Industry -          -0,26099 0,33909 -0,77000 0,44200 -0,92832 0,40634
+Healthcare
+
+Years between    0,32402 0,04656 6,96000 0,00000 0,23240 0,41565
+founding until first
+funding round
+
+Total number of    -0,54521 0,26851 -2,03000 0,04300 -1,07363 -0,01679
+MBA-degrees
+
+Total number of    0,09358 0,14419 0,65000 0,51700 -0,19018 0,37735
+PhD degrees
+
+Total software     -0,01017 0,11673 -0,09000 0,93100 -0,23990 0,21956
+experience
+
+Total company    0,42866 0,09660 4,44000 0 0,23854 0,61877
+leadership
+experience
+
+Total number of    0,11898 0,11251 1,06000 0,29100 -0,10245 0,34040
+technical degrees
+
+                                   21
+ Total number of    0,24032 0,10882 2,21000 0,02800 0,02617 0,45447
+ business degrees
+
+ Average founded  0,14372 0,08216 1,75000 0,08100 -0,01798 0,30541
+ companies
+
+ Number of        -0,05523 0,10367 -0,53000 0,59500 -0,25924 0,14878
+ founders
+
+ Constant 12,34002 0,27356 45,11000 0 11,80167 12,87838
+
+Table 8: OLS-regression - Total equity funding in the first funding round. The table displays results from the thesis
+second regression model with logarithmized total equity funding in the first funding round as dependent variable.
+
+Table 8 reflects how the same independent variables as in table 7 affect the amount
+raised in the first equity funding round. The results are overall closely related to the
+results of regression 1 with some differences. Once again total company leadership
+experience and total number of business degrees are statistically significant
+predictors of higher funding while total number of MBA-degrees and team gender
+diversity are the best estimators of lower funding. In this model however team
+gender diversity has a slightly higher negative coefficient than total number of
+MBA-degrees. In this regression the number of years from founding until funding are
+significant with a positive coefficient of 0,32402 while company age correlates
+slightly negatively and also exhibits statistical significance. These results contrast the
+ones seen in table 7.
+
+Results that are almost significant include: country - Norway and average founded
+companies. It is also worth noting that Industry - Machine learning which was almost
+significant in regression 1 is far from significant in regression 2. Another difference
+between the results is that significant positive variables (total number of business
+degrees and total company leadership experience) have smaller positive
+coefficients than in regression 1. Regarding coefficients of negatively correlated
+variables, total number of MBA degrees has a smaller negative coefficient while
+team gender diversity has a slightly larger negative coefficient compared to
+regression 1. The R-squared adjusted value of 0,2306 is similar to the one seen in table
+7. However, overall statistically significant control variables are stronger in this
+regression while statistically significant variables regarding founder qualities are
+weaker. This is especially the case when examining years between founding and
+funding which correlates considerably stronger with first funding than with total
+funding.
+
+6.6 Additional results
+In order to clearly assess whether team characteristics are a better predictor of total
+funding than of first funding regressions were also run without control variables in
+order to assess the difference in R-squared adjusted value (together with differences
+between coefficients from the main models). The results show an R-squared adjusted
+value of 0.2112 for the regression on total funding and an R-square adjusted of
+0.0996 in the regression on first funding. The regressions can be found in appendix 2.
+
+                                    22
+7. Interpretation & Implications
+
+Linear multiple regression models built on the data collected suggests that some
+characteristics of the founder team correlates with the amount of equity funding an
+early stage startup raises from investors.
+
+Data used in this analysis is based on early stage information and technology
+industry companies founded in the Nordic countries and to which extent the results
+can be generalized to other countries, industries and companies in different funding
+stages is unclear. Results may provide insight into information and technology
+companies residing in markets outside the Nordic countries if these markets have
+similar characteristics. It is however unlikely that results can be generalized to early
+stage startups in sectors outside the information technology industry since capital
+requirements differ significantly. Moreover the results of this thesis are correlations
+and should not be interpreted as causal.
+
+It is also important to note that funding is impacted by many factors. Therefore only
+variables with strong coefficients and significance should be interpreted as having
+an effect on funding. Variables with a small impact (even if significant) may be due
+to confounders and should not be seen as robust. Confounders of course also
+impact variables with strong coefficients but if a variable has a strong coefficient
+and is significant in both regressions the likelihood of it having an impact on funding
+is much greater.
+
+Both regression models have roughly the same R-square adjusted of around 0,23
+suggesting that the variables included in the analysis explains approximately a fourth
+of the variation in funding. It is however important to note that variables regarding
+team characteristics overall have larger coefficients in regression 1 than in regression
+2 while several control variables have larger coefficients in regression 2. Regressions
+run without control variables also indicate that team characteristics have a greater
+impact on total funding than on the first funding round. The number of years
+between founding of the company and closing its first funding round has a greater
+impact on the amount of funding in the first round than on the total funding
+received by a company. That waiting longer before raising capital (in the startup
+world usually referred to as “bootstrapping”) results in higher funding is logical since
+the company's value often increases over time. The impact of waiting longer before
+raising capital had a much smaller coefficient and was non-significant in predicting
+total funding which (if accepting funding as a proxy for startup success) suggests
+that bootstrapping is not an important factor for long term success. It is important
+however to understand as a startup founder that statistically (according to this data)
+the longer you wait to raise capital the more funding can be raised in the first round.
+
+The fact that team characteristics somewhat better explains the total amount of
+money raised in a startup compared to the amount raised in the first round is
+somewhat surprising and the opposite of our assumptions. The idea that investors in
+the very early stages of a company’s life must place greater emphasis on the team
+when making investment decisions since financial data is often lacking or unreliable
+is according to our analysis not the case. However, roughly the same variables
+regarding team characteristics are the strongest in both regression models. This
+
+                                    23
+suggests that the same team characteristics impact both first funding and total
+funding but that total funding is impacted to a higher degree. One possible
+conclusion to draw from this is that team characteristics correlated with funding also
+correlates with building better/worse companies and that the effect on funding is
+seen more clearly the longer the company exists. If for example having a former
+CEO in the team was only of signalling value then the effect should logically be seen
+more clearly on the first funding round than on total funding which correlates
+stronger with how the company actually performs. If the other way around having a
+CEO on the team was not of signalling value but did impact the company's actual
+performance then the effect on funding would be seen more clearly in the longer
+term. Likely team characteristics provide both signalling value and impact the
+company’s actual performance.
+
+Judging from our data the one characteristic that correlates best with higher
+funding is previous company leadership experience. An investor looking to invest in a
+company is evaluating its potential to grow into a successful venture and people
+who have led companies to success before are reasonably going to have valuable
+skills to achieve that goal. For the same reason, having founders with previous
+experience of founding companies, regardless of their success, is found attractive by
+investors. However, according to our data company leadership is a much better
+predictor of higher funding than having teams that have founded many companies
+before. The reason these correlates with higher funding are multifaceted but likely
+encompases a combination of signalling effects and skills that actually result in
+companies with higher valuations. Another important factor is network since people
+with earlier leadership positions or startup experience are more likely to have
+connections to sources of capital.
+
+Concerning the education background of founder team members, only business
+degree holders and MBA graduates had a significant relationship with company
+funding. A co-founder holding a business degree had a positive effect on funding
+for the company. This could possibly be explained by business degree holders being
+more prepared for fundraising or the process of building a company. On the other
+hand, one co-founder having an MBA led to a significantly lower funding amount
+despite an MBA being a sought-after education. This is most likely due to in-group
+differences such as startup-founding being a highly unconventional step for an MBA
+graduate to take and mostly low quality MBA graduates may choose the startup
+path. However, the strong negative coefficient in both models is a surprising result
+given that other metrics of business experience and education seems to correlate
+with higher funding.
+
+Having members hold engineering degrees and having software development
+experience did not have a significant relationship with funding. In the scope of this
+thesis, information and technology companies, competency in these areas is of
+course valuable but it might be more of a requisite/hygiene factor than a
+competitive advantage or unique asset. For example, software companies or
+companies working with AI could hardly exist without these characteristics so if they
+are lacking in the founder team they will instead be acquired externally. Only a
+handful of companies had one or more members with a Ph.D. This special expertise
+may certainly be beneficial or even required in some research heavy industries but
+since the occurrence was low in our sample a significant relationship was not
+
+                                    24
+possible to establish. A segmented analysis might be able to examine the possible
+value of PhD degree holders more closely.
+
+A minority of teams in our data set were gender diverse and founding teams with at
+least one male and female co-founder received less funding with a clearly
+statistically significant relationship. Investors seem biased against gender diverse
+founding teams, deeming them less likely to succeed and factor that into investment
+decisions. Studies show that investors are tougher on teams with female founders
+which leads to lower funding for gender diverse teams (Kanze et al., 2018) and that
+the overwhelming majority of male investors favour same-sex investments (Diversity
+VC, 2017).
+
+Regarding control variables included in the analysis, most were not statistically
+significant. The analysis does suggest that Norwegian companies receive
+considerably less funding than Swedish, Danish and Finnish companies and that
+waiting longer before raising funds increases the amount raised in the first round.
+Regarding industry differences all except AI/Machine learning companies (with total
+funding as dependent variable) were far from significant. When looking at total
+funding companies providing AI/Machine learning solutions were correlated quite
+strongly with higher funding and the coefficient was almost significant (P= 0,08400).
+This is not surprising as it has arguably been the most hyped industry of the decade
+with a staggering amount of funding (Pitchford, 2020).
+
+Variables controlling for time related aspects were also included in the analysis and
+as earlier stated the time between founding the company and receiving its first
+funding round did have a significant and quite strong relationship with the amount
+raised in the first round. In contrast to this result, company age which logically should
+also correlate with higher funding did not. In fact when looking at the amount of
+funding in the first round company age correlated slightly negatively. This is surprising
+but might be a result from the time scope of the data set involving most companies
+founded between 2010 - 2020 in which global VC investments grew considerably
+(Teare, 2020). The annual growth in early stage VC investments between 2010 - 2020
+may result in companies founded further back in time receiving less capital in early
+founding rounds. Another factor that may contribute is that successful companies
+founded early in the time scope of the thesis may have graduated beyond series A
+funding and therefore been disqualified from the study.
+
+8. Limitations
+
+When conducting research on early stage startups gathering data is a challenge
+since companies by definition are not publicly traded and specific data regarding
+seed and VC transactions is often lacking. The best source and a source used in
+many similar studies is Crunchbase, an aggregation site for early stage company
+information. There is always a possibility that some of the data on transactions is
+incorrect, or not updated, for some of the companies in the set. Given the sample of
+317 companies hopefully most of these errors (if occurring) is spread between
+companies and not a systematic error. The same is true for the website LinkedIn.com
+from which founder characteristics were gathered. The decision to drop data
+gathered on years of professional experience was an example of this where the lack
+
+                                    25
+of accurate data was obvious. For parameters on education and earlier positions
+the data gathered is likely correct to a very high degree (Caers & Castelyns, 2011).
+
+Another obvious flaw of the study is that the transactions are not controlled for the
+amount of equity sold. This means that the only conclusions one can draw from this
+are conclusions regarding funding and valuation since different companies may
+choose to sell different amounts of equity. In the funding rounds included the equity
+sold is within the industry standard ranges but will still differ from company to
+company. The best parameter to track in a study like this would have been
+pre-money valuation which was our initial aim. However this was not possible since
+this information is not accessible.
+
+The analysis is also impacted by survival bias since there is no data on team
+characteristics of companies that do not or were not able to raise any funding. This
+means that the results of the study may not reflect which characteristics are
+important for company survivorship in the very early stages. An example of this is
+software experience which did not show a significant positive relationship with
+funding. Even though a software developer on the founding team is not (according
+to our data) correlated with higher funding it might be a crucial factor for even
+starting the company and being able to later raise money at all.
+
+9. Conclusion
+
+The results of this thesis show that some characteristics of the founding team impact
+the amount of equity funding an early stage startup raises. Regarding founder
+education a business degree is correlated with higher funding while an MBA degree
+is correlated with a considerably lower funding amount. Engineering or science
+experience did not show a significant relationship with funding and may possibly be
+hygiene factors rather than competitive advantages, especially in research heavy
+segments of the market.
+
+Professional experience in company leadership positions was the best predictor of
+higher funding but earlier experience of founding companies was also correlated
+and significant. It is logical to expect that founders with earlier experience of
+company leadership will be suitable for building successful companies and these
+may also be better connected to sources of funding.
+
+Our results on gender diversity strengthens conclusions from earlier research showing
+that women still are underrepresented in the startup world and may be affected by
+gender based biases resulting in lower funding.
+
+The results also show that the importance of the founding team, with regards to
+funding, do not fade with time as more financial data becomes available. Instead
+the opposite seems to be the case since founder characteristics, judging from our
+data, are a better predictor of total equity funding than of first equity funding. A
+possible explanation being that founding teams with attractive attributes build more
+successful companies.
+
+                                    26
+9.1 Suggestions on further research
+This thesis is a comparison of which founder characteristics may be important for
+early stage software companies in order to secure funding. To further increase
+understanding this area deeper research, with both a qualitative and quantitative
+focus, is needed.
+
+A granular analysis of subsegments both within industries and within specific
+education backgrounds could further improve the understanding of which specific
+competences and experience that matter the most in certain industries. The data
+gathered for this thesis would structurally be able to analyze industry segments but
+the data set needs to be considerably larger in order to establish any statistical
+correlations. Optimally future research should also be based on pre-money
+valuations in order to use company value and not funding as a measure of success.
+Some earlier studies already use this metric but as earlier mentioned the data is not
+widely accessible. Optimally this kind of research should be conducted by
+researchers closely connected to investors.
+
+A study with similar independent variables as in this thesis but incorporating all
+companies founded and also data on companies having declared bankruptcy
+would also be interesting to perform. This would allow researchers to alleviate
+survivorship bias.
+
+                                    27
+10. References
+
+   Banerji, D. and Reimer, T., 2019. Startup founders and their LinkedIn connections:
+     Are well-connected entrepreneurs more successful?. Computers in Human
+     Behavior, 90, pp.46-52.
+   Beaton, N., 2013. Valuing Early Stage And Venture Backed Companies. Hoboken,
+      N.J.: Wiley.
+   Breschi, S., Lassébie, J. and Menon, C., 2018. A Portrait Of Innovative Start-Ups
+     Across Countries. Paris: OECD Publishing.
+   Brush, C., Carter, N., Gatewood, E., Greene, P. and Hart, M., 2008. The Diana
+     Project: Women Business Owners and Equity Capital: The Myths Dispelled. SSRN
+      Electronic Journal,.
+   Caers, R. and Castelyns, V., 2010. LinkedIn and Facebook in Belgium. Social
+     Science Computer Review, 29(4), pp.437-448.
+   Cassar, G., 2014. Industry and startup experience on entrepreneur forecast
+     performance in new firms. Journal of Business Venturing, 29(1), pp.137-151.
+   Diversity VC, 2017. Women In U.K. Venture Capital 2017. [online] Bvca.co.uk.
+     Available at:
+     <https://www.bvca.co.uk/Portals/0/Documents/Research/2017%20Reports/Wo
+     men-in-UK-Venture-Capital-2017.pdf>.
+   Gompers, P., Kovner, A., Lerner, J. and Scharfstein, D., 2006. Skill vs. Luck in
+     Entrepreneurship and Venture Capital: Evidence from Serial Entrepreneurs.
+     SSRN Electronic Journal,.
+   Gompers, P., Kovner, A., Lerner, J. and Scharfstein, D., 2006. Skill vs. Luck in
+     Entrepreneurship and Venture Capital: Evidence from Serial Entrepreneurs.
+     SSRN Electronic Journal,.
+   Guillory, J. and Hancock, J., 2012. The Effect of Linkedin on Deception in Resumes.
+     Cyberpsychology, Behavior, and Social Networking, 15(3), pp.135-140.
+   Henry, P., 2016. What Are The Typical Startup Funding Rounds?. [online] Medium.
+     Available at:
+     <https://medium.com/@PatrickHenryEntropic/what-are-the-typical-startup-fun
+     ding-rounds-1b7845121df4> [Accessed 10 May 2020].
+   Hoenig, D. and Henkel, J., 2015. Quality signals? The role of patents, alliances, and
+     team experience in venture capital financing. Research Policy, 44(5),
+     pp.1049-1064.
+   Hsu, D., 2007. Experienced entrepreneurial founders, organizational capital, and
+     venture capital funding. Research Policy, 36(5), pp.722-741.
+   Hyytinen, A. and Pajarinen, M., 2001. Financial systems and venture capital in
+     Nordic countries: A comparative study (No. 774). ETLA Discussion Papers.
+   Islam, M., Fremeth, A. and Marcus, A., 2018. Signaling by early stage startups: US
+     government research grants and venture capital funding. Journal of Business
+     Venturing, 33(1), pp.35-51.
+   Jin, F., Wu, A. and Hitt, L., 2017. Social Is the New Financial: How Startup Social
+     Media Activity Influences Funding Outcomes. Academy of Management
+     Proceedings, 2017(1), p.13329.
+   Kanze, D. and Lyengar, S., 2014. Startups that seek to disrupt get more funding
+     than those who seek to build. Harvard Business Review.
+
+                                    28
+Kanze, D., Huang, L., Conley, M. and Higgins, E., 2018. We Ask Men to Win and
+  Women Not to Lose: Closing the Gender Gap in Startup Funding. Academy of
+  Management Journal, 61(2), pp.586-614.
+Khan, A., 1986. Entrepreneur characteristics and the prediction of new venture
+  success. Omega, 14(5), pp.365-372.
+Lafontaine, F. and Shaw, K., 2016. Serial Entrepreneurship: Learning by Doing?.
+   Journal of Labor Economics, 34(S2), pp.S217-S254.
+Lerner, J. et al. (2018) The globalization of angel investments: Evidence across
+   countries. Journal of Financial Economics. [Online] 127 (1), 1–20.
+LinkedIn, 2020. About Us. [online] News.linkedin.com. Available at:
+  <https://news.linkedin.com/about-us#statistics> [Accessed 11 May 2020].
+Marcus, A., 2018. Signaling by early stage startups: US government research grants
+   and venture capital funding. Journal of Business Venturing, 33(1), pp.35-51.
+Mitroff, S. 2012. Hardware, the Ugly Stepchild of Venture Capital, Is Having a
+  Glamour Moment. Retrieved 10 May 2020, from
+  https://www.wired.com/2012/12/hardware-funding/
+Naude. W, Nagler. P. 2016. Non-farm entrepreneurship in rural sub-Saharan Africa:
+   New empirical evidence. Food Policy, Vol 67, P 175 - 191.
+OECD, 2018. OECD Science, Technology And Innovation Outlook 2018. Paris:
+  OECD Publishing.
+OECD, 2020. Conversion Rates - Exchange Rates - OECD Data. [online] theOECD.
+  Available at: <https://data.oecd.org/conversion/exchange-rates.htm>
+   [Accessed 7 April 2020].
+OECD, 2020. Prices - Inflation (CPI) - OECD Data. [online] Available at:
+   <https://data.oecd.org/price/inflation-cpi.htm> [Accessed 7 April 2020].
+Pitchford, D., 2020. A Decade Of Advancements As We Enter A New Age Of AI.
+   [online] Forbes. Available at:
+  <https://www.forbes.com/sites/danielpitchford/2020/12/31/a-decade-of-adva
+  ncements-as-we-enter-a-new-age-of-ai/#404505154055> [Accessed 9 May
+   2020].
+Rasmussen. E, Sorheim. R. 2006. Action-Based Entrepreneurship Education.
+  Technovation 26(2):185-194.
+Sawaya, A. Bhero, S. 2018. Is Entrepreneurship learned or an inborn feature in
+  Mozambique? Journal of Economics and Sustainable development. Vol.9,
+  No.16.
+Stuart, T. E., Hoang, H. and Hybels, R. C. (1999) ‘Interorganizational Endorsements
+  and the Performance of Entrepreneurial Ventures’, Administrative Science
+   Quarterly, 44(2), pp. 315–349.
+Teare, G., 2020. Decade In Review: Trends In Seed- And Early-Stage Funding.
+  [online] Techcrunch.com. Available at:
+  <https://techcrunch.com/2019/03/16/decade-in-review-trends-in-seed-and-ea
+  rly-stage-funding/> [Accessed 10 May 2020].
+Torrisi, S., Toschi, L. and Zhang, C., 2014. Does Reputation Facilitate Startups'
+  Access to Venture Capital Funding?. Academy of Management Proceedings,
+   2014(1), p.13630.
+Wadhwa, V., Aggarwal, R., Holly, K. and Salkever, A., 2009. Making of A Successful
+   Entrepreneur: Anatomy of an Entrepreneur Part II. SSRN Electronic Journal,.
+Zhang, L., 2018. Founders Matter! Serial Entrepreneurs and Venture Capital
+   Syndicate Formation. Entrepreneurship Theory and Practice, 43(5), pp.974-998.
+
+                                  29
+Appendix 1 - Statistical tests
+
+1. Assumptions of linear regression
+
+In order for a linear regression model to give the best results certain criteria should be
+fulfilled. Even though different sources state slightly different assumptions of linear
+regression a common set of assumptions used in many forms of linear regression are
+the Gauss-Markov assumptions which state that a regression model should be linear
+in parameters, that the data should be randomly sampled, that the estimators
+should not be perfectly correlated with each other and that the data should be
+exogenous and homoscedastic. If these are fulfilled the model will give the most
+accurate estimates sometimes referred to as Best Linear Unbiased Estimate (BLUE).
+
+In addition to these the dependent variables should be normally distributed. It is also
+important (optimally) for the residuals to be normally distributed, to have constant
+variance (homoscedastic), have a mean of approximately zero and to be
+independent of each other. Below we will list the assumptions and how they are
+tested.
+
+2. Linearity
+
+In order to test if there is a linear relationship between the individual estimators and
+the dependent variable each non-dummy variable is plotted in an
+augmented-component plus residual plot (for both regressions). If the observations
+deviate considerably from the straight plotted line there might be non-linearity. The
+plots for most estimators used in our regression model show linearity. There might
+however be slight nonlinearity in some of the estimators (Total PhD, total technical
+degrees and total software experience). This nonlinearity is mostly due to a few
+extreme values and are likely not caused by systematic errors. However, the
+nonlinearity is not very strong and should likely not affect the models in a drastic
+way. This test is not carried out on dummy variables since these by definition have a
+linear relationship.
+
+                                    30
+Augmented-component plus residual plots – Total funding
+
+                                    31
+Figure 1: Augmented-component plus residual plots – Total funding
+
+Augmented-component plus residual plots – First funding
+
+                                    32
+Figure 2: Augmented-component plus residual plots – First funding
+
+                                    33
+3. Random sample
+
+The data is not randomly sampled in its true sense. However, the data set in this thesis
+is quite narrow and the conclusions should not be used to draw inferences to a
+larger population which largely makes this assumption redundant. In other words, the
+models contain the data set it aims to explore.
+
+4. Non-collinearity/multicollinearity
+
+In order to assess the correlation between the estimators a VIF-test was performed.
+Some papers argue that a VIF < 10 is acceptable while others say 5. The values
+obtained from the VIF-test show no signs of problems with collinearity.
+
+Variance inflation factors
+
+ Variable VIF 1/VIF
+
+ nroffound 2,55 0,39147
+
+ toteng 2,54 0,39354
+
+ totsoft 2 0,49914
+
+ yearsinbus~s 1,68 0,59489
+
+ yearsbetwe~d 1,6 0,62327
+
+ totbus 1,51 0,66183
+
+ totphd 1,45 0,68910
+
+den 1,44 0,69616
+
+ fin 1,36 0,73390
+
+ totc 1,28 0,78197
+
+aimach 1,25 0,80282
+
+ nor 1,24 0,80359
+
+gender 1,16 0,85902
+
+ecom 1,14 0,87831
+
+ advert 1,11 0,89866
+
+totmba 1,1 0,91149
+
+ finance 1,09 0,91715
+
+ healthcare 1,06 0,94153
+
+avgfoundcomp 1,06 0,94605
+
+                                    34
+              Mean VIF 1,45
+
+Table 1: Variance inflation factors
+
+5. Exogenity
+
+This assumption states that only the regressors should be able to affect the
+dependent variable and not the other way around. In other words, total funding or
+first funding should not affect the characteristics of the founders or any of the other
+independent variables. No test is carried out to assess this assumption but logically
+the amount of funding a company receives will not affect the education, gender
+and experience of the founders since the founders in almost all cases start the
+company before knowing anything about the amount of funding the venture will
+receive. The same is true for industry and country. The only variable which might be
+affected by endogeneity is company age (control variable) which logically may be
+longer if the company receives more funding.
+
+6. Homoscedasticity
+
+In order to test the assumption of homoscedasticity a Breusch-Pagan /
+Cook-Weisberg test was carried out. The test failed to reject the null hypothesis of
+homoscedasticity by which we can assume constant variance of the residuals.
+
+ Breusch-Pagan / Cook-Weisberg test for heteroskedasticity
+
+                          First funding Total funding
+
+ chi2(1) 0,46 1,55
+
+ Prob > chi2 0,4986 0,2138
+
+ Table 2: Breusch-Pagan test
+
+7. Distribution of dependent variables
+
+The dependent variables total equity funding and first equity funding were tested
+with a Skewness and Kurtosis test for normality, a Shapiro-Wilks test and plotted as
+histograms. The tests showed that first equity funding is very close to a normal
+distribution (null hypothesis of normality could not be rejected) while total funding
+deviated slightly from a normal distribution (null hypothesis of normality was
+rejected). However, the deviation from normality was small and histograms show
+that the distribution of the variable is quite close to a normal distribution. The
+skewness and kurtosis values are also in a reasonable range. This might impact the
+exactness of the model but should likely not be a big concern.
+
+                                    35
+Histogram – Total funding and first funding
+
+ Figure 3: Distribution of total funding (ln) Figure 4: Distribution of first funding (ln)
+
+Shapiro-Wilks test for normal data
+
+Variable Obs W V z Prob>z
+
+Total funding 317 0.98655 3.01 2.594 0.00475
+
+Variable Obs W V z Prob>z
+
+First funding 317 0.99539 1.032 0.075 0.4701
+
+ Table 3: Shapiro-Wilks test for normal data
+
+Skewness/Kurtosis tests for Normality
+
+Variable Obs Pr(Skewness) Pr(Kurtosis) adj chi2(2) Prob>chi2
+
+Total funding 317 0.0018 0.1928 10.3 0.0058
+
+Skewness/Kurtosis tests for Normality
+
+Variable Obs Pr(Skewness) Pr(Kurtosis) adj chi2(2) Prob>chi2
+
+First funding 317 0.4315 0.3421 1.53 0.4652
+Table 4: Skewness/Kurtosis tests for Normality
+
+ 8. Residuals
+
+A linear regression model assumes:
+
+1. Constant variance of the residuals
+2. Normality of the residuals
+3. Independence of the residuals
+4. Zero (or close to zero) mean of the residuals
+
+8.1 Constant variance of residuals
+
+Constant variance of the residuals is assessed by the Breush-Pagan test earlier
+performed. It can also be assessed in the residuals vs fitted plots shown in 8.4.
+
+                                    36
+8.2 Normality of residuals
+
+The residuals for both regressions were plotted in a histogram, tested for normality
+with a Shapiro-Wilks test and plotted in a fitted vs residual plot in order to assess
+normality. The Shapiro-Wilks test indicates that first funding is normally distributed
+while total funding is not. However, just as in the case with the dependent variable
+total funding itself, the deviation from normality is not huge when visually inspecting
+the histograms.
+
+Histogram residuals – First equity funding and Total equity funding
+
+ Figure 5: Distribution of residuals - first equity funding Figure 6: Distribution of residuals - first equity funding
+
+Shapiro-Wilks test for normal data – Residuals of total funding
+
+Variable Obs W V z Prob>z
+
+residfirst 317 0.99515 1.085 0.192 0.42402
+Table 5: Shapiro-Wilks test for normal data – Residuals of first funding
+
+Shapiro-Wilks test for normal data – Residuals of total funding
+
+Variable Obs W V z Prob>z
+
+residtot 317 0.98852 2.569 2.221 0.01318
+Table 6: Shapiro-Wilks test for normal data – Residuals total funding
+
+8.3 Independence of residuals
+
+The fitted vs residual plot showed no clear patterns (indicating independence) and
+were centered around zero indicating a mean of approximately zero and a
+constant variance (homoscedastic, which is reasonable given results from the
+Breusch-Pagan test). A summary of the residuals show that the mean is very close to
+zero for both regressions.
+
+                                    37
+Residuals vs Fitted Plots
+
+ Figure 7: Residuals vs Fitted Plot – First funding Figure 8: Residuals vs Fitted Plot – Total funding
+
+8.4 Zero (or close to zero) mean of residuals
+
+Summary of residuals
+
+Variable Obs Mean Std. Dev. Min Max
+
+residtot 317 1.67E-09 1.311896 -5.192386 3.283033
+
+ First funding
+
+Variable Obs Mean Std. Dev. Min Max
+
+residfirst 317 5.10E-10 1.243323 -4.282424 3.499283
+Table 7: Summary of residuals
+
+9. Summary
+
+Tests performed on variables used in the regressions show no real issues although
+some small deviations from the assumptions are present. These will likely not have a
+large impact on the results of the regression.
+
+                                    38
+Appendix 2 - Regression models without control variables
+
+ Total equity funding - No control variables
+
+Number of obs 317
+
+ F(9, 307) 10,4
+
+Prob> F 0
+
+ R-squared 0,2336
+
+ R-squared Adj 0,2112
+
+Root MSE 1,3755
+
+ Total equity funding - No control variables
+
+ Variable Coef. Std. Err. t P>t [95% Conf. Interval]
+
+ Team gender     -0,48767 0,25295 -1,93 0,055 -0,98540 0,01006
+ diversity
+
+ Total number of   -0,75760 0,28228 -2,68 0,008 -1,31305 -0,20216
+MBA-degrees
+
+ Total number of   0,14152 0,15289 0,93 0,355 -0,15932 0,44236
+PhD-degrees
+
+ Total software     -0,06037 0,12371 -0,49 0,626 -0,30379 0,18306
+ experience
+
+Total company    0,61865 0,10175 6,08 0 0,41843 0,81887
+ leadership
+ experience
+
+ Total number of   0,26479 0,11492 2,3 0,022 0,03866 0,49091
+MBA-degrees
+
+ Total number of   0,30218 0,11529 2,62 0,009 0,07532 0,52903
+ business degrees
+
+ Average founded 0,23837 0,08656 2,75 0,006 0,06805 0,40870
+companies
+
+ Number of        0,03392 0,10927 0,31 0,756 -0,18109 0,24893
+ founders
+
+Constant 12,66415 0,18742 67,57 0 12,29537 13,03294
+
+Table 1: OLS-regression - Total equity funding without control variables. Regression run in order to compare R-squared
+adjusted with the regressions from the main results.
+
+                                    39
+ First equity funding - No control variables
+
+Number of obs 317
+
+ F(9, 307) 4,88
+
+Prob> F 0
+
+ R-squared 0,1252
+
+ R-squared Adj 0,0996
+
+Root MSE 1,3874
+
+ First equity funding - No control variables
+
+ Variable Coef. Std. Err. t P>t [95% Conf. Interval]
+
+ Team gender     -0,54819 0,25514 -2,15 0,032 -1,05023 -0,04615
+ diversity
+
+ Total number of   -0,60545 0,28472 -2,13 0,034 -1,16571 -0,04519
+MBA-degrees
+
+ Total number of   0,15314 0,15421 0,99 0,321 -0,15030 0,45659
+PhD-degrees
+
+ Total software     -0,08724 0,12478 -0,7 0,485 -0,33277 0,15830
+ experience
+
+Total company    0,48553 0,10263 4,73 0 0,28358 0,68749
+ leadership
+ experience
+
+ Total number of   0,19149 0,11591 1,65 0,1 -0,03659 0,41958
+MBA-degrees
+
+ Total number of   0,23365 0,11629 2,01 0,045 0,00483 0,46247
+ business degrees
+
+ Average founded 0,11144 0,08731 1,28 0,203 -0,06036 0,28324
+companies
+
+ Number of        -0,09669 0,11021 -0,88 0,381 -0,31357 0,12018
+ founders
+
+Constant 12,41588 0,18904 65,68 0 12,04390 12,78786
+
+Table 2: OLS-regression - Total equity funding in the first funding round without control variables. Regression run in
+order to compare R-squared adjusted with regressions from the main results.
+
+                                    40

@@ -1,0 +1,1316 @@
+Stockholm School of Economics Bachelor’s Thesis
+Department of Finance May 2016
+
+               Altruism or Nepotism?
+
+   A Study of Financial Firms’ Connections to Presidential Candidates and the
+                      Resulting Impact on Stock Returns
+
+                    Marcus Ackland* Victor Svahn**
+
+     Abstract: It has proven difficult in previous research to quantify the accrued value derived
+      from connections between companies and the political sector in developed countries. This
+      thesis aims to quantify the value of connections to a presidential candidate in the early stage of
+      a political election. By doing so, we aim to fill the gap in existing research that is mostly
+      conducted on already elected politicians. On the 12th of April 2015, Hillary Clinton announced
+      that she was running for President of the United States. Surrounding the announcement,
+      financial companies who are connected to Clinton experienced significant abnormal returns.
+      The cumulative effect amounts to 2.9 % after five days of trading. When isolating the
+      connection to Clinton by controlling for firm characteristics, we show that the “Clinton effect”
+      can explain the increase in value. These results show the significance of the relationship
+      between the private and political sector, even in an early stage of a political election; where the
+      candidates themselves have not been elected to office and hold no legal power.
+
+     Keywords: political connections, financial firms, event study
+     Tutor: Ramin Baghai
+
+     Acknowledgements: First and foremost, we are thankful for the support we have received from
+      our tutor, Ramin Baghai; assistant professor at the department of finance at the Stockholm
+      School of Economics. Further we want to extend our gratitude to Karin Fernler for her valuable
+      input.
+
+*22994@student.hhs.se **22993@student.hhs.se
+Table of contents
+
+1 Introduction 03
+1.1 Research question 05
+2 Previous Research 05
+    2.1 Emerging Countries 06
+    2.2 Developed Countries 06
+    2.3 Related Research 07
+       2.3.1 Regulatory Capture 07
+    2.4 How our paper adds to the previous literature 08
+3 Background 08
+    3.1 Hillary Clinton’s career 08
+    3.2 Why we study Clinton 9
+    3.3 Wall Street Speeches 09
+    3.4 The Clinton Foundation 10
+    3.5 How the media influences the public’s perception of Clinton 11
+4 Data 12
+5 Methodology and Hypothesis formulation 13
+    5.1 Hypothesis formulation 13
+    5.2 Event Study 14
+    5.3 Ordinary Least Squares Regression 16
+       5.3.1 Robust Standard Error Correction 16
+6 Results 17
+    6.1 Event Study 17
+       6.1.1 Speech group 17
+       6.1.2 Analysis of Speeches 18
+       6.1.3 Foundation group 19
+       6.1.4 Analysis of Foundation 19
+    6.2 OLS Regression model 19
+       6.2.1 Speech group 20
+       6.2.2 Analysis of speeches 20
+       6.2.3 Foundation group 20
+       6.2.4 Analysis of Foundation 21
+    6.3 Summary of results and implications 21
+       6.3.1 What implications do these results have for the research field? 22
+
+7 Discussion 22
+    7.1 The announcement could have industry-wide effects 22
+    7.2 Why does not foundation show the same results? 23
+
+8 Conclusion 24
+
+List of References 25
+Appendices 27
+    Appendix A: Tables and Graphs 27
+    Appendix B: Code to run in R 34
+
+                                                                                   2
+1 Introduction
+
+During the 2016 U.S. primary elections, the topic of special interest has dominated the agenda. In
+this paper, we set out to try and quantify this effect to determine whether or not there is a value of
+a connection to a candidate in a presidential primary. This study show that companies who have a
+connection to Hillary Clinton experience an increase in abnormal returns of roughly 3% over the
+days following her announcement to run for President of the United States on the 12th of April
+2015.
+       Research in the area of political connections have emerged in the last decade and there is
+limited research that focus on an early stage as a primary election. In addition to this, there are few
+papers centering on the high office of the Presidency, they rather focus on the U.S. Congress. For
+instance Akey (2015) showed that firms donating to the winning instead of to the losing congress
+candidate experienced a 3% abnormal return. Further, Duchin & Sosyura (2012) showed that firms
+connected to a congress representative are more likely to receive capital under the Troubled Asset
+Relief Program (TARP). These connections are established, however, our topic with regards to a
+presidential candidate is not exhaustively researched.
+        Existing research suggest that connections are more valuable to firms in emerging markets,
+because they do not have strong enough institutions to guard against possible corruption (Khwaja
+and Mian, 2005). Valuable connections exist in developed countries as well, and can be explained
+by, among other things, the connection in a crisis hypothesis (Baker, Bloom, and David 2015).
+This hypothesis claims that even though a country’s institution is solid there can be a value of
+connections when a crises occurs. Recent studies have documented this effect (Acemoglu et al
+
+                                                                                                   1
+2015), however, studies analyzing normal times have not yielded as strong results .These recent
+developments will serve as the backbone for our thesis as we want to further develop the field of
+political connections in developed countries.
+       What has driven our hypothesis is the assumption that there could exists a quid pro quo
+between the political and the private sector. Therefore, companies that provide money to a well-
+known presidential candidate could expect a return, in one way or another. The connections we
+consider in this paper are established before Clinton announced her candidacy. Namely, the Wall
+
+1
+ Some researchers have found valuable connections in developed countries as Amore and Bennedsen (2013).But
+these connections tend to be less significant and yield smaller results.
+
+                                                                                   3
+Street firms at which she held speeches and the financial firms who donated to the Clinton
+Foundation. Because there is no crisis at the time of her announcement, we argue that the abnormal
+returns could be motivated by regulatory capture rather than the connection in a crisis hypothesis.
+Regulatory capture comes from the theory of capture which means that a company take control
+(captures) another part (Dal Bó, 2006). Our findings should be seen in the light of this, implying
+that for instance a Wall Street firm can expect something from Clinton when they have contributed
+to her, aside from the speech itself. What they could be expecting is a that Clinton does not pass
+regulation that are unfavorable to them.
+        The speeches Clinton held at financial firms gives us further reason to study the financial
+industry, because it is susceptible to regulation from the federal level of government it is justified
+to limit our analysis to that sector. Our paper consists of two steps in order to quantify the
+connections. First, we conduct an event study to find potential cumulative abnormal returns
+(CARs). Secondly, we try to isolate the effect from the announcement by treating each firm as if
+it had the same characteristics. This is done with an Ordinary Least Squares (OLS) regression. The
+data we collected is heteroscedastic. To address this, we utilize robust standard errors to treat the
+
+                                     2
+data as if it was homoscedastic .
+       Two event studies are carried out during the period surrounding Clinton’s announcement
+to measure the abnormal returns for connected firms with regards to speeches and contributions to
+the Clinton Foundation. We then compare those to the abnormal returns for the rest of the financial
+firms on the New York Stock Exchange (NYSE) that constitute our control group.
+       The event study shows that there is a significant, positive CAR for both the companies at
+which Clinton held speeches and also for the companies which donated to the Clinton foundation.
+Further, there is a significant difference in the CAR between the two groups. We study different
+event windows to determine the exact effect on Clinton’s announcement. Our results indicate that
+the speech group’s results are slightly more significant and its CAR is also higher.
+        The uncertainty regarding an event study is that there could be some bias to the separation
+of the connected groups—that the increase in value for these firms are not because of their
+connection to Clinton but that they share another characteristic. To control for this uncertainty, we
+perform an ordinary least squares (OLS) regression, where CAR[0,t] is the dependent variable and
+regress on firm specific variables in this case size, leverage and their profitability which has been
+
+2
+ A homoscedastic sample is one criteria to pursue a regression.
+
+                                                                                   4
+done in previous research (Acemoglu et al, 2015). By including a dummy variable for the Clinton
+connection, we can isolate this effect. From the regression we deduce that Clinton’s announcement
+was the reason why the connected firms experienced positive, significant CARs. We can therefore
+conclude that Clinton’s announcement had a direct quantifiable effect on these connected
+companies’ stock returns.
+
+1.1 Research question
+Given the amount of attention to special interest during the U.S. primary election 2016 and the
+debates, on both the republican and democratic side, it would be of interest to quantify if this effect
+results in an increase in value for companies with a connection to a presidential candidate.
+The question that we want to answer in this paper is:
+
+               Do connections to presidential candidates increase stock returns?
+
+We believe that the connected firms we study will have a positive return on their stock as the
+market is aware and perceive that there is a connection between Clinton and a particular group of
+companies. If we assume that the market perceives an existing connection, news relating Clinton
+could have spill-over effects on the companies she has a connection to. Our hypothesis is then that
+these effects would be reflected in their stock price.
+       Another important aspect to address is why we look at the speech and foundation group. It
+could be argued that the market already knows of these connections as Clinton’s ties to Wall Street
+has been circulated in the media before. We are certain that some of the connections we study were
+already established before this campaign cycle. What our criteria for a connection provides is a
+tangible relation between Clinton and the connected firm. We therefore argue that the connection
+actually exists and is not just a haphazard coincidence.
+
+2 Previous Research
+
+The research regarding connections between firms to politicians is a growing area as research
+continually find new patterns and behaviors. This field can be separated into two parts, one
+regarding emerging countries and the other concerns developed countries. Literature with regards
+to developed countries have increased lately because of a public interest in the matter and
+
+                                                                                   5
+                                                                              3
+requirements to disclose campaign finance, especially in the U.S . This information opens up the
+field of research and enables us to, in more detail, study the effect between politics and their
+connections to private companies.
+
+2.1 Emerging Countries
+Studies indicate that political connections to a larger degree affects corporations in emerging
+markets. This phenomenon is arguably a product of misgovernance due to weak institutions which
+in turn enables a corrupt relation between firms and politicians. This is illustrated by Khwaja and
+Mian (2005) who observed stock brokers who manipulate stock prices in Pakistan.
+       The idea of misgovernance is developed from the early work of Fisman (2001) who showed
+that a connection to the president in Indonesia during the 1990s made companies soar 23 % in firm
+value when the Indonesian economy was in a downward spiral. Another similar example is made
+by Johnson and Mitton (2003) who found that in 1998 when the Prime Minister of Malaysia
+introduced regulations of capital flows, companies gained 5 billion, 32 % of which was because
+of their connection to him. That event could further be considered a result of regulatory capture
+as the Prime Minster passes a regulation that affects connected firms in an advantageous matter.
+        The papers concerning the emerging market all share the characteristic of weak institutions.
+Therefore this argument serve as the strongest reason explaining why connections between stock
+returns and politicians are more evident in emerging markets than in developed countries.
+
+2.2 Developed Countries
+Previous studies suggest that political connections do alter businesses’ value in developed
+countries, although, in general, not to the same extent. For instance Amore and Bennedsen (2013)
+found value in family connections to politicians in Denmark, a seemingly non-corrupt country.
+One example in the United States is the Jeffords Effect (Jayachandaran, 2006), an eponym from a
+senator who would change parties which in turn switched the control in the US senate. The study
+showed that it affected firms’ values with 1%. Similar to this example, most studies in the United
+States focus on elections to congress. For example, Tahoun (2014) showed that members of
+
+3
+ The Disclose Act of 2010 put more pressure on political candidates to disclose their campaign contributions
+
+                                                                                   6
+Congress that own stock in a company that donate to their campaign are more willing to give these
+firms governmental contracts.
+       On a higher level of government there are few examples. Fisman et al (2012) shows that
+by analyzing connections to Vice President Dick Cheney, they show that the reason for a lack of
+increased value is the fact that the connections to Cheney are not strong enough. The conclusion
+they draw is that the legal system in the US is sophisticated to not be affected by connections.
+       One influential paper for our study is The Value of Connections in Turbulent Times by
+Acemoglu et al (2015). They shed light on the abnormal returns surrounding the announcement of
+Timothy Geithner – a former President of the Federal Reserve Bank of New York – to Treasury
+Secretary had on connected financial firms. They are able to isolate this effect to Geithner for three
+different groups who were all connected to Geithner when he was President of the Federal Reserve
+Bank of New York. The results they find are noteworthy for a developed market such as the United
+States. An emerging argument that explains this phenomenon is the connections in a crisis. The
+hypothesis states that during turbulent times, and when economic markets are as turbulent as they
+were during Geithner’s appointment in 2008, the midst of the financial crisis, companies will
+benefit from having a connection to an influential politician.
+
+2.3 Related Research
+As our paper is closely related to politics we will briefly touch upon other research fields to better
+contextualize our research question.
+
+2.3.1 Regulatory Capture
+Nobel Laureate George Stigler developed the concept of regulatory capture in his 1971 paper The
+Theory of Economic Regulation. The theory centers on the fact that a regulatory or legislative body
+can be captured from special interest groups and generate favorable conditions for the capturer.
+This risk is something that an agency is exposed to by its very nature, since it exists to regulate an
+industry and is therefore heavily connected to it. Capture does not implicate that a company can
+gain favorable regulation in exchange for payment per se. While political donations are a type of
+materialist capture, another example is that the industry can indoctrinate the regulatory agency in
+their way of thinking by lobbying them.
+
+                                                                                   7
+       Capture is of importance when considering Clinton’s potential connections as they have
+contributed to her financially. Even if they do not lobby her directly, it is in their best interest to
+avoid further regulation. By being on friendly terms they have a closer relationship than they would
+have had otherwise. Therefore it could be in Clinton’s subconscious that she would not pursue
+tough regulation on the financial industry if she takes office.
+
+2.4 How our paper adds to the previous literature
+From the aforementioned literature, we notice that there are several papers that cover different
+aspects of this complicated issue between the private and political sector. What our paper adds to
+this, is that we try to analyze one step earlier. When Clinton announced her candidacy for president,
+she was already an influential figure but she wielded no legislative or regulatory power. She is
+simply seeking to be the nomination of the Democratic Party. Geithner, in comparison, was all but
+confirmed as the next Treasury Secretary and the examples from Congress are the results of actual
+election victories or change in party control. We aim to quantify the primary election’s importance
+and the potential value in an influential political figure such as Hillary Clinton.
+
+3 Background
+
+To understand why Clinton’s announcement can affect connected firms we need to emphasize her
+background, the chosen firms’ connection to Clinton and how the media can alter our view on
+these connections. First, we analyze Clinton’s background and argue that her past form a perfect
+and complex example to study. Thereafter we review the two connected groups and explain how
+the media which is the channel between the politician and the market can affect how these
+connections are perceived.
+
+3.1 Hillary Clinton’s career
+Clinton is one of the most qualified candidates to ever run for president. She has held positions
+within several levels of government, most recently Secretary of State in Obama’s first cabinet. She
+began her political career almost four decades ago, as First Lady of Arkansas when her husband,
+Bill Clinton, was Governor of Arkansas. Since then she has been First Lady of the United States,
+one of the most influential to hold that position. She was the first to hold a postgraduate degree,
+
+                                                                                   8
+had a professional career of her own, took charge of healthcare policy and moved her office to the
+west wing of the white house. After her period as First Lady, she was elected Senator from New
+York and served two terms. In 2008 she ran for President but lost to Barack Obama and was offered
+the role of Secretary of State during his first term. In 2012 she chose to resign and has since been
+involved with the Clinton Foundation and served as a corporate speaker.
+
+3.2 Why we study Clinton
+The majority of the candidates for the 2016 U.S. presidential elections have spent their entire life
+in the political sector and the chance of finding strong connections to the private sector is weak.
+Example of candidates with a successful career in the private sector, e.g. Mitt Romney in 2012,
+are not as easy to analyze because he served as governor of Massachusetts before announcing his
+campaign and therefore did not have any recent, strong connections. Also, Bain Capital and BCG
+where he spent the majority of his career are not public, which could complicate the study of any
+direct impact on the market. Hillary Clinton is a unique candidate because of her vast experience
+in politics but also her strong connections to the private sector.
+       Another reason that Clinton is a good candidate to study is because of other events where
+the market has reacted to her. On the 21st September 2015, Clinton tweeted in response to the
+recent price increase in the biotechnology sector that she would lay out a plan to stop the “price
+gouging” going on in the industry. Biotech stocks fell 20 % to 35 % in a few trading days and
+
+                                                 4
+investor lost over $130 billion as a result . This tells us that even though she is not the democratic
+nominee yet, the market values her influence and potentially perceive her as the presumptive
+nominee already.
+
+3.3 Wall Street speeches
+When Clinton left the White House she was on the speaker circuit, according to CNN she held 92
+
+                                       5
+speeches between 2013 and 2015 . Not all of these speeches were held to firms within the financial
+industry but the ones that were, have gained a lot of publicity. Her base speaking fee is $225,000
+and she has famously refused to allow media to attend and has not released the transcripts from
+her speeches. It is important to point out that there is nothing illegal with Clinton’s speeches and
+
+4
+ http://money.cnn.com/2015/09/21/investing/hillary-clinton-biotech-price-gouging/
+5
+ http://money.cnn.com/2016/04/20/news/economy/hillary-clinton-goldman-sachs/
+
+                                                                                   9
+her speaking fee is not unusual for someone with her experience. It does, however, raise questions
+if she can be controlled by special interest and if they expect anything back from her, would she
+become President. To extend the group of companies, we also include financial firms to whom
+either of the Clintons have held speeches at.
+        Sunstein (1994) argues that a speech by a politician can be procured to draw attention to a
+certain topic. This could seem counterintuitive for financial firms since they are usually under
+scrutiny and negative publicity from the media and the public, it would be in their best interest to
+draw attention away from themselves. However, this could be explained by Sunstein’s conclusion
+that a political candidate who can successfully attract and accumulate money should be more opt
+to do well in the “political marketplace”. The political marketplace is a metaphor that embodies
+the political decisions as taken on a marketplace in exchange for payment or other services.
+        We conclude that this connection could be in the interest of the connected financial firms,
+if Clinton was elected president. As she is reluctant to release the transcripts from her speeches,
+there could be something dubious that she does not want the public to know of, that could benefit
+this group.
+
+3.4 The Clinton Foundation
+The Clinton Foundation was founded as the William J. Clinton Foundation in 2001 when Bill
+Clinton left the White House. Hillary Clinton served on the board during 2013-2015. The mission
+is to “strengthen the capacity of people throughout the world to meet the challenges of global
+
+                   6
+interdependence.”  During her time as Secretary of State it was required to disclose donations to
+the foundation, per an ethics agreement with President Obama.
+       The foundation has been criticized for taking money from foreign corporations and
+especially companies that have lobbied Clinton when she was Secretary of State, notably the
+Kingdom of Saudi Arabia and Blackwater. Another reason that the Clinton foundation has been
+accused of conflicts of interest is that questions have been raised as to whether the donations are
+motivated only by an altruistic reason or if companies donating hope to gain access to the Clintons’
+
+                                               7
+power and influence in Washington DC .
+
+6
+ The Clinton Foundation’s website
+7
+ http://www.wsj.com/articles/the-clinton-charity-case-1438731092
+
+                                                                                 10
+       Given the questions raised on the true motive of donations to the Clinton Foundation, we
+want to include the financial firms who have donated more than $50,000 as a separate connection.
+This would answer if there are any increases in value to a financial firm who have donated to the
+Clinton Foundation.
+
+3.5 How the media influences the public’s perception of Clinton
+The purpose with this part is to understand how the media portrays Clinton. By doing so, we can
+better understand why these connections do occur. According to Tetlock (2007) Media’s
+description of an event impacts stock returns. The media depicts Clinton as connected to some
+firms and if Clinton announces her presidential campaign that should have spill-over effects on the
+connected firms.
+        The media tends to focus their reporting on a few controversies that she has been involved
+in. Two controversies that frequently have been discussed are her email scandal and her ties to the
+financial sector. One obvious reason may be that the media is biased and chooses continually to
+repeat these controversies. But by using the concept of mediatization, meaning that “a political
+system to a high degree is influenced by and adjusted to the demands of the mass media in their
+coverage of politics” Asp, (1986), we are allowed to see her public figure in a new perspective.
+        The media builds up a persona and after enough time, that persona becomes a reality in the
+eye of the public. This process could be illustrated via the mediatization as the media often
+describes Clinton as correlated to Wall Street. The medialization then suggest that this portrayal
+after enough time becomes the reality and the common way people recognize and describe
+her.
+       The media has focused their reporting on her controversies to a large extent. One reason
+for this coverage can also be found in Braden (1996) who argues that women running for office
+receive different, irrelevant, questions from the media because of their gender. There are several
+studies supporting this view (Khan 1992 and Witt, Pages and Matthews 1994). However, these
+studies are over two decays old and the question of equality has shifted the way the media report
+their articles, however, the views of Clinton may be deeply rooted.
+       A study of Clinton as the First Lady in the 1996 election indicated that only one out of
+eight news articles about Clinton was about her political standpoints, the rest were in regard to her
+personality and her appearances (Bystrom, Mckinnon and Channey, 1999). The research further
+
+                                                                                 11
+concluded that Clinton was significantly more prone to receive negative media coverage than her
+counterpart, Elizabeth Dole. Consequently, one reason explaining Clinton’s seemingly negative
+public image may be the result of over 20 years of negative publicity.
+       It would be interesting to study why this is the case, however that is beyond the scope of
+our paper. The conclusion is that media’s depiction of Clinton is a double edged sword: it gives
+Clinton space to advocate her concerns, at the same time, the media have portrayed her in the lens
+of her controversies. These have, among other things, given the public the perception that she is
+connected to Wall Street which could yield spill-over effects as the public, and market, could be
+influenced by the media.
+
+4 Data
+
+The sample of financial firms that is used in our analysis consist of the firms on the New York
+Stock Exchange that are classified as financial companies. They amount to 378 companies. These
+consist of all financial companies, which includes subsidiaries. First, we clean up the data and
+remove any duplicates we might find. After removing duplicates we end up with 293 unique
+financial firms. In order to be able to analyze all the data, we have to exclude companies that do
+not provide enough stock returns during the entire period. These could be companies who had their
+IPO in late 2014 or 2015. We also removed companies who merged during that time. After this
+we end up with 244 financial firms that make up our base sample. For descriptive statistics for this
+sample, see table 1 in Appendix A.
+       From the 244 financial firms we create a connected group and a control group for both of
+the two groups based on their connection to Clinton. The first, which is the speech-group, is the
+group of financial firms at which she held speeches 2013-2015. This consist of 8 companies, for
+detail see table 2, panel A. The second group of connected companies are the ones that have
+donated to the Clinton Foundation. We limit our analysis to companies that have donated more
+than $50,000. The connected firms in this group amounts to 12 companies and are listed in table
+2, panel B. The control group is listed in table 3 in Appendix A.
+       We have decided to not include a separate group for campaign donations which could at
+first be thought of as the most obvious group to have an interest in Clinton’s campaign. There are
+two reasons that we omit this group. The first is that the majority of campaign donations are made
+to super-PACs instead of the candidate's political campaign. These donations are usually not made
+
+                                                                                 12
+by the company or their management per se but by employees at a specific company. This does
+not necessarily mean that the donors have their company’s best interest in mind when donating but
+could prioritize other issues such as social issues such as abortion or income tax. The speeches
+Clinton held and the donations to her campaign usually involves top-level executives and could
+therefore be argued to be a stronger channel of influence. Second, the companies included in both
+of these groups consists of companies that frequently top lists of donors to Clinton’s campaign.
+Because of this strong correlation, it would be obsolete to include donors as a separate group.
+
+5 Methodology and hypothesis formulation
+
+In this section we derive our six hypotheses to answer the research questions. There are three
+hypotheses connected to the speech-connected group (H1, H3, H5) and three are in relation to the
+foundation group (H2, H4, H6). After that we emphasize the methodology where we lay out the
+event study and the Ordinary Least Square regression performed to answer our hypotheses.
+
+5.1 Hypothesis formulation
+In order to determine if there is an increase in value for a connected company, abnormal returns
+on the days surrounding Clinton’s campaign will be analyzed. If we can accept the two hypotheses
+stated below, we are reassured that there is a CAR because it is significantly different from zero.
+
+   Hypothesis 1: The cumulative abnormal returns for a connected company at which Clinton has
+   held a speech are different from zero.
+   Hypothesis 2: The cumulative abnormal returns for a connected company who have donated to
+   the Clinton Foundation are different from zero.
+
+The first two hypotheses only state that the CAR is different from zero. With regard to our research
+question, it is of essence to also determine if there is a difference between the connected groups
+and the control group. After all, if non-connected firms also experience a significant CAR, there
+is no value in being connected to Clinton.
+
+                                                                                 13
+   Hypothesis 3: The difference in cumulative abnormal returns between a connected company at
+   which Clinton has held a speech and the control group is different from zero.
+  Hypothesis 4: The difference in cumulative abnormal returns between a connected company
+   who have donated to the Clinton Foundation and the control group is different from zero.
+
+Finally, we want to test if the CAR is solely a result of a connection to Clinton. This does not have
+to be the case, they could be a consequence of other firm characteristics such as size, leverage and
+profitability.
+   Hypothesis 5: The cumulative abnormal returns for a connected company at which Clinton held
+   a speech is because of the connection to Clinton and not some other firm characteristic.
+   Hypothesis 6: The cumulative abnormal returns for a connected company who have donated to
+  the Clinton Foundation is because of the connection to Clinton and not some other firm
+   characteristic.
+
+These hypotheses can be divided by the group they are meant to test. Hypotheses one, three and
+five are designed to test the speech-connected group and hypotheses two, four and six are meant
+to test the foundation-connected group. To establish an increase in stock returns as a consequence
+of a connection to Clinton, all three hypotheses in one group have to be accepted.
+
+5.2 Event Study
+An event study will be performed to test hypotheses 1-4. First we calculate a beta for each firm
+throughout a one year estimation window. The length of the estimation window commonly varies
+depending on what is studied, because our event is not directly tied to any specific company but
+instead a political event we chose one year. This gives us a more reliable beta as we sample more
+data. It is common to use 250 trading days as a proxy for one year but since we access the data
+directly, we can use exactly one year.
+       The event window also varies, it can be divided into short- and long term horizons (Chen,
+2014). The first is more reliable because there can be other factors that affect stock returns
+throughout the event window, therefore the closer you are to the studied event, the more likely it
+is to be the source of the abnormal returns. In our study, we will use several event windows to
+study Clinton’s announcement.
+
+                                                                                 14
+       The announcement is on a Sunday, the first trading day after the announcement is referred
+to as day [0]. The first trading day before the announcement is denoted [-1] and the day after the
+first trading day is written as [1]. To determine the immediate impact of the event, we will study
+event windows [0] and [0,1]. To capture any potential leaks that might have affected the
+announcement, windows [-3,3] and [-1,1] will be looked at. Lastly, to determine any sustained
+effects we will study a window of [0,5] to determine the impact the announcement has had after
+five days of trading.
+       The measure of return we study is the cumulative abnormal returns (CAR) for each
+company during the event window. The reason we study CAR is that this represents the increase
+in value. Abnormal returns could also be of interest but if there is a significant AR say five days
+after the announcement, it does not have to be relevant to the event itself. A company’s CAR can
+be calculated as:
+
+                                                                                            𝑛
+                                                   𝐶𝐴𝑅[0, 𝑛]𝑖 = ∑ 𝐴𝑅𝑖𝑡
+                                                                  𝑡=0
+
+where 𝐴𝑅𝑖𝑡 is the abnormal return for each company. This is a measure of how much it exceeds
+the expected return compared to the market return:
+
+                                             𝐴𝑅𝑖𝑡 = 𝑅𝑖𝑡 − [𝛼𝑖 + 𝛽𝑖 ⋅ 𝑅𝑚𝑡]
+
+Where 𝑅𝑚𝑡 corresponds to the market return. We have used the S&P 500 index as a proxy for the
+market return. 𝛼𝑖, 𝛽𝑖 have been calculated using a regression model (CAPM) throughout the
+previous mentioned estimation window as follows:
+
+                                                𝑅𝑖𝑡 = 𝛼𝑖 + 𝛽𝑖 ⋅ 𝑅𝑚𝑡 + 𝜖𝑖𝑡
+
+After having calculated the abnormal returns for the connected and the non-connected groups, we
+measure the statistical significance of the CARs using a two-sided t-test. This is done to test if we
+can accept or reject hypotheses 1-4. That is, to determine if the CARs are statistically different
+from zero and if the difference between the connected and non-connected groups are statistically
+different from zero.
+
+                                                                                 15
+5.3 Ordinary Least Squares Regression
+Question marks surrounding an event study is the causality of the abnormal returns. Even though
+we have done our best to establish connected groups based on existing, strong connections and can
+see that these companies do experience a significantly larger return than our control group, this
+does not have to be a consequence of the firms’ connection to Clinton. To test this, and in doing
+so testing hypotheses 5-6, we will perform an ordinary least squares (OLS) regression that control
+for firm characteristics. If the beta for the connected dummy variable is positive at a significant
+level, we can accept our hypotheses. A positive beta would imply that a company who is connected
+to Clinton experience a positive abnormal return as a result of that connection.
+       There is no consensus regarding what firm characteristics to use when performing a
+regression to control for the causality of an event study. In previous instances leverage and firm
+size has been included (Johnson and Mitton, 2003). In a recent study Acemoglu et al (2015) added
+return on equity to their analysis. Similar to what they did we will study the effect of firm size,
+leverage and profitability. These three ratios can explain several aspects of the firms such as their
+exposure to the market and the risk they have taken on by leveraging their business. By including
+them in the regression we can ignore the impact they have as the results from the connection effect
+is studied, ceteris paribus. Including these variables, and a dummy variable to control for the
+connection to Clinton, we end up with the following equation:
+
+          𝑦𝑖 = 𝛽0 + 𝛽𝑠𝑖𝑧𝑒 ⋅ 𝑥𝑠𝑖𝑧𝑒 + 𝛽𝑙𝑒𝑣. ⋅ 𝑥𝑙𝑒𝑣. + 𝛽𝑝𝑟𝑜𝑓𝑖𝑡 ⋅ 𝑥𝑝𝑟𝑜𝑓𝑖𝑡 + 𝛽𝑐𝑜𝑛𝑛𝑒𝑐𝑡𝑖𝑜𝑛 ⋅ 𝑥𝑐𝑜𝑛𝑛𝑒𝑐𝑡𝑖𝑜𝑛
+
+The firm size is the log of total market cap just before the announcement, leverage is represented
+by total debt to total capital and profitability is measured by return on equity, as is the norm for
+financial firms.
+
+5.3.1 Robust Standard Errors correction
+One assumption to perform a regression is that the data analyzed is homoscedastic, as the error is
+not correlated to the covariates. To address this we use robust standard errors which gives a more
+representative result of the regression. As our analysis is done in R, we download a package and
+function that utilize robust standard errors, for more details see Appendix B.
+
+                                                                                 16
+6 Results
+
+The results are organized into two sections, in each we will conclude by answering if we can accept
+or reject the hypotheses stated in 5.1 Hypotheses development. All tables and graphs will be
+presented in the appendix at the end of the paper.
+       First, the results from the event study is presented. Here it is evident that there are
+significant CAR for the connected firms and that the difference between the connected and non-
+connected firms is significantly different from zero.
+        Lastly, we will present what we find after performing a regression upon firm characteristics
+with CAR as a dependent variable.
+
+6.1 Event Study
+The result from the event study will be divided into firms that are connected by speeches and the
+foundation in order to test hypothesis 1-4. Both groups show similar abnormal returns on the event
+day and afterward that differ from zero, which indicate that there is a CAR for both groups. See
+figure 1 for a graph showing the surrounding days of the event.
+
+6.1.1 Speech group
+The speech group shows that the CAR is positive and significantly different from zero on and after
+the announcement (See table 5, panel A). At the same time this is not the case before the
+announcement, which should be expected as there should not be an increase in value before the
+event takes place.
+        The difference in abnormal return on the event day is not as large as one would expect. Nor
+does it reflect a significant CAR. CAR[0,1] indicate that there is a significant difference between
+the connected and non-connected firms. If we study the following trading days we see that this
+difference increases and is significant for the remainder of the event window. These numbers
+suggest that there are positive, significant differences in CARs on all days where the highest
+difference is on event day four with 2.6% between the connected and the non-connected group.
+CAR[0,5] also indicates that there is a sustained effect after five days of trading.
+       A second event study was carried out and extended to 11 event days where we measured
+CAR[0,10] this was however less significant. The reason for that is because it is harder to isolate
+
+                                                                                 17
+one event’s effect the longer period one examines. Many factors could affect the abnormal returns;
+hence, a shorter event study such as five days is more reliable.
+       To investigate why CAR[0] is not significant we studied the event window CAR[-1,1] and
+CAR[-3,3] in this way we capture any potential leakages prior Clinton’s announcement. Both event
+windows indicate a positive difference in CARs with a significance under 1%. (See Table 4, panel
+A).
+
+6.1.2 Analysis of Speeches
+In general, there is a positive trend throughout the post-announcement event window. The majority
+of the CARs are statistically different from zero and the difference as well. The notable exception
+is CAR[0]. This could be somewhat confusing since this is the first trading day after Clinton’s
+announcement and we ought to see an immediate reaction from the market. Because only the
+abnormal return for the connected companies on the day of the event, and not the difference, is
+statistically different from zero, we propose that Clinton’s announcement have a positive impact
+on the financial industry as a whole. This will be elaborated on further in the Discussion. (See 7.2.)
+       Another potential explanation we find is that there is a leak in the days before the
+announcement. Indeed, CNN and other news sources, reported on the Friday that Clinton would
+announce her candidacy on Sunday the 12th of April. This strengthens our hypothesis that a leak
+would soften the abnormal return on the first trading day after Clinton’s announcement, as some
+of it could be priced in from the Friday. This hypothesis is supported by CAR[-1,1] which is
+significant but it does not explain, however, why there is an increase in CAR for the remainder of
+the event window.
+       Another possible cause to the CAR’s insignificant p-value on the event day could be the
+fact that, even though the announcement was the inception of her campaign, she held her first
+
+                                    th
+speech that Tuesday on the 14  of April. That was her campaign debut in the first state to vote in
+
+                     8
+the primary, Iowa . It could be argued that it was first when she held her speech in Iowa that the
+market reacted to the fact that she was running for the Presidency. This could imply that the
+market’s realization of Clinton’s intentions was outspread during several days, which also provides
+an explanation to why we observe a sustained effect on CAR[0,5].
+
+8
+ https://www.bostonglobe.com/news/nation/2015/04/14/clintoniowa/ujEYUxeYwJc275PdFQ5pWI/story.html
+
+                                                                                 18
+       In conclusion we can accept both hypotheses 1 and 3 as the speech group has CARs that
+are different from zero and the difference is positive in comparison to the non-connected group.
+We notice that the numbers indicate a sustained effect for the speech group after five trading days.
+We also observe that the leak reported on the Friday before the announcement (which was on a
+Sunday) may have affected the CARs.
+
+6.1.3 Foundation group
+The Clinton Foundation group show similar numbers to the speech group yet they are not as
+convincing as the first group, as they show higher p-values. (See table 4, panel B) The foundation
+group also experiences CARs that are all different from zero from the announcement day and
+throughout five days of trading which once again indicate that the group did experience abnormal
+returns. The difference after five days of trading amounts to 1.9 % indicated by CAR[0,5] and it
+could therefore be argued that the foundation group also had a sustained CAR after the event
+window. (See table 5, panel B)
+        CAR[0], similar to the speech group, does not display a significant difference between the
+two groups. To examine this behavior we once again have to study the estimation windows
+CAR[0,1], CAR[-1,1] and CAR[-3,3]. The results are similar to the speech group.
+
+6.1.4 Analysis of Foundation
+In the entire analysis we observe a similar pattern to that of the speech group. That is CAR[-1,1]
+and CAR[-3,3] show that a leak could be the reason behind the softened effect on event day 0.
+This would be expected, if the leak affects the first group it should also affect the group who have
+donated to the Clinton Foundation.
+        In conclusion, it is evident that there is a positive CAR surrounding the event day that is
+significant throughout the remainder of the event window. Although, something could have
+softened the impact of her announcement. This could partly be explained by a leak the Friday
+before the announcement. These results suggest that we can accept hypotheses 2 and 4 as the CARs
+are positive and there is a significant difference between the connected and non-connected groups.
+
+6.2 OLS Regression model
+The regression on firm-characteristics is performed to test hypotheses 5 and 6. These state that the
+source of the abnormal return is a consequence of the firms’ connection to Clinton and not some
+
+                                                                                 19
+other variable that would have the firms behave similarly. To address this problem, we regress
+both groups’ CAR on firm size, leverage and profitability and a dummy variable is included for
+each connection respectively. We separate the speeches and the foundation connected companies
+and present the results for each group individually.
+
+6.2.1 Speech group
+When taking into account the firm characteristics, the results indicate that we can accept our
+hypothesis. The day of the event, CAR[0] is positive and significant at a 6% level (See table 6,
+Panel A). 0.6% of the abnormal return on this day can be attributed to the Clinton connection. For
+the post announcement event window, the connection coefficient continues to be positive and is
+significant below 1%. After five trading days, a CAR of 3% can be attributed to the Clinton
+connection. (See table 5, panel A). The event windows surrounding the event, CAR[-3,3] and
+CAR[-1,1], the connection contributes with a positive 𝛽 of around 2%, which is significant.
+
+6.2.2 Analysis of speeches
+The regression implies that the results from the event study still holds after treating each firm as if
+they had the same size, leverage and profitability. This should remove the main concerns to the
+causality of the abnormal returns. It is clear that these are a result from the connection to Clinton.
+       In conclusion, the group of companies at which Clinton held speeches experience a
+cumulative abnormal return that is derived from their connection to Clinton. The fifth hypothesis
+can be accepted as the connection still holds when we control for firm characteristics.
+
+6.2.3 Foundation group
+The regression is performed on the same covariates as was done on Speech-connections but with
+a dummy variable for Foundation donations instead of speeches. On the event day we see a positive
+coefficient for the connection; however, the coefficient is not statistically significant. (See table 6,
+panel B) Throughout the event window we continue to see positive coefficients attached to the
+Clinton connection. After five trading days, the contribution to a firm’s CAR is 2.3% as a result
+of their connection to Clinton. With the exception of CAR[0,1], they are statistically significant;
+CAR[0,2] has a p-value of below 5% and CAR[0,3], CAR[0,4] and CAR[0,5] are significant below
+1%. What does differ for the Foundation connection is that the pre-announcement window, CAR[-
+1,1], is not significant. CAR[-3,3] does prove to be significant to below 1%. See table 6.
+
+                                                                                 20
+6.2.4 Analysis of Foundation
+The results above are similar to that of the speech-connections but we cannot draw as strong of a
+conclusion as some days are not significant. What the results suggests is that there is a sustained
+effect of a connection to Clinton as the CAR[0,5] is significant and positive. Also, a leak could
+have impacted the result and lessened the impact on the event day. There is no significance on the
+day following the event which could suggest that there is no excessive returns for companies
+connected to Clinton, as this should have been reflected in the immediate abnormal return. This is
+strengthened further by the fact that CAR[-1,1] is not significant either.
+       The only conclusion we can draw is that there is an impact surrounding the event which is
+evident by CAR[-3,3] and there is a sustained effect after five trading days. However, we cannot
+draw any conclusion if the CAR is a direct consequence of Clinton’s announcement. Therefore it
+is plausible that the announcement does have an effect on connected firms, but we cannot accept
+Hypothesis 6 on a statistically significant level.
+
+6.3 Summary of results and implications
+Below is a table that presents our results in form of the hypotheses stated above. We can accept all
+of the hypotheses with the exception of Hypothesis 6, which states that the CARs for foundation
+companies are a consequence of connection to Clinton.
+
+     Hypothesis Course of Action
+
+     H1, CARs for speeches are significantly different from zero. Accepted
+
+     H2, CARs for the Clinton Foundation is significantly different from zero. Accepted
+
+     H3, The difference between CAR for speeches and the control group are        Accepted
+      significantly different from zero.
+
+     H4, The difference between CAR for foundation and the control group are       Accepted
+     significantly different from zero.
+
+     H5, CARs are affected by the speech connection and not because of some other       Accepted
+      firm characteristic.
+
+     H6, CARs are affected by the foundation connection and not because of some        Rejected
+      other firm characteristic.
+
+Hypothesis one, three and five are accepted, this implies that, for the speech group, the connection
+to Clinton does increase stock returns. The same does not apply for the foundation group as
+
+                                                                                 21
+hypothesis six is rejected. We recognize that there are significant CARs but if this hypothesis does
+not hold, we cannot deduce that the CARs are from the connection to Clinton. As our goal was not
+to answer if all connected companies exhibit this behavior, we have successfully answered our
+research question. Companies who are connected to a political candidate can experience increased
+stock returns. In section 7 we will discuss eventual limitations and try to elaborate on why this is
+not the case for the companies who donated to the Clinton Foundation.
+
+6.3.1 What implications do these results have for the research field?
+This paper aimed to fill the gap in existing research and has done so within the limitations of our
+research question. What is most interesting in this study is that even though Clinton is influential
+and a well-recognized name, she has no legal power as of her announcement. Despite this we show
+that connections to a candidate is enough to experience abnormal returns and it would be
+interesting to study this candidate further if she would be elected to office in the future.
+
+7. Discussion
+
+This study aimed to fill the gap in existing research and has done so within the limitations of this
+paper. It is not exhaustive and there are two fundamental thoughts that have arisen that will be
+addressed in this section. First, we will discuss if Clinton’s announcement impacts only the
+connected group or the industry as a whole. Second, we will bring up the importance of a
+connection and whether or not it is significant enough. Perhaps donations to the Clinton
+Foundation are driven by an altruistic motive and firms do not expect a favor in return.
+
+7.1 The announcement could have industry-wide effects
+A potential explanation for the difference in CARs is not as significant as the individual reported
+CARs is that the effect of Clinton’s announcement is industry wide.
+       It would make sense to any observer if the reason behind an increase in value could be
+because of potential regulatory favors, or simply lack of regulation, this would impact the entire
+industry and not only the firms who have a connection to Clinton. Some companies could be the
+driving force behind these “benefits” but everyone can reap the results. This would be supported
+
+                                                                                 22
+by our results and also tie into the theory of regulatory capture, mentioned earlier, as the motive
+behind these connections.
+       Earlier in this paper we concluded that, regardless of the actual connection between Clinton
+and another party, the image that the media conveys does impact the public and could thence
+influence the market. What this could imply, which is outside the scope of this paper, is that
+perhaps it is not actually the connections per se that increases stock returns but a connection
+perceived by the public. Further research into this area could try to establish a connection based
+on online mentions -- in newspapers and twitter -- of a financial firm together with Clinton.
+
+7.2 Why does not foundation show the same results?
+The connections we have established in this paper, namely speeches and foundation, do show a
+difference in CAR during the event windows. Speeches show a higher CAR than Foundation on
+most instances. We believe that this is a consequence of speeches being a stronger connection to
+Clinton. These companies have had direct contact with Clinton while a donation to her foundation
+does not have to imply even meeting her. The true motive behind a donation could be seen as more
+altruistic, relative to that of a speaking fee.
+       Moreover, if these companies truly have an ulterior motive and see a benefit in Clinton
+being elected, there are more effective ways of contributing to her campaign. What these
+alternatives could offer, however, is a way to contribute to Clinton without directly being involved
+in her political career.
+
+                                                                                 23
+8. Conclusion
+
+Throughout the analysis in this paper, we see a pattern of positive cumulative abnormal returns for
+connected firms on the first trading day after Hillary Clinton’s campaign announcement. We look
+at two different groups, speeches and foundation donors and both display an excessive return
+during our pre-determined event windows. This is significant on a standalone basis but also when
+compared to a sample of financial firms who have, seemingly, no connection to Clinton. This
+suggests that there is a value in being connected to a presidential candidate as some connected
+firms do experience excessive stock returns.
+        Controlling for firm-characteristics, one group still exhibits a significant increase in value
+because of the connection to Clinton. The other is not as convincing even though there is a
+significant connection on some days. From this analysis we can confirm that the increased value
+for speech connected firms are derived from their connection to Clinton. For the foundation
+connected companies, the results are not as significant. We can be sure that there is an impact but
+we cannot be entirely certain that this is because of their connection to Clinton.
+       We have shown that companies in developed countries can experience an increase in stock
+returns because of their connection to a politician. This is done without the backdrop of a crisis
+which has been the emerging argument to explain these phenomenon. However, this does not
+contradict the connection in a crisis hypothesis. It is possible that if the U.S. would experience
+another crisis, similar to that in 2008, these connections would become even more valuable and
+this would be reflected in the CARs.
+       What remains to be answered is if this value from connections are a one-time occurrence
+or if there can be an established pattern for other presidential candidates as well. This appears to
+be a fruitful area for further research.
+
+                                                                                 24
+References
+Acemoglu, D., Johnson, S., Kermani, A., Kwak, J., Mitton, T., (2015). The Value of Connections
+in a Turbulent Time: Evidence from the United States. Working paper not published.
+
+Akey, P., (2015). Valuing Changes in Political Networks: Evidence from Campaign
+Contributions to Close Congressional Elections. Oxford Review of Financial Studies 28(11),
+3188-3223.
+
+Amore, M.D., Bennedsen, M., The value of local political connection in a low-corruption
+environment. Journal of Financial Economics 110(2), 387-402.
+
+Asp, K., (1986). Powerful Mass Media. Studies in Political Opinion Formation. Stockholm:
+Akademilitteratur
+
+Baker, S.R., Bloom, N., Davis, S.J., (2015). Measuring economic policy uncertainty. Working
+paper not published.
+
+Bó, E.D., (2006). Regulatory Capture: A Review. Oxford Review of Economic Policy 22(2),
+203-225.
+
+Braden, M., (1996). Women politicians and the media. Lexington: The University of Kentucky
+Press.
+
+Bystrom, D.G., McKinnon, L. M., and Channey, C.K. (1999). The first lady and the first estate:
+Media coverage of Hillary Clinton and Elisabeth Dole in the 1996 presidential campaign. In
+L.L. Kaid and D., and D.G. Bystrom (Eds), The electronic election: Perspectives on the 1996
+campaign communication. Mahway, NJ: Lawrence Erlbaum.
+
+Duchin, R., Sosyura, D., (2012). The Politics of Government Investments. Journal of Financial
+Economics 106(1), 24-48.
+
+Fisman, R., (2001). Estimating the Value of Political Connections. The American Economic
+Review 91(4), 1095-1102.
+Jayachandaran, S., (2006). The Jeffords Effect. The journal of Law & Economics 49(2), 397-425.
+
+Johnson, S., Mitton, T., (2003). Cronyism and capital controls: evidence from Malaysia.Journal
+of Financial Ecnomics 67(2), 351-382.
+
+Khan, K.F., (1992). Does being male help? An investigation of gender and media effects in the
+U.S. Senate races. Journal of Politics 54, 497-517
+
+Khwaja, A.I., Mian, A., (2005). Unchecked intermediaries: Price manipulation in an emerging
+stock market. Journal of Financial Economics 78(1), 203-241.
+
+Tahoun, A., (2014). The role of stock ownership by US members of Congress on the market for
+political favors. Journal of Financial Economics 111(1), 86-110.
+
+                                                                                 25
+Fisman, D., Fisman, R., Galef, J., Khurana, R., and Wang, Y., (2012). Estimating the value of
+connections to Vice-President Cheney. B.E. Journal of Economic Analysis and Policy 12(3), 1-
+18.
+
+Sunstein, C.R., (1994). Political Equality and Unintended Consequences. Culumbia Law Review
+94(4), 1390-1414.
+
+Tetlock, P.C., (2007). Giving Content to Investor Sentiment: The Role of Media in the Stock
+Market. The Journal of THE AMERICAN FINANCE ASSOCIATION 62(3), 1139-1168
+
+Witt, L., Paget, K., and Matthews, G., (1994). Running as a woman: Gender and power in
+American Politics. New York: Three Free Press.
+
+News articles and other references
+DISCLOSED act of 2010. United States. H.R. 5175 (S.3628-Senate)
+
+Egan, M., (2015). Hillary Clinton Tweet Crushes Biotech Stock.
+http://money.cnn.com/2015/09/21/investing/hillary-clinton-biotech-price-gouging/. Accessed:
+2016-05-14.
+
+Griffin, D., (2016). The Truth About Hillary Clinton’s Wall Street Speeches.
+http://money.cnn.com/2016/04/20/news/economy/hillary-clinton-goldman-sachs/. Accessed: 2016-05-
+14.
+
+Not published author, (2015). The Clinton Charity Case. http://www.wsj.com/articles/the-clinton-
+charity-case-1438731092. Accessed: 2016-05-14.
+
+Thomas, K., and Lerer, L., (2015). At Iowa College, Clinton began to lay out campaign message.
+https://www.bostonglobe.com/news/nation/2015/04/14/clintoniowa/ujEYUxeYwJc275PdFQ5p
+WI/story.html. Accessed: 2016-0-14.
+
+The Clinton Foundation, https://www.clintonfoundation.org/ Accessed: 2016-05-14
+
+                                                                                 26
+Appendix A: Tables and Graphs
+
+Figure 1: The graphs below presents the difference in cumulative abnormal return (CAR) ten
+trading days before and after Clinton announcing her intention to run for President. The red line
+                                                                                                                 th
+indicates the start of the first trading day after her announcement, April 13 . The dotted lines
+show the 90 % and 95 % significance interval.
+Panel A: Difference in CAR surrounding the announcement of Clinton
+running for President for Speech Connections vs non-connected firms.
+
+  6,0%
+  5,0%
+  4,0%
+  3,0%
+  2,0%
+  1,0%
+  0,0%
+  -1,0%
+  -2,0%
+  -3,0%
+  -4,0%
+
+Panel B: Difference CAR surrounding the announcement of Clinton running
+for President for Foundation Connections vs non-connected firms.
+
+  7,0%
+
+  6,0%
+
+  5,0%
+
+  4,0%
+
+  3,0%
+
+  2,0%
+
+  1,0%
+
+  0,0%
+
+  -1,0%
+
+  -2,0%
+
+                                                                                 27
+Table 1: Descriptive Statistics
+
+Table 1 shows descriptive statistics for our data which comprises of 244 financial firm listed on
+the NYSE. “Speeches” consist of the companies at which Clinton held speeches between 2013
+and 2015. “Foundation” are companies who have donated more than $50,000 to the Clinton
+Foundation. 𝐶𝐴𝑅[𝑡1, 𝑡2] is the cumulative abnormal return from day 𝑡1 to day 𝑡2. The firm
+characteristics that are analyzed are size (ln of assets), leverage (total debt to total capital) and
+profitability (return on equity).
+
+             Mean Min 25th Pctile Median 75th Pctile Max St. Dev. N
+ Speeches 0.4% -1.8% -0.1% 0.5% 1.3% 2.8% 1.0% 244
+ Foundation 0.3% -1.9% -0.3% 0.4% 1.1% 2.9% 1.1% 244
+
+ CAR(-3,3) 0.2% -15.2% -1.3% 0.1% 1.8% 16.4% 3.6% 244
+ CAR(-1,1) 0.1% -9.1% -0.8% 0.2% 1.1% 9.8% 2.2% 244
+ CAR(0) 0.7% -3.3% 0.1% 0.7% 1.3% 8.7% 1.3% 244
+ CAR(0,1) 0.6% -8.1% -0.1% 0.6% 1.3% 7.4% 1.7% 244
+ CAR(0,2) 0.7% -11.4% -0.3% 0.7% 1.6% 9.1% 2.2% 244
+ CAR(0,3) 1.0% -18.2% -0.3% 0.8% 2.2% 9.0% 2.6% 244
+ CAR(0,4) 0.6% -17.4% -0.9% 0.5% 2.1% 9.9% 2.9% 244
+ CAR(0,5) 0.3% -19.0% -1.2% 0.4% 1.8% 10.8% 3.2% 244
+
+ Size 8.4 4.3 7.1 8.2 9.8 12.5 1.8 244
+ Leverage 45.0 0.0 20.4 41.2 67.9 339.2 32.9 244
+ Profitability 11.7 -66.4 6.3 9.6 15.8 83.9 14.5 244
+
+                                                                                 28
+Table 2: List of connected companies
+
+The tables below show a list of the connected companies. These companies have been chosen
+because of their relation to Clinton, either by Speeches or that they have donated to the Clinton
+Foundation.
+
+Panel A: Group of Companies at which Clinton has held a speech
+
+                      Company Name Speaking Fees ($)
+                       Bank of America 485,000
+                       Citigroup 700,000
+                      Goldman Sachs 675,000
+                       J P Morgan Chase 225,000*
+                       Morgan Stanley 225,000
+                       Apollo Global Management 225,000
+                       Canadian Imperial Bank of Commerce 150,000
+                        Ameriprise Financial Services 225,000
+
+*Assumed to be standard fee, not listed in original source.
+
+Panel B: Group of Companies who have donated to the Clinton Foundation
+
+                        Company Name Donation ($)
+                           Banc of California 1,000,000 - 5,000,000
+                           Bank of America 1,000,000 - 5,000,000
+                           Barclays 1,000,000 - 5,000,000
+                           Citigroup 1,000,000 - 5,000,000
+                           Goldman Sachs 1,000,000 - 5,000,000
+                          HSBC Holdings 1,000,000 - 5,000,000
+                           J P Morgan Chase 500,000 - 1,000,000
+                           Morgan Stanley 500,000 - 1,000,000
+                           The Blackstone Group 500,000 - 1,000,000
+                           Wells Fargo 500,000 - 1,000,000
+                          Lazard 50,000 - 100,000
+                          Toronto Dominion Bank 50,000 - 100,000
+
+Sources:
+
+Clinton Foundation, https://www.clintonfoundation.org/ accessed 2016-05-14
+
+Clinton Campaign Website, www.hillaryclinton.com accessed 2016-05-12
+
+                                                                                 29
+Table 3: List of companies in control group
+
+This list consist of all financial companies in the control group. The list is sorted in alphabetical order.
+                                                                            Control Group
+ABM Industries BlackRock First Marblehead Corporation Marcus & Millichap Regional Management
+Aegon Blue Capital Reinsurance Flagstar Bancorp Markel Corporation Regions Financial Corporation
+Affiliated Managers Brookfield Property Partners Forestar Group Marriot Vacations Worldwide Reinsurance Group of America
+Aflac Brown & Brown Fortress Investment Group Marsh & McLennan Companies RenaissanceRe
+Alexander & Baldwin Capital One Financial Corporation Franklin Resources Maui Land & Pineapple Company RLI Corp
+Alleghany Corporation CBRE Group FXCM MBIA Rollins
+AllianceBernstein Holding Charles Schwab Gamco Investors Mercury General Corporation Rouse Properties
+AllianzGI NFJ China Cord Blood Corporation Gazit-Globe MetLife Royal Bank Of Canada
+Allied World Assurance China Life Insurance Company Genworth Financial MGIC Investment Corporation Royal Bank Scotland
+Allstate Citizens Getty Realty Corporation MidSouth Bancorp Safeguard Scientifics
+Altisource Residential CNA Financial Corporation Government Properties Income Trust Mitsubishi UFJ Financial Group Shinhan Financial Group
+American Equity Investment Life CNO Financial Group Green Dot Corporation Mizuho Financial Group State Street Corporation
+American Express Company Cohn & Steers Greenhill & Co Nam Tai Property Sterling Bancorp
+American Financial Group Comerica Incorporated Grupo Financiero Santander Mexico National Bank Holdings Corporation Stewart Information Services
+American International Group Community Bank System Hartford Financial Services Nationstar Mortgage Holdings Stifel Financial Corporation
+American Realty Investors CPB HCI Group Nelnet Stifel Financial Corporation
+Aon Credicorp HDFC Bank Limited New York Community Bancorp Stonegate Mortgage Corporation
+Arlington Asset Investment Credit Suisse Group Hilltop Holdings Noah Holdings Suffolk Bancorp
+Armada Hoffler Properties Cullen/Frost Bankers Horace Mann Educators Nomura Holdings Sumitomo Mitsui Financial
+Arthur J. Gallagher & Co. Customers Bancorp Hudson Pacific Properties Oaktree Capital Group Sun Life Financial
+Artisan Partners Asset Management D/B/A Chubb Limited New ICICI Bank Limited Och-Ziff Capital Management SunTrust Banks
+Aspen Insurance Deutsche Bank Independence Holding Company Ocwen Financial Corporation Synovus Financial
+Associated Banc-Corp Dun & Bradstreet Corporation ING Group OFG Bancorp TCF Financial Corporation
+Assurant Dupont Fabros Technology Intercontinental Exchange Old Republic International Corporation Tejon Ranch Co
+Assured Guaranty Eaton Vance Corporation Invesco OneBeacon Insurance Group Terreno Realty Corporation
+Astoria Financial Corporation E-House Investment Technology Group OneMain Holdings The Hanover Insurance
+Aviva Ellington Financial Itau Unibanco Banco Holding Oppenheimer Holdings The Travelers Companies
+Axis Capital Holdings Emergent Capital J.G. Wentworth Company Orix Corp Ads Third Point Reinsurance
+Banco Bilbao Viscaya Argentaria Employers Holdings Janus Capital Group PennyMac Financial Services Torchmark Corporation
+Banco Bradesco Endurance Specialty JMP Group LLC PHH Corp Triple-S Management
+Banco Bradesco Equifax Jones Lang LaSalle Incorporated Phoenix Companies U.S. Bancorp
+Banco De Chile Essent Group KB Financial Group Piper Jaffray Companies Universal Insurance Holdings
+Banco Latinoamericano EverBank Financial KCG Holdings PNC Financial Services Unum Group
+Banco Santander Evercore Partners Kemper Corporation Primerica Validus Holdings
+Banco Santander Brasil Everest Re Kennedy-Wilson Holdings Principal Financial Group Valley National Bancorp
+BanColombia Everi Holdings KeyCorp ProAssurance Corporation Voya Financial
+BancorpSouth F.N.B. Corporation Kingsway Financial Services Progressive Corporation W.R. Berkley Corporation
+Bank of Hawaii FBL Financial Group KKR & Co. Prosperity Bancshares Waddell & Reed Financial
+Bank Of Montreal Federal Agricultural Mortgage Legg Mason Provident Financial Services Walker & Dunlop
+Bank Of New York Mellon Federated Investors Lincoln National Corporation Prudential Financial Walter Investment Management
+Bank of Nova Scotia Fidelity and Guaranty Life Lloyds Banking Group Prudential Public Limited Company Western Alliance Bancorporation
+BankUnited First Acceptance Corporation Loews Corporation Pzena Investment Management Westpac Banking Corporation
+BB&T First American Corporation M&T Bank Corporation Radian Group Westwood Holdings Group
+BBVA Banco Frances First BanCorp. Macro Bank Raymond James Financial White Mountains Insurance Group
+BBX Capital Corporation First Commonwealth Financial Manning & Napier RE/MAX Holdings XL Group
+Berkshire Hills Bancorp First Horizon National Corporation Manulife Financial Realogy Holdings
+
+                                                                                                                  30
+Table 4: Overview of CAR
+The panels below show an overview of the five event windows we have studied in this paper.
+“Significance” is a measure of the statistical significance for the differences between “Connected” and
+“Non-Connected”. (* < 10%, ** < 5%, *** < 1%)
+
+Panel A: Overview of CAR for Speech connections
+
+                 Measure Connected Non-Connected Difference Significance
+                 CAR[-3,3] 2.4% 0.2% 2.2% ***
+                 CAR[-1,1] 1.5% 0.0% 1.5% ***
+                 CAR[0] 1.0% 0.7% 0.3% -
+                 CAR[0,1] 1.9% 0.5% 1.4% ***
+                 CAR[0,5] 2.9% 0.2% 2.6% **
+
+Panel B: Overview of CAR for Foundation connections
+
+                 Measure Connected Non-Connected Difference Significance
+                 CAR[-3,3] 2.5% 0.1% 2.4% ***
+                 CAR[-1,1] 0.9% 0.0% 0.9% **
+                 CAR[0] 0.9% 0.7% 0.2% -
+                 CAR[0,1] 1.4% 0.5% 0.9% **
+                 CAR[0,5] 2.2% 0.2% 1.9% ***
+
+                                                                                         31
+Table 5: Detailed view of CAR in post announcement window
+
+The tables below presents a detailed view of the post-announcement event window. “Significance” shows
+the significance for the difference between the connected and non-connected companies’ CAR.
+“Significance (Level Effect)” represents the significance of the “CAR (Connected)” against zero.
+(* < 10%, ** < 5%, *** < 1%)
+
+Panel A: Post announcement event window for Speech connections
+
+                                                                                                         Significance
+ Event Day Date CAR (Connected) CAR (Non-Connected) Difference Significance
+                                                                                                                 (Level effect)
+     0 13-Apr-15 1.0% 0.7% 0.3% - ***
+     1 14-Apr-15 1.9% 0.5% 1.4% *** ***
+     2 15-Apr-15 2.5% 0.6% 1.9% *** ***
+     3 16-Apr-15 3.2% 0.9% 2.3% *** ***
+     4 17-Apr-15 3.4% 0.5% 2.9% *** ***
+     5 20-Apr-15 2.9% 0.2% 2.6% ** ***
+
+Panel B: Post announcement event window for Foundation connections
+
+                                                                                                         Significance
+ Event Day Date CAR (Connected) CAR (Non-Connected) Difference Significance
+                                                                                                                 (Level effect)
+     0 13-Apr-15 0.9% 0.7% 0.2% - ***
+     1 14-Apr-15 1.4% 0.5% 0.9% ** ***
+     2 15-Apr-15 2.0% 0.6% 1.4% *** ***
+     3 16-Apr-15 2.4% 0.9% 1.6% *** ***
+     4 17-Apr-15 2.6% 0.5% 2.0% *** ***
+     5 20-Apr-15 2.2% 0.2% 1.9% *** ***
+
+                                                                                         32
+Table 6: Regression Coefficients
+
+Table 6 display the results from our (robust) OLS regressions. Each covariate’s beta is shown including standard error in parenthesis.
+The significance level for each coefficient is also shown. (* < 10%, ** < 5%, *** < 1%)
+
+Panel A: Regression Coefficients for the Speech connected companies
+
+                      CAR[-3,3] CAR[-1,1] CAR[0] CAR[0,1] CAR[0,2] CAR[0,3] CAR[0,4] CAR[0,5]
+ Clinton Connection 2.2% ** 1.3% *** 1.4% * 1.3% *** 1.7% *** 2.2% *** 2.7% *** 3.0% ***
+                     (0.9%) (0.5%) (0.3%) (0.4%) (0.6%) (0.7%) (0.9%) (0.9%)
+ Firm Size 0.0% 0.0% 0.6% 0.0% 0.0% 0.0% 0.0% -0.2%
+                     (0.2%) (0.1%) (0.1%) (0.1%) (0.1%) (0.1%) (0.1%) (0.1%)
+ Leverage 0.0% 0.0% -0.1% 0.0% 0.0% 0.0% 0.0% 0.0%
+                     (0.0%) (0.0%) (0.0%) (0.0%) (0.0%) (0.0%) (0.0%) (0.0%)
+ Profitability 0.1% * 0.0% 0.0% 0.0% 0.0% 0.0% 0.0% 0.0%
+                     (0.0%) (0.0%) (0.0%) (0.0%) (0.0%) (0.0%) (0.0%) (0.0%)
+ R^2 0.06 0.03 0.02 0.03 0.03 0.04 0.04 0.03
+ N 244 244 244 244 244 244 244 244
+
+Panel B: Regression Coefficients for the Clinton Foundation
+
+                      CAR[-3,3] CAR[-1,1] CAR[0] CAR[0,1] CAR[0,2] CAR[0,3] CAR[0,4] CAR[0,5]
+ Clinton Connection 2.1% *** 0.7% 0.4% 0.7% 1.3% ** 1.3% *** 1.8% *** 2.3% ***
+                     (0.6%) (0.4%) (0.3%) (0.4%) (0.5%) (0.5%) (0.6%) (0.6%)
+ Firm Size 0.0% 0.0% -0.1% 0.1% 0.0% 0.0% 0.0% -0.2%
+                     (0.2%) (0.1%) (0.1%) (0.1%) (0.1%) (0.1%) (0.1%) (0.1%)
+ Leverage 0.0% 0.0% 0.0% 0.0% 0.0% 0.0% 0.0% 0.0%
+                     (0.0%) (0.0%) (0.0%) (0.0%) (0.0%) (0.0%) (0.0%) (0.0%)
+ Profitability 0.1% * 0.0% 0.0% 0.0% 0.0% 0.0% 0.0% 0.0%
+                     (0.0%) (0.0%) (0.0%) (0.0%) (0.0%) (0.0%) (0.0%) (0.0%)
+ R^2 0.06 0.02 0.01 0.02 0.03 0.03 0.03 0.03
+ N 244 244 244 244 244 244 244 244
+                                                                                                                 33
+Appendix B: Code in R to run analysis
+
+rm(list=ls())
+
+C=matrix(c(1),nrow=6,ncol=1)
+
+#Hillary Tickets to loop through
+nyseFin=c("AIG","ABM","AEG","AMG","AFL","ALEX","Y","AB","NFJ","AWH","ALL","RESI","AEL","AXP","AFG","ARL","AON","AI","AHH","AJG","AP
+AM","AHL","ASB","AIZ","AGO","AF","AV","AXS","BBVA","BBD","BBDO","BCH","BLX","BSBR","SAN","CIB","BXS","BOH","BMO","BK","BNS","BKU"
+,"BBT","BFR","BBX","BHLB","BLK","BCRH","BPY","BRO","COF","CBG","CO","LFC","BLW","CIA","CNA","CNO","CNS","CMA","CBU","CPF","BAP","C
+S","CFR","CUBI","CB","DNB","DFT","EV","EJ","EFC","EMG","EIG","ENH","EFX","ESNT","EVER","EVR","RE","EVRI","FNB","FFG","AGM","FII","FGL",
+"FAC","FAF","FBP","FCF","FHN","FMD","FBC","FOR","FIG","BEN","FXCM","GBL","GZT","GNW","GTY","GOV","GDOT","GHL","BSMX","HIG","HCI"
+,"HDB","HTH","HMN","HPP","IBN","IHC","ING","ICE","IVZ","ITG","ITUB","JGW","JNS","JMP","JLL","KB","KCG","KMPR","KW","KEY","KFS","KKR",
+"LM","LNC","LYG","L","MTB","BMA","MN","MFC","MMI","MKL","VAC","MMC","MLP","MBI","MCY","MET","MTG","MSL","MTU","MFG","NTP",
+"NBHC","NSM","NNI","NYCB","NOAH","NMR","OAK","OCN","OFG","ORI","OB","OMF","OPY","IX","PFSI","PHH","PNX","PJC","PNC","PRI","PFG",
+"PRA","PGR","PB","PFS","PRU","PUK","PZN","RDN","RJF","RMAX","RLGY","RM","RF","RGA","RNR","RLI","ROL","RSE","RY","RBS","SFE","SHG","S
+TT","STL","STC","SF","SFN","SGM","SCNB","SMFG","SLF","STI","SNV","TCB","TRC","TRNO","THG","TRV","TPRE","TMK","GTS","USB","UVE","UN
+M","VR","VLY","VOYA","WRB","WDR","WD","WAC","WAL","WBK","WHG","WTM","XL","OZM","SCHW","DB","BANC","BCS","HSBC","LAZ","BX",
+"TD","WFC")
+nyseSpeech=c("BAC","C","GS","JPM","MS","APO","CM","AMP")
+
+ejFoundation=c("SCHW","OZM","DB","ABM","AEG","AMG","AFL","ALEX","Y","AB","NFJ","AWH","ALL","RESI","AEL","AXP","AFG","AIG","ARL","A
+MP","AON","APO","AI","AHH","AJG","APAM","AHL","ASB","AIZ","AGO","AF","AV","AXS","BBVA","BBD","BBDO","BCH","BLX","BSBR","SAN","CI
+B","BXS","BOH","BMO","BK","BNS","BKU","BBT","BFR","BBX","BHLB","BLK","BCRH","BPY","BRO","CM","COF","CBG","CO","LFC","BLW","CIA","C
+NA","CNO","CNS","CMA","CBU","CPF","BAP","CS","CFR","CUBI","CB","DNB","DFT","EV","EJ","EFC","EMG","EIG","ENH","EFX","ESNT","EVER","E
+VR","RE","EVRI","FNB","FFG","AGM","FII","FGL","FAC","FAF","FBP","FCF","FHN","FMD","FBC","FOR","FIG","BEN","FXCM","GBL","GZT","GNW","
+GTY","GOV","GDOT","GHL","BSMX","HIG","HCI","HDB","HTH","HMN","HPP","IBN","IHC","ING","ICE","IVZ","ITG","ITUB","JGW","JNS","JMP","JL
+L","KB","KCG","KMPR","KW","KEY","KFS","KKR","LM","LNC","LYG","L","MTB","BMA","MN","MFC","MMI","MKL","VAC","MMC","MLP","MBI","
+MCY","MET","MTG","MSL","MTU","MFG","NTP","NBHC","NSM","NNI","NYCB","NOAH","NMR","OAK","OCN","OFG","ORI","OB","OMF","OPY","
+IX","PFSI","PHH","PNX","PJC","PNC","PRI","PFG","PRA","PGR","PB","PFS","PRU","PUK","PZN","RDN","RJF","RMAX","RLGY","RM","RF","RGA","R
+NR","RLI","ROL","RSE","RY","RBS","SFE","SHG","STT","STL","STC","SF","SFN","SGM","SCNB","SMFG","SLF","STI","SNV","TCB","TRC","TRNO","TH
+G","TRV","TPRE","TMK","GTS","USB","UVE","UNM","VR","VLY","VOYA","WRB","WDR","WD","WAC","WAL","WBK","WHG","WTM","XL")
+Foundation=c("WFC","TD","BX","MS","LAZ","JPM","HSBC","GS","C","BCS","BAC","BANC")
+
+#Old dates
+Url="http://real-chart.finance.yahoo.com/table.csv?s="
+estimationWindow="&a=02&b=12&c=2014&d=02&e=12&f=2015&g=d&ignore=.csv"
+eventWindow="&a=03&b=10&c=2015&d=03&e=20&f=2015&g=d&ignore=.csv"
+
+for(i in nyseSpeech)
+{
+urlCompany<-paste(url,i, estimationWindow,sep="")
+
+dataCompany<-read.csv(urlCompany, header=TRUE)
+dataCompany<-rev(dataCompany)
+
+pricesCompany<-dataCompany[,'Adj.Close']
+datesCompany<-dataCompany[,'Date']
+returnsCompany<-(head(pricesCompany,-1)-tail(pricesCompany,-1))/tail(pricesCompany,-1)
+
+urlSP500<-paste(urlen,"%5EGSPC",first,sep="")
+
+dataSP500<-read.csv(urlSP500, header=TRUE)
+dataSP500<-rev(dataSP500)
+
+pricesSP500<-dataSP500[,'Adj.Close']
+datesSP500<-dataSP500[,'Date']
+
+returnsSP500<-(head(pricesSP500,-1)-tail(pricesSP500,-1))/tail(pricesSP500,-1)
+
+fit <- lm(returnsCompany ~ returnsSP500)
+summary(fit)
+
+#---------------------------------------- eventWindow analysis -------------------------------------------------------------------------
+
+                                                                                 34
+urlCompany<-paste(url,i, eventWindow,sep="")
+
+dataCompany<-read.csv(urlCompany, header=TRUE)
+dataCompany<-rev(dataCompany)
+
+pricesCompany<-dataCompany [,'Adj.Close']
+datesCompany<-dataCompany [,'Date']
+returnsCompany<-(head(pricesCompany,-1)-tail(pricesCompany,-1))/tail(pricesCompany,-1)
+
+urlSP500<-paste(urlen,"%5EGSPC",second,sep="")
+
+dataSP500<-read.csv(urlSP500, header=TRUE)
+dataSP500<-rev(dataSP500)
+
+pricesSP500<-dataSP500[,'Adj.Close']
+datesSP500<-dataSP500[,'Date']
+
+returnsSP500<-(head(pricesSP500,-1)-tail(pricesSP500,-1))/tail(pricesSP500,-1)
+
+#Calculate Abnormal returns and CAR
+AR<-returnsCompany-(coef(fit)[1]+returnsSP500*coef(fit)[2])
+AR<-rev(AR)
+CAR<-cumsum(AR)
+
+dates<-rev(datesSP500)
+dates<-dates[-1]
+
+print(i)
+
+C<-cbind(C,CAR)
+colnames(C)[ncol(C)]=i
+}
+
+#--------------------------------------------------------- STATISTICS -------------------------------------------------------------------
+
+#Manually save data from previous run to compare
+ConnectionResults<-C[,-1]
+CompaniesResults<-C[,-1]
+
+P=matrix(c(1),nrow=5,ncol=1)
+
+#t-test for the difference in CAR
+for(j in 1:6)
+{
+ b<-t.test(ConnectionResults[j,],CompaniesResults[j,],var.equal=FALSE,paired=FALSE, conf.level = 0.95)
+ temp<-c(b$estimate[1],b$estimate[2],b$p.value,b$conf.int[1],b$conf.int[2])
+ P<-cbind(P,temp)
+}
+
+#Export results to Excel
+write.xlsx(data.frame(P), "Results_CAR.xlsx", col.names = TRUE, row.names = FALSE)
+
+write.xlsx(data.frame(ConnectionResults), "Ind_Firm_NYSE_Speexch.xlsx", col.names = TRUE, row.names = FALSE)
+
+#--------------------------------------------------------- OLS REGRESSION ------------------------------------------
+
+regressionData <- read_excel("Regression.xlsx",9)
+
+#CAR[-3,3]
+car<-as.matrix(regressionData [2])
+#CAR[-1,1]
+car<-as.matrix(regressionData [3])
+#CAR[0]
+car<-as.matrix(regressionData [4])
+#CAR[0,1]
+car<-as.matrix(regressionData [5])
+
+                                                                                 35
+#CAR[0,2]
+car<-as.matrix(regressionData [6])
+#CAR[0,3]
+car<-as.matrix(regressionData [7])
+#CAR[0,4]
+car<-as.matrix(regressionData [8])
+#CAR[0,5]
+car<-as.matrix(regressionData [9])
+
+speech_dummy<-as.matrix(regressionData [10])
+mktcap<-as.matrix(regressionData [11])
+lev<-as.matrix(regressionData [12])
+roe<-as.matrix(regressionData [13])
+
+#summarR.lm produces robust standard errors for the regression
+reg<-lm(car ~ speech_dummy+mktcap+lev+roe)
+summaryR.lm(reg)
+
+                                                                                 36

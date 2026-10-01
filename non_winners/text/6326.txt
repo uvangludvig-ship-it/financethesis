@@ -1,0 +1,951 @@
+INTERGENERATIONAL
+WEALTH MOBILITY
+
+HOW POLICY CHANGES AFFECT INTERGENERATIONAL
+WEALTH MOBILITY IN SWEDEN
+
+FELIX SVENSSON
+
+JOHAN HAGBERG
+
+Bachelor Thesis
+Stockholm School of Economics
+2025
+Intergenerational wealth mobility: How policy changes affect intergenerational
+wealth mobility in Sweden
+
+Abstract:
+
+   We use a life-cycle simulation model based on Swedish administrative data to quantify
+   how wealth taxation affects intergenerational wealth mobility. We find that a 1
+   percentage point increase in wealth tax reduces the mean wealth gap between the Very
+   Rich and the Non-Rich by 6.2%. However, when we assign counterfactual behavioral
+   parameters, risk aversion, time preference, and bequest motives, from the Non-Rich
+   group to all socioeconomic groups, the effect of the tax drops to 0.2%. This shows that
+   persistent wealth accumulation is primarily driven by inherited behavioral traits rather
+   than inherited wealth alone and that the effect of wealth tax on wealth accumulation
+   gaps is limited. Even under a flat 5% wealth tax, wealth accumulation among the Very
+   Rich remains significantly higher. This suggests that while wealth taxation can reduce
+   absolute disparities, long-run wealth persistence is primarily driven by behavioral
+   differences rather than taxation alone.
+
+Keywords:
+
+   Intergenerational wealth mobility, Wealth taxes, Behavioral heterogeneity, Life-
+   cycle simulation, Wealth accumulation
+
+Authors:
+
+   Felix Svensson (25769)
+   Johan Hagberg (25776)
+
+Tutors:
+
+   Mehran Ebrahimian, Assistant Professor, Department of Finance
+
+Examiner:
+
+   Ramin P Baghai, Professor, Department of Finance
+
+Bachelor Thesis
+Bachelor Program in Business & Economics
+Stockholm School of Economics
+© Felix Svensson and Johan Hagberg, 2025
+
+We would like to express our gratitude to Mehran Ebrahimian, whose guidance and steady support have
+been instrumental throughout this thesis. We also extend our sincere thanks to Mohammad Reshad Esfehani
+for his invaluable help in clarifying the model and for his patience in guiding us through MATLAB.
+
+                                   1
+1. Introduction
+
+Wealth disparities are a longstanding characteristic of modern economies, with
+significant implications for social mobility and economic policy. Intergenerational wealth
+mobility plays a crucial role in determining long-term economic opportunity and
+inequality. The aim of this paper is to evaluate how policy changes regarding taxation
+influences intergenerational wealth mobility, using a structurally calibrated life-cycle
+model grounded in Swedish data.
+
+While Sweden is often recognized as having relatively high intergenerational mobility
+compared to other countries (Black and Devereux, 2011), wealth persistence remains
+substantial. Estimates suggest that Sweden’s intergenerational wealth elasticity is
+approximately 0.37, meaning that 37% of parental wealth differences persist into the next
+generation (Ebrahimian and Sodini, 2024). Although some degree of mobility exists,
+more than 20% of children from the lowest wealth quintile move to the top two quintiles,
+while 25% of children from wealthy parents fall into the lowest two quintiles, there is
+evidence that Sweden’s wealth concentration has increased in recent decades (Ebrahimian
+and Sodini, 2024; Roine and Waldenström, 2008).
+
+One driver of this trend is the shift in tax policy over the past 30 years. The abolition of
+Sweden’s wealth tax in 2007 has been linked to rising wealth inequality, with the wealth-
+to-income ratio increasing to 6.85, higher than Germany (6.16) and Finland (5.11) (Black,
+Devereux, Landaud, and Salvanes, 2022). This trend aligns with broader international
+patterns, where wealthier households consistently earn higher returns on investment,
+exacerbating wealth disparities over time (Benhabib, Bisin, and Luo, 2015). Notably,
+research has shown that capital income risk and differences in asset returns contribute
+significantly to wealth concentration at the top, reinforcing long-term persistence
+(Gabaix, Lasry, Lions, and Moll, 2016).
+
+Despite extensive research on wealth inequality, most analyses focus on wealth
+concentration rather than mobility. While intergenerational mobility has been explored in
+various national contexts, particularly in comparative studies between the United States,
+the United Kingdom, and the Nordic countries, there is limited research on the specific
+relationship between intergenerational wealth mobility and tax policy in Sweden. Black
+and Devereux (2011) highlight the role of inheritances, investment behavior, and tax
+structures in wealth transmission, yet the mechanisms through which tax policies
+influence intergenerational wealth persistence remain insufficiently explored.
+Furthermore, studies on wealth accumulation suggest that labor income, rather than
+inheritance, is the dominant driver of wealth for most individuals, raising questions about
+the relative importance of taxation in shaping wealth mobility (Black et al., 2023).
+
+To address this gap, we build on the empirically calibrated framework by Ebrahimian and
+Sodini (2024), which is itself grounded in the heterogeneous-agent model developed by
+Benhabib, Bisin, and Luo (2011). We use this structure to simulate how counterfactual
+wealth tax regimes affect long-run wealth persistence in Sweden. The model incorporates
+key drivers of wealth accumulation (labor income, bequests, and returns on investment)
+and accounts for heterogeneous preferences across socioeconomic groups, including
+
+                                   2
+differences in risk aversion, time preference, and bequest motives. This life-cycle
+simulation framework allows us to explore how tax policy interacts with behavioral traits
+to shape intergenerational mobility outcomes. In doing so, we aim to contribute to the
+limited body of research that explicitly links tax structures to intergenerational wealth
+dynamics in a Swedish context.
+
+The model also incorporates portfolio choice across multiple asset classes, distinguishing
+between risky and risk-free investments, with returns calibrated to reflect both systematic
+and idiosyncratic risk. Labor income profiles and initial endowments are allowed to vary
+by background group, capturing the influence of human capital investment and early life
+transfers. Wealth accumulation is thus endogenously determined by a combination of
+individual decisions, inherited financial resources, and behavioral traits shaped by
+socioeconomic background.
+
+Wealth evolution in our model is shaped by individual consumption-behavior, risk-taking
+and savings attitudes, portfolio allocation, and capital returns. These individual-level
+dynamics are aggregated to assess group-level outcomes, such as intergenerational wealth
+elasticity and mobility. Using the empirically calibrated framework developed by
+Ebrahimian and Sodini (2024), we simulate counterfactual wealth tax scenarios to
+examine how taxation may influence the persistence of wealth across generations in
+Sweden.
+
+To put our work into a relevant context we will provide a short history of wealth and tax
+policy in Sweden. Sweden’s historical trajectory in wealth distribution and taxation
+makes it a compelling case for studying intergenerational wealth mobility. Once among
+the most unequal countries in Europe, Sweden had a hierarchical society where wealth
+dictated political influence through property-based voting rights (Piketty, 2014).
+
+During the 20th century, the Swedish Social Democratic Party leveraged wealth data to
+implement progressive taxation, significantly reducing inequality (Piketty, 2014).
+However, economic turmoil in the 1970s, driven in part by the oil crises, prompted a shift
+toward neoliberal policies inspired by Milton Friedman. This led to deregulation,
+privatization, and reduced state intervention (Schön, 2010). The shift accelerated in the
+1990s and early 2000s, resulting in key tax policy changes:
+
+    • 1990/91: Separation of capital gains tax from labor income tax.
+    • 1995: Introduction of the high-income surtax (värnskatt).
+    • 2004: Abolition of the inheritance tax.
+    • 2007: Abolition of the wealth tax.
+    • 2008: Replacement of real estate tax with a lower municipal property fee.
+
+These reforms marked a shift toward capital-friendly policies, contributing to rising
+wealth concentration. Empirical evidence suggests a U-shaped trend in inequality, with
+declining wealth disparities in the mid-20th century followed by a reversal in recent
+decades (Roine and Waldenström, 2008). Given this background, this paper examines the
+impact of tax policy changes on intergenerational wealth mobility in Sweden.
+
+                                   3
+We find that wealth taxes have a moderating effect on the wealth gap between the Very
+Rich and the Non-Rich, as well as between the Rich and the Non-Rich. Wealth gap
+elasticity appears to be inversely related to tax rates, where a one percentage point
+increase in the wealth tax reduces the wealth gap by approximately 6.2% and 1.4% for
+the respective socioeconomic groups. This can be interpreted as an increase in flexibility
+within socioeconomic segmentation, leading to improved wealth mobility.
+
+When testing counterfactual values for the behavioral parameters, γ (risk aversion), χ
+(bequest motives), and ρ (time preference), we assign them the values of the Non-Rich
+group. The resulting drop in the wealth gap is significant, reinforcing the conclusion by
+Ebrahimian and Sodini (2024): it is not only the level of inherited wealth that matters, but
+also the behavioral traits that drive persistent wealth accumulation.
+
+While our model simulates clear mechanisms for wealth mobility, it also underscores the
+persistent challenge of addressing the wealth gap. From a policy perspective, it is difficult
+to directly influence the behavioral drivers of wealth accumulation. Therefore, tools such
+as wealth taxation may present a more feasible solution. That said, the debate remains as
+to whether efforts should focus on reducing wealth at the very top or instead on improving
+the capacity of the lower-wealth groups to accumulate wealth.
+
+Finally, our simulations show that even under hypothetically high wealth tax rates of 5%,
+which are unrealistic in an empirical context, the wealth gap continues to widen over a
+25-year period. This underscores the powerful compounding effect of wealth
+accumulation among the Very Rich.
+
+                                   4
+2. Related Works
+
+Our primary empirical foundation is Ebrahimian and Sodini (2024), who estimate
+preference heterogeneity using Swedish administrative data. Their model captures how
+inherited attitudes toward saving and risk influence long-run wealth accumulation and
+intergenerational persistence. We replicate and extend their framework by incorporating
+wealth tax policy changes into their model. In doing so, our contribution lies in adapting
+their preference-driven model to evaluate how taxation reshapes the distributional
+trajectory of wealth across generations.
+
+An important empirical complement is Black et al. (2023, who decompose individual
+wealth accumulation into labor income, capital gains, and inheritances. Their findings
+suggest that while inherited wealth plays a role, it is far from the dominant factor,
+particularly for most of the population. This is consistent with Black et al. (2022), who
+demonstrate that the importance of inheritances for explaining the observed wealth
+distribution is often overstated. Instead, both papers point toward the need to understand
+behavioral and structural mechanisms behind lifetime accumulation. Our study
+contributes to this literature by structurally modeling the implications of such behavioral
+mechanisms, captured through preference heterogeneity, and analyzing how they interact
+with tax policy to shape long-run wealth dynamics. Black and Devereux (2011) offer a
+broader overview of the empirical literature on intergenerational mobility and its
+persistence across time and countries. Black et al. (2023) focus on Norway, a country
+which shares many structural and institutional similarities with Sweden, including a
+comprehensive welfare state, detailed administrative data, and relatively equal
+opportunity structures, making it a strong empirical reference point for our Swedish
+setting. Our contribution builds on these insights by applying a similar empirical
+foundation to Sweden and exploring how institutional design, in particular, taxation,
+shapes wealth mobility outcomes.
+
+On the methodological side, our paper connects to the simulation-based literature that
+models wealth dynamics through structurally calibrated life-cycle models. Hubmer,
+Krusell, and Smith (2021) build a structural model to analyze the evolution of U.S. wealth
+inequality over time, incorporating heterogeneity in saving behavior, investment returns,
+and income risk. Their work supports our approach of using preference heterogeneity,
+estimated from real-world data to simulate the long-run distributional outcomes of
+different policy settings. Our contribution lies in applying this approach to a Swedish
+context, using preference parameters drawn from Swedish administrative data, rather than
+assumed or estimated within the model. Furthermore, our data source originates from the
+Swedish administrative register data first used in Calvet, Campbell, and Sodini (2007),
+who provide evidence of systematic heterogeneity in household investment behavior and
+risk exposure. Their findings justify the use of type-specific parameters in our model to
+capture differences in financial behavior across population subgroups. We extend this by
+examining how these differences affect intergenerational wealth dynamics under varying
+policy regimes.
+
+Finally, our work contributes to the literature on taxation and wealth mobility. Benhabib,
+Bisin, and Luo (2019) develop a quantitative model of wealth distribution and social
+
+                                   5
+mobility, emphasizing the role of stochastic returns and saving behavior in generating
+persistent inequality. Their model demonstrates that small differences in risk profiles and
+saving behavior can lead to large differences in mobility outcomes, highlighting the
+importance of incorporating behavioral heterogeneity in structural models of wealth
+accumulation, an approach we adopt in our own simulation framework. In addition,
+Benhabib, Bisin, and Zhu (2011) analytically characterize how fiscal policies, particularly
+capital income and estate taxation, impact the stationary distribution of wealth. We adopt
+a similar framework to simulate counterfactual policy environments and evaluate how tax
+changes affect the intergenerational wealth mobility under heterogeneous preferences.
+Our addition lies in applying this logic to a calibrated Swedish model developed by
+Ebrahimian and Sodini (2024) and evaluating how a range of realistic tax reforms
+influence wealth persistence across generations.
+
+                                   6
+3. Data
+
+This paper adopts the wealth accumulation model and utilizes the estimated parameters
+presented by Ebrahimian and Sodini (2024). Their work, which uses Swedish
+administrative register data to recover individual preferences and other model
+components, forms the direct empirical basis for our simulations. We do not access or
+manipulate the underlying microdata ourselves; instead, we use their complete model
+specification, and the summarized parameter estimates and data moments derived from
+their analysis as inputs for our simulation model. The methods Ebrahimian and Sodini
+(2024) used to obtain these parameters and data moments are summarized below, for a
+comprehensive explanation, readers are referred to their original paper. Our empirical
+method, which utilizes these parameters, is detailed in Section 4.
+
+The data used by Ebrahimian and Sodini (2024) originates from several linked
+administrative registers maintained by Statistics Sweden. They have used the Wealth,
+Income and Demographic Registers (which contain annual information on financial
+assets, real estate, liabilities, labor and capital income, and household composition) and
+the Multi-Generation Register (which enables linkages between individuals and their
+biological parents, facilitating intergenerational analysis). Their study is limited to the
+1999–2007 period, during which detailed, asset-level wealth data are available for the full
+population. In addition, income and demographic variables are observed from 1983 to
+2016, allowing for long-run assessments of income potential, labor market attachment,
+and background characteristics.
+
+The sample comprises more than 4 million individuals and spans multiple birth cohorts.
+During the observation period, Sweden maintained a wealth tax that required detailed and
+mandatory asset reporting, including securities, which improves the accuracy of measured
+household wealth. To capture intergenerational heterogeneity, individuals are classified
+into 108 socio-economic subgroups based on three background characteristics: Parental
+wealth background, parental industry sector and parental education level.
+
+This paper focuses on variation by parental wealth background, which is constructed by
+ranking parents into three groups according to taxable net wealth when their children are
+in early adulthood. The three groups are defined as:
+
+    • Non-rich: This group consists of individuals whose parents were not subject to the
+        wealth tax (approximately 91% of the sample).
+   • Rich: This category includes individuals whose parents were among the 75%
+        lowest wealth-tax-paying households (approximately 6.8% of the sample).
+    • Very-rich: This group comprises individuals whose parents fell within the top
+        25% of wealth-tax-paying households (approximately 2.2% of the sample).
+
+The estimation of behavioral preferences is conducted using a minimum distance
+estimation approach. The authors simulate life-cycle behavior (savings, consumption, and
+investment) under different values of the preference parameters and select the set that
+minimizes the distance between simulated outcomes and observed group-level moments.
+The empirical moments used for identification include:
+
+                                   7
+    • The average share of risky assets in household portfolios, used to identify risk
+         aversion.
+    • The consumption-to-wealth ratio in early adulthood, used to identify the time
+         discount factor.
+    • The consumption-to-wealth ratio in later adulthood, used to identify the strength
+       of bequest motives.
+
+The estimated preference parameters (risk aversion (γ), time discount factor (ρ), and
+bequest motive (χ)) are reported in summary form in Tables 4 and 5 of Ebrahimian and
+Sodini (2024). These parameters differ across wealth background groups and are
+estimated non-parametrically, allowing for heterogeneity in financial behavior based on
+socioeconomic origin. A short summary of the key estimated parameters from
+Ebrahimian and Sodini (2024) Table 5 follows below in Table 1:
+
+         Table 1: Preference Parameters by Wealth Background, with Controls
+
+                                  Risk Aversion (γ)
+                 Non-rich 10.31 10.31 10.31 10.31
+                    Rich -3.58 -3.38 -3.35 -3.05
+                  Very rich -6.87 -6.56 -6.4 -5.96
+        Controlling for Education No Yes No Yes
+      Controlling for Business Sector No No Yes Yes
+
+                                    Impatience (ρ)
+                 Non-rich 0.097 0.097 0.097 0.097
+                    Rich -0.039 -0.023 -0.035 -0.019
+                  Very rich -0.08 -0.057 -0.074 -0.05
+        Controlling for Education No Yes No Yes
+      Controlling for Business Sector No No Yes Yes
+
+                                Bequest Motives (χ)
+                 Non-rich 14.27 14.27 14.27 14.27
+                   Rich 5.75 5.84 5.56 5.52
+                 Very rich 12.82 12.94 12.42 12.37
+        Controlling for Education No Yes No Yes
+      Controlling for Business Sector No No Yes Yes
+
+Note: Table 1 illustrates how estimated preference parameters (risk aversion γ, impatience ρ, and bequest
+motives χ) differ by individuals' wealth background. It reports the weighted average parameter for the Non-
+Rich group and the estimated deviations for Rich and Very-Rich groups. These are based on weighted
+regressions across 108 socio-economic groups (formed by wealth background, education, and business
+sector), with group size as weights. Columns 2-5 detail results with varying controls for education and
+business sector fixed effects.
+
+                                   8
+Crucially, for the simulation model employed in this paper, preference parameters (γ, ρ,
+χ), the structural form of the wealth accumulation equation, and all its components
+(namely the risk-free rate (rf), expected and realized excess returns (ert, μ), the variance-
+covariance matrix of return shocks (Ω), human capital (ht), intergenerational transfers (gt
+), labor income (yt), and direct parental transfers (pt)) are directly taken from the data,
+definitions, and estimations provided in Ebrahimian and Sodini (2024). Our analysis
+therefore directly operationalizes their original datasets, containing pre-processed panel
+data including values for all our variables across all ages (time-periods) and socio-
+economic groups.
+
+Although we do not have access to the underlying micro-level data, the administrative
+records used by Ebrahimian and Sodini (2024) offer extensive population coverage and
+detailed measurement of financial variables. The authors’ estimation procedure is
+thoroughly documented and designed to ensure internal consistency between the
+structural model and the observed data.
+
+One limitation of relying on summarized data moments is that it constrains the scope for
+model validation and sensitivity analysis. Specifically, we cannot perform robustness
+checks based on alternative specifications or subsamples. However, this limitation is
+mitigated by the breadth and precision of the underlying data, as well as the
+methodological rigor of the estimation procedure. By running simulations on these
+empirically grounded parameters, we aim to capture key features of wealth dynamics and
+generate policy-relevant insights on intergenerational mobility.
+
+                                   9
+4. Empirical Method
+
+Our simulation model builds on the wealth accumulation framework presented by
+Ebrahimian and Sodini (2024). In this model, the future wealth wt+1 depends on capital
+returns and non-capital income sources such as labor, transfers, and pensions. The
+original formulation is given by:
+
+                                                                                        (1)
+
+Where:
+
+    • wt+1 is the wealth at time t+1.
+    • rf is the risk-free interest rate at time t.
+    • ert is the realized aggregate excess return on risky assets for a group at time t.
+   • Ω is the variance-covariance matrix of return shocks for risky asset classes.
+    • μ represents a vector of expected excess returns on risky asset classes.
+    • γ is the risk aversion coefficient.
+    • at is the consumption-to-wealth ratio.
+    • wt is the wealth at time t.
+    • ht is human capital defined as the present value of future labor earnings, including
+         pension income, at time t.
+    • gt represents the present value of future inheritance and gifts from parents at time
+           t.
+    • yt is the labor income at time t.
+    • pt is the direct transfer from parents at time t.
+
+In our simulation model, individuals make forward-looking decisions based on their
+expectations about the future. The vector of expected excess returns (μ) on different risky
+asset classes is a key parameter influencing their optimal portfolio choices and,
+consequently, their consumption-saving decisions (at). However, the actual wealth
+accumulated in any given period depends on the realized aggregate excess return (ert) for
+that period, which reflects the actual market performance above the risk-free rate and
+includes unpredictable shocks. Thus, while μ guides optimal behavior, ert (further
+individualized with idiosyncratic shocks in our simulation) drives the period-by-period
+changes in wealth. For the complete mathematical derivations of these relationships and
+the underlying continuous-time model, readers are referred to Ebrahimian and Sodini
+(2024, particularly Sections 2.5, 4, and Appendix B).
+
+The consumption-to-wealth ratio, at, dictates the fraction of an individual's total resources
+(wt + ht + gt) that is consumed at each time t. It incorporates the subjective time discount
+rate, ρ, through an effective discount rate ρ~, where:
+
+                                                                                        (2)
+
+                                  10
+and includes the bequest motive, χ, directly in its age-dependent formula:
+
+                                                                                        (3)
+
+Essentially, greater patience (a lower ρ) and a stronger desire to leave bequests (a higher
+χ) generally result in a lower at, thereby encouraging more saving. For the complete
+derivation please refer to Ebrahimian and Sodini (2024, Section 4.3 and Appendix B).
+
+The model categorizes the population into three socioeconomic groups: Non-rich, Rich,
+and Very Rich. Each group is characterized by a distinct level of initial wealth w0 and
+population size N. Each group is weighted, where the respective weights correspond to
+the number of individuals in that group, scaled to reflect millions of individuals. These
+group weights are used to simulate many individual agents within each group, thereby
+capturing heterogeneity and preserving representativeness of the Swedish wealth
+distribution.
+
+As established in the model, μ represents the vector of expected excess returns on various
+risky asset classes. The term erg,t in our simulation represents the realized aggregate
+excess return for group g in period t. To introduce within-group variability in investment
+outcomes and thereby more closely replicate realistic investment scenarios, we model
+individual realized excess returns, er~ i,t, by adding an idiosyncratic shock to this group-
+level realized excess return. Specifically, we draw individual excess returns from a
+normal distribution around the group's realized excess return:
+
+                                                                                        (4)
+
+This approach ensures our model captures real-world heterogeneity in investment returns
+and the idiosyncratic shocks that individual investors are subject to when investing. This,
+in turn, increases the representativeness of our results. Setting σ to 0.2 aligns with the
+average level of idiosyncratic risk reported in Calvet et al. (2007), where volatility of
+household-level portfolio returns ranges around 18–22% depending on how assets are
+treated.
+
+The simulation horizon tp covers 25 periods, corresponding to the available input risk-
+free rate data. This reflects an individual from the age of 25 until the age of 50. Simulating
+over a longer duration, for example 40 periods to represent the full working life until the
+standard retirement age of 65, would be informative. This extended timeframe would
+capture the entire period during which individuals typically accumulate wealth through
+their productive careers. However, extending the simulation horizon is constrained by the
+
+                                  11
+available input data, as key variables such as the risk-free rate are limited to the initial 25
+periods.
+
+To assess the impact of fiscal instruments, we extend the baseline simulation by
+incorporating a flat wealth tax on net wealth exceeding a predefined level. A vector of
+wealth tax rates, τw ∈ {0%, 1%, 2%, 3%, 4%, 5%}, is defined exogenously. A fixed
+threshold, wthreshold = 1.5 MSEK, is established, and only wealth above this amount is
+subject to the tax. The tax amount for period t+1 (Taxt+1) and the resulting post-tax wealth
+    after
+(w    t+1) are defined as:
+
+                                                                                        (5)
+
+As Bastani and Waldenström (2023) discuss, it is unrealistic to assume that 100% of an
+individual's total wealth constitutes taxable wealth under typical wealth tax regimes. Such
+regimes historically include numerous exemptions and specific valuation rules (e.g. using
+tax-assessed values for real estate or applying discounts to shares) which narrow the tax
+base compared to total market-value net worth. While the reasons for this discrepancy are
+well understood, our review of the prior literature did not identify specific empirical
+research quantifying the precise ratio of taxable wealth to total wealth for the relevant
+periods in Sweden. Consequently, due to this data limitation, our current simulation
+applies the wealth tax to the modelled total wealth, recognizing this as a simplifying
+assumption that likely overstates the actual tax base.
+
+The simulation proceeds through nested loops: for each wealth tax rate τw, for each
+socioeconomic group g, and for each individual i ∈ Ng within that group, wealth is updated
+over Tp = 25 time periods. Within each group, a representative number of individuals is
+simulated based on group-specific behavioral parameters.
+
+In each period t, an individual’s wealth wi,t evolves according to the discrete-time wealth
+accumulation equation derived from the continuous-time model of Ebrahimian and Sodini
+(2024). The future wealth wi,t+1 is determined by:
+
+                                                                                        (6)
+
+This equation is largely the same as equation 1, the main difference being that stochastic
+element for individual-specific realized excess returns has been implemented.
+
+If the individual’s pre-tax wealth wi,t+1 exceeds the threshold wthreshold = 1.5 million SEK,
+the flat wealth tax τw is applied to the excess wealth. This loop structure ensures that each
+individual's wealth path is simulated over time under every specified tax regime, allowing
+
+                                  12
+the model to evaluate the long-run impact of taxation. After completing all simulations
+across tax scenarios, individual-level outcomes are aggregated to compute group-level
+statistics. For each tax rate, the model reports the average final wealth of each group.
+From these values, both absolute and relative wealth gaps between group pairs are
+calculated.
+
+The absolute gap between two groups g1 and g2 is measured in MSEK and is defined as:
+
+                                                                                        (7)
+
+The relative gap, expressed as percentages of the mean wealth level of the less wealthy
+group in each pairwise comparison, is defined as:
+
+                                                                                        (8)
+
+These results are presented both in tabular form and through visualizations. The figures
+include a vertical reference line at 1.5%, corresponding to the historical wealth tax rate in
+Sweden, to contextualize the simulated outcomes and facilitate interpretation of policy
+relevance.
+
+Beyond examining final wealth gaps, we also analyze the dynamic wealth accumulation
+paths for each socioeconomic group under the simulated tax regimes. For each wealth tax
+rate τ, the average wealth trajectory over the 25-period horizon is plotted for the Non-
+Rich, Rich, and Very Rich groups. This visualization allows for an assessment of how
+different tax pressures affect not only the endpoint of wealth accumulation but also the
+pattern of wealth growth over the simulated lifecycle.
+
+Furthermore, to quantify the sensitivity of wealth gaps to the tax instrument, we estimate
+the linear impact of changes in the wealth tax rate on the absolute wealth gaps.
+Specifically, we regress the calculated absolute wealth gaps on the wealth tax rate
+(expressed in percentage points). The slope coefficient from this ordinary least square
+(OLS) regression,
+
+                                                                                        (9)
+
+                                  13
+is interpreted as the average change in the absolute wealth gap (in MSEK) resulting from
+a one percentage point increase in the wealth tax rate and can be seen as an elasticity
+measure for wealth gaps. This provides a straightforward measure of the marginal effect
+of the wealth tax on intergroup wealth disparities and is central to our analysis.
+
+To contextualize the coefficient values, we calculate the relative wealth gap elasticity by
+using the counterfactual outputs for each parameter value. We average the resulting
+wealth gaps and then divide the estimated elasticity coefficient (from the regression) by
+the corresponding average wealth gap. This yields a measure of elasticity in relative
+terms.
+
+                                  14
+5. Results
+
+This section presents the outcomes of the simulation model introduced above. The
+analysis focuses on average final wealth levels, absolute wealth gaps between groups, and
+the extent to which wealth taxes affect these. All results are reported for the three
+population groups, Non-Rich, Rich, and Very Rich, over a fixed time horizon of 25 years
+and across tax rates ranging from 0% to 5%.
+
+The central finding of our simulation is that increasing the wealth tax rate leads to a non-
+trivial reduction in the final wealth gap between socioeconomic groups. As illustrated in
+Figure 1, the mean absolute wealth gap between the Very Rich and the Non-Rich declines
+from approximately 4.7 MSEK to just under 3.5 MSEK as the tax rate increases from 0%
+to 5%. Similarly, the Rich–Non-Rich gap falls slightly from above 1 MSEK to just under
+1 MSEK. These trends are smooth and monotonic across all group comparisons,
+reflecting a clear inverse relationship between the wealth tax rate and overall wealth
+dispersion at the top of the distribution. A vertical reference line at 1.5% marks Sweden’s
+pre-2007 wealth tax level. Notably, even at this relatively moderate rate, the absolute
+wealth gaps between groups are already reduced. For illustrative visuals of the wealth gap
+on a relative basis, see Figures A1 and A2 in the appendix.
+
+          Figure 1: Absolute Mean Wealth Gap across Wealth Tax Rates
+
+Note: This figure shows the absolute wealth gap for age 50 given the different tax policy regimes spanning
+from 0-5% wealth tax. We can see a declining curve for the Very Rich-Non-Rich while the Rich-Non-Rich
+gap stays flat. This is due to the threshold value of 1.5 MSEK.
+
+                                  15
+We can further see in Table 2 that for every given percentage point increase in wealth tax
+the average wealth gap between Very Rich and Non-Rich decreases by 6.2%, and between
+Rich and Non-Rich by 1.4%, indicating non-trivial effects on wealth mobility.
+
+                         Table 2: Wealth Gap Elasticity
+
+                                                  Benchmark
+            VR-NR, W_Gap -0.2514
+            R-NR, W_Gap -0.0143
+            VR-NR, Avg W_Gap % -6.2%
+            R-NR, Avg W_Gap % -1.4%
+
+Note: This table compiles the wealth gap elasticity. It indicates the change in wealth gap between
+socioeconomics groups for every given percentage point increase in wealth tax, for the baseline model.
+
+This dynamic is further reflected in the underlying average final wealth values for each
+group, reported in Table 3. The Very Rich group accumulate approximately 5.0643
+MSEK under a 0% wealth tax, which declines to 3.7944 MSEK under a 5% tax. The Rich
+experience a more modest decline, from 1.3511 MSEK to 1.2782 MSEK. In contrast, the
+Non-Rich see almost no change in final wealth, with average values remaining virtually
+constant, ranging from 0.3167 to 0.3170 MSEK, across all tax rates. This asymmetry in
+responsiveness confirms that a flat wealth tax applied only above a threshold of 1.5
+MSEK concentrates its impact on those with substantial wealth, thereby reducing the
+wealth gap while leaving the broader population largely unaffected.
+
+              Table 3: Absolute wealth accumulated at age 50 (MSEK)
+
+             Wealth Tax Non-Rich Rich Very Rich
+             0% 0.3170 1.3511 5.0643
+             1% 0.3167 1.3361 4.7586
+             2% 0.3168 1.3224 4.4779
+             3% 0.3168 1.3070 4.2351
+             4% 0.3170 1.2941 4.0025
+             5% 0.3167 1.2782 3.7944
+
+Note: Absolute wealth accumulated at age 50 given wealth tax between 0-5%.
+
+Table 3 also illustrates that the Non-Rich group is effectively unaffected by the tax
+threshold of 1.5 MSEK, as their average wealth remains well below this cutoff across all
+tax rates. This insulates them from the impact of the policy and explains why their average
+
+                                  16
+final wealth remains virtually unchanged regardless of the level of taxation. In contrast,
+the Rich group accumulates average wealth levels narrowly below the threshold, hovering
+between 1.2 and 1.3 MSEK. Although they are close to the threshold, their exposure to
+the tax remains limited, resulting in only a modest decline in accumulated wealth.
+
+Furthermore, our model indicates that even with a flat wealth tax applied above 1.5
+MSEK and set at a rate of 1.5%, wealth gaps between groups continue to diverge over
+time. However, as demonstrated in Appendix Figure A3, the pace of divergence is
+significantly slower under higher tax regimes. This pattern points to a clear moderating
+effect of tax policy on the long-run concentration of wealth at the top.
+
+              Figure 4: Wealth accumulated at age 50 (1.5% Wealth Tax)
+
+Note: Absolute wealth accumulated between age 25-50 with a wealth tax level of 1.5%
+
+A closer look at Figure 4 reveals that in year 0, all three groups begin with negative net
+wealth due to initial indebtedness. This reflects realistic starting conditions, where
+individuals often incur debt early in life, such as student loans or mortgages. Interestingly,
+the Rich group starts with a lower net wealth than the Non-rich. One possible explanation
+is that the Rich have greater expected future income, which enables them to take on more
+debt to invest in education, housing, or other forms of human capital, but this would
+require further investigation to be confirmed.
+
+While the analysis above primarily focuses on the effects of wealth taxation on absolute
+wealth levels and group-level disparities, the simulated wealth trajectories also offer
+insight into economic mobility over the life cycle. Specifically, the results suggest that
+
+                                  17
+although the wealth tax compresses the absolute gap between groups, it does not
+substantially alter the relative positioning of individuals across the distribution over time.
+
+The Very Rich continue to accumulate wealth at a significantly faster pace than both the
+Rich and the Non-Rich, even under higher tax rates. For an overview of outcomes under
+varying tax levels, see Figure A3 in the appendix. This reflects a low degree of upward
+mobility among lower-wealth groups, as the gap in final outcomes persists despite policy
+interventions. The Non-Rich, in particular, see virtually no improvement in their average
+final wealth, indicating limited opportunity for meaningful economic advancement within
+the simulated time horizon.
+
+These patterns are closely tied to the behavioral parameters embedded in the model. The
+differences in risk aversion (γ), bequest motives (χ) and time preference (ρ) play a key
+role in shaping long-run accumulation, strengthening the results of Ebrahimian and Sodini
+(2024). Individuals with lower risk aversion, greater bequest motives and patience, traits
+concentrated among the Very Rich in the simulation, are more likely to benefit from
+compounding returns over time. As a result, wealth positions tend to remain stable,
+reinforcing persistence at the top and limiting catch-up dynamics for those below.
+
+Taken together, the results point to a broader implication: while wealth taxation above a
+threshold can slow the pace of wealth concentration and reduce disparities in absolute
+terms, it does not, on its own, generate high levels of mobility across the wealth
+distribution. Additional mechanisms, such as policies aimed at improving access to
+capital, education, or investment opportunities, may be necessary to facilitate more
+dynamic movement between economic positions over time.
+
+                                  18
+6. Extensions and Robustness
+
+In this section, we outline the implications of extending the model by focusing on
+counterfactual scenarios involving parameter and threshold variations. Drawing from the
+findings of Ebrahimian and Sodini (2024), wealth accumulation is influenced not only by
+the level of inherited wealth but also by inherited behavior. Accordingly, we test the
+elasticity of the wealth gap in response to wealth taxes across different socioeconomic
+groups, applying the logic that "less favorable" accumulation conditions, i.e., Non-Rich
+group parameter values may alter the effects for especially the Very-Rich category.
+
+6.1. Counterfactual Parameters
+
+As shown in Table 4, setting the risk aversion parameter (γ) to the Non-Rich group's level
+results in a substantially smaller wealth gap elasticity. Specifically, we observe a wealth
+gap elasticity of 2.9%, meaning the wealth gap decreases by 2.9% following a one
+percentage point increase in the wealth tax, compared to a 6.9% reduction in the base
+case. This suggests that higher risk aversion among the Very Rich reduces the potential
+for wealth accumulation, thus compressing the overall wealth gap and limiting the
+marginal effect of taxation.
+
+Turning to the bequest motive parameter (χ), we observe a similar but less pronounced
+effect. When setting bequest motive to Non-Rich level for all wealth groups we observe
+a decrease in the relative wealth gap elasticity between Very Rich-Non-Rich to 5.1%
+compared to the benchmark value of 6.2%. The wealth tax still yields a marginal impact
+on the wealth gap when bequest motives are aligned across groups. A comparable pattern
+is seen for the time preference parameter (ρ): in the counterfactual scenario with uniform
+time preference parameter, wealth taxes continue to have a non-trivial effect. Here, the
+elasticity of the wealth gap between the Very Rich and Non-Rich is 4% per percentage
+point increase in wealth tax.
+
+Finally, when all parameters are simultaneously set to Non-Rich levels, we find a minimal
+effect of wealth taxes on the gap between the Very Rich and the Non-Rich. In this
+scenario, the elasticity drops to just 0.2%, underscoring the critical role of behavioral
+parameters in shaping wealth inequality. These findings reinforce the conclusions of
+Ebrahimian and Sodini (2024) regarding the importance of inherited behavior in driving
+wealth dynamics.
+
+This highlights the role of behavioral parameters in driving heterogeneity in the wealth
+accumulation process across groups. In particular, the risk aversion parameter, γ, plays a
+central role in shaping wealth trajectories. When combined with the intertemporal
+preference parameter, ρ, these factors lead to more pronounced fluctuations in wealth
+among the Very Rich. This group exhibits both higher risk tolerance and greater patience,
+enabling them to pursue more aggressive investment strategies and defer consumption,
+which in turn results in a steeper accumulation path. These dynamics align with the
+findings of Ebrahimian and Sodini (2024), who emphasize the importance of
+heterogeneous investment behavior in explaining long-term wealth mobility.
+
+                                  19
+                Table 4: Parameter Counterfactuals on Wealth Gap Elasticity
+
+                       Benchmark γ set to NR χ set to NR ρ set to NR γ χ ρ set to NR
+ VR-NR, W_Gap -0.2514 -0.0751 -0.1185 -0.0572 -0.0009
+R-NR, W_Gap -0.0143 -0.0018 -0.0084 -0.0022 0.0001
+VR-NR, Avg W_Gap % -6.2% -2.9% -5.1% -4.0% -0.2%
+R-NR, Avg W_Gap % -1.4% -0.3% -1.2% -1.9% -0.4%
+
+      Note: Counterfactual analysis of wealth gap elasticity at age 50. Parameters γ (risk aversion), χ (bequest
+      motives), and ρ (time discount rate) are tested individually and jointly, with all set to Non-Rich levels to
+       assess their isolated and combined effects.
+
+     6.2. Counterfactual Tax Cutoffs
+
+     The following counterfactual scenario in Table 5 tests the impact of varying threshold
+     values for the application of the wealth tax. Thresholds range from 0 MSEK, increasing
+     in increments of 0.5 MSEK up to 1.5 MSEK, as well as a high-threshold case of 4.5
+     MSEK. As expected, the higher the threshold, the smaller the impact on reducing the
+     wealth gap. This outcome is intuitive: the higher the cutoff, the fewer individuals are
+      affected by the tax. For instance, if everyone were subject to a 1.5% wealth tax (i.e., a 0
+     MSEK threshold), the elasticity of the wealth gap would be 11.1% per percentage point
+      increase in the tax. In contrast, with a threshold of 4.5 MSEK, the corresponding elasticity
+      drops to just 1.6%. Figure 5 provides a visual illustration of these effects across different
+     threshold levels. For visuals on relative developments, see Figure 6.
+
+                  Table 5: Counterfactual Analysis of Wealth Tax Cut Offs
+
+                           Benchmark T:0 T:0.5 T:1 T:1.5 T:4.5
+VR-NR, W_Gap -0.2535 -0.4162 -0.3591 -0.3031 -0.2535 -0.0731
+R-NR, W_Gap -0.0138 -0.0705 -0.0480 -0.0274 -0.0138 -0.0001
+VR-NR, Avg W_Gap % -6.2% -11.1% -9.1% -6.6% -6.2% -1.6%
+R-NR, Avg W_Gap % -1.4% -7.8% -5.0% -2.7% -1.4% 0.0%
+
+      Note: Wealth tax thresholds range from 0 to 4.5 MSEK. The baseline is set at 1.5 MSEK, reflecting the
+      historical wealth tax threshold previously used in Sweden. Wealth taxes set to between 0-5%.
+
+                                       20
+        Figure 5: Visual Representation of Counterfactual Wealth Tax Cutoffs
+
+Note: The upward-sloping curve illustrates the diminishing impact of the wealth tax as the threshold
+increases. This reflects the reduced number of individuals subject to the tax at higher cutoff levels, thereby
+limiting its effect on narrowing the wealth gap. The curve visualizes how broader tax coverage (i.e., lower
+thresholds) leads to stronger wealth gap elasticity, whereas higher thresholds result in a more concentrated
+and less impactful tax burden. Wealth tax set to 1.5%.
+
+Further analyzing the relative measure of the wealth gap in Figure 6, we observe a
+noticeable drop when the wealth tax threshold increases from 0.0 to 0.5 MSEK. This is
+reasonable, as the average wealth level of the Non-Rich group is around 0.3 MSEK. Once
+they are exempt from the tax, while it still applies to higher wealth groups, the relative
+wealth gap narrows. However, beyond this point, as the threshold continues to rise, fewer
+and richer individuals are subject to the tax, leading to a bottoming out of the effect.
+
+          Figure 6: Relative Wealth Gaps at Varying Wealth Tax Thresholds
+
+Note: Counterfactual estimates of different wealth tax thresholds, ranging from 0 to 4.5 MSEK, presented
+on a relative basis for wealth gap levels. Wealth tax set to 1.5%.
+
+                                  21
+     6.3. Robustness test
+
+      To reinforce our results, we conduct a robustness test on the calibrated parameter in our
+      extended model, σ, representing shocks in excess returns. By testing various values of σ,
+     we anticipate similar trends, which are confirmed in Table 6. Our baseline model uses σ
+      = 0.2. As expected, the results show that the lower the value of σ, the smaller the impact
+      of wealth taxes on wealth gap elasticity. This outcome is driven by the reduced presence
+      of outliers in the right tail of the wealth distribution, which are otherwise
+      disproportionately affected by higher taxes. The effect becomes especially clear in the
+      extreme case of σ = 1, a value that is not realistic but used here for illustrative purposes
+      to highlight the trend. As can be observed in Figure A4 the relative developments of
+      wealth gaps follow the same overall trend as our original model no matter the adjustments
+      to σ. This in turn indicates that our model is robust across a wide range of return shock
+      assumptions. While the magnitude of the tax impact varies with σ, the relationship
+      between tax policy and wealth concentration remains consistent. This supports the
+      internal validity of our findings and suggests that our conclusions regarding the role of
+      taxation in shaping intergenerational wealth mobility are not unduly sensitive to the
+      assumed level of return volatility.
+
+                   Table 6: Robustness Test on σ (Shocks in Excess Returns)
+
+                                Benchmark(σ = 0.2) σ = 0.1 σ = 0.2 σ = 0.3 σ = 1.0
+VR-NR, W_Gap -0.2535 -0.2220 -0.2535 -0.2960 -0.6173
+R-NR, W_Gap -0.0138 -0.0038 -0.0138 -0.0284 -0.1338
+VR-NR, Avg W_Gap % -6.2% -5.3% -6.2% -7.5% -21.1%
+R-NR, Avg W_Gap % -1.4% -0.4% -1.4% -3.0% -20.3%
+
+      Note: Robustness test of the model by changing calibrated parameter σ (shocks in excess returns).
+
+      Since σ is the only parameter we estimated ourselves, it is also the only one requiring
+      robustness testing in this paper. For additional robustness tests and a detailed explanation
+      of the calibration approach, we refer readers to the robustness section in Ebrahimian and
+      Sodini (2024).
+
+     6.4. Further Research
+
+     A promising avenue for future research involves refining the simulation framework to
+      distinguish more clearly between total wealth and taxable wealth. This could be achieved
+      by incorporating estimated discounts or exemptions based on historical Swedish wealth
+      tax rules. Drawing on comparative data from countries with existing wealth taxation, such
+      as Norway (Thoresen et al., 2022), researchers could approximate a more realistic taxable
+      wealth base.
+
+                                       22
+Introducing this distinction would likely reduce the quantitative magnitude of simulated
+wealth tax effects, as the tax would apply to a narrower subset of total wealth. However,
+the qualitative direction of the results is expected to remain stable. Even when applied to
+a reduced base, wealth taxes would continue to primarily affect high-wealth individuals.
+As such, the core finding, that wealth taxation contributes to lowering wealth inequality,
+would likely hold.
+
+Another interesting direction for future research would be to simulate a broader set of tax
+policies to compare their effects. This could include real estate taxes, inheritance taxes,
+and various forms of progressive income taxation. Additionally, exploring combinations
+of tax policies, such as lowering income taxes while increasing capital or wealth taxes,
+could provide valuable insights into the trade-offs and synergies of different fiscal
+strategies.
+
+                                  23
+7. Conclusion
+
+We conclude that wealth taxes have a non-trivial effect on intergenerational wealth
+accumulation and can contribute to increased economic mobility. However, this effect is
+significantly determined by key behavioral parameters (risk aversion, time preference,
+and bequest motives) which shape the underlying dynamics of wealth accumulation.
+While wealth can be inherited, the persistence of wealth across generations is primarily
+driven by the behavioral characteristics of heirs.
+
+From a policy perspective, this suggests that although wealth taxation can play a role in
+increasing mobility, it is not a comprehensive solution. More impactful long-term
+outcomes may be achieved by investing in human capital and the knowledge that
+facilitates wealth creation. Rather than solely focusing on reducing the wealth of the
+richest, policies that empower the Non-Rich to accumulate wealth more effectively may
+offer a sustainable path toward greater mobility. That said, implementing such measures
+poses its own set of complex challenges.
+
+In light of the research conducted prior to this paper, our findings align with and further
+strengthen the conclusions of Ebrahimian and Sodini (2024), particularly their conclusion
+that: ”it is not just about the money that individuals receive from their parents, but also
+what they do with it... ”
+
+                                  24
+     References
+
+Adermon, Adrian, Mikael Lindahl, and Mårten Palme, 2021, Dynastic Human Capital,
+Inequality, and Intergenerational Mobility, The American Economic Review 111(5),
+1523-1548.
+
+Bastani, Spencer, and Daniel Waldenström, 2023, Taxing the wealthy: the choice
+between wealth and capital income taxation, Oxford Review of Economic Policy 39(3),
+604-616.
+
+Benhabib, Jess, Alberto Bisin, and Mi Luo, 2019, Wealth Distribution and Social
+Mobility in the US: A Quantitative Approach, American Economic Review 109(5), 1623-
+1647.
+
+Benhabib, Jess, Alberto Bisin, and Shenghao Zhu, 2011, The Distribution of Wealth and
+Fiscal Policy in Economies With Finitely Lived Agents, Econometrica 79(1), 123-157.
+
+Black, Sandra E., and Paul J. Devereux, 2011, Recent Developments in Intergenerational
+Mobility, in O. Ashenfelter and D. Card, eds.: Handbook of Labor Economics, Vol. 4b
+(Elsevier), 1487-1541.
+
+Black, Sandra E., Paul J. Devereux, Fanny Landaud, and Kjell G. Salvanes, 2022, The
+(Un)Importance of Inheritance, NBER Working Paper 29693.
+
+Black, Sandra E., Paul J. Devereux, Fanny Landaud, and Kjell G. Salvanes, 2023, Where
+Does Wealth Come From? Measuring Lifetime Resources in Norway, The Journal of
+Economic Perspectives 37(4), 115-136.
+
+Calvet, Laurent E., John Y. Campbell, and Paolo Sodini, 2007, Down or Out: Assessing
+the Welfare Costs of Household Investment Mistakes, Journal of Political Economy
+115(5), 707-747.
+
+Ebrahimian, Mehran, and Paolo Sodini, 2024, More than Money: The Role of Inherited
+Preferences on Wealth Mobility, Working Paper, Stockholm School of Economics, April
+1, 2024.
+
+Gabaix, X., Lasry, J. M., Lions, P. L., and Moll, B., 2016, The Dynamics of Inequality,
+Econometrica 84(6), 2071-2111.
+
+Hubmer, Joachim, Per Krusell, and Anthony A. Smith, Jr., 2021, Sources of U.S. Wealth
+Inequality: Past, Present, and Future, NBER Macroeconomics Annual 35(1), 391-455.
+
+Piketty, T., 2014, Capital in the Twenty-First Century (Harvard University Press,
+Cambridge, MA).
+
+                                  25
+Roine, J., and Waldenström, D., 2008. Wealth Concentration over the Path of
+Development: Sweden, 1873–2006. The Scandinavian Journal of Economics, 111(1),
+pp.151–187
+
+Schön, L., 2010, En modern svensk ekonomisk historia: Tillväxt och omvandling under
+två sekel, SNS Förlag, Stockholm
+
+Thoresen, Thor O., Marius A. K. Ring, Odd E. Nygård, and Jon Epland, 2022, A Wealth
+Tax at Work, CESifo Economic Studies 68(4), 321-361.
+
+                                  26
+Appendices
+
+To better understand the magnitude and proportionality of the changes presented in Figure
+1 in the results, Figures A1 and A2 present the same comparisons in relative terms. These
+graphs show the mean wealth gap as a percentage of the less wealthy group in each pair.
+
+             Figure A1: Relative wealth gap of Very Rich vs Non-Rich
+
+Note: Figure A1 shows the wealth gap between the Very Rich and Non-rich as a share of the Non-Rich’s
+average wealth. The relative gap decreases steeply, suggesting that the tax burden meaningfully tempers
+the accumulation of wealth at the top without proportionally burdening the bottom. At the incremental
+increase in tax rates, the gap declines from roughly 1500% to just under 1100%.
+
+                 Figure A2: Relative wealth gap of Rich vs Non-Rich
+
+Note: Figure A2 presents the relative wealth gap between the Rich and the Non-Rich. It follows a consistent
+downward trajectory, decreasing from approximately 326% to 305% as the wealth tax rate increases. This
+trend confirms that the tax instrument affects wealth accumulation across the entire wealth distribution, not
+just at the top.
+
+                                  27
+       Figure A3: Absolute Wealth Projections Under 0–5% Wealth Tax Rates
+
+Note: Displays the projected wealth trajectory over a 25-year period, from age 25 to 50. This timeframe
+represents the influence of inherited background from one’s parents through to the most decisive phase of
+an individual's professional career. The tax cut off value is set to 1.5 MSEK.
+
+                                  28
+        Figure A4: Robustness Test on Calibrated σ (Shocks in Excess Returns)
+
+Note: Extension of the robustness test for market shocks (σ), with values ranging from 0.1 to 1. The
+benchmark model uses σ = 0.2.
+
+Appendix A5: Use of AI
+
+Throughout this paper, OpenAI’s language model ChatGPT-4o and Google Gemini 2.5
+Pro have been used for two main purposes: (1) assisting with syntax for MATLAB visuals
+and tables, and (2) serving as advanced grammar tools to identify synonyms, correct
+spelling, and streamline language.
+
+                                  29

@@ -1,0 +1,1664 @@
+            ”Den 25:e sm¨aller det!”
+Payday Arbitrage in Swedish Consumer Market
+                  Behavior
+
+Payday Arbitrage in Swedish Consumer Market Behavior
+
+             Marwan Al-Bardaji
+           Alexander Wikstr¨om
+
+                    Bachelor Thesis
+
+           Stockholm School of Economics
+
+                       2023
+Payday Arbitrage in Swedish Consumer Market Behavior
+
+Abstract:
+
+This thesis investigates the impact of the Swedish salary disbursement sched-
+ule on consumer behavior, particularly on the 25th of each month, a notable
+payday for most employees in Sweden. The study examines whether the antici-
+pation of a monthly salary influences consumer decisions and spending patterns,
+potentially leading to payday-related arbitrage opportunities in Swedish mar-
+ketplaces. By scrutinizing transaction data from Tradera, this research seeks
+to reveal if there is a discernible fluctuation in prices that corresponds with
+the inflow of regular salaries. Our analysis uncovers a modest but statistically
+significant increase in bidding activity post-payday, with a 2% rise in prices and
+a notable increase in bid volumes. However, this effect does not translate into
+substantial arbitrage opportunities due to the platform’s fee structure and ship-
+ping costs. Intriguingly, day-of-the-week patterns emerged as more influential in
+shaping bidding behavior than payday effects. These findings contribute to the
+understanding of consumer market dynamics in response to synchronized salary
+disbursements, enriching the discourse on behavioral finance and auction theory.
+
+Keywords:
+
+Payday effect, Household liquidity, Behavioral Household Finance
+
+Tutor:
+
+Marieke Bos, Associate Professor, Department of Finance, SSE
+
+Examiner:
+
+Adrien d’Avernas, Associate Professor, Department of Finance, SSE
+
+Acknowledgement: We extend our sincere thanks to Amir Namazi and Soren
+Sabet Sarvestany from Tradera for helping us gathering the data. Special thanks
+to Marieke Bos for her guidance and willingness to meet outside office hours.
+Lastly, we also want to give some gratitude to Marwan’s brothers for ”gener-
+ously” lending out their computers for some extra computational power.
+
+Bachelor Thesis
+Bachelor Program in Business and Economics
+Stockholm School of Economics
+© Marwan Al-Bardaji and Alexander Wikstr¨om, 2023
+
+                                  1
+1 Introduction
+
+                                                       1
+       ”Den 25:e Sm¨aller det!” - Magnus Uggla
+
+In Sweden, the synchronization of payday across the workforce engenders a
+                                                                   2
+unique societal rhythm, notably encapsulated by the term ”L¨onehelg”  which is
+well known cultural phenomena when Swedes consume more once they recieve
+their salary and is well depicted in Magnus Ugglas song Kung f¨or en dag.
+   Conventional economic models, as postulated by Friedman [1957], typically
+advocate for a paradigm of consistent consumption patterns, positing these
+as instrumental in optimizing utility. Yet, empirical observations, particularly
+around the timing of paydays, present a challenge to this classical perspective.
+Such patterns, underscored by the work of Gabaix and Laibson [2022], reveal
+that consumer spending behaviors are often inconsistent with time preferences
+and exhibit a notable bias. This is evident in the spending spikes immediately
+following payday, deviating from the steady consumption spread anticipated by
+traditional economic theory. Our study endeavors to decode this divergence from
+classical models, drawing on the behavioral economics framework articulated
+by Huffman and Barenstein [2005] and Thaler [1999]. These seminal works
+suggest that the observed anomalies in spending behavior may be rooted in
+behavioral biases, particularly in contexts characterized by periodic liquidity
+boosts. The concept of ’mental accounting,’ as introduced by Thaler, provides
+a theoretical underpinning for understanding how consumers mentally categorize
+and subsequently spend their income, potentially leading to disparate spending
+patterns post-payday. Huffman’s insights into the monthly pay cycle further
+underscore the role of temporal factors in shaping consumer financial decision-
+making, especially in the presence of self-control challenges. By integrating
+these behavioral economics perspectives, our analysis aims to offer a nuanced
+understanding of the deviations from classical consumption models observed in
+real-world consumer behavior.
+   In this paper, we’ll investigate if this payday-effect can be observed, when
+looking at transactional data from Tradera, a prominent Swedish online auction
+platform. The implication we’ll investigate if due to this predicitble change
+in consumption and demand for second-hand will imply a form of arbitrage,
+where the same goods will be sold for more during payday, and thus it would
+be possible to create an algorithm that utilize this. Building up from a similar
+                                                    3
+approach from Huffman and Barenstein [2004]  .
+   Our preliminary empirical investigation reveals intricate patterns in con-
+sumer bidding behavior on Tradera, particularly in relation to the Swedish pay-
+day cycle. Consistent with the liquidity hypothesis posited by Deaton [1991], we
+
+   1
+   Eng: The 25:th is banging! In Magnus Uggla’s song Kung F¨or en Dag (Eng: King For A
+Day) he sings about the enjoyment of getting his paycheck on the 25:th and spending all his
+money the same day.
+   2
+    ”L¨onehelg” translates to ”Salary Weekend” in English, referring to the weekend when
+most Swedes receive their salary.
+   3
+    By implementing a weekly expenditure profile
+
+                                  2
+observe a notable augmentation in both the volume of bids and overall trans-
+actional activity following payday. This pattern aligns with the findings of
+                                                         4
+Stephens Jr [2003], who documented similar post-payday   increases in spend-
+ing in the context of social security payments. However, when scrutinizing
+the data for evidence of payday arbitrage, as conceptualized by Mian and Sufi
+[2014], the results are less pronounced. The data indicates marginal price in-
+creases for comparable items around payday, yet the extent of these increases
+does not substantiate a robust arbitrage opportunity, especially when account-
+ing for transactional costs such as fees and shipping, as highlighted by Dobbie
+and Skiba [2013]. This suggests that while payday influences consumer behav-
+ior on Tradera, its impact on pricing dynamics is constrained, warranting a
+more nuanced examination of the interplay between liquidity constraints and
+consumer decision-making in auction-based marketplaces.
+   Previous research has set the stage for examining the influence of scheduled
+income on consumer behavior, notably in the context of social security payments
+as seen in the study ”3rd of Tha Month” by Stephens Jr [2003] using daily
+expenditure data from CES (Current Employment Statistics), Stephen’s showed
+that people’s spending increased significantly more right after the 3th of the
+month. This effect was however looked for a subpopulation i.e US Citizens
+receiving social security while this paper will see if we can observe the same
+effects on the aggregated bidding market at Tradera.
+   Extending the analysis beyond mere consumption to encompass the demand
+                                                                5
+dynamics for similar products. The concept of ”payday arbitrage”  inspired by
+the observed ”Payday Anomaly” in financial markets detailed by Ma and Pratt
+[2018], will be examined to understand if similar market dynamics occur around
+paydays in the consumer sphere. Specifically, we investigate whether the influx
+of funds during payday induces a behavior akin to arbitrage, where consumers
+optimize their purchasing power by timing the market for certain goods and
+services. This behavior, hitherto unexplored, could offer new insights into the
+economic activities that follow payday synchronizations.
+   In extending the frontiers of finance and economics literature, our research
+introduces the concept of ”payday arbitrage” within consumer markets, a phe-
+nomenon unexplored in existing scholarly discourse. This investigation builds
+upon the foundational understanding of consumer behavior influenced by reg-
+ular income schedules, a topic that has been central to the works of Bos et al.
+[2017] and Baugh and Correia [2022]. These studies have significantly illumi-
+nated the realms of financial scarcity and the cyclic nature of paychecks, laying
+the groundwork for our exploration.
+   Our research goes beyond the traditional analysis of consumption patterns
+to examine how synchronized salary disbursements impact the demand dynam-
+ics for comparable products within the auction-based marketplace of Tradera.
+By analyzing how consumers strategically respond to periodic financial influxes,
+
+   4
+    Once individuals get a liquidity individuals may assign a part of their new salary for
+short-term consumption
+   5
+    That a significance change in prices of similar products changes such that it exist an
+arbitrage opportunity
+
+                                  3
+particularly in terms of their bidding behavior and pricing strategies, we offer a
+nuanced comprehension of market dynamics during pay cycles. This approach
+is not only novel in its exploration of the ”payday arbitrage” phenomenon but
+also in its application to a real-world auction platform, thereby providing em-
+pirical evidence to a concept that has hitherto been largely theoretical. The
+contribution of our study to the literature is twofold. First, it enriches the
+discourse on economic behavior under regular income schedules by providing
+empirical insights into how these schedules affect consumer behavior in online
+marketplaces. Second, by introducing and exploring the concept of payday arbi-
+trage, our research sheds light on a previously unexamined aspect of consumer
+market movements in response to synchronized salary disbursements. Such an
+exploration is critical, as it reveals the intricate interplay between financial pre-
+dictability and consumer decision-making, thereby enhancing our understand-
+ing of calendar anomalies in financial markets. Ultimately, this line of inquiry
+promises to broaden the scope of behavioral finance and economics, offering
+new perspectives on how regular income cycles influence market dynamics and
+consumer strategies.
+   The structure of this paper is organized into several key sections to thor-
+oughly investigate the payday arbitrage phenomenon in the Swedish consumer
+market. Following this introduction, Section 2, ’Data Description,’ delves into
+the specifics of the Tradera dataset, detailing the auction system and criteria
+for identifying successful sales. Section 3, ’Methodology,’ outlines our analytical
+approach, including the panel models and the rationale behind the selection of
+fixed and random effects models. Section 4, ’Empirical Results and Analysis,’
+presents our findings, analyzing the effects of paydays on different dimensions of
+consumer behavior on Tradera. This section contextualizes our results within ex-
+isting literature and discusses their implications. Section 5, ’Robustness Check,’
+evaluates the reliability of our findings, including placebo tests and other robust-
+ness checks. Finally, the paper concludes with a comprehensive discussion of the
+study’s contributions, limitations, and potential avenues for future research in
+this area. The Appendix provides supplementary data and detailed descriptions
+of our methodological approach, ensuring transparency and reproducibility of
+our analysis.
+
+2 Data Description
+
+Our research utilizes a comprehensive dataset from Tradera, a key player in Swe-
+den’s online auction market for second-hand goods. Since its inception in 1999,
+Tradera has been at the forefront of the Swedish e-commerce scene, offering
+an eclectic mix of products in categories ranging from collectibles to electronics
+and fashion. Our focus is particularly on the auction-based segment of Tradera’s
+offerings, which operates alongside its fixed-price sales model.
+   Tradera’s auctions are marked by a fixed-end-time approach, ensuring that
+the highest bidder at the close of the auction wins the item. This format includes
+a ’Bid Ladder’ system, setting minimum increments for subsequent bids, and
+
+                                  4
+allows sellers to set hidden reserve prices, ensuring their items are not sold
+below a desired value. These elements, akin to those observed in Hossain and
+Morgan [2009]’s eBay auction study, play a significant role in shaping both seller
+strategies and buyer bidding behaviors.
+   Our analysis centers on auctions resulting in a sale, a common focus in
+auction-based research such as in Bajari and Horta¸csu [2003]. An auction is
+deemed successful if it receives more than one bid by its conclusion. While
+generally reliable, this criterion assumes full compliance with transaction terms
+by both sellers and buyers. Our dataset encompasses 23 months of transaction
+     6                                  7
+data , with a total of x million rows , capturing all bids up to the auction end
+dates.
+   The ideal dataset for our study would encompass a wider time frame and
+                                                                         8
+a more granular breakdown of bidder demographics and behaviors . However,
+the dataset at hand provides a substantial basis for our current research.
+   It is also essential to note the occasional exceptional cases deviating from
+typical auction behaviors on Tradera. A prominent instance was the high-profile
+auction of a Swedish rapper’s platinum award plaque, with bids exceeding a bil-
+lion SEK, which was subsequently removed from the platform. Such anomalies,
+while notable, are outliers and hence excluded from our analysis to ensure data
+                                   9
+integrity and representativeness .
+   The dataset in our analysis is derived exclusively from active members on
+Tradera, ensuring a high relevance and accuracy of the consumer behavior in-
+sights we aim to derive. It’s important to note that the scope of our dataset
+is limited to active user interactions; data from inactive members are not in-
+cluded, which may influence the completeness of historical transaction patterns.
+Moreover, the dataset is rich in categorical granularity, featuring four category
+levels in a category tree where leaf categories, which is the last category in a
+branch of the category tree, can appear at any level between two and four. In
+total, the data contains 5747 different leaf categories.
+
+   6
+    1 January 2022 to 27 November 2023
+   7
+    Redacted due to confidentiality
+   8
+    An expanded dataset would provide deeper insights into long-term trends and nuanced
+bidder profiles, enhancing the robustness of our analysis.
+   9
+    For details on this specific auction prior to its removal, see:
+https://www.tradera.com/item/341175/615831028/dree-low-pippi-multiplatina-plaque
+
+                                  5
+           Table 1: Data Description for Tradera Listings Dataset
+
+ Field Description
+ externalAuctionId Unique identifier for the listing
+ externalSellerMemberId Unique seller identifier
+ StartDate The date the listing was scheduled to go live
+ EndDate The date the listing was scheduled to stop
+ StartPrice The starting price (SEK) for the listing
+ Title The title of the listing
+ leaf category id The leaf category that the auction was posted in. To figure
+                            out the full category path, join leaf category id with the exter-
+                          nal DimCategory table.
+ total bids Total number of bids on an item.
+ Max bids Largest bid on an item. Assumed to be the price sold for when
+                           number of bids is greater than one
+ Vertical id Vertical that the item was listed in, join to exter-
+                           nal DimAuctionVertical to get the vertical name
+
+3 Methodology
+
+We will be studying the payday effect in two dimensions. The payday effect on
+(1) listing ending prices (2) listing ending number total of bids. Since Tradera
+sells a wide range of items propose that a Panel model that adjusts for constant
+differences can be utilized. Moreover, we will also study the total volumes of
+sold items and total number of bids where an ordinary OLS regression is used.
+
+3.1 General Considerations
+In our analysis, the determination of payday is crucial, as it is hypothesized to
+influence consumer behavior significantly. In Sweden, the standard payday is
+typically set for the 25th of each month. However, to reflect real-world practices
+accurately, adjustments are made if this date falls on a weekend. Specifically,
+if the 25th is a Saturday or Sunday, the payday is shifted to the preceding Fri-
+day. This adjustment is essential in our study, as it ensures that the analysis
+corresponds with the actual days when consumers receive their salaries. By
+aligning our investigation with these adjusted paydays, we aim to capture the
+true impact of salary disbursement on consumer spending and bidding behav-
+ior, particularly in the context of the Swedish market and its unique payday
+rhythms.
+   A set of indicators have been calculated to comprehensively analyze the
+auction data from Tradera. These indicators are derived to capture the temporal
+dynamics associated with payday schedules and weekly patterns. The aim is to
+understand how these factors might influence bidding behavior. The indicators
+are also conceptually divided in two group, payday indicators that are related
+
+                                  6
+to the payday. Secondly, weekday indicators that are added to account for
+intra-week variability across the days. The following table summarizes these
+indicators:
+
+            Table 2: Description of Indicators Used in the Analysis
+
+ Indicator Description
+                          Payday Indicators
+ payday indicator week 1 Indicator for auction ending 0-6 days after payday
+ payday indicator week 2 Indicator for auction ending 7-13 days after payday
+ payday indicator week -1 Indicator for auction ending 0-6 days before payday
+ payday indicator week -2 Indicator for auction ending 7-13 days before payday
+                        Weekday Indicators
+ monday indicator Indicator for auctions ending on Monday
+ tuesday indicator Indicator for auctions ending on Tuesday
+ wednesday indicator Indicator for auctions ending on Wednesday
+ thursday indicator Indicator for auctions ending on Thursday
+ friday indicator Indicator for auctions ending on Friday
+ saturday indicator Indicator for auctions ending on Saturday
+ sunday indicator Indicator for auctions ending on Sunday
+
+   The indicators act as the independent, exogenous variables, in our model.
+The two dependent variables that are studied are max bid and total bids.
+   In our comprehensive analysis, we examine four distinct regression combina-
+tions, each representing a unique combination of variables and indicators. These
+models incorporate either the independent variable max bid or total bids, cou-
+pled with two different sets of explanatory variables. The first set includes all
+payday indicators along with weekday indicators, while the second set comprises
+only the payday indicators in conjunction with a constant term. This approach
+allows us to capture the intricacies of auction dynamics in relation to payday
+cycles and weekday patterns.
+   Crucially, the baseline comparison for our parameters hinges on periods as
+                                       10
+distant from the payday as feasible  . This choice of baseline ensures that the
+influence of paydays on auction behavior is distinctly contrasted against non-
+payday periods.
+   The following table provides a clear overview of these models, labeled from
+A to D for easy reference:
+
+  10
+    Given that the payday indicators extend two weeks before and after the payday, the length
+of this reference period slightly varies each month.
+
+                                  7
+Table 3: Overview of Regression Models. const stands for a constant in the
+models.
+
+      Model Regression Equation
+        A max bid ∼ payday indicators + weekday indicators
+         B total bids ∼ payday indicators + weekday indicators
+        C max bid ∼ const + payday indicators
+        D total bids ∼ const + payday indicators
+
+   This structured approach to model selection and analysis facilitates a nu-
+anced understanding of the varying impacts of payday and weekday factors on
+both the maximum bid and the total number of bids in online auctions.
+
+3.2 Data Preprocessing
+In order to ensure that only data according to the assumptions stated in section
+2 two steps of data preprocessing are conducted
+
+   1. All listings that have ended with zero bids are filtered out.
+
+   2. Outliers in the max bid and total bids are removed by calculating the
+      means and removing all values outside of three standard deviations.
+
+   The raw data includes about several millions of rows which where we end up
+with about 16 million rows after the data preprocessing, details of the sample
+sizes and exlusion criteria can be found in figure 1.
+
+                                  8
+Figure 1: Data filtration process for Tradera auction dataset. The flowchart
+illustrates the sequential steps taken to clean the dataset, detailing the exclusion
+criteria at each stage and the resulting number of observations retained for
+analysis. Size of raw data set and number of rows excluded are redacted due to
+confidentiality.
+
+3.3 Panel Models
+Our analysis employs panel models to account for variations across different
+categories of data. We assume that a fixed effects model is suitable for capturing
+these variations. Both fixed effects and random effects models are utilized in this
+study. The choice between these models is informed by the results of Hausman
+tests, which provide guidance on the appropriateness of either model based on
+their assumptions and the nature of our data.
+
+3.3.1 Fixed Effects
+The fixed effects model is designed to analyze the impact of variables that vary
+over time. It is particularly useful in panel data analysis where the interest lies
+in investigating how predictors affect the outcome variable within an entity.
+
+                                  9
+    The fixed effects model includes entity-specific constants (intercepts), which
+capture all time-invariant characteristics of the entities. This allows the model to
+control for unobserved heterogeneity when this heterogeneity is constant over
+time and correlated with the independent variables. The model focuses on
+within-entity variation over time. It essentially compares an entity to itself over
+different time periods, controlling for all time-invariant characteristics of the
+entity. By using entity-specific constants and focusing on within-entity varia-
+tions, the fixed effects model effectively removes the influence of time-invariant
+confounders, thereby reducing omitted variable bias ScienceDirect Topics [a].
+    The major limitation of the fixed effects model is that it cannot estimate the
+effects of time-invariant variables, as these are absorbed by the entity-specific
+constants.
+   In our case, the leaf category is used as a proxy for different entities, and
+time variations are modeled on a month-by-month basis with time fixed effects.
+                                                                11
+To implement this approach, we utilize a PanelOLS model  .
+    A general fixed effects model is specified as follows:
+            X
+                     yit = αi + γt +    βkxk,it + ϵit (1)
+                                          k
+where i indexes the entity, t indexes time, y is the dependent variable, and xk
+are the exogenous independent variables. In this model, γt represents time-fixed
+effects and αi entity-fixed effects.
+
+   For regression combination A and B it will be implemented as following
+
+        X7              X4
+yit = αi+γt+        βweekday1weekday,it+              βpayday indicator1payday indicator,it+ϵit
+              weekday=1                      payday indicator=1
+                                                                              (2)
+where αi and γt correspond to the entity and time effects and the rest of the
+exogenous variables are indicator defined as in section 3.1.
+   For regression combination C and D the weekday indicator are left out and
+instead a constant is added denoted by β0 according to the following formula
+
+             X4
+ yit = αi + γt + β0 +              βpayday indicator1payday indicator,it + ϵit (3)
+                         payday indicator=1
+
+3.3.2 Random Effects
+For comparison, a random effects model is also considered. The random effects
+model is another approach to panel data analysis. It assumes that the entity-
+specific effect is a random variable that is uncorrelated with the independent
+variables. This model is useful when the focus is on both within-entity and
+between-entity variations.
+
+  11
+   Using linearmodels version 5.3 implemented in Python.
+https://github.com/bashtage/linearmodels/
+
+                                  10
+    Unlike fixed effects, the random effects model includes random entity-specific
+effects. These effects are assumed to be uncorrelated with the regressors, allow-
+ing for time-invariant variables to play a role in the model. The random effects
+model is generally more efficient than the fixed effects model, as it uses both
+within-entity and between-entity variations. This can lead to more precise es-
+timates under the correct model assumptions. The random effects model can
+estimate the effects of time-invariant variables, making it more versatile in cer-
+tain contexts. The crucial assumption of the random effects model is that the
+entity-specific effects are not correlated with the regressors. Violation of this
+assumption can lead to biased and inconsistent estimators, making the fixed
+effects model a more appropriate choice in such cases ScienceDirect Topics [c].
+                                                                         12
+   To implement this approach, we utilize a RandomEffects model  . The gen-
+eral random effects model is given by:
+           X
+                       yit = ui +    βkxk,it + ϵit (4)
+                                       k
+Here, ui represents the random effect, unique to each entity but uncorrelated
+with the independent variables xk.
+   For regression combination A and B it will be implemented as following
+
+      X7              X4
+yit = ui+        βweekday1weekday,it+              βpayday indicator1payday indicator,it+ϵit
+          weekday=1                      payday indicator=1
+                                                                              (5)
+   For regression combination C and D the weekday indicator are left out and
+instead a constant is added denoted by β0 according to the following formula
+
+            X4
+   yit = ui + β0 +              βpayday indicator1payday indicator,it + ϵit (6)
+                      payday indicator=1
+
+3.3.3 Hausman Test
+The Hausman test is a statistical test used to determine whether a fixed effects
+or random effects model is more appropriate for a given dataset. It tests the null
+hypothesis that the preferred model is random effects against the alternative of
+fixed effects. The test is based on the difference in coefficients estimated by the
+fixed and random effects models. If the difference is systematic and significant,
+it suggests that the random effects model produces biased estimators, and hence
+the fixed effects model is preferredScienceDirect Topics [b].
+   The Hausman test statistic is calculated as follows:
+                           ′                         −1
+        H = (βF E − βRE ) [V ar(βF E ) − V ar(βRE )]  (βF E − βRE ) (7)
+where βF E and βRE are the coefficient vectors obtained from the fixed effects
+and random effects models, respectively. V ar(βF E ) and V ar(βRE ) are the vari-
+ance matrices of these estimators. A significant Hausman test statistic implies
+
+  12
+   Using linearmodels version 5.3 implemented in Python.
+https://github.com/bashtage/linearmodels/
+
+                                  11
+that the fixed effects model is more appropriate for the analysis.
+
+   The distribution of the Hausman test statistic under the null hypothesis is
+a key factor in determining the p-value. Under the null hypothesis that the
+random effects model is appropriate, the Hausman test statistic follows a chi-
+          2
+square (χ ) distribution. The degrees of freedom for this distribution are equal
+to the number of regressors being tested – essentially, the number of coefficients
+in the model.
+
+   • A high Hausman test statistic relative to the chi-square distribution indi-
+      cates a low p-value, leading to rejection of the null hypothesis in favor of
+      the fixed effects model.
+
+   • A lower test statistic suggests a higher p-value, meaning the evidence is
+      insufficient to reject the null hypothesis, and the random effects model
+     may be more appropriate.
+
+3.4 Ordinary OLS
+One part of our methodology includes looking at the total volume of items sold
+and total number of bids across the time period not taking account any entity
+effects. Here a simple ordinary OLS model is used with the same combinations
+A to D of dependent and independent variables.
+   For regression combination A and B an ordinary OLS is implemented as
+following
+
+   X7              X4
+yˆ =         βweekday1weekday,it+              βpayday indicator1payday indicator,it+ϵit
+     weekday=1                      payday indicator=1
+                                                                              (8)
+   For regression combination C and D the weekday indicator are left out and
+instead a constant is added denoted by β0 according to the following formula
+
+           X4
+       yˆ = β0 +              βpayday indicator1payday indicator,it + ϵit (9)
+                    payday indicator=1
+   The sum ˆy is calculated over both time and entities
+           XX
+                            yˆ =       yit (10)
+                                                         i     t
+4 Empirical Results and Analysis
+
+Our analysis explores the dynamics of consumer bidding behavior, with a partic-
+ular focus on how payday timing and day-of-the-week patterns influence auction
+activity. This investigation entailed conducting twelve distinct regression anal-
+yses across three different models, and four different combinations of dependent
+and independent variables.
+
+                                  12
+   By adopting this multifaceted analytical approach, we were able to delve
+deeply into the nuances of how consumers interact with online auctions, consid-
+ering both the magnitude of their bids and the frequency of bidding. The varied
+combinations of variables within each model were strategically selected to iso-
+late and evaluate the individual and combined effects of paydays and weekdays,
+thus providing a comprehensive view of their impact on consumer behavior. The
+extensive and detailed results of these regressions are methodically presented in
+Appendix A.
+   We employed the Hausman test the most appropriate panel model for each
+           13
+regression  . This test is crucial in determining whether a fixed effects or random
+effects model better suits the data structure and inherent characteristics of the
+variables. The outcomes, detailed in 4 and further elaborated in Appendix C,
+revealed a preference for the fixed effects model in most regressions. However, an
+intriguing exception was noted in regression B, which studies the total number of
+bids with both payday and weekday indicators as dependent variables. Here, the
+Hausman test indicated that a random effects model might be more appropriate.
+   This suggestion that a random effects model is suitable for understanding the
+total number of bids is significant. It implies that there might be unobserved,
+time-invariant individual characteristics influencing the number of bids that are
+not captured by the fixed effects model. In essence, this finding suggests that
+while payday and weekday effects have a consistent impact across the dataset,
+there are underlying, unchanging factors unique to each bidder that also play
+a pivotal role in determining their bidding behavior. These factors could range
+from individual financial stability to personal bidding strategies, hinting at a
+more complex interplay of influences in online auction settings than initially
+presumed.
+
+             Table 4: Model Selection Based on Hausman Test
+
+ Model Selection Conclusion
+  max bid (weekday included) Fixed effects model is preferred
+  total bids (weekday included) Random effects model may be appropriate
+  max bid (weekday excluded) Fixed effects model is preferred
+  total bids (weekday excluded) Fixed effects model is preferred
+
+   The empirical findings from our study present a clear and consistent pattern
+that aligns with the theoretical underpinnings of the payday effect in consumer
+behavior. Specifically, our analysis demonstrates a discernible trend in both the
+maximum bid and the total number of bids in relation to the timing of paydays.
+   We observed that in the first week following payday, there is a notable in-
+crease in both the max bid and total bids. This uptick suggests that consumers
+are more willing and able to engage in higher bidding and more frequent partic-
+ipation in auctions immediately after receiving their salaries. The magnitude of
+
+  13
+    Not including the ordinary OLS
+
+                                  13
+this effect, although still significant, tends to diminish in the second week after
+payday. This gradual decrease can be attributed to the dwindling disposable
+income as the month progresses.
+   Conversely, the two weeks preceding payday exhibit a contrasting trend.
+During this period, both max bid and total bids are generally lower than the
+baseline. The baseline, in this context, represents the days that are as far
+removed from payday as possible. This decline in auction activity before payday
+can be explained by the natural decrease in consumers’ financial liquidity as they
+approach the end of their monthly budget cycle.
+    The analysis of our data yields distinct insights into the significance of bid-
+ding behavior in relation to the timing of paydays, particularly when examining
+total bids and maximum bids. The findings indicate a marked difference in the
+impact of financial liquidity (or the lack thereof) on consumer behavior in online
+auctions.
+    For total bids, the significance is exceptionally high, with p-values close to
+zero across all instances. This strong statistical significance suggests a robust
+and consistent effect of payday timing on the total number of bids placed in
+the auctions. Such a trend underscores the influence of paydays on consumers’
+participation levels in auction activities, reflecting a heightened willingness or
+ability to engage in bidding post-payday.
+   In contrast, for maximum bids, the data reveals a more pronounced signifi-
+cance for the payday indicators in the weeks leading up to payday. This suggests
+that the constraint of being cash-strapped before payday is a more influential
+factor than the increased financial capacity following payday. The urgency or
+necessity to secure goods before the impending low-liquidity period might drive
+consumers to place higher maximum bids in the pre-payday phase.
+   Interestingly, the least significant impact is observed in the period of the
+second week after payday, particularly in regression C of the Fixed Effects model,
+where the p-value hovers around 0.5. This indicates that while the immediate
+post-payday period sees a surge in bidding activity, this diminishes significantly
+as consumers move further away from the payday. It reflects a normalization
+of bidding behavior as the immediate effects of increased liquidity begin to
+decrease.
+   The examination of the magnitudes of the effects on bidding behavior in
+relation to payday cycles provides crucial insights into the feasibility of arbi-
+trage opportunities on Tradera. Our findings indicate a price variation of ap-
+proximately 2-4% and a variation in total bids of about 5-10% across different
+regression models. While these variations are statistically significant, they are
+relatively modest in scale.
+    This moderate level of fluctuation in both prices and bid volumes around pay-
+days suggests that, although consumer behavior is indeed influenced by payday
+cycles, the extent of this influence is not substantial enough to create straight-
+forward arbitrage opportunities. In the context of Tradera, this is particularly
+relevant due to the platform’s fee structure and the inherent costs associated
+with transactions, commonly referred to as transaction friction.
+   The fees and other costs associated with buying and selling on Tradera would
+
+                                  14
+likely offset the potential gains from exploiting the small variations in prices
+and bidding volume tied to payday timings. For an arbitrage strategy to be
+successful, the price differential needs to be sufficient to cover these additional
+costs and still yield a profit. Given the observed price and bid volume variations,
+it appears that the potential for such profitable arbitrage on Tradera is limited.
+   The cumulative trends observed in the total volume of items sold and the
+total number of bids present an interesting fact about consumer behavior in
+relation to payday cycles. A key observation is the disparity in significance
+between the weeks following payday compared to other weeks.
+   In the week immediately following payday, there is a notable increase in
+both the volume of items sold and the total number of bids. This trend is
+statistically significant, suggesting a direct correlation between the influx of
+funds into consumers’ hands and their increased activity in online auctions. The
+post-payday period, marked by enhanced financial liquidity, seems to encourage
+consumers to participate more actively in auctions, both in terms of bidding
+frequency and in the purchase of a higher volume of items.
+   Conversely, for the weeks leading up to payday and those further from the
+payday, the significance drops markedly. This implies a reduced inclination or
+ability of consumers to engage in auction activities during these periods. The
+decrease in bidding and purchasing behavior could be attributed to a more
+cautious financial approach as consumers anticipate or experience a reduction
+in disposable income before the next payday.
+    These empirical results not only corroborate the existence of a payday effect
+in the context of online auctions but also offer a nuanced understanding of its
+temporal dynamics. The pattern of increased bidding activity following paydays
+and subdued participation before them is in harmony with the anticipated be-
+havior of consumers responding to their cyclical financial liquidity. This insight
+into consumer spending patterns around paydays adds a valuable dimension to
+the understanding of bidding behavior in online auction platforms, highlighting
+the significant role of personal financial cycles in economic decision-making.
+
+5 Robustness Check
+
+To ensure the robustness of our main regression results and to ascertain that they
+are not merely artifacts of statistical noise, we have implemented a placebo test.
+This test involves the random assignment of payday dates within the calendar for
+each data point, followed by a reevaluation of the regression models. Specifically,
+                                                      14
+we employ a permutation test, about 600 times   , to rigorously examine the
+                          15
+stability of our findings  .
+
+  14
+    The exact number of simulations is 623
+  15
+    Optimally we would have liked to execute the simulation thousands or tens of thousands
+times; however, due to the large size of the data set, containing about 16 million rows after
+data pre-processing, the computing power and time needed was not enough within the time
+constraint of this thesis.
+
+                                  15
+   During this permutation test, we compare the distribution of parameter esti-
+mates from each iteration to the baseline coefficients obtained from our primary
+regression analysis. A key aspect of this comparison is the focus on the position-
+ing of the baseline coefficients within the distribution range of the permutation
+test results. Should these coefficients consistently reside in the extremities or
+tails of this distribution, it would significantly diminish the likelihood that our
+original findings are mere consequences of random noise.
+    It is crucial to note that throughout this process, the original dates of the
+auction listings are preserved. Altering these dates would risk losing vital time-
+series information, leading to non-converging regression models. This preser-
+vation is fundamental to maintain the temporal integrity of the data, ensuring
+that the robustness checks accurately reflect the dynamics captured in the initial
+analysis.
+   To calculate the p-values in this context, we utilize the permutation test’s
+distribution of parameter estimates. By assessing where the original regression
+coefficients fall within this distribution, we can estimate the probability of ob-
+serving such coefficients under the null hypothesis. This method allows us to
+derive p-values that are not only robust but also grounded in the empirical dis-
+tribution of the data, rather than relying on theoretical assumptions. Such an
+approach is deeply rooted in the statistical literature, with early references found
+in the works of Eden and Yates and Dwass, who pioneered these non-parametric
+methods of hypothesis testing Dwass [1957], Eden and Yates [1933].
+    The regression that we have selected to do a robustness check of is the panel
+model with entity effects and time effects that only includes the payday win-
+dows and not the weekday indicators as described in section 3.3.1. This model,
+as detailed earlier in our study [Reference to previous discussion in the paper],
+encompasses five key parameters, including the constant. Upon completion
+of the simulations, we plotted the estimated parameter values in a histogram
+alongside the corresponding Gaussian curve. This approach assumes that the
+parameter distributions approach normal distribution as the number of simula-
+tions increases Dwass [1957].
+   For each parameter, we have already determined baseline p-values. To con-
+trast these with our simulation results, we computed the estimated p-values
+using the following formula:
+
+       count of test-statistics that are as or more extreme than our baseline
+  pˆ =
+                     total count of test-statistics calculated
+                                                                          (11)
+Additionally, we determined one-sided confidence intervals for these estimated
+p-values, adhering to a confidence level of α = 0.01. This calculation follows
+the binomial proportion confidence interval formula:
+                               "      r      #
+                                                   pˆ(1 − pˆ)
+    Confidence interval of estimated p-value =  0, pˆ + zα               (12)
+                                  N
+
+where, N denotes the total count of test-statistics computed.
+
+                                  16
+   Table 5 presents a side-by-side comparison of the baseline p-values, the p-
+values estimated from the simulation, and their respective confidence intervals.
+For a comprehensive examination of the test-statistic distributions arising from
+this robustness check, please refer to Appendix B.
+
+Table 5: Comparison of Baseline and Estimated P-Values with Confidence In-
+tervals
+
+                                   P-values Confidence
+Variable
+                           Baseline Estimated from intervals
+                                        simulation
+const 0.0000 0.0706 [0,0.0945]
+payday indicator week 1 0.2781 0.0000 [0,0.0000]
+payday indicator week 2 0.5099 0.08989 [0,0.1165]
+payday indicator week -1 0.0066 0.0000 [0,0.0000]
+payday indicator week -2 0.0087 0.0000 [0,0.0000]
+
+   Our estimated p-values, in comparison to the baseline, skew significantly
+towards the lower end of the spectrum. This observation indicates a substan-
+tial deviation from what might be expected under the null hypothesis, thereby
+strengthening the credibility of our original findings. Each estimated p-value,
+notably smaller than its corresponding baseline, suggests a reduced likelihood
+that the observed effects in our regression analysis are merely artifacts of sta-
+tistical randomness.
+   However, it is imperative to approach these results with a degree of caution.
+The limitations imposed by the number of simulations introduce a margin of
+uncertainty. A higher volume of simulations would invariably lead to more
+robust and confident results. Despite this limitation, the trend observed in the
+simulation outcomes provides a compelling indication that the effects captured
+in our regression model are indeed reflective of underlying economic phenomena
+rather than spurious correlations.
+   These findings lend confidence to the hypothesis that the dynamics we have
+identified and modeled are not merely statistical anomalies but are grounded
+in actual market behavior. Which underscores the robustness of our analytical
+approach and the validity of the insights derived from our study.
+
+6 Conclusion
+
+This paper presents a comprehensive exploration of the payday effect in the
+Swedish consumer market, focusing on the online auction platform Tradera.
+Our study rigorously examines the interplay of payday effects and day-of-the-
+week patterns on bidding behavior. By analyzing extensive transaction data, we
+have uncovered subtle but significant influences of payday timing on consumer
+bidding behavior. The analysis reveals a modest but statistically significant
+
+                                  17
+increase in both bid volume and prices around paydays, with a 2% increase
+in prices post-payday. This finding aligns with behavioral economics theory,
+suggesting that consumers may experience a change in their financial disposition
+following a payday, as discussed in Shefrin [2009]. However, the magnitude
+of this effect does not create a viable arbitrage opportunity, primarily due to
+Tradera’s commission structure and associated shipping costs.
+   More pronounced than the payday effect, our study identifies a significant
+day-of-the-week pattern in bidding behavior. The number of bids increases no-
+tably on specific days, particularly weekends, indicating a strong temporal pat-
+tern in bidding behavior, resonating with the findings of Agarwal et al. [2013].
+This observation underscores the dominance of day-of-the-week effects over pay-
+day impacts in shaping bidding behavior, offering new insights into temporal
+patterns in consumer decision-making.
+   From a practical standpoint, while the payday effect is noticeable, its ex-
+ploitation for arbitrage is limited within Tradera’s platform. However, these
+insights offer strategic implications for Tradera’s auction scheduling. Aligning
+auction end dates with periods of increased bidding activity, such as post-payday
+or weekends, could potentially enhance revenue. This recommendation is in line
+with the revenue optimization strategies discussed in Ostrovsky and Schwarz
+[2009] and contributes to a more nuanced understanding of bidder behavior,
+offering practical avenues for revenue optimization in online marketplaces.
+   The implications of these findings are twofold. Firstly, they provide valu-
+able insights for online marketplaces like Tradera to optimize auction scheduling.
+Secondly, they contribute to the broader discourse in behavioral finance and eco-
+nomics, enriching our understanding of how regular income schedules influence
+consumer behavior in digital market spaces.
+    Despite the robustness of our findings, this study is not without limitations.
+The specific context of Tradera and the Swedish market may restrict the gen-
+eralizability of the results. Future research could extend this analysis to other
+online marketplaces and cultural contexts, exploring whether similar patterns
+emerge. Additionally, examining the interplay between consumer behavior and
+other cyclic economic factors, such as holiday seasons or tax return periods,
+could offer further insights into the dynamics of online auction markets, addi-
+tional resarch could also be done relating to the specific time-stamps people
+make these bids and specifically related to weekend shopping and if alcohol
+consumption has an increase in bidding behavior.
+    In conclusion, this thesis illuminates the subtle yet significant influence of
+payday timing on consumer bidding behavior in online auctions. It contributes
+to the literature on behavioral finance by revealing the intricate relationship
+between regular income cycles and consumer market dynamics, offering practical
+insights for online auction platforms and paving the way for future research in
+this evolving field.
+
+                                  18
+References
+
+Sumit Agarwal, Paige Marta Skiba, and Jeremy Tobacman. Payday loans and
+  consumer financial health. Journal of Banking Finance, 37(9):3398–3415,
+  2013.
+
+Patrick Bajari and Ali Horta¸csu. Winners’ curse, reserve prices, and endogenous
+  entry: Empirical insights from ebay auctions. RAND Journal of Economics,
+  34(2):329–355, 2003.
+
+Brian Baugh and Filipe Correia. Does paycheck frequency matter? evidence
+  from micro data. Journal of Financial Economics, 143(3):1026–1042, 2022.
+  URL https://EconPapers.repec.org/RePEc:eee:jfinec:v:143:y:2022:
+  i:3:p:1026-1042.
+
+Marieke Bos, Chloe Le Coq, and Peter van Santen. Scarcity and consumers’
+  credit choice. Swedish House of Finance Research Paper Series, (16-19), May
+  2017. Available at SSRN: https://ssrn.com/abstract=2849203 or http:
+  //dx.doi.org/10.2139/ssrn.2849203.
+
+Angus Deaton. Saving and liquidity constraints. Econometrica, 59(5):1221–48,
+  1991. URL https://EconPapers.repec.org/RePEc:ecm:emetrp:v:59:y:
+  1991:i:5:p:1221-48.
+
+Will Dobbie and Paige Marta Skiba. Information asymmetries in consumer
+  credit markets: Evidence from payday lending. American Economic Journal:
+  Applied Economics, 5(4), 2013.
+
+Meyer Dwass. Modified Randomization Tests for Nonparametric Hypotheses.
+  The Annals of Mathematical Statistics, 28(1):181 – 187, 1957. doi: 10.1214/
+  aoms/1177707045. URL https://doi.org/10.1214/aoms/1177707045.
+
+T. Eden and F. Yates. On the validity of fisher’s z test when applied to an
+  actual example of non-normal data. (with five text-figures.). The Journal of
+  Agricultural Science, 23(1):6–17, 1933. doi: 10.1017/S0021859600052862.
+
+Milton Friedman. A Theory of the Consumption Function. National Bureau
+  of Economic Research, Inc, 1957. URL https://EconPapers.repec.org/
+  RePEc:nbr:nberbk:frie57-1.
+
+Xavier Gabaix and David Laibson. Myopia and disounting. 2022.
+
+Tanjim Hossain and John Morgan. Learning by bidding. Rand Journal of
+  Economics, 40(2):297–319, 2009.
+
+David Huffman and Matias Barenstein. Riches to rags every month? the fall in
+  consumption expenditures between paydays. IZA Discussion Paper, 2004.
+
+David Huffman and Matias Barenstein. A monthly struggle for self-control? hy-
+  perbolic discounting, mental accounting, and the fall in consumption between
+  paydays. Institute for the Study of Labor (IZA) Discussion Paper, 2005.
+
+                                  19
+Aixin James Ma and William R Pratt. Payday anomaly. Available at SSRN
+  3257064, 2018.
+
+Atif Mian and Amir Sufi. House of Debt: How They (and You) Caused the Great
+  Recession, and How We Can Prevent It from Happening Again. University of
+  Chicago Press, 2014.
+
+Michael Ostrovsky and Michael Schwarz. Reserve prices in internet advertising
+  auctions: A field experiment. American Economic Review, 99(2):97–102,
+  2009.
+
+ScienceDirect Topics. Fixed effects model - an overview. https://www.
+  sciencedirect.com/topics/economics-econometrics-and-finance/
+  fixed-effects-model, a. Accessed: 2023-12-05.
+
+ScienceDirect Topics. Hausman test - an overview. https://www.
+  sciencedirect.com/topics/economics-econometrics-and-finance/
+  hausman-test, b. Accessed: 2023-12-05.
+
+ScienceDirect Topics. Random effects model - an overview. https://www.
+  sciencedirect.com/topics/economics-econometrics-and-finance/
+  random-effects-model, c. Accessed: 2023-12-05.
+
+Hersh Shefrin. Behavioralizing finance. Foundations and Trends in Finance, 4
+  (1-2):1–184, 2009.
+
+Melvin Stephens Jr. “3rd of tha month”: do social security recipients smooth
+  consumption between checks? American Economic Review, 93(1):406–422,
+  2003.
+
+Richard H Thaler. Mental accounting matters. Journal of Behavioral decision
+  making, 12(3):183–206, 1999.
+
+                                  20
+A Appendix: Detailed regressions results
+
+A.1 Fixed Effect Variable Combination A: max bid ∼ pay-
+      day indicators + weekday indicators
+
+ Dep. Variable: max bid R-squared: 5.59e-05
+ Estimator: PanelOLS R-squared (Between): -0.0079
+ No. Observations: 15861563 R-squared (Within): 5.735e-05
+                                   R-squared (Overall): 0.0001
+                                   Log-likelihood -1.321e+08
+ Cov. Estimator: Unadjusted
+                                     F-statistic: 88.642
+ Entities: 5747 P-value 0.0000
+ Avg Obs: 2760.0 Distribution: F(10,15855784)
+ Min Obs: 1.0000
+ Max Obs: 2.233e+05 F-statistic (robust): 9.361e+04
+                                   P-value 0.0000
+ Time periods: 23 Distribution: F(10,15855784)
+ Avg Obs: 6.896e+05
+ Min Obs: 2.168e+05
+ Max Obs: 8.819e+05
+
+F-test for Poolability: 640.86
+P-value: 0.0000
+Distribution: F(5768,15855784)
+
+Included effects: Entity, Time
+
+                                  21
+    267.76265.85266.71263.86264.24253.18250.113.81763.3183-0.2471-0.1116
+Upper CI
+
+
+
+    263.20261.24262.12259.26259.53248.77246.20-0.3339-0.9046-4.4338-4.2908
+Lower CI
+
+
+
+    0.00000.00000.00000.00000.00000.00000.00000.10000.26260.02840.0390
+P-value
+
+
+T-stat228.12224.03225.52222.73218.24223.44248.461.64471.1203-2.1913-2.0646
+
+
+
+    1.16371.17641.17241.17431.20001.12320.99881.05911.07731.06811.0661
+Std. Err.
+
+
+
+    265.48263.54264.41261.56261.88250.98248.151.74191.2068-2.3404-2.2012
+Parameter
+
+
+
+
+
+
+
+   monday indicatortuesday indicatorwednesday indicatorthursday indicatorfriday indicatorsaturday indicatorsunday indicatorpayday indicator week 1payday indicator week 2payday indicator week -1payday indicator week -2
+
+            22
+A.2 Fixed Effect Variable Combination B: total bids ∼
+     payday indicators + weekday indicators
+
+ Dep. Variable: total bids R-squared: 0.0095
+ Estimator: PanelOLS R-squared (Between): 0.0095
+ No. Observations: 15861563 R-squared (Within): 0.0097
+                                   R-squared (Overall): 0.0114
+                                   Log-likelihood -5.351e+07
+ Cov. Estimator: Unadjusted
+                                    F-statistic: 1.524e+04
+ Entities: 5747 P-value 0.0000
+ Avg Obs: 2760.0 Distribution: F(10,15855784)
+ Min Obs: 1.0000
+ Max Obs: 2.233e+05 F-statistic (robust): 7.423e+05
+                                   P-value 0.0000
+ Time periods: 23 Distribution: F(10,15855784)
+ Avg Obs: 6.896e+05
+ Min Obs: 2.168e+05
+ Max Obs: 8.819e+05
+
+F-test for Poolability: 190.79
+P-value: 0.0000
+Distribution: F(5768,15855784)
+
+Included effects: Entity, Time
+
+                                  23
+    4.38914.24664.28574.43374.30064.48635.82980.30270.17170.12820.0740
+Upper CI
+
+
+
+    4.35694.21404.25324.40124.26744.45525.80220.27340.14190.09860.0444
+Lower CI
+
+
+
+    0.00000.00000.00000.00000.00000.00000.00000.00000.00000.00000.0000
+P-value
+
+
+T-stat531.95509.05515.49532.53505.37563.44824.3438.50320.60315.0277.8607
+
+
+
+    0.00820.00830.00830.00830.00850.00790.00710.00750.00760.00750.0075
+Std. Err.
+
+
+
+    4.37304.23034.26944.41754.28404.47075.81600.28810.15680.11340.0592
+Parameter
+
+
+
+
+
+
+
+   monday indicatortuesday indicatorwednesday indicatorthursday indicatorfriday indicatorsaturday indicatorsunday indicatorpayday indicator week 1payday indicator week 2payday indicator week -1payday indicator week -2
+
+            24
+A.3 Fixed effect Variable Combination C: max bid ∼ const
+     + payday indicators
+
+ Dep. Variable: max bid R-squared: 3.377e-06
+ Estimator: PanelOLS R-squared (Between): -0.0080
+ No. Observations: 15861563 R-squared (Within): 3.935e-06
+                                    R-squared (Overall): 4.613e-06
+                                   Log-likelihood -1.321e+08
+ Cov. Estimator: Unadjusted
+                                     F-statistic: 13.384
+ Entities: 5747 P-value 0.0000
+ Avg Obs: 2760.0 Distribution: F(4,15855790)
+ Min Obs: 1.0000
+ Max Obs: 2.233e+05 F-statistic (robust): 13.384
+                                   P-value 0.0000
+ Time periods: 23 Distribution: F(4,15855790)
+ Avg Obs: 6.896e+05
+ Min Obs: 2.168e+05
+ Max Obs: 8.819e+05
+
+F-test for Poolability: 641.18
+P-value: 0.0000
+Distribution: F(5768,15855790)
+
+Included effects: Entity, Time
+
+                                  25
+    258.953.22362.8209-0.8097-0.7089
+Upper CI
+
+
+
+    255.32-0.9269-1.4013-4.9956-4.8871
+Lower CI
+
+
+
+    0.00000.27810.50990.00660.0087
+P-value
+
+
+T-stat277.711.08460.6590-2.7182-2.6250
+
+
+
+    0.92591.05881.07711.06781.0659
+Std. Err.
+
+
+
+    257.141.14840.7098-2.9026-2.7980
+Parameter
+
+
+
+
+   constpayday indicator week 1payday indicator week 2payday indicator week -1payday indicator week -2
+
+     26
+A.4 Fixed Effect Variable Combination D: total bids ∼
+      const + payday indicators
+
+ Dep. Variable: total bids R-squared: 0.0002
+ Estimator: PanelOLS R-squared (Between): -9.872e-05
+ No. Observations: 15861563 R-squared (Within): 0.0002
+                                   R-squared (Overall): 0.0002
+                                   Log-likelihood -5.358e+07
+ Cov. Estimator: Unadjusted
+                                     F-statistic: 773.57
+ Entities: 5747 P-value 0.0000
+ Avg Obs: 2760.0 Distribution: F(4,15855790)
+ Min Obs: 1.0000
+ Max Obs: 2.233e+05 F-statistic (robust): 773.57
+                                   P-value 0.0000
+ Time periods: 23 Distribution: F(4,15855790)
+ Avg Obs: 6.896e+05
+ Min Obs: 2.168e+05
+ Max Obs: 8.819e+05
+
+F-test for Poolability: 196.70
+P-value: 0.0000
+Distribution: F(5768,15855790)
+
+Included effects: Entity, Time
+
+                                  27
+    4.81020.34860.21100.16930.1143
+Upper CI
+
+
+
+    4.78440.31920.18110.13960.0846
+Lower CI
+
+
+
+    0.00000.00000.00000.00000.0000
+P-value
+
+
+T-stat730.0344.43525.64820.38313.147
+
+
+
+    0.00660.00750.00760.00760.0076
+Std. Err.
+
+
+
+    4.79730.33390.19610.15450.0995
+Parameter
+
+
+
+
+   constpayday indicator week 1payday indicator week 2payday indicator week -1payday indicator week -2
+
+     28
+A.5 Random Effect Variable Combination A: max bid ∼
+     payday indicators + weekday indicators
+
+ Dep. Variable: max bid R-squared: 7.343e-05
+ Estimator: RandomEffects R-squared (Between): 1.398e-07
+ No. Observations: 15861563 R-squared (Within): 5.741e-05
+                                       R-squared (Overall): -0.0138
+                                      Log-likelihood -1.321e+08
+ Cov. Estimator: Unadjusted
+                                         F-statistic: 116.47
+ Entities: 5747 P-value 0.0000
+ Avg Obs: 2760.0 Distribution: F(10,15861552)
+ Min Obs: 1.0000
+ Max Obs: 2.233e+05 F-statistic (robust): 119.61
+                                      P-value 0.0000
+ Time periods: 23 Distribution: F(10,15861552)
+ Avg Obs: 6.896e+05
+ Min Obs: 2.168e+05
+ Max Obs: 8.819e+05
+
+                                  29
+    438.91436.68437.38434.55434.93423.97421.183.44142.7581-0.9604-0.8088
+Upper CI
+
+
+
+    355.41353.17353.88351.05351.42340.48337.72-0.6364-1.3755-5.0917-4.9275
+Lower CI
+
+
+
+    0.00000.00000.00000.00000.00000.00000.00000.17760.51210.00410.0063
+P-value
+
+
+T-stat18.64518.53918.57318.44018.45617.94617.8211.34820.6555-2.8712-2.7297
+
+
+
+    21.30121.30221.30221.30221.30321.29921.2931.04031.05451.05391.0507
+Std. Err.
+
+
+
+    397.16394.92395.63392.80393.18382.22379.451.40250.6913-3.0261-2.8682
+Parameter
+
+
+
+
+
+
+
+   monday indicatortuesday indicatorwednesday indicatorthursday indicatorfriday indicatorsaturday indicatorsunday indicatorpayday indicator week 1payday indicator week 2payday indicator week -1payday indicator week -2
+
+            30
+A.6 Random Effect Variable Combination B: total bids ∼
+     payday indicators + weekday indicators
+
+ Dep. Variable: total bids R-squared: 0.0101
+ Estimator: RandomEffects R-squared (Between): 0.0087
+ No. Observations: 15861563 R-squared (Within): 0.0097
+                                       R-squared (Overall): 0.0108
+                                      Log-likelihood -5.352e+07
+ Cov. Estimator: Unadjusted
+                                        F-statistic: 1.617e+04
+ Entities: 5747 P-value 0.0000
+ Avg Obs: 2760.0 Distribution: F(10,15861552)
+ Min Obs: 1.0000
+ Max Obs: 2.233e+05 F-statistic (robust): 1.583e+04
+                                      P-value 0.0000
+ Time periods: 23 Distribution: F(10,15861552)
+ Avg Obs: 6.896e+05
+ Min Obs: 2.168e+05
+ Max Obs: 8.819e+05
+
+                                  31
+    4.26994.12814.17084.31584.18304.38145.72700.30650.17080.13420.0781
+Upper CI
+
+
+
+    4.10453.96274.00544.15034.01744.21625.56240.27770.14160.10500.0490
+Lower CI
+
+
+
+    0.00000.00000.00000.00000.00000.00000.00000.00000.00000.00000.0000
+P-value
+
+
+T-stat99.24295.83396.851100.2897.056102.01134.4539.72620.95216.0548.5544
+
+
+
+    0.04220.04220.04220.04220.04220.04210.04200.00740.00750.00740.0074
+Std. Err.
+
+
+
+    4.18724.04544.08814.23304.10024.29885.64470.29210.15620.11960.0635
+Parameter
+
+
+
+
+
+
+
+   monday indicatortuesday indicatorwednesday indicatorthursday indicatorfriday indicatorsaturday indicatorsunday indicatorpayday indicator week 1payday indicator week 2payday indicator week -1payday indicator week -2
+
+            32
+A.7 Random effect Variable Combination C: max bid ∼
+      const + payday indicators
+
+ Dep. Variable: max bid R-squared: 1.98e-05
+ Estimator: RandomEffects R-squared (Between): -0.0002
+ No. Observations: 15861563 R-squared (Within): 3.966e-06
+                                       R-squared (Overall): -0.0139
+                                      Log-likelihood -1.321e+08
+ Cov. Estimator: Unadjusted
+                                         F-statistic: 78.514
+ Entities: 5747 P-value 0.0000
+ Avg Obs: 2760.0 Distribution: F(4,15861558)
+ Min Obs: 1.0000
+ Max Obs: 2.233e+05 F-statistic (robust): 15.650
+                                      P-value 0.0000
+ Time periods: 23 Distribution: F(4,15861558)
+ Avg Obs: 6.896e+05
+ Min Obs: 2.168e+05
+ Max Obs: 8.819e+05
+
+                                  33
+    430.552.99742.4084-1.3798-1.2596
+Upper CI
+
+
+
+    346.66-1.0799-1.7249-5.5106-5.3778
+Lower CI
+
+
+
+    0.00000.35670.74590.00110.0016
+P-value
+
+
+T-stat18.1580.92170.3241-3.2693-3.1589
+
+
+
+    21.4011.04011.05441.05381.0506
+Std. Err.
+
+
+
+    388.610.95870.3417-3.4452-3.3187
+Parameter
+
+
+
+
+   constpayday indicator week 1payday indicator week 2payday indicator week -1payday indicator week -2
+
+     34
+A.8 Random Effect Variable Combination D: total bids ∼
+      const + payday indicators
+
+ Dep. Variable: total bids R-squared: 0.0006
+ Estimator: RandomEffects R-squared (Between): -0.0009
+ No. Observations: 15861563 R-squared (Within): 0.0002
+                                       R-squared (Overall): -0.0004
+                                      Log-likelihood -5.359e+07
+ Cov. Estimator: Unadjusted
+                                         F-statistic: 2433.3
+ Entities: 5747 P-value 0.0000
+ Avg Obs: 2760.0 Distribution: F(4,15861558)
+ Min Obs: 1.0000
+ Max Obs: 2.233e+05 F-statistic (robust): 782.49
+                                      P-value 0.0000
+ Time periods: 23 Distribution: F(4,15861558)
+ Avg Obs: 6.896e+05
+ Min Obs: 2.168e+05
+ Max Obs: 8.819e+05
+
+                                  35
+    4.70140.34500.20030.16630.1092
+Upper CI
+
+
+
+    4.53580.31610.17090.13700.0799
+Lower CI
+
+
+
+    0.00000.00000.00000.00000.0000
+P-value
+
+
+T-stat109.3744.74924.78320.26112.672
+
+
+
+    0.04220.00740.00750.00750.0075
+Std. Err.
+
+
+
+    4.61860.33050.18560.15160.0945
+Parameter
+
+
+
+
+   constpayday indicator week 1payday indicator week 2payday indicator week -1payday indicator week -2
+
+     36
+A.9 Ordinary OLS Variable Combination A: sum of max bid
+     ∼ payday indicators + weekday indicators
+
+ Dep. Variable: max bid R-squared: 0.762
+ Model: OLS Adj. R-squared: 0.758
+ Method: Least Squares F-statistic: 216.2
+                                       Prob (F-statistic): 3.47e-203
+                                      Log-Likelihood: -10795.
+ No. Observations: 688 AIC: 2.161e+04
+ Df Residuals: 677 BIC: 2.166e+04
+ Df Model: 10
+ Covariance Type: nonrobust
+
+ Omnibus: 447.877 Durbin-Watson: 0.644
+ Prob(Omnibus): 0.000 Jarque-Bera (JB): 11006.397
+ Skew: -2.491 Prob(JB): 0.00
+ Kurtosis: 21.950 Cond. No. 7.07
+
+                                  37
+                     0.975]
+                        5.14e+064.79e+064.89e+064.78e+064.55e+065.78e+061.29e+071.39e+066.08e+055.75e+056.23e+05
+
+
+
+                     [0.025
+                         4.12e+063.77e+063.87e+063.76e+063.53e+064.76e+061.18e+074.15e+05-3.62e+05-3.98e+05-3.47e+05
+                       |
+                             t|
+
+              >
+                      P  0.0000.0000.0000.0000.0000.0000.0000.0000.6180.7220.576
+
+                       t
+                           17.84216.49616.88616.44115.53120.32847.7343.6360.4990.3560.560
+
+
+                     std err2.6e+052.6e+052.6e+052.6e+052.6e+052.59e+052.59e+052.48e+052.47e+052.48e+052.47e+05
+
+
+
+                     coef
+                        4.631e+064.281e+064.382e+064.267e+064.036e+065.268e+061.235e+079.022e+051.233e+058.835e+041.382e+05
+
+
+
+
+
+
+
+                       monday indicatortuesday indicatorwednesday indicatorthursday indicatorfriday indicatorsaturday indicatorsunday indicatorpayday indicator week 1payday indicator week 2payday indicator week -1payday indicator week -2
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly
+specified.
+
+                                  38
+A.10 Ordinary OLS Variable Combination B: sum of to-
+       tal bids ∼ payday indicators + weekday indicators
+
+ Dep. Variable: total bids R-squared: 0.826
+ Model: OLS Adj. R-squared: 0.823
+ Method: Least Squares F-statistic: 321.1
+                                       Prob (F-statistic): 2.95e-249
+                                      Log-Likelihood: -8256.4
+ No. Observations: 688 AIC: 1.653e+04
+ Df Residuals: 677 BIC: 1.658e+04
+ Df Model: 10
+ Covariance Type: nonrobust
+
+ Omnibus: 462.907 Durbin-Watson: 0.848
+ Prob(Omnibus): 0.000 Jarque-Bera (JB): 14110.176
+ Skew: -2.536 Prob(JB): 0.00
+ Kurtosis: 24.598 Cond. No. 7.07
+
+                                  39
+                     0.975]
+                        8.26e+047.41e+047.73e+047.92e+047.27e+041.06e+053.22e+053.85e+041.83e+041.96e+041.89e+04
+
+
+
+                     [0.025
+                         5.71e+044.86e+045.18e+045.38e+044.72e+048.05e+042.97e+051.42e+04-5965.336-4724.032-5349.347
+                       |
+                             t|
+
+              >
+                      P  0.0000.0000.0000.0000.0000.0000.0000.0000.3190.2310.274
+
+                       t
+                           10.7849.4719.96510.2619.23914.40447.9174.2550.9961.2001.095
+
+
+                      std err6478.5396478.5396478.5396478.5396487.7116469.5936460.8016193.3466167.6086188.1056162.596
+
+
+
+                     coef
+                         6.987e+046.136e+046.456e+046.647e+045.994e+049.319e+043.096e+052.635e+046144.60327426.15376750.7516
+
+
+
+
+
+
+
+                       monday indicatortuesday indicatorwednesday indicatorthursday indicatorfriday indicatorsaturday indicatorsunday indicatorpayday indicator week 1payday indicator week 2payday indicator week -1payday indicator week -2
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly
+specified.
+
+                                  40
+A.11 Ordinary OLS Variable Combination C: sum of max bid
+      ∼ const + payday indicators
+
+  Dep. Variable: max bid R-squared: 0.012
+  Model: OLS Adj. R-squared: 0.006
+  Method: Least Squares F-statistic: 1.991
+                                       Prob (F-statistic): 0.0942
+                                       Log-Likelihood: -11285.
+  No. Observations: 688 AIC: 2.258e+04
+  Df Residuals: 683 BIC: 2.260e+04
+  Df Model: 4
+  Covariance Type: nonrobust
+
+     Omnibus: 263.968 Durbin-Watson: 1.787
+     Prob(Omnibus): 0.000 Jarque-Bera (JB): 761.772
+     Skew: 1.954 Prob(JB): 3.83e-166
+     Kurtosis: 6.363 Cond. No. 8.88
+
+                                  41
+                             0.975]
+                                6.45e+061.93e+061.12e+061.12e+061.12e+06
+
+
+
+                             [0.025  -8.5e+05
+                                 4.76e+06-4.17e+04-8.57e+05-8.44e+05
+                               |
+                                       t|
+
+                  >
+                            P  0.0000.0600.7900.7970.783
+
+                               t
+                                   12.9991.8810.2660.2580.276
+
+
+
+                           std err      5e+05
+                                4.31e+055.03e+055.01e+055.02e+05
+
+
+
+                            coef
+                                5.603e+069.457e+051.331e+051.295e+051.382e+05
+
+
+
+
+                              constpayday indicator week 1payday indicator week 2payday indicator week -1payday indicator week -2
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly
+specified.
+
+                                  42
+A.12 Ordinary OLS Variable Combination D: sum of to-
+       tal bids ∼ const + payday indicators
+
+  Dep. Variable: total bids R-squared: 0.009
+  Model: OLS Adj. R-squared: 0.003
+  Method: Least Squares F-statistic: 1.600
+                                       Prob (F-statistic): 0.172
+                                       Log-Likelihood: -8854.4
+  No. Observations: 688 AIC: 1.772e+04
+  Df Residuals: 683 BIC: 1.774e+04
+  Df Model: 4
+  Covariance Type: nonrobust
+
+     Omnibus: 292.546 Durbin-Watson: 1.936
+     Prob(Omnibus): 0.000 Jarque-Bera (JB): 907.164
+     Skew: 2.162 Prob(JB): 1.03e-197
+     Kurtosis: 6.599 Cond. No. 8.88
+
+                                  43
+                             0.975]
+                                1.28e+055.66e+043.52e+043.75e+043.55e+04
+
+
+
+                             [0.025       -2.2e+04
+                                 7.88e+04-1196.561-2.23e+04-2.02e+04
+                               |
+                                       t|
+
+                  >
+                            P  0.0000.0600.6610.5550.645
+
+                               t
+                                   8.2161.8820.4380.5910.461
+
+
+                            std err1.26e+041.47e+041.46e+041.47e+041.46e+04
+
+
+
+                            coef
+                                 1.036e+052.768e+046417.26078680.23446750.7516
+
+
+
+
+                              constpayday indicator week 1payday indicator week 2payday indicator week -1payday indicator week -2
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly
+specified.
+
+                                  44
+B Appendix: Robustness Check
+
+Figure 2: Permutation Test Histogram with Gaussian Fit for pay-
+day indicator week 1
+
+                                  45
+Figure 3: Permutation Test Histogram with Gaussian Fit for pay-
+day indicator week 2
+
+                                  46
+Figure 4: Permutation Test Histogram with Gaussian Fit for pay-
+day indicator week -1
+
+                                  47
+Figure 5: Permutation Test Histogram with Gaussian Fit for pay-
+day indicator week -2
+
+                                  48
+      Figure 6: Permutation Test Histogram with Gaussian Fit for const
+
+C Appendix: Results from Hausman Test
+
+             Table 6: Hausman Test Results for Model Selection
+
+Model Variables Hausman Test Statistic P-value
+max bid payday indicators + weekday indicators 346.9101 1.80e-68
+total bids payday indicators + weekday indicators -2297.0580 1.0
+max bid const + payday indicators 61.9191 1.15e-12
+total bids const + payday indicators 58.9288 4.87e-12
+
+             Table 7: Model Selection Based on Hausman Test
+
+ Model Selection Conclusion
+  max bid (weekday included) Fixed effects model is preferred
+  total bids (weekday included) Random effects model may be appropriate
+  max bid (weekday excluded) Fixed effects model is preferred
+  total bids (weekday excluded) Fixed effects model is preferred
+
+                                  49
+D Appendix: Data Summary
+
+                     StartPrice BuyItNowPrice ReservePrice
+          mean 268.782 743.657 275.427
+           std 15083.546 218119.708 15218.258
+           min 1.000 1.000 1.000
+          25% 39.000 70.000 39.000
+          50% 78.000 150.000 79.000
+          75% 199.000 351.000 199.000
+          max 99999999.000 555555555.000 99999999.000
+
+                            total bids max bid
+                   mean 1.444 299.862
+                    std 5.868 34865.457
+                    min 0.000 1.000
+                   25% 0.000 45.000
+                   50% 0.000 89.000
+                   75% 0.000 200.000
+                   max 419.000 242551100.000
+
+                                  50

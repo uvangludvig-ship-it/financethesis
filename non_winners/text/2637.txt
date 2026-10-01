@@ -1,0 +1,1505 @@
+  Does the current influenza activity generate stock
+                market responses?
+
+                             An analysis of US data from 1997-2015
+
+                                             1                     2
+                       Björn Norrby & Ida Florestedt
+                               Bachelor Thesis
+                      Stockholm School of Economics
+
+                                                           th
+                             May 18 , 2015
+                                  Abstract
+
+This paper investigates if the release of influenza activity information during influenza seasons on the
+US aggregate level, from 1997 to 2015, generates any stock market responses. The hypothesis is that
+certain companies (i.e. heath insurance companies/pharmacies) might disadvantage/advantage from
+an unexpected mild/severe influenza season. We have tested the hypothesis by conducting event
+studies on historical dates when the seasonal influenza hit the US, but find no indication of influenza
+activity generating any stock market responses. The null hypothesis cannot be rejected on most
+seasons and the CAARs frequently trend in the wrong direction. Perhaps focusing on a state wise level
+and examining the accounting reports following an influenza season, will shed more light on where the
+missing costs/revenues are located. If not, perhaps the cost/revenues are too small and/or too
+uncertain to generate any significant stock market responses. In the end, the aim with this paper is to
+illuminate a previously unexplored topic in the financial markets, with the hope of leaving the door a
+bit more open than it was before, and thereby encouraging further research on the topic.
+
+Keywords: influenza season, influenza epidemic, event study, stock market reaction
+
+Tutor: Irina Zviadadze, Assistant Professor
+
+Acknowledges: We would like to thank our tutor Irina Zviadadze for providing us with valuable input
+and guidance. We also want to thank Per-Olov Edlund for his support regarding the statistical
+methods used in this thesis. All errors are our own.
+
+1
+ 22949@student.hhs.se
+2
+ 22701@student.hhs.se
+Table of Contents
+1. Introduction......................................................................................................................................... 2
+2. Related literature ................................................................................................................................ 4
+3. Background.......................................................................................................................................... 5
+   3.1 What is the Influenza? ................................................................................................................... 5
+   3.2 How the intensity of the common flu is measured? ..................................................................... 6
+   3.3 Sources providing information about Influenza activity ............................................................... 6
+   3.4 Characteristics of the average influenza season ........................................................................... 6
+4. Estimating the costs associated with the seasonal influenza ............................................................. 8
+5. Influenza exposure depending on industry ......................................................................................... 9
+    5.1 Industry categorization ............................................................................................................... 11
+6. Hypothesis ......................................................................................................................................... 13
+7. Data ................................................................................................................................................... 15
+8. Method .............................................................................................................................................. 15
+   8.1 Event study .................................................................................................................................. 16
+   8.2 Event window .............................................................................................................................. 19
+   8.3 Performed event studies ............................................................................................................. 20
+     8.3.1 Drop-outs of companies when running the regressions ...................................................... 21
+9. Results ............................................................................................................................................... 21
+   9.1 Results from “NEG”-industries .................................................................................................... 21
+   9.2 Results from “STRONG POS”-companies .................................................................................... 24
+  9.2 Results from “STRONG NEG”-companies .................................................................................... 26
+    9.3 Robustness test ........................................................................................................................... 29
+10. Limitation and suggestions for future research .............................................................................. 29
+   10.1 The event studies are performed on aggregate level instead of state level............................. 29
+   10.2 Previous research on the economic impact of the influenza is overestimated ........................ 30
+   10.3 The available information is too uncertain to be used for trading ........................................... 30
+   10.4 Suggestions for future research ................................................................................................ 31
+11. Conclusion ....................................................................................................................................... 31
+12. Appendix.......................................................................................................................................... 33
+   12.1 CAARs season 1997-2015, “NEG”-industries............................................................................. 33
+  12.2 CAARs season 1997-2015, “STRONG POS”-companies ............................................................. 35
+  12.3 CAARs season 1997-2015, “STRONG NEG”-companies ............................................................ 37
+   12.4 Adjusted Z-BMP statistics calculations ...................................................................................... 39
+13. References ....................................................................................................................................... 41
+
+                                                                                1
+1. Introduction
+
+According to the efficient markets hypothesis, it is impossible to “beat the market” since stock
+market efficiency causes existing share prices to always reflect and incorporate all relevant
+information (Investopedia, LLC 2015). In this thesis, the statement’s verity will be tested by
+investigating if information about the current influenza activity generates any stock market
+reactions. It is to our belief that influenza seasons affect certain companies’ costs and
+revenues, creating an opportunity for aware traders to short and long certain shares to reflect
+and incorporate all relevant information into the share prices. However, if the efficient market
+hypothesis is correct, the share prices should already be adjusted to reflect these cost and
+revenues. The aim of this thesis is thus to investigate if the efficient market hypothesis is
+correct or if there possibly still exists an arbitrage opportunity to make money on the release
+of influenza activity.
+
+Previous research has showed that when influenza activity is higher than normal, costs
+increases through loss of sales, paid sick leave and loss of productivity for companies whose
+labor and/or customers are ill. The estimated costs for the annual seasonal influenza varies
+depending on research study but has been estimated to be significant in most cases. A report
+from (Molinari, Noelle-Angelique M 2007) estimated the annual costs of the influenza to be
+$111.75 billion (95% confidence interval, $54.14, $191.81) ($2015). For companies selling
+influenza related products (i.e. pharmacies), the effects of the seasonal influenza are the
+opposite. The CNBC wrote in an article from 2014 (CNBC News Friday 3 Jan 2014) stating that
+pharmacies sales increased with 9.2% during the 2013-2014 influenza season due to an
+increase in sales of over-the counter medicines and tissues. The same article also wrote that
+Walgreens pharmacies administrated almost 1 million more flu shots during the influenza
+season than what they did one year earlier.
+
+As the seasonal influenza seems to have a significant impact on some industries it is our belief
+that information about influenza activity would be valuable for traders. We have therefore
+chosen to study information provided on influenza activity in order to investigate any
+potential trading based on this information.
+
+The US National Public Health Institute “The Centers of Disease Control and Prevention” (CDC)
+provides weekly updated information about the current influenza activity in the US. The
+information is provided through the influenza activity measurement “Percentage of
+hospitalized patients with Influenza like Illness” (ILI). Even though not all persons infected will
+be hospitalized, the measurement is commonly used in related research as an indicator of the
+overall influenza activity in US.
+
+Receiving this information, traders become aware of the intensity of the seasonal influenza
+and can easily reason around what impact a severe or mild seasonal influenza will have on a
+specific industry/company. In order to reflect this impact they can short or long shares
+depending on if a company will profit or disadvantage from the current influenza activity.
+
+                                                                                2
+This thesis aim is thus to investigate how and if influenza activity rates are used by traders.
+The research question is explored by looking at historical information provided on influenza
+activity rates (ILI-rates) and then investigating the abnormal returns on share prices during
+influenza epidemics. The abnormal returns are investigated through performing event studies
+on influenza seasons from 1997 to 2015. The event studies are made on a selection of S&P
+500 companies divided into categories based on the effect the influenza is believed to have
+on the companies. The execution of the event studies are based on the article “Event Studies
+in Economics and Finance” (MacKinlay,A.Craig 1997) where abnormal returns during a specific
+event window are identified by estimating companies normal returns and then investigating
+any deviations from this return. If the influenza activity rates are used for trading we would
+thus expect positive or negative abnormal returns during the influenza seasons where the
+Influenza activity rate is very low or high, since this deviation from the average influenza
+intensity would be unexpected to the market.
+
+With this thesis we hope to be able to contribute to the research on the impact of influenza
+epidemics on the financial markets in a way that has previously not been explored. We want
+to, in contrast to the research that has been made more purely on the socio economic burden
+associated with the influenza, rather investigate the practical financial use of knowing when
+these impacts will emerge. We also believe that our research question will help contribute to
+the research on the Efficient Market Hypothesis.
+
+Looking at the results from our event studies we see no implications of influenza activity rates
+being used for trading. For most performed event studies we generate insignificant results,
+making it impossible to reject the null hypothesis stating that CAAR=0 during the event
+window. Even though we do find evidence of abnormal returns occurring during some of the
+influenza epidemics, the abnormal returns seem to appear randomly and to not have any
+connection to the presented influenza rates during that season. We draw this conclusion as
+negative abnormal returns occur for industries that reasonably should be positively affected
+during a seasonal influenza and vice versa.
+
+Since the results did not show that the information about influenza activity generates any
+stock market reactions, the question thus becomes, why not? Did we do something wrong
+when performing the event studies? Is there possibly an arbitrage opportunity to make money
+on information about influenza activity? Is the cost/revenues associated with the seasonal
+influenza too small to affect share prices or is it perhaps too difficult to estimate the
+costs/revenues that will occur for the affected companies?
+
+Personally, we believe that the reason to why we did not find any implications of influenza
+activity rates being used for trading is most in line with the two last possibilities (the
+cost/revenues being too small and/or too uncertain too estimate). This, as the previous
+research’ estimations on cost and revenues occurring due to the seasonal influenza being
+inadequate, presenting numbers ranging from $3-8 billion (Liang Mao, Yang Yang, Youliang
+Qiu and Yan Yang 1981) up to $268.71 billion (Meltzer MI, Cox NJ, Fukuda K. 1999) ($2015).
+
+                                                                                3
+Also, we believe that the larger numbers presented might have been overestimated, including
+costs, such as projected statistical life values for deaths, that possibly not fully would be
+reflected and incorporated into security prices on the financial markets.
+
+For future research we thus leave an open door to investigate where these costs and revenues
+are shown. Our suggestion to future research is to investigate the possibility of the
+cost/revenues being shown in the quarterly reports after an influenza season. If not, then
+perhaps the impacts are too small and previous research estimations has been overestimated.
+If yes, do we have an arbitrage opportunity?
+
+2. Related literature
+
+Trading behavior based on information about influenza activity is an unexplored topic, hence
+there is little to none related literature on the specific topic. However, there is previous
+research that explores the costs associated with the seasonal influenza and on the Swine Flu
+pandemic in 2009. Also some articles investigates the increase in sales that some industries
+might experience (CNBC News Friday 3 Jan 2014). These researches become relevant for this
+thesis in order to understand what effect we expect to see on the financial markets during an
+influenza epidemic.
+
+Many of the previous studies focus on the cost-benefits associated with vaccination against
+the seasonal flu (Nichol,K.L. 2009) (Bridges, Carolyn Buxton 2000) other studies focus on the
+cost-benefits on paid sick leave plans contra no paid sick leave (Puhani, Patrick A 2010) (Colla,
+Carrie H 2014). Some studies focus mainly on the direct medical costs (Fairbrother, Gerry
+2010) but most of them try to split up the costs between direct and indirect costs (Molinari,
+Noelle-Angelique M 2007) (Mao, Liang 2012). In our case we care about both the direct
+medical costs and the indirect costs associated with productivity loss from work absence,
+working while ill (i.e., presenteeism days) and cost associated with death (using projected
+statistical life values).
+
+Also, we have found a study from (Karve, Sudeep 2013) that investigates the direct and
+indirect costs associated with the Swine Flu in 2009. Even though, we are not particularly
+interested in looking into the effects of the Swine Flu, we find the presented results to be
+useful when trying to estimate the impact of a seasonal influenza epidemic with a similar level
+of severity.
+
+The above mentioned studies’ estimations of the annual average cost associated with the
+seasonal influenza seem to vary a lot, presenting numbers ranging from $3-8 billion (Liang
+Mao, Yang Yang, Youliang Qiu and Yan Yang 1981) up to $268.71 billion (Meltzer MI, Cox NJ,
+Fukuda K. 1999) ($2015). The great variation is due to the researches including different costs
+aspects and/or using different methods for estimations, which makes it difficult to know what
+estimations are most accurate. Consequently, in order for us to calculate the average cost
+associated with a seasonal influenza epidemic on the financial markets we will have to
+extrapolate information from all the studies and estimate the total economic burden by
+
+                                                                                4
+ourselves. This processes of estimating the cost is described in section “4. Estimating the costs
+associated with the seasonal influenza”.
+
+Regarding the industries that might profit from the influenza the research, in contrast to the
+cost perspective, is almost non consisting, but there are articles that investigate trading
+strategies (Thomson Reuters Jan 21, 2013) during seasonal influenza epidemics and other
+articles that investigate what products are boosted in sales during an influenza epidemic
+(CNBC News Friday 3 Jan 2014). These articles become important for this research paper in
+order to understand what industries are positively affected by the influenza season and in
+what way. We will investigate this topic further below in the section “5. Influenza exposure
+depending on industry”.
+
+3. Background
+
+To provide an overview of the central definitions used in this research paper, the following
+section will present relevant background information. General information about the
+influenza and where information about it is released will firstly be presented. Secondly, we
+will look at the characteristics of the average influenza season, and lastly, we will present and
+reflect on the costs/revenues associated with the seasonal influenza and what industries are
+most likely exposed to these costs/revenues. The last two parts will be based on previous
+literature and conclusions being drawn from it.
+
+3.1 What is the Influenza?
+
+The influenza is a virus spread and a contagious illness. When discussing the influenza, one
+                                                                3
+often refers to either the Pandemic Flu or the Seasonal Flu. The pandemic and the seasonal
+influenza are different in both severity and frequency of occurring. The pandemic influenza is
+more severe in its nature and occurs when the influenza virus has gone through mutations
+and changes its structure. The virus thus becomes much more dangerous to people infected
+as they have no immunity for the virus and thus can be spread faster. The pandemic,
+                                                                                                                                     th
+compared to the seasonal influenza, is rare and only occurred three times during the 20
+century; The Spanish Flu (1918), the Asian Flu (1957) and the Hong Kong Flu (1998). Our most
+recent pandemic influenza outbreak was the so called Swine Flu (H1N1) virus that occurred in
+2009 (Metropolitan Emergency Managers Committee 2010).
+
+The influenza virus is spread between humans and the symptoms come on quickly and result
+in the individual feeling too unwell to continue with their usual activities. Symptoms are
+usually shown about 1 to 4 days after being infected, and one can infect other about 1 day
+before symptoms are shown and up to 5-7 days after becoming sick. As a result one can infect
+other without being aware of themselves being infected (CDC 2015).
+
+3
+ In this research paper we will always spell out if we are referring to the seasonal or pandemic influenza. The
+word “flu” will only be used in names such as the “Swine Flu”.
+
+                                                                                5
+3.2 How the intensity of the common flu is measured?
+
+Influenza activity is measurement through the unit “Percentage of hospitalized patients with
+Influenza like Illness (ILI)”. Even though, not all persons infected will be hospitalized, the
+measurement becomes a good indicator of the overall public influenza activity and the current
+ILI can be compared to the national baseline of 2% (CDC 2015). Almost all related literature
+on the seasonal influenza uses the ILI-rate as the base line indicator for estimating the total
+economic burden/spread of the influenza within a region.
+
+3.3 Sources providing information about Influenza activity
+
+There are two sources providing information about the current Influenza activity; The Centers
+of Disease Control and Prevention and Google Flu trends.
+
+The Centers of Disease Control and Prevention (CDC) is the US National Public health institute
+with the mission to protect the public health. In order to accomplish its mission, CDC conducts
+critical science and delivers health information. The CDC provides a weekly update on the
+current ILI rate in the US, on both nationwide aggregate level and State level. The revealed ILI
+rates are based on information provided by the U.S. Outpatient Influenza-like Illness
+Surveillance Network (ILINet), consisting of more than 2900 outpatient health care providers
+in all 50 states. The influenza activity rates are compiled and released every Friday, thus
+making the revealed data 1-2 weeks old. CDC has been providing this information every week
+since 1997 (CDC 2015).
+
+The other source providing this information is the Google Flu trends. Google Flu trends was
+released in 2008 and provides information about influenza activity based on aggregated
+Google Search Data. Google has found that people feeling ill tend to google their symptoms
+which make certain search queries great indicators of Influenza activity. Google Flu trends has
+been successful with estimating the current ILI rate, but its information have multiple times
+deviated from numbers delivered by CDC. This has resulted in Google Flu trends updating their
+models almost annually in order to make it more accurate (Google Flu Trends 2015). Due to
+the fact that Google Fu trends has been showing inaccurate ILI numbers several times we have
+chosen to not include this data in our research paper. This, as we believe that the market
+would find Google Flu trends ILI-rates too uncertain to base their trades on.
+
+3.4 Characteristics of the average influenza season
+
+By looking at all influenza seasons occurring from 1997 to 2015 we have been able to compile
+some of the characteristics of the average influenza season. The compiled characteristics are
+based on ILI-rates presented by CDC. Each year’s influenza season is identified through the
+highest ILI-rate presented that year. The length of each influenza season has been defined as
+
+                                                                                6
+                                                                 4
+the time from when the ILI first crosses the baseline of 2%  until it returns back below the
+baseline. Presented in Figure 1 and Graph 1 are some of the characteristics of the average
+seasonal influenza. As we are interested in the characteristics of the seasonal influenza, the
+2009 pandemic (Swine Flu) has been excluded. The characteristics are thus based on 17
+influenza seasons from 1997-2015.
+
+                                                 As can be seen from Figure 1, the
+                                                     seasonal influenza peaks in the period
+                                                    December-Mars, with a majority of the
+                                                  seasons peaking in December. Graph 1
+                                                    illustrates the development curve for
+                                                      the average seasonal influenza. It
+                                                   peaks at an ILI-rate of around 4.5%,
+                                                    lasts for about 16 weeks and the time
+                                                          for it to reach its peak is approximately
+                                                          as long as the time it takes for it to go
+Figure 1: The graph illustrates the distribution of the seasonal  back to the baseline level again.
+influenza peak-dates. The graph is based on 17 seasons
+occurring from 1997-2015.
+                                                   The characteristics of the average
+influenza season is important in order to identify unexpectedly mild or severe seasons,
+regarding its intensity. In this paper a mild and a severe influenza season are referred to as
+when the peak ILI-rate is below respectively above one standard deviation from the average
+influenza curve. These characteristics are important when investigating what the market is
+
+           Graph 1: This graph illustrates the average influenza activity curve. Approximately 68%
+           out of all annual influenza seasons are captured between the “min” curve and the “max”
+           curve (the grey area). If an influenza season peaks above the “max” or below the “min”
+           curve they are regarded to be severe respectively mild seasons. The graph is based on 17
+            influenza seasons occurring from 1997-2015.
+expecting of the seasonal influenza.
+
+4
+  ILI-rates lower than 2% is regarded as normal ILI-rates according to CDC. Above 2% is regarded as an influenza
+epidemic.
+
+                                                                                7
+4. Estimating the costs associated with the seasonal influenza
+
+In order to understand what effect we expect to see on the financial markets during the
+seasonal influenza we have to estimate the costs associated with the influenza. As mentioned
+earlier, previous research cost estimations vary a lot from each other since they chose to
+include different types of costs. In this section we will thus discuss what costs are relevant for
+the scope of this research paper.
+
+Later in this research paper, we will calculate the cumulative abnormal average returns (CAAR)
+for specific industry groups during the different influenza seasons. In order to do that, we will
+focus on the indirect costs and the direct medical costs associated with the annual influenza.
+
+The direct medical costs will mostly affect the health insurance companies in contrast to the
+indirect costs that would affect a broader industry selection of companies. These costs should
+be reflected in the future expected cash flows when calculating the present value of security
+prices.
+
+A large part of the estimated costs from previous research constitutes of the costs from
+projected life values from deaths. When determining whether to include these costs or not,
+we have to reason about if this cost should affect the pricing of company securities. If a severe
+non expected pandemic influenza hits the US and results in the death of a large percentage of
+the population, then both productivity losses in the form of lost workers and losses in
+consumption are expected in the future. The results thus should be a decrease in the value of
+the companies affected. Even though, this is an extreme and unlikely case, it demonstrates
+that it is reasonable to consider the costs associated with deaths when investigating the
+effects on the financial markets.
+
+As we are interested in the costs that are above or below expected it becomes interesting to
+compare the costs of a severe/mild influenza season, with the costs of an average influenza
+season.
+
+THE CDC estimates that the average number of hospitalizations and missed workdays
+associated with the seasonal influenza every year is estimated to 200 000 and 111 million
+respectively, with an attack rate from 5% to 20% (CDC 2015).
+
+According to the most cited study (Molinari, Noelle-Angelique M 2007) within the topic of the
+economic burden of an average seasonal influenza hitting the US market, the total cost is
+$111.75 billion (95% confidence interval, $54.14, $191.81). This is based on an estimated
+27.18 million people (8.5% of the population) getting sick every season. The major part of
+these costs (about 65%) is due to death and the rest is medical costs and costs associated with
+work absenteeism. What is interesting to consider with this research paper is that the costs of
+presenteeism (costs of working while ill) are not considered in this study. A study from 2009
+(Nichol,K.L. 2009) estimates that employees on average work for more than 4 days while still
+symptomatic with the median level of work effectiveness being 70%–75%. This implies that
+
+                                                                                8
+not all relevant costs are included and the total cost of $111.75 billion might be even higher
+when considering the cost for presenteeism.
+
+In order to estimate the economic burden occurring when the US is hit by a severe (20% attack
+rate) influenza we investigate the costs associated with the 2009-pandemic which had an
+attack rate of 20.0% (approximately 60 million cases). This, as it could be useful when
+estimating the economic burden occurring when the US is hit by a severe influenza (20% attack
+rate). In a study from 2013 (Karve, Sudeep 2013) they calculated the relative higher economic
+burden between the regular seasonal influenza in 2005-2006 with the pandemic in the 2009.
+The total costs associated with influenza-related productivity loss (not including deaths) were
+4.6 times higher between the two seasons. Some reasons for the costs developing faster than
+the estimated cases of influenza (≈2.5x cases; ≈4.6x productivity costs) are the loss of
+mobility to prevent the spread of the pandemic. With the 2009 pandemic being low in severity,
+the costs were dominated by productivity losses due to illness and social distancing
+interventions, such as closing of schools and workplaces (Kelso,J.K. 2013). Interestingly, the
+closing of schools and workplaces during the pandemic were done in a cost-beneficial
+purpose, whereas if the interventions had not been done, the costs would have been even
+larger (Mao, Liang 2013). However, the use of interventions is not a regular procedure when
+considering the seasonal influenza, even though they may have similar, or even higher, attack
+rates. This implies that the indirect costs may be larger relatively speaking for a severe
+seasonal influenza than they were for the pandemic in 2009. For example, another season
+that had similar ILI rates as the pandemic season of 2009, was the severe influenza season of
+2012-2013 with adults missing an estimated 230 million workdays due to infection (CNBC
+News Friday, 3 Jan 2014). This makes us believe that it is possible that the costs associated
+with productivity losses on a severe seasonal influenza can be 4.6 times higher than a regular
+season.
+
+As can be seen by the presented numbers, the differences in costs between a severe and mild
+season of influenza can vary very much. During a severe season, with many deaths, missed
+workdays, presenteeism days and hospitalizations days the costs could indeed go above $200
+billion. This would comprise approximately 1% of the entire S&P 500 market capitalization
+(S&P Dow Jones Indices LLC April 30, 2015). Focusing only on industries with a higher exposure
+to the costs associated with the seasonal influenza, the relative impact should be even higher.
+
+5. Influenza exposure depending on industry
+
+In order to choose what industries to investigate, it becomes relevant to reflect on what
+industries reasonably should be most affected by the influenza. Considering that companies
+have different main sources of income and are dependent on different inputs, it is reasonable
+to think that the impact of the seasonal influenza may vary dependent on the industry.
+Industries can either profit from the seasonal influenza, or disadvantage from it, but the risk
+exposure should vary depending on industry.
+
+                                                                                9
+The companies that profit from the seasonal influenza would reasonably do so by an increase
+in sales from selling influenza related products. CNBC wrote an article about the 2014
+influenza and stated that pharmacy companies increased their sales with 9.2% during the most
+severe influenza month, thus strengthening our assumption (CNBC News January 7th 2015).
+
+In contrast, the companies that would disadvantage from the seasonal influenza would either
+experience increased costs through, for example, loss of productivity, loss of sales and/or
+increased paid sick leave costs as a result of ill staff and/or customers.
+
+In the same article mentioned earlier, CNBC wrote that while the pharmacy companies benefit
+from seasonal influenza, health insurance companies take a hit. This as the health insurance
+companies has to pay for medicine costs and medical costs from hospitalizations during the
+influenza season.
+
+As the influenza virus spreads between humans it is reasonable that staff dense industries
+should be more exposed to the indirect costs associated with the seasonal influenza, as the
+virus can be spread faster. Also, the nature of the work should have an impact on the exposure
+to the indirect costs. For industries where the workers perform manual work, so called “blue
+collar”-industries, this exposure should be larger. This as physical work is more difficult to
+perform ill and also since the companies’ revenues are more dependent on the physical
+presence and productivity of their workers. Also, a study on vaccination rates made on
+occupational groups show that white-collar industries have a 35 % higher vaccination
+coverage compared to blue-collar industries (Caban-Martinez, Alberto J 2010), which would
+imply a higher risk for blue-collar workers becoming ill.
+
+Some industries may also be affected by the seasonal influenza trough a decrease in sales as
+a result of their customers becoming ill. Citigroup concluded in a 2005 report a trading strategy
+in the event of an avian flu outbreak. The report stated that investors should short companies
+whose revenues come from malls, casinos, air travel, and tourism. Analysts were also bearish
+on labor-intensive industries and countries with "inflexible" labor laws (most of Europe)
+because companies not being able to easily fire workers if demand for their products fall
+(Thomson Reuters Jan 21, 2013). Even though this trading strategy applies for a pandemic
+influenza, we believe it indicates what industries are more exposed to the risk of a severe
+influenza season. The impact of a seasonal influenza may be smaller but the distribution of
+where the effects are shown should be similar.
+
+                                                                               10
+5.1 Industry categorization
+
+Based on this information we have categorized each industry after the impact we assume the
+seasonal influenza to have on that industry. The industries have been divided into three
+categories shown below;
+
+    1. Broad industry selection of companies believed to be negatively affected by the
+       seasonal influenza (NEG) – Here we have included all industries whose business
+       operations are believed to have inputs with a higher relative exposure to influenza
+        illness than other industries, thus making these industries more negatively affected by
+       the seasonal influenza compared to other industries. In order to ease the reading, this
+       category of industries/companies will be referred to as “NEG”-industries.
+    2. Companies that are assumed to be strongly positively affected by the seasonal
+       influenza (STRONG POS) – Here we have include companies whose business
+       operations have a strong correlation with illness and which would be very positively
+       affected by the seasonal influenza. In order to ease the reading, this category of
+       industries/companies will be referred to as “STRONG POS”-companies.
+    3. Companies that are assumed to be strongly negatively affected by the seasonal
+      influenza (STRONG NEG) - Here we have included companies whose business
+       operations have a strong correlation with illness and which would be very negatively
+       affected by the influenza. In order to ease the reading, this category of
+       industries/companies will be referred to as “STRONG NEG”-companies.
+
+Category 1: (NEG)
+
+  Construction, Manufacturing, Retail trade*      • Productivity losses due to work
+                                                absteeism and preesenteism
+       *(Exception: Pharmacies and Drug Stores)
+                                                        (working while ill)
+              Air Transportation                 • Decreases in sales
+
+     Direct Health and Medical Insurance
+                                               • Increases in costs
+                    Carriers
+
+        Art, Entertainment, Recreation
+                                               • Decreases in sales
+    Accommmodation and Food Services
+
+Table 1: This table shows what industries are included in the broad selection of companies that are believed to
+be negatively affected by the seasonal influenza (“NEG”-industries). The right column describes what impact the
+seasonal influenza is assumed to have on the industry/company.
+
+Based on the previous information, the included companies should reasonably be negatively
+affected by the seasonal influenza through either productivity losses, decreases in sales or
+increases in costs. The included companies’ business operations are believed to have inputs
+that have a higher exposure to the seasonal influenza than a “general” company on the
+market, but lower than the more narrow industry selections below.
+
+                                                                               11
+Category 2: (STRONG POS)
+
+             CVS Pharmacies
+                                               • Increases in sales
+         Walgreens Boots Alliance Inc.
+
+Table 2: This table shows what companies are included in the narrow selection of companies believed to be
+strongly positively affected by the seasonal influenza (“STRONG POS”-companies). The right column describes
+what impact the seasonal influenza is assumed to have on the companies.
+
+For the “STRONG POS”-companies we have included only pure-pharmacy companies.
+Pharmacies incorporated in other retail chains, such as Walmart Pharmacies, were excluded
+since the pharmacies is such a small part of their total sales and also because of the assumed
+negative effect that is believed to affect the other parts of their businesses. Pharmaceutical
+companies were also excluded, as influenza medicines are a very small part of their total
+revenues. Finally, Rite Aid Pharmacies was excluded because of the company being under
+financial distress for several of the included periods in this study. This resulted in only two
+companies being included for the positive selection group; CVS Pharmacies and Walgreens
+Boots Alliance Inc. These two companies are the major players when considering the US
+Pharmacy industry, encompassing approximately 42% of the total US market (Storify Aug
+2014).
+
+Category 3: (STRONG NEG)
+
+     Direct Health and Medical Insurance
+                                               • Increases in costs
+                    Carriers
+
+Table 3: This table shows what companies are included in the narrow selection of companies believed to be
+strongly negatively affected by the seasonal influenza (“STRONG NEG”-companies). The right column describes
+what impact the seasonal influenza is assumed to have on the companies.
+
+When choosing the “STRONG NEG”-companies, we made the selection based on the NAICS
+(North American Industry Classification System) codes representing the “Direct Health and
+Medical Insurance Carriers” (NAICS code: 524114). We excluded companies such as “Dental
+insurance carriers”, that are also included in 524114, because they are not believed to be
+negatively affected by the seasonal influenza.
+
+                                                                               12
+6. Hypothesis
+
+𝐻0: 𝐶𝐴𝐴𝑅 = 0 (when ILI-rate is as expected)
+
+𝐻1: 𝐶𝐴𝐴𝑅 ≠ 0 (when ILI-rate is low or high)
+
+The efficient market hypothesis (EMH) states that share prices always incorporate and reflect
+all relevant information in the market. If the EMH holds, we would thus expect that the
+information provided on influenza activity should be reflected in share prices as increased
+influenza activity may lead to an increase in costs or sales depending on the business of the
+companies and industries.
+
+The seasonal influenza occurs on an annual basis and usually hits the market in the period
+December-February every year. The intensity of the seasonal influenza peaks around 4.5 %
+every year and it is therefore reasonably to say that the aggregated costs for it should be
+approximately equally large every season. Since the seasonal influenza has these
+characteristics it should be expected by the market. According to the EMH, this means that
+share prices already are adjusted to reflect the effects of the average seasonal influenza.
+
+However, we should be able to find abnormal returns for the years where the influenza activity
+was very low or very high compared to the average seasonal influenza. This, as the effects on
+companies for those years would be larger or smaller than what was expected and thus the
+                                                                                      5
+previous adjustment in share prices would not be sufficient to reflect it.
+
+Based on this, we have formulated the hypothesis showed above, which states that we expect
+to have abnormal returns during the influenza season were ILI-rates are very low or very high.
+Very low respectively very high ILI-rates are defined as mild respectively severe influenza
+seasons and occur when the ILI-rate peaks below respectively above one standard deviation
+from the average influenza curve (for further explanation of a mild and severe influenza
+season see Graph 1 under section “3.4 Characteristics of the average influenza season”).
+
+Depending on the industry and the specific influenza season’s ILI-rate we expect to have
+positive or negative abnormal returns during the event window for the season. Companies
+who are positively affected by the seasonal influenza, i.e. pharmacies, would be expected to
+show negative abnormal returns for mild seasons and positive abnormal returns for severe
+
+5
+ One could argue that if the average seasonal influenza was expected by the market every year then, no changes
+would affect the share prices for the mild or severe seasons as well, due to these being averaged over time to fit
+the long run expected cost/profit. However, the discussion then becomes how long of a time horizon the average
+investor has. Furthermore, other possibilities to question if they are expected by the market are new vaccination
+policies and effectiveness changing over time and institutional changes over time such as paid sick leave contra
+no paid sick leave. Moreover, other effects such as a higher density of people with bigger cities and more
+cramped production within agriculture creating a faster spreading and more aggressive mutation possibilities for
+the influenza virus over time, may not be expected by the market. However, the scope of this research paper is
+to explore if there are any stock market reaction due to influenza activity and we will leave further discussion of
+how the average influenza may or may not be expected by the market to the reader.
+
+                                                                               13
+seasons. This is as the sales would increase more than expected for the severe seasons and
+less than expected for the mild seasons.
+
+For the companies who are negatively affected by the influenza we would expect the opposite,
+positive abnormal returns during mild seasons and negative abnormal returns during severe
+seasons. This is, as the costs would increase more than expected for the severe seasons and
+less than expected for the mild seasons.
+
+Presented in Graph 3, the estimated CAAR (Cumulated Abnormal Average Return) is
+illustrated based on this hypothesis. For further explanation on CAAR see section “8.1 Event
+study”.
+
+         Graph 2: The graph illustrates the assumed CAAR for a company who would be negatively
+          affected by the influenza. For a company who would be positively affected by the influenza,
+         the graph would show the opposite. Thus, the green and blue line would switch places. The
+           x-axis shows days, and the y-axis shows the CAAR (Cumulated Abnormal Average Returns)
+          in %. For further explanations on CAAR see section “8.1 Event study”.
+
+                                                                               14
+7. Data
+
+For this research paper we have limited our focus to the US market. The reason for this is that
+the US market has the most complete data for historical released ILI-rates.
+
+Regarding the choice of data used for the market model proxy we decided to use index data
+from the S&P 500. The S&P 500 captures approximately 80% of the coverage of available
+market capitalization and thus becomes the most representative index for the US market (S&P
+Dow Jones Indices LLC April 30, 2015).
+
+Considering that we are only focusing on the US market regarding influenza seasons, we want
+major companies exposed to the total wideness of an influenza epidemic, affecting the entire
+nation. Therefore, we choose to use larger companies with the major part of their operational
+business in the US market, thus making the S&P 500 constituents good candidates for our
+event studies. All stock market data and index data are collected from the COMPUSTAT
+database.
+
+The influenza activity rates have been collected from CDC’s database (CDC 2015). As CDC has
+ILI information since 1997 we will conduct our study on the period 1997 until 2015 in order to
+capture as many seasons as possible. From the period 1997-2015 the US experienced 18
+influenza epidemics of which 16 seasons have been included for this research. The influenza
+epidemics 2002-2003 and 2008-2009 has been excluded due to the market instability
+occurring from the internet bubble bursting in 2002 and the financial crisis in 2008. The great
+volatility in share prices makes it difficult to perform correct event studies for those seasons.
+
+8. Method
+
+In this section we lay out the empirical framework used to investigate if the release of
+influenza activity generates any stock market responses. First, the average seasonal influenza
+was calculated using historical influenza periods from 1997 to 2015. Once the average
+influenza curve was estimated we split up the different seasons between mild, medium and
+severe seasons. In this section we will estimate the trading strategy used by the market on
+influenza activity information. By combining the information from influenza activity and the
+estimated trading strategy we can locate the event window and the estimation window. We
+then calculate the normal and abnormal returns during the event to see if any interesting
+stock market responses are generated. Investigations on stock market responses are made on
+the “NEG”-, “STRONG POS”- and ”STRONG NEG”-industry selections. Because of event-date
+clustering we choose to use the adjusted Z-BMP test statistic (Kolari, James W 2010) that
+accounts for event-induced volatility, serial correlation and cross-sectional correlation. Finally,
+we show our results period-wise and regarding the level of severity of the influenza.
+
+                                                                               15
+8.1 Event study
+
+In order to investigate the market’s reaction to the release of influenza activity information
+we perform a so-called event study. This is done by identifying several historical periods when
+information about increased influenza activity were released and then studying what happens
+to security prices during these periods. In finance and accounting research, event studies have
+been applied to a variety of firm specific and economy wide events for over 50 years and is a
+common tool used to identify stock market responses to distinct event types. The conduction
+of our event study is based on the article “Event Studies in Economics and Finance”
+(MacKinlay,A.Craig 1997), which summarizes how an event study should be performed and
+potential biases done in event studies.
+
+To identify any stock market responses during our event we first have to calculate the normal
+performance of the stock. MacKinlay suggest several different methods to estimate the
+normal performance. One of the simpler and more common used models for this is the CAPM
+(Capital Asset Pricing Model), specified as following:
+
+                             E(ri) = rf + αi + βmkt,i(rmkt − rf) + εi
+
+ri = logarithmic stock return for security i
+
+rf = risk free rate
+
+αi = performance of security i after accounting for the systematic risk
+
+βmkt,i = measure of the systematic risk
+
+rmkt = return of the market
+
+As a proxy for the market return we have chosen to use the S&P 500 index. The daily risk free
+rate is collected from the Fama/French database (Kenneth R. French 2015). As specified on his
+website, this is the simple daily rate that, over the number of trading days in the month,
+compounds to a 1-month T-Bill rate from Ibbotson and Associates, Inc.
+
+The abnormal returns are then calculated:
+
+                         ARi,t = ri,t − [rf,t + αi + βmkt,i(rmkt,t − rf,t)]
+
+ARi,t = abnormal return for security i on day t
+
+rf,t = risk free rate on day t
+
+αi = performance of security i after accounting for the systematic risk on day t
+
+βmkt,i = estimated using the CAPM
+
+rmkt = estimated using the CAPM
+
+As MacKinlay suggests we use an estimation window of 120 days before the event window.
+The event window is not included in the estimation window to prevent the event from
+
+                                                                               16
+influencing the normal performance model parameter estimates. By regressing each security’s
+excess return (security i’s return on day t minus the risk free rate) with the market excess
+return, within the estimation window, we can estimate each security’s beta and alpha. By then
+using these estimates in the event window we can estimate each security’s normal
+performance during the event window. The abnormal return is then calculated by taking the
+actual return minus the estimated normal return for each security and day in the event
+window.
+
+However, to see if there are any actual stock market responses occurring because of the event
+we need to test if the abnormal returns are significantly different from zero. In our case, having
+a long event window, we are not especially interested with each abnormal return on a stand-
+alone basis, but more interested in the cumulated abnormal return (CAR) during the event.
+The formula calculating the CAR for each security is:
+
+                                               T2
+                           CARi = ∑ ARi,t
+                                             t=T1+1
+
+CARi = cumulated abnormal return for security i
+
+T1 = the latest day in the estimation window
+
+T2 = the latest day in the event window
+
+ARi,t = abnormal return for security i on day t
+
+Furthermore, there are many securities in the sample and we are interested in the total
+cumulated abnormal effect among all securities as a group during the entire event window.
+Therefore, we have to calculate the cumulated abnormal average return (CAAR). The formula
+for calculating the CAAR is as follows:
+
+                                                 T2
+                                1
+                       CAAR =   ∑ CARi
+                                              𝑁
+                                              t=T1+1
+
+CAAR = cumulated abnormal average return for all securities as a group during the event window
+
+N = number of securities in the event
+
+The hypothesis test now becomes:
+
+                                H0 = CAAR
+
+                                H1 ≠ CAAR
+
+By rejecting the null hypothesis (H0) we can say that there indeed is a significant stock market
+response during the distinct event.
+
+To test the null hypothesis we need a test statistic to test the CAAR against. Specifically in our
+case we have event-date clustering, because of the seasonal influenza (the event) occurring
+
+                                                                               17
+at the same time for all the firms (securities). This poses a problem leading to cross-sectional
+correlation of the abnormal returns and distortions from event-induced volatility changes.
+Cross-sectional correlation emerges when studies focuses on an event which occurs for
+several firms at the same day. Event-induced volatility changes, on the other hand, is a
+phenomenon common to many event types and also becomes a problem when events are
+clustered. Consequently, both issues introduce a downward bias in the standard deviation,
+thus overstating the t-statistic. This leads to a falsely over-rejection of the null hypothesis.
+There have been several attempts to address these statistical issues, with one of the latest
+solutions for solving them being the adjusted Z-BMP test statistic developed by (Kolari, James
+W 2010). This test statistic accounts for both the event-induced volatility, serial correlation
+and cross-sectional correlation, hence making it a good test statistic for testing our null
+              6
+hypothesis.
+
+6
+ To see the calculations for the adjusted Z-BMP test statistic see Appendix “12.4 Adjusted Z-BMP test statistics
+calculations”.
+
+                                                                               18
+8.2 Event window
+
+As information on influenza activity is released solely through the current ILI it becomes
+impossible for the market to know in advance how large the influenza activity will become
+and for how long it will last. However, looking at the characteristics of the average seasonal
+influenza, we have been able to form an assumption about traders reasoning. From section
+“3.4 Characteristics of the average influenza” we know that the average seasonal influenza
+curve is formed as a normal distribution curve with 6-8 weeks long tails and peaking one time
+in the middle, on average at an ILI-rate of 4.5%. These two characteristics together make it a
+reasonable assumption to say that when a lower ILI-rate compared to the previous week is
+revealed (red dot in Graph 3), the market knows the severity of that year’s seasonal influenza.
+This as, by looking at the first half of the seasonal influenza curve, easily can calculate the
+length and intensity of the later half.
+
+          Graph 3: This graph demonstrates at what time the market knows the severity of the
+            seasonal influenza. The point is here shown as the red dot and is the first released lower
+            ILI-rate compared to the previous week of the influenza period. It is possible for the traders
+           to, by this point in time, know the severity of the whole period, as area 1 is approximately
+           as large as area 2. (The curve is for explanatory purpose regarding the trading strategy
+             on ILI-rates and do not represent correct numbers considering the length of the tails and
+            height of the curve.)
+
+Given that our assumption is correct, it should not occur any trading on influenza activity
+information after the market knows that the influenza season has had its peak. This means
+that the last date of the event window should be set equal to the date at the red dot for all
+influenza seasons used in our event study.
+
+However, the first date of the chosen event window is not as easy to decide since the ILI
+trading trigger may vary between traders. In order to capture all potential trades on the ILI
+information, we strive to make the start date as early as possible. However, longer event
+windows come at the cost of lower significance levels when running the regressions. The
+choice of the event window’s length thus has to be a compromise that captures as many
+potential trades due to the event as possible, but without immediately generating too low
+significant results in our event studies.
+
+                                                                               19
+By looking at the historical influenza seasons we have come to the conclusion that, around 6
+weeks before the season hits its peak, it starts becoming obvious that the seasonal influenza
+is present. This as, the revealed ILI-rate increases faster compared to earlier weeks and the ILI
+is at least 1 percentage point above the national baseline of 2%. Going shorter than 6 weeks
+strengthens the risk of losing valuable information from stock market responses caused by the
+event.
+
+Because of the above mentioned reasons we have decided that our event window will be set
+to 6 weeks (or 30 trading days) before the first revealed lower ILI point. The event window is
+demonstrated graphically in Graph 4.
+
+          Graph 4: This graph illustrates the method for identifying the event window for each
+          seasonal influenza epidemic. The event window is chosen from the first reveled lower ILI
+           rate compared to the previous week, and 6 weeks earlier. (The curve is for explanatory
+            purpose regarding the trading strategy on ILI-rates and do not represent correct numbers
+            considering the length of the tails and height of the curve.)
+8.3 Performed event studies
+
+To see if there are any significant stock market responses due to the seasonal influenza we
+have chosen to run event studies on the three different industry/company selections
+mentioned in section “5.1 Industry categorization”; “NEG”, “STRONG POS” and “STRONG
+NEG”.
+
+The three event studies will be done for each and every of the 16 included influenza seasons
+occurring from 1997 to 2015. The pandemic of 2009 (Swine Flu) has been included in the event
+studies and been classified as a severe influenza season. This as the Swine Flu was unexpected
+by the market due to the fact that no one new if or how large the impact would be if it hit the
+US. This implies that the market would react to the Swine Flu first when the ILI-rates were
+released of its presence, thus making it possible to accurately calculate the costs/revenues
+from it.
+
+                                                                               20
+All the event studies are done on an individual basis for each season in able to investigate if
+there are any differences between mild, normal and severe seasons. This implies that we will
+run a total of 48 regressions: 16 on the “NEG”-industry selection, 16 on the “STRONG POS”-
+companies and 16 on the “STRONG NEG”-companies. The pandemic of 2009 (Swine Flu) is
+included to see if there are any differences between this special event and the other “regular”
+events.
+
+8.3.1 Drop-outs of companies when running the regressions
+
+As mentioned under the section “7. Data” we choose to look at S&P 500 companies under the
+period 1997 to 2015. When running the regression on the “NEG”-industries we first dropped
+all the companies being classified as not being part of the affected industries using the NAICS
+codes collected from the COMPUSTAT database. Next we dropped all companies not having
+30 active trading days in the event window or not having 120 trading days in the estimation
+window. Finally, we winsorized the returns to the 1-percentile and 99-percentile level.
+Winsorization is done to limit extreme values in the statistical data to reduce the effect of
+                            7
+possibly spurious outliers. However, this is done by first checking that no returns in the event
+window is affected, due to the risk of losing important stock market responses occurring
+during the event.
+
+After the drop-outs there are 275 to 366 companies in the “NEG”, 2 companies in the
+“STRONG POS” and 10 to 16 companies in the “STRONG NEG” depending on season.
+
+9. Results
+
+The main result in this research is that traders do not seem to trade on information about
+influenza activity in the US. First we present the results for the ”NEG”-industry selection, next
+the results for the “STRONG POS”-companies and lastly the “STRONG NEG”-companies.
+
+9.1 Results from “NEG”-industries
+
+After performing the event studies on the industries that were assumed to be negatively
+affected by the seasonal influenza, “NEG”-industries, we conclude that there are not any
+significant stock market responses due to the release of ILI-rates.
+
+                                                                8
+Of the 16 included seasons we have 2 mild, 10 medium  and 4 severe. During the mild
+influenza seasons the cost should be unexpected lower than the market has anticipated and
+
+7
+ For example, when checking our data we had one security price that went from 325 to 32.5 and back to 325 on
+three consecutive days. This generated extreme values in the return variable which were due to wrong values
+from the COMPUSTAT database. One could argue that trimming or trunking then would be a better choice of
+action, but then the risk is that we lose important information regarding volatility for a specific security, which
+later on is used to estimate the standard deviation in the event window. In the end, winsorizing and trimming
+usually generates similar results.
+8
+ Medium seasons are referred to as the ”regular” average influenza season. See section ”4. Characteristics of
+the average influenza season” for more explanations on mild, medium and severe seasons.
+
+                                                                               21
+therefore the CAARs should be positive. The opposite should apply for the severe seasons,
+and the medium seasons should not generate any CAARs at all. Therefore, according to our
+hypothesis we want to reject the null hypothesis on 2 seasons due to positive CAARs, 4
+seasons due to negative CAARs, and on 10 seasons we do not want to be able to reject it at
+all. However, our results show that we only can reject the null hypothesis for 1 out of 16
+seasons. The season we could reject the null hypothesis for was during a mild seasons, with a
+                                     9
+rejection in the right direction.
+
+Even though the rejection rates between the seasons are not as expected we further
+investigate if the CAARs are generated in the right direction regarding if the season were mild,
+medium or severe. As shown in Graph 5, the average CAAR for all the 16 seasons combined
+show a slight increase of less than 1%. This implies that the seasonal influenza already is
+incorporated in the pricing of securities. However, when then looking closer between if the
+seasons were mild, medium or severe we conclude that the mild seasons on average have
+positive CAARs, with the low and severe seasons on average having negative CAARs. This
+implies that the release of influenza activity does not generate any stock market responses.
+
+Graph 5: This graph shows the results for the event studies made on the “NEG”-industries. The results are
+presented as average CAAR for all seasons combined, for the medium seasons, the severe seasons and the mild
+seasons. The averaged CAAR for all seasons combined indicates that the information of influenza activity is
+already incorporated in the pricing of securities. However, looking at the CAAR averaged for medium seasons we
+see a slight positive trend and for the mild and severe seasons we see a slight negative trend. This implies that
+the release of influenza activity does not generate any stock market responses.
+
+9
+ We are only looking at the 95% level of significance when talking about rejection. Therefore, the adjusted Z-
+BMP test statistic must take a value of (-1.96 < adj Z-BMP < 1.96) not to be rejected, take a value of (adj Z-BMP
+< -1.96) to be rejected due to a negative CAAR and take a value of (1.96 < adj Z-BMP) to be rejected due to a
+positive CAAR.
+
+                                                                               22
+Furthermore, to understand if there is any relation between the CAARs and the level of
+influenza activity released during an influenza season we plotted the adjusted Z-BMP test
+statistic for the CAARs corresponding to each season against the peak ILI-rate measured during
+that season. The higher peak ILI-rate during a season implies a higher unexpected cost during
+that season, which would lead to a more negative CAAR and thus a more negative value of the
+adjusted Z-BMP test statistic. In contrast, a lower peak ILI-rate would lead to lower
+unexpected costs, a more positive CAAR and thus a more positive value of the adjusted Z-BMP
+test statistic. The relationship between the value of the adjusted Z-BMP test statistic and the
+peak ILI-rate should then be a line leaning downwards from the top left corner to the bottom
+right corner of the graph. As shown in Graph 6, the slope of the line is leaning in the right
+direction, but the explanation value is very low, which implies further that ILI-rates are not
+affecting the pricing of securities.
+
+Graph 6: This graph shows the relationship between the value of the adjusted Z-BMP test statistic and the peak
+ILI-rate for each season from 1997 to 2015 for the “NEG”-industries. When a mild influenza season occurs “NEG”-
+industries are believed to incur lower unexpected costs and therefore generate positive CAARs, in contrast to
+severe season, where the opposite is believed to happen. This implies positive values of the adjusted Z-BMP test
+statistics for mild seasons and negative values of the adjusted Z-BMP test statistics for severe seasons. We thus
+expect a trend in the relationship between the test statistics and the peak ILI-rates from the top left corner to
+the bottom right corner. Even though we have a slight trend in the right direction the explanation value of the
+                       2
+trend is very low with a 𝑅  value of 0.046. This implies that ILI-rates are not affecting the pricing of securities.
+
+                                                                               23
+9.2 Results from “STRONG POS”-companies
+
+When look at the “STRONG POS”-companies, believed to be affected in a strong positive way
+due to the seasonal influence, we use the same procedure as with the “NEG”-industries.
+However, due to “STRONG POS”-companies being believed to be effected in a positive way
+from increased sales during the seasonal influenza, we want the results to be in the opposite
+direction compared to the “NEG”-industries. Out of 16 seasons we want to see 2 negative
+CAARs (due to lower unexpected sales from a mild season), 4 positive CAARs (due to higher
+unexpected sales from a severe season) and 10 CAARs to be zero (due to nothing unexpected
+happening during a medium season). When looking at our results we can reject the null
+hypothesis for 6 out of 16 seasons. However, the rejections of the null hypothesis is during 2
+severe seasons and 4 medium seasons and with the rejection being in the wrong direction for
+one of the severe seasons.
+
+Once again, taking a closer look at the CAAR averaged over all the seasons together we actually
+see a slight increase of almost 3%. However, as shown in Graph 7, the split up between CAARs
+generated during mild, medium and severe seasons indicates that the release of influenza
+activity has nothing to do with the stock market responses shown in the CAARs averaged for
+
+Graph 7: This graph shows the results for the event studies made on the “STRONG POS”-companies. The results
+are presented as average CAAR for all seasons combined, for the medium seasons, the severe seasons and the
+mild seasons. The averaged CAAR for all seasons combined indicates that the information of influenza activity
+does generate stock market reactions in the right direction. However, splitting up the CAARs between mild,
+medium and severe seasons we see that the medium seasons generate the positive CAARs and that mild and
+severe seasons more or less do not generate any CAARs at all. This implies that it is not the release of influenza
+activity that is generating the positive CAARs during medium seasons.
+                                                                               24
+all seasons together. The severe and mild seasons show CAARs being quite steady around the
+zero mark with only the medium influenza seasons generating steady positive CAARs.
+
+Furthermore, as done with the “NEG”-industries, we look at the relationship between the
+value of the adjusted Z-BMP test statistic and the peak ILI-rate for each season. We should, in
+contrast to the “NEG”-industries graph, expect a positive trend between the two. When an
+unexpected severe influenza season occurs it should generate unexpected increases in sales
+for the “STRONG POS”-companies and therefore generate positive CAARs, hence giving
+positive values of the adjusted Z-BMP test statistic, with the opposite occurring for an
+unexpected mild influenza season. As seen in Graph 8, we in fact see a slight positive relation
+between the two, however, the explanation value is, as it was with the “NEG”-industries, also
+here very low. This implies further that ILI-rates are not affecting the pricing of securities.
+
+Graph 8: This graph shows the relationship between the value of the adjusted Z-BMP test statistic and the peak
+ILI-rate for each season from 1997 to 2015 for “STRONG POS”-companies. When a mild influenza season occurs
+“STRONG POS”-companies are believed to have lower unexpected sales and therefore generate negative CAARs,
+in contrast to severe season, where the opposite is believed to happen. This implies negative values of the
+adjusted Z-BMP test statistics for mild seasons and positive values of the adjusted Z-BMP test statistics for severe
+seasons. We thus expect a trend in the relationship between the test statistics and the peak ILI-rates from the
+bottom left corner to the top right corner. Even though we have a slight trend in the right direction the explanation
+                                  2
+value of the trend is very low with a 𝑅  value of 0.0439. This implies that ILI-rates are not affecting the pricing of
+securities.
+
+                                                                               25
+9.2 Results from “STRONG NEG”-companies
+
+Lastly the results from the “STRONG NEG”-companies, that are the companies believed to be
+affected in a strong negative way due to the seasonal influenza, show that we only have 1 out
+of 16 seasons where the null hypothesis can be rejected. This was for a medium season that
+showed a positive CAAR. According to our hypothesis we want to see 2 positive CAARs (due
+to lower unexpected costs from a mild season), 4 negative CAARs (due to higher unexpected
+costs from a severe season) and 10 CAARs to be zero (due to nothing unexpected happening
+during a medium season). Looking further at the CAARs averaged for all seasons together we
+see a slight negative trend of 1% to 2% (see Graph 9). However, showing the averaged CAARs
+split into mild, medium and severe seasons we do see a big negative trend for the severe
+seasons, as proposed by our hypothesis. On the other hand, the mild seasons do not show any
+trend what so ever and the CAARs are quite steady around the zero mark.
+
+Graph 9: This graph shows the results for the event studies made on the “STRONG NEG”-companies. The results
+are presented as average CAAR for all seasons combined, for the medium seasons, the severe seasons and the
+mild seasons. The averaged CAAR for all seasons combined indicates slight negative CAARs for the “STRONG NEG”-
+companies. However, splitting up the CAARs between mild, medium and severe seasons we see that severe
+seasons generate strong negative CAARs but that mild seasons more or less do not generate any CAARs at all.
+
+To further investigate why the severe seasons generate such negative CAARs but mild seasons
+have quite steady CAARs around the zero mark, we split up the four severe seasons to look at
+them separately as shown in Graph 10. All these seasons were very severe with peak ILI-rates
+ranging from 7% to 8%. We see that the two seasons 1998-1999 and 1999-2000 both show
+large downturns that seem to recover almost fully respectively more than fully, before the
+influenza season has reached its peak. From section “8.2 Event window” the last day in the
+
+                                                                               26
+event window is the first day when a lower peak ILI-rate is released compared to the previous
+week. This means that we do not want to see a recovery effect, and instead no movement at
+all in the CAARs during the last days of the event window. The season of 1999-2000 is a bit
+special in the case that CDC reported an unexpected high count of deaths attributed to
+pneumonia and influenza (P&I). However, later that season they stated the P&I figures had to
+be interpreted with caution due to changes in the case definition that may be contributing to
+higher estimates of P&I mortality than in previous seasons (CDC 2015). This could have
+induced an overreaction and a rebound effect in the pricing of health insurance companies
+(“STRONG NEG”-companies). Though, that this rebound would take a positive CAAR before
+the season reached its’ peak, is highly unlikely. This implies that we might have captured some
+other event during these seasons, causing the health insurance companies to drop and
+recover in price. Furthermore, the season of 2003-2004 did not show any significant decreases
+at all. Despite these results, the most interesting result is the one for the 2009 pandemic
+season. Here we see a steady and long decrease in the CAAR with a slight flattening in the end,
+exactly what our hypothesis proposes. The severity of the pandemic was large, but compared
+with the other seasons it was quite similar. However, the media attention surrounding the
+pandemic was much larger. With a regular influenza season hardly attracting any media
+
+Graph 10: This graph shows the CAARs for the “STRONG NEG”-companies (health insurance companies) during
+the most severe influenza seasons. The two seasons 1998-1999 and 1999-2000 both show big decreases in the
+CAARs that seem to recover almost fully respectively more than fully before the season has reached its’ peak ILI-
+rate. The season of 2003-2004 shows small changes in the CAAR mostly surrounding the zero line. These three
+seasons imply that it is not the ILI-rate affecting security prices in the health insurance companies, with the two
+first seasons’ event window probably capturing some other event during the seasonal influenza. The most
+interesting season is the pandemic, where we see a steady decrease in the CAAR, with a slight flattening of it in
+the end of the event window. The huge difference in media attention during this season, in comparison to other
+regular influenza seasons, might be the cause of these differences between the severe seasons’ CAARs.
+
+                                                                               27
+coverage, the pandemic was closely monitored. This might have induced a higher level of fear
+in the market, with the most obvious exposed companies to the costs associated with the
+pandemic, taking the largest hit.
+
+As done with the “NEG”-industries and “STRONG POS”-companies, we look at the relationship
+between the value of the adjusted Z-BMP test statistic and the peak ILI-rate for each season.
+We should expect to see a negative trend between the two. When an unexpected severe
+influenza season occurs it should generate unexpected increases in costs for the “STRONG
+NEG”-companies and therefore generate negative CAARs, hence giving negative values of the
+adjusted Z-BMP test statistics, with the opposite occurring for an unexpected mild influenza
+season. As Graph 11 shows, we in fact see a slight negative trend that both is more negative
+and has a higher explanation value than the “NEG”-industries. However, this is mainly due to
+an “outlier” season. Trimming the graph from this “outlier” season makes the explanation
+value go from 0.1442 down to 0.0664, slightly higher than the 0.046 shown in the “NEG”-
+industries, but still very low. This implies that ILI-rates are not affecting the pricing of
+             10
+securities.
+
+Graph 11: This graph shows the relationship between the value of the adjusted Z-BMP test statistic and the peak
+ILI-rate for each season from 1997 to 2015 for “STRONG NEG”-companies. When a mild influenza season occurs
+“STRONG NEG”-companies are believed to have lower unexpected costs and therefore generate positive CAARs,
+in contrast to severe season, where the opposite is believed to happen. This implies positive values of the adjusted
+Z-BMP test statistics for mild seasons and negative values of the adjusted Z-BMP test statistics for severe seasons.
+We thus expect a trend in the relationship between the test statistics and the peak ILI-rates from the top left
+corner to the bottom right corner. As shown by the graph we both have a more negative trend and a higher
+explanation value than shown in the “NEG”-industries. However, this is mainly due to an “outlier” season.
+                                                     2
+Trimming the graph from this “outlier “ season makes the 𝑅  go from 0.1442 down to 0.0664, slightly higher than
+the 0.046 shown in the “NEG”-industries, but still very low. This implies that ILI-rates are not affecting the pricing
+of securities.
+
+10
+  To see all the CAARs and adjusted Z-BMP test statistic values for each influenza season on a stand-alone basis
+see Appendix sections “12.1 CAARs seasons 1997-2015, “NEG”-industries”, “12.2 CAARs seasons 1997-2015,
+“STRONG POS”-companies” and “12.3 CAARs seasons 1997-2015, “STRONG NEG”-companies”.
+
+                                                                               28
+9.3 Robustness test
+
+For robustness, we redid all 46 event studies for the “NEG”-industries, “STRONG POS”-
+companies and “STRONG NEG”-companies but with an extended estimation window of 180
+days to investigate if our results varied in any significant way. As expected, the results did not
+change in any significant way, and were still very insignificant, with CAARs trending in the
+wrong direction, as proposed in our hypothesis.
+
+10. Limitation and suggestions for future research
+
+Since our results showed no indication of trading based on ILI-rates it becomes important to
+understand the implications of our results and what future research can contribute with to
+bring more understanding to this topic. It is possible that the information on ILI-rates are not
+used for trading, but it is also possible that we are missing something in this research paper.
+In order to understand the implications of our results, it is important to understand the
+limitations of our research to see what we potentially have missed and to understand what
+needs to be done next.
+
+The following section will firstly present the limitations with our research paper and next
+present what future research can do to help further understand why our research paper
+showed the results it did.
+
+10.1 The event studies are performed on aggregate level instead of state level
+
+The main potential bias in our study is that our event studies are performed on aggregate US
+level. The aggregate US ILI-rate used in this paper is an average of ILI-rates on state level. Some
+states may have little to none exposure to the seasonal influenza while other states has a
+widespread epidemic. This means that several companies may have their operations in a state
+where the ILI-rate is very low, but they have been included due to high ILI-rates in the rest of
+the country. Even though, ILI-rates are released state-wise, there is no database that compiles
+where US companies have their business operations, making it impossible for us to perform
+event studies on state level. For this reason, some stock market reactions from several
+companies may happen before or after our selected event window, due to their exposure to
+the seasonal influenza depending on where their business operations are located.
+
+This bias is a large issue for our research credibility, but it is important to consider that a lot
+of the information needed is very difficult, or in some cases impossible, to receive. Many
+companies’ information about revenue distribution between states are not available for the
+public. One possibility would be to manually investigate and estimate every company’s
+relative business exposure between states, but this would be very time consuming, and
+probably quite unreliable. The forming of a trading strategy on companies believed to be
+strongly affected from the seasonal influenza, when regarding business exposure on state
+level, may be a possibility, but is left for future research.
+
+                                                                               29
+10.2 Previous research on the economic impact of the influenza is overestimated
+
+As previously mentioned in the section “2. Related literature”, the estimations of the total
+economic burden associated with the seasonal influenza vary a lot between different research
+papers. The high variations in the cost estimations indicate that they may be overestimated
+and that the impact of the seasonal influenza on companies may be smaller than what
+previous research papers have suggested. Furthermore, the inclusion of projected statistical
+life values for deaths in the cost estimations might possibly not fully be reflected and
+incorporated in the pricing of securities. If this is the case, the reason to why we see no
+indications of trading on ILI-rates occurring may be because of the costs/revenues being too
+small to show any significant impact on the pricing of securities.
+
+10.3 The available information is too uncertain to be used for trading
+
+Another limitation with our research, and alternative interpretation, is that the information
+provided is too uncertain to be used for trading. First, almost all previous research papers uses
+the CDC ILI data as a gold standard when estimating the costs. However, this source has
+potential biases of its own. First of all, only about 1800 out of the 2900 health care sentinels
+provide ILI surveillance data any given week. Also, each health care sentinel serves areas that
+vary in population size/density, which may lead to a skew in reporting. Additionally, increased
+media attention of an influenza season may lead to health care sentinels reporting more
+potential ILI cases than they would have otherwise. Furthermore, when previous research
+papers estimate the total number of infected cases, hospitalizations and deaths occurring
+each influenza season on an aggregate level, they use different types of multipliers, which
+makes the cost estimations even more uncertain.
+
+Moreover, the selection of companies that are believed to either strongly profit or
+disadvantage from the seasonal influenza, are based on news articles or different analysts’
+estimations. The lacking of research based sources on these companies, in conjunction with
+the exposure to the seasonal influenza being highly dependent on where their business
+operations are located, makes the estimations of the costs/revenues for the affected
+companies very uncertain.
+
+All these reasons imply that trader’s may think that the information provided is not sufficient
+and too unreliable to be used for trading. If this is the case, the implication of this research
+would be that no trading occurs because it is yet not possible, since the information is too
+uncertain.
+
+                                                                               30
+10.4 Suggestions for future research
+
+As discussed previously the amount of people being affected by the market and its cost impact
+is significant and does affect the market. The total costs of the impact, however, is up for
+discussion. For future research we suggest that the costs/revenues are investigated through
+accounting reports released after the influenza, instead of investigating it through the
+financial markets during the event.
+
+We did not find any significant stock market reactions, but as mentioned in the previous
+section, screening the believed strongly positively/negatively affected companies on a state-
+wise level, might yield more significant results. Additionally, if no stock market reactions are
+found during the event, the believed costs/revenues might instead be reflected in the
+quarterly reports following the influenza season. By comparing the expected EBITDA with the
+actual EBITDA, in the quarterly reports following an unexpected mild/severe influenza season,
+one should capture the operational costs/revenues not reflected and incorporated in the
+share prices during the event. If nothing is found here, it might imply that the costs/revenues
+are too small or that the bigger part of the costs, associated with deaths, is spread over time,
+making the leftover costs too small to be captured during the event.
+
+11. Conclusion
+
+We have examined if the release of influenza activity generated any significant stock market
+responses in the US during the influenza seasons from1997 to 2015. By using the historical
+influenza periods from 1997 to 2015 we calculated the average seasonal influenza and used
+this to estimate a potential trading strategy on ILI-rates released from the CDC. Our hypothesis
+was, that if an unexpected severe seasonal influenza hit the US, this would generate negative
+or positive abnormal returns depending on company. For companies exposed to the costs
+associated with illness we would expect to find negative abnormal returns (productivity losses
+due to ill workers or paid sick leave costs) and positive abnormal returns would be found for
+companies who would experience an increase in sales (i.e. pharmacies). Other companies,
+such as health insurance companies, would disadvantage from the severe season, due to
+higher costs associated with increased insurance payouts from illness. The opposite was
+proposed for an unexpected mild seasonal influenza hitting the US. The classification for a
+mild respectively severe influenza season was when the peak ILI-rate was below respectively
+above one standard deviation from the average seasonal influenza curve. We tested our
+hypothesis by performing event studies on all seasons from 1997 to 2015 (excluding the 2002-
+2003 and 2008-2009 season due to market instabilities generated from the internet bubble
+bursting and financial crisis).
+
+After running 48 regressions for all seasons regarding different industries/companies believed
+to be either positively/negatively affected from the seasonal influenza we conclude that we
+did not find any significant stock market responses generated from the release of influenza
+activity. The null hypothesis (𝐻0: 𝐶𝐴𝐴𝑅 = 0) was randomly rejected and many times, the
+
+                                                                               31
+abnormal returns were in the wrong direction. When looking at the relationship between the
+value of the test statistic for the CAARs and the peak ILI-rates for each season, we could see
+an indication of the believed costs/revenues being generated as proposed in our hypothesis.
+                                                                       2
+However, the explanation value of these findings were very low (𝑅  ≈ 6% − 8%). This
+further implies that ILI-rates were not affecting the pricing of securities.
+
+Additionally, we found a strong negative decrease in the CAAR during the pandemic in 2009
+for companies believed to be strongly negatively affected (health insurance companies) due
+to a severe influenza season. These companies dropped about 13% during the pandemic, but
+however, showed unexpected movements during other severe influenza seasons. The
+increased media coverage of the pandemic, in comparison with the regular seasonal influenza,
+might be the underlying cause for creating the large downturn in health insurance companies
+during this specific event. If this is the case, it implies that the media attention on the seasonal
+influenza might be a cause for creating stock market responses instead of the actual ILI-rates
+released by CDC.
+
+For future research we suggest to conduct the event studies on a state level, by first estimating
+every companies’ operational business exposure on state level. This, as one can more
+accurately account for the cost/revenues associated with seasonal influenza between
+companies. If no stock market responses are found on state level, then maybe they are
+reflected in the quarterly reports following the seasonal influenza. By comparing the expected
+EBITDA with the actual EBITDA, in the quarterly reports following an unexpected mild or
+severe influenza season, one should capture the operational costs/revenues not reflected and
+incorporated in the share prices during the event. If not, then perhaps the impacts are too
+small and previous research estimations has been overestimated. However, with this research
+paper we have illuminated a previously unexplored topic in the financial market, and now we
+leave the door slightly more open than it was before, and thereby hope to inspire further work
+on this topic.
+
+                                                                               32
+12. Appendix
+
+12.1 CAARs season 1997-2015, “NEG”-industries
+
+Influenza class Medium Severe Severe Medium Medium Severe Medium Low
+Season 97-98 98-99 99-00 00-01 01-02 03-04 04-05 05-06
+Companies 366 365 348 342 346 351 350 346
+Z-BMP 2,817 -3,124 1,414 1,559 7,980 0,358 -0,3283 2,1969
+average corr 0,008 0,019 0,014 0,035 0,018 0,013 0,0112 0,0158
+Adjusted Z-BMP 1,450 -1,089 0,574 0,426 2,944 0,151 -0,1474 0,8574
+Appendix 1: The graphs show the CAAR for each season from 1997 to 2006 for the “NEG”-companies (excluding
+season 2002-2003). The table shows descriptive statistics for each season’s event study. The adjusted Z-BMP test
+statistic is calculated using the regular Z-BMP test statistic and the average of the sample cross correlation of the
+estimation periods abnormal returns (average corr).
+
+                                                                               33
+Influenza class Medium Medium Severe Medium Low Medium Medium Medium
+Season 06-07 07-08 Swine Flu 10-11 11-12 12-13 13-14 14-15
+Companies 333 321 305 299 293 284 278 275
+Z-BMP 1,979 1,289 -1,930 1,478 -3,709 -0,956 -0,624 2,596
+average corr 0,013 0,017 0,034 0,018 0,023 0,015 0,012 0,013
+Adjusted Z-BMP 0,861 0,505 -0,561 0,583 -1,314 -0,412 -0,301 1,204
+Appendix 2: The graphs show the CAAR for each season from 2006 to 2015 for the “NEG”-companies (excluding
+season 2008-2009). The table shows descriptive statistics for each season’s event study. The adjusted Z-BMP test
+statistic is calculated using the regular Z-BMP test statistic and the average of the sample cross correlation of the
+estimation periods abnormal returns (average corr).
+                                                                               34
+12.2 CAARs season 1997-2015, “STRONG POS”-companies
+
+Influenza class Medium Severe Severe Medium Medium Severe Medium Low
+Season 97-98 98-99 99-00 00-01 01-02 03-04 04-05 05-06
+Companies 2 2 2 2 2 2 2 2
+Z-BMP 7,192 4,037 -0,668 4,652 1,445 -6,278 0,6199 1,7365
+average corr 0,126 0,474 0,351 0,508 0,492 0,392 0,2199 0,3889
+Adjusted Z-BMP 6,338 2,412 -0,463 2,657 0,843 -4,150 0,4957 1,1518
+ Appendix 3: The graphs show the CAAR for each season from 1997 to 2006 for the “STRONG POS”-companies
+ (excluding season 2002-2003). The table shows descriptive statistics for each season’s event study. The adjusted
+ Z-BMP test statistic is calculated using the regular Z-BMP test statistic and the average of the sample cross
+ correlation of the estimation periods abnormal returns (average corr).
+
+                                                                               35
+Influenza class Medium Medium Severe Medium Low Medium Medium Medium
+Season 06-07 07-08 Swine Flu 10-11 11-12 12-13 13-14 14-15
+Companies 2 2 2 2 2 2 2 2
+Z-BMP -14,197 2,060 0,603 -2,320 -1,904 1,621 0,054 10,781
+average corr 0,714 0,509 0,450 0,417 0,042 -0,062 0,288 0,315
+Adjusted Z-BMP -5,798 1,175 0,371 -1,488 -1,826 1,725 0,040 7,783
+Appendix 4: The graphs show the CAAR for each season from 2006 to 2015 for the “STRONG POS”-companies
+(excluding season 2008-2009). The table shows descriptive statistics for each season’s event study. The adjusted
+Z-BMP test statistic is calculated using the regular Z-BMP test statistic and the average of the sample cross
+correlation of the estimation periods abnormal returns (average corr).
+                                                                               36
+12.3 CAARs season 1997-2015, “STRONG NEG”-companies
+
+Influenza class Medium Severe Severe Medium Medium Severe Medium Low
+Season 97-98 98-99 99-00 00-01 01-02 03-04 04-05 05-06
+Companies 10 12 10 11 12 15 16 16
+Z-BMP 0,059 -1,242 -0,623 -0,757 0,492 0,484 -0,671 -0,198
+average corr 0,070 0,053 0,124 0,179 0,136 0,098 0,108 0,109
+Adjusted Z-BMP 0,044 -0,962 -0,401 -0,410 0,290 0,299 -0,391 -0,115
+Appendix 5: The graphs show the CAAR for each season from 1997 to 2006 for the “STRONG NEG”-companies
+(excluding season 2002-2003). The table shows descriptive statistics for each season’s event study. The adjusted
+Z-BMP test statistic is calculated using the regular Z-BMP test statistic and the average of the sample cross
+correlation of the estimation periods abnormal returns (average corr).
+
+                                                                               37
+Influenza class Medium Medium Severe Medium Low Medium Medium Medium
+Season 06-07 07-08 Swine Flu 10-11 11-12 12-13 13-14 14-15
+Companies 14 12 12 12 12 12 12 11
+Z-BMP 4,559 -3,054 -3,686 0,951 -1,106 0,926 -1,389 -0,942
+average corr 0,141 0,162 0,282 0,129 0,175 0,148 0,201 0,243
+Adjusted Z-BMP 2,509 -1,677 -1,542 0,571 -0,587 0,527 -0,693 -0,442
+Appendix 6: The graphs show the CAAR for each season from 2006 to 2015 for the “STRONG NEG”-companies
+(excluding season 2008-2009). The table shows descriptive statistics for each season’s event study. The adjusted
+Z-BMP test statistic is calculated using the regular Z-BMP test statistic and the average of the sample cross
+correlation of the estimation periods abnormal returns (average corr).
+
+                                                                               38
+12.4 Adjusted Z-BMP statistics calculations
+
+The following calculations are based on the research platform “Event Study Tools” (Event
+Study Tools 30 Mar 2015).
+
+First we calculate the standard deviation over the estimation window as following:
+
+Mi = the count of non missing return values in the estimation window for firm i
+
+T0 = the earliest day of the estimation window
+
+T1 = the latest day of the estimation window
+
+ARi,t = abnormal return for firm i on day t
+
+We then calculate the forecast error corrected standard deviation from (Mikkelson and Partch
+1988). The Mikkelson and Partch correction adjusts the test statistic for each firm for serial
+correlation in the returns. The correction term for the market model is as follows:
+
+Li = the count of non missing return values in the event window for firm i
+
+T2 = the latest day of the event window
+
+R̅m = the mean of the market returns in the estimation window
+
+Rm,t = the market return at day t
+
+The regular Z-BMP test statistics for testing 𝐻0: 𝐶𝐴𝐴𝑅 = 0 is given by:
+
+                                                                               39
+Where 𝑆𝐶𝐴𝑅̅̅̅̅̅̅̅ is the averaged standardized cumulated abnormal returns across the N firms,
+with standard deviation:
+
+Finally, to account for cross-sectional correlation between firms, due to event-date clustering,
+the adjusted Z-BMP test statistic for testing 𝐻0: 𝐶𝐴𝐴𝑅 = 0 is given by:
+
+                                                                    1 − 𝑟̅
+                               𝑎𝑑𝑗 𝑧𝐵𝑀𝑃 = 𝑧𝐵𝑀𝑃√
+                                                      1 + (𝑁 − 1)𝑟̅
+
+   r̅ = the average of the sample cross correlation of the estimation periods abnormal returns
+
+                                                                               40
+13. References
+
+© 2015, I., LLC, . Available:
+http://www.investopedia.com/terms/e/efficientmarkethypothesis.asp [05/14, 2015].
+
+BRIDGES, C.B., THOMPSON, W.W., MELTZER, M.I., REEVE, G.R., TALAMONTI, W.J., COX, N.J.,
+LILAC, H.A., HALL, H., KLIMOV, A. and FUKUDA, K., 2000. Effectiveness and cost-benefit of
+influenza vaccination of healthy working adults: a randomized controlled trial. Jama,
+284(13), pp. 1655-1663.
+
+CABAN-MARTINEZ, A.J., LEE, D.J., DAVILA, E.P., LEBLANC, W.G., ARHEART, K.L.,
+MCCOLLISTER, K.E., CHRIST, S.L., CLARKE, T. and FLEMING, L.E., 2010. Sustained low
+influenza vaccination rates in US healthcare workers. Preventive medicine, 50(4), pp. 210-
+212.
+
+CDC, 2015-last update, Centers for Disease Control and Prevention. Available:
+http://www.cdc.gov/flu/index.htm.
+
+CNBC NEWS, January 7th 2015-last update, Flu boosts drug store sales, but others take a hit.
+Available: http://www.nbcnews.com/business/business-news/flu-boosts-drug-store-sales-
+insurers-may-take-hit-n2814512015].
+
+CNBC NEWS, Friday, 3 Jan 2014-last update, Flu blues: Season could hit business hard this
+winter. Available: http://www.cnbc.com/id/101306804.
+
+COLLA, C.H., DOW, W.H., DUBE, A. and LOVELL, V., 2014. Early Effects of the San Francisco
+Paid Sick Leave Policy. American Journal of Public Health, 104(12), pp. 2453-2460.
+
+EVENT STUDY TOOLS, 30 Mar 2015-last update, Significance tests
+Dr. Simon Müller
+PhD in Maths (Stuttgart). Available: http://www.eventstudytools.com/.
+
+FAIRBROTHER, G., CASSEDY, A., ORTEGA-SANCHEZ, I.R., SZILAGYI, P.G., EDWARDS, K.M.,
+MOLINARI, N., DONAUER, S., HENDERSON, D., AMBROSE, S. and KENT, D., 2010. High costs
+of influenza: direct medical costs of influenza disease in young children. Vaccine, 28(31), pp.
+4913-4919.
+
+GOOGLE FLU TRENDS, 2015-last update. Available:
+https://www.google.org/flutrends/intl/en_us/about/how.html.
+
+KARVE, S., MISURSKI, D., MEIER, G. and DAVIS, K.L., 2013. Employer-incurred health care
+costs and productivity losses associated with influenza. Human vaccines &
+immunotherapeutics, 9(4), pp. 841-857.
+
+                                                                               41
+KELSO, J.K., HALDER, N., POSTMA, M.J. and MILNE, G.J., 2013. Economic analysis of
+pandemic influenza mitigation strategies for five pandemic severity categories. BMC public
+health, 13, pp. 211-2458-13-211.
+
+KENNETH R. FRENCH, 2015-last update, Data Library. Available:
+http://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html.
+
+KOLARI, J.W. and PYNNÖNEN, S., 2010. Event study testing with cross-sectional correlation
+of abnormal returns. Review of Financial Studies, , pp. hhq072.
+
+KOLARI, J.W. and PYNNÖNEN, S., 2010. Event study testing with cross-sectional correlation
+of abnormal returns. Review of Financial Studies, , pp. hhq072.
+
+LIANG MAO, YANG YANG, YOULIANG QIU AND YAN YANG, US Congress: Office of Technology
+Assessment: Cost-effectivness of Influenza Vaccination. GPO, Washington, DC; 1981. .
+
+MACKINLAY, A.C., 1997. Event Studies in Economics and Finance. Journal of Economic
+Literature, 35(1), pp. 13-39.
+
+MAO, L., 2013. Cost-effectiveness of workplace closure and travel restriction for mitigating
+influenza outbreaks: a network-based simulation, Proceedings of the Second ACM
+SIGSPATIAL International Workshop on the Use of GIS in Public Health 2013, ACM, pp. 77-84.
+
+MAO, L., YANG, Y., QIU, Y. and YANG, Y., 2012. Annual economic impacts of seasonal
+influenza on US counties: spatial heterogeneity and patterns. Int J Health Geogr, 11, pp. 16.
+
+MELTZER MI, COX NJ, FUKUDA K., The economic impact of pandemic influenza in the United
+States: priorities for intervention. Emerg Infect Dis 1999;5(5):659–71. .
+
+METROPOLITAN EMERGENCY MANAGERS COMMITTEE, 2010-last update, Pandemic vs.
+Seasonal Flu:
+What’s the Difference?. Available:
+http://www.preparemetrokc.org/know_the_risks/difference.pdf2015].
+
+MIKKELSON, W.H. and PARTCH, M.M., 1988. Withdrawn security offerings. Journal of
+Financial and Quantitative Analysis, 23(02), pp. 119-133.
+
+MOLINARI, N.M., ORTEGA-SANCHEZ, I.R., MESSONNIER, M.L., THOMPSON, W.W., WORTLEY,
+P.M., WEINTRAUB, E. and BRIDGES, C.B., 2007. The annual impact of seasonal influenza in
+the US: measuring disease burden and costs. Vaccine, 25(27), pp. 5086-5096.
+
+NICHOL, K.L., D'HEILLY, S.J., GREENBERG, M.E. and EHLINGER, E., 2009. Burden of influenza-
+like illness and effectiveness of influenza vaccination among working adults aged 50-64
+
+                                                                               42
+years. Clinical infectious diseases : an official publication of the Infectious Diseases Society of
+America, 48(3), pp. 292-298.
+
+PUHANI, P.A. and SONDERHOF, K., 2010. The effects of a sick pay reform on absence and on
+health-related outcomes. Journal of health economics, 29(2), pp. 285-302.
+
+S&P DOW JONES INDICES LLC, April 30, 2015-last update. Available:
+http://us.spindices.com/idsenhancedfactsheet/file.pdf?calcFrequency=M&force_download=
+true&hostIdentifier=48190c8c-42c4-46af-8d1a-0cd5db894797&indexId=340 [05/14, 2015].
+
+STORIFY, Aug 2014-last update, Walgreens Competitive Advantage. Available:
+https://storify.com/Abarrett2/walgreens-competitive-advantage.
+
+THOMSON REUTERS, Mon Jan 21, 2013, Jan 21, 2013-last update, Flu-conomics: The next
+pandemic could trigger global recession. Available:
+http://www.reuters.com/article/2013/01/21/us-reutersmagazine-davos-flu-economy-
+idUSBRE90K0F820130121.
+
+                                                                               43

@@ -1,0 +1,970 @@
+SHARPER STRATEGIES
+
+GLOBAL PATTERNS & LOCAL PRECISION IN STOCK RETURN
+PREDICTION THROUGH TRANSFER LEARNING WITH
+CONVOLUTIONAL NEURAL NETWORKS
+
+ANTON HOLST
+
+Bachelor Thesis
+
+Stockholm School of Economics
+
+2024
+Abstract:
+   This paper explores the potential of transfer learning with convolutional neural
+   networks to improve stock return predictions. The transfer learning models are
+   compared to models trained on local market data as well as the direct application of
+   models trained on U.S. data. Analyzing daily data of individual stocks, across 22
+   countries from 1993 to 2024, the study evaluates two transfer learning models: one
+   that fine-tunes decision-making layers while retaining pre-trained patterns and another
+   that fully adapts all layers to local data. The findings reveal that leveraging a model
+   pre-trained on U.S. data generally enhances performance, particularly when the local
+   dataset is below a certain size. However, the impact of retraining on local data is
+   mixed, with results varying significantly across different markets.
+Keywords:
+   Transfer Learning, Convolutional Neural Networks, Asset Pricing,
+   Return Prediction, Machine Learning
+Author:
+   Anton Holst (25738)
+Tutor:
+   Michael Klug, PhD
+Examiner:
+   Ramin Baghai, Associate Professor, Department of Finance
+
+Bachelor Thesis
+Bachelor Program in Business & Economics
+Stockholm School of Economics
+© Anton Holst, 2024
+
+                                   1
+1 Introduction
+The prediction of future stock returns is a complex and long-standing challenge that has
+captivated both academics and practitioners. Machine learning techniques have shown
+promising potential in addressing this task. The impressive recent advancements in
+machine learning across other domains are likely to further inspire and accelerate its
+application to return prediction. This paper examines whether a transfer learning
+approach, using convolutional neural networks (CNN), delivers superior Sharpe ratios
+compared to a locally trained model as well as the direct application of a pre-trained
+model. The analysis is conducted at the individual stock level across 22 countries,
+covering the period from January 1, 1993, to September 30, 2024. The models take stock
+data from the most recent five trading days as input and the output is the predicted
+probability of a positive return over the following five trading days. The predictions are
+then used to construct portfolios. In this study, the data is encoded as images before being
+fed to the models, departing from the common practice of using numerical values as input.
+This method is particularly intriguing as it allows the application of machine learning
+algorithms typically used in other domains, such as computer vision tasks like driver-
+assist systems in cars. Additionally, structuring the data this way may help uncover
+patterns that might otherwise remain hidden. Conducting the study involved generating
+stock chart images, training models on them, using these models to produce trading
+signals, and constructing portfolios based on the signals. The study leverages an extensive
+dataset, resulting in the generation of millions of stock chart images representing stock
+charts for tens of thousands of individual companies across the examined markets. The
+portfolios that are constructed are equally weighted zero-cost long-short portfolios. The
+performance of these portfolios is evaluated primarily by comparing the Sharpe ratio
+differences between the strategies. These differences are tested for statistical significance
+using a paired studentized circular block bootstrap.
+     The methodology relies on the assumption that stock prices are influenced by
+human behavior, which generates complex and subtle patterns in the data. These patterns
+are believed to hold some predictive power that can be modeled to a certain extent.
+Machine learning is employed to capture these non-linear features, which simpler models
+often fail to identify. Empirical evidence has demonstrated the value of machine learning
+in stock return prediction, as shown by Gu, Kelly, and Xiu (2020), as well as Brogaard
+and Zareei (2021). When selecting a suitable algorithm for such tasks, several factors
+must be considered. The model must be flexible enough to identify intricate patterns that
+simpler models overlook, yet sufficiently constrained to avoid overfitting to noise in the
+data. This study focuses specifically on exploring the potential of transfer learning, rather
+than identifying the optimal algorithm. Consequently, optimizing the architecture and
+hyperparameters of the underlying model lies beyond the scope of this analysis.
+      The use of CNNs for stock chart analysis represents a significant departure from
+traditional technical analysis methods. While traditional approaches rely on predefined
+patterns and indicators, often subjectively interpreted and validated anecdotally, CNNs
+employ a data-driven, learning-based framework. By autonomously identifying relevant
+features from large datasets, CNNs reduce subjectivity and improve predictive accuracy
+by uncovering complex, nonlinear patterns beyond human cognitive capabilities.
+      Machine learning aims to autonomously identify patterns and extract meaning from
+data without explicit instructions from humans. However, the selection of features
+provided to the model inherently reflects human assumptions about the importance of
+
+                                   2
+different inputs. CNNs address this limitation by integrating the feature selection process
+into the learning itself, allowing the model to identify relevant features more
+independently. To understand the research question and methodology of this study, a
+basic understanding of CNNs is necessary. CNNs are a type of neural network that
+includes specialized operations prior to the regular fully connected layer. These layers
+automate the feature extraction process and reduce the dimensionality of the data before
+passing it through the network. Unlike static filters, these layers are part of the training
+process, meaning the filters are updated during training to learn and capture the patterns
+with the greatest predictive power. In this application, these patterns are those most
+strongly correlated with future stock returns. CNNs stack multiple layers on top of one
+another, enabling the network to detect patterns at varying levels of complexity. This
+depth allows the model to capture intricate patterns and is what defines “deep learning.”
+One key advantage of this automatic feature extraction is its ability to uncover patterns
+that are too complex or subtle for humans to identify. However, a significant downside is
+the difficulty in interpreting and understanding the patterns learned by the model.
+      Extensive training data to learn from is essential for effective machine learning and
+performance is likely to continue to improve as more data is added to the training.
+However, data availability varies widely across markets, raising the question of how to
+enhance model performance in data-poor markets. Transfer learning is a subfield of
+machine learning that aims to leverage knowledge from one task to improve performance
+on another. This is achieved by using an existing model as the foundation for a new
+model, rather than training it from scratch. By utilizing pre-trained models, this approach
+enhances performance on related tasks, largely due to the base model being trained on a
+larger dataset. The importance of training data size for machine learning accuracy has
+been highlighted by studies such as Sun, Shrivastava, Singh, and Gupta (2017). Assuming
+that international financial markets share underlying structural similarities and behavioral
+patterns – shaped by economic principles, investor psychology, and macroeconomic
+factors – transfer learning may constitute a way to address the issue of lacking data in
+certain markets. This study evaluates two distinct approaches to transfer learning: one
+that retains pre-trained patterns and fine-tunes only the decision-making layers, and
+another that fully adapts all layers to better align with the characteristics of the local data.
+      This study builds on the work of Jiang, Kelly, and Xiu (2023), replicating their
+approach of using CNNs for individual stock return prediction, while extending its
+application to transfer learning with retraining. Their research demonstrated that CNN
+models can effectively generate trading signals for constructing portfolios with high
+Sharpe ratios and highlighted their potential to enhance Sharpe ratios in markets beyond
+the one the model was trained on.
+      The results of this study confirms the findings of Jiang, Kelly, and Xiu (2023),
+showing that incorporating a model trained on U.S. data produces superior average results
+compared to using a model trained solely on local data. However, the decision on whether
+to retrain the model on local data is more complex. At first glance, the fully trainable
+transfer learning model performs the best compared to the local model. It achieves the
+highest number of statistically significant Sharpe ratio gains across markets and the
+largest average Sharpe ratio improvements, both in the full sample and the statistically
+significant subsample. However, when accounting for the size of the local training
+datasets and directly comparing the performance to that of the model trained on U.S. data
+without local retraining, the benefits become less clear. The results vary substantially
+across the examined markets, emphasizing the need to account for market-specific factors
+
+                                   3
+when considering the use of transfer learning. In one country, Australia, the transfer
+learning approach outperforms both the locally trained model and the direct application
+of the U.S. model, with substantial and statistically significant results. The effectiveness
+of transfer learning likely varies across markets due to differences in market similarities
+and the quality and quantity of local data. Transfer learning relies on a base level of
+similarity between markets, which may be stronger in some cases than others. The
+findings suggest that when sufficient local data is available, using a pre-trained model
+may harm model performance rather than improve it. In smaller datasets, the risk of
+overfitting to noise increases. Regardless of dataset size, data quality and accuracy are
+crucial for uncovering predictive patterns. Transfer learning is likely to be the most
+effective when the target market is similar to the base market and has limited data –
+allowing it to benefit from the pre-trained model – but still providing enough data to
+reduce the risk of overfitting to noise.
+      In practice, the implementation of transfer learning could have meaningful
+implications. It offers the potential to enhance the performance of existing models and
+could enable faster deployment of models in new markets where historical data is either
+limited or of insufficient quality. These findings contribute to the growing literature on
+the geographical transferability of trading strategies and the effectiveness of transfer
+learning in financial applications.
+      The remainder of the paper is structured as follows: first, a brief summary of the
+related literature is provided. This is followed by the methodology section, which outlines
+the data, models, and statistical tests used. Next, the results are presented, discussed, and
+concluded. Finally, the appendix includes additional examples and illustrations of key
+features and concepts.
+
+2 Related Literature
+
+The power of machine learning in predicting stock returns has been extensively
+explored in the literature. Gu, Kelly, and Xiu (2020) demonstrate its superiority in
+identifying complex patterns in price data that simpler models fail to capture. Similarly,
+Brogaard and Zi (2020) demonstrate the superior performance of machine learning and
+other non-linear models, in relation to other simpler methods. These findings underline
+the ability of machine learning techniques to uncover complex structures in financial
+data, advancing return predictability. Machine learning is widely used today for a range
+of tasks across many different fields, with various algorithms and techniques proving
+effective in solving complex problems. One such technique, convolutional neural
+networks (CNNs), has been around for decades but gained renewed attention with the
+success of AlexNet (Krizhevsky, Sutskever, and Hinton, 2012). This breakthrough
+demonstrated the power of CNNs in deep learning and solidified their place as a key
+tool in the field.
+      CNNs have become a cornerstone in tackling computer vision tasks, owing to
+their ability to effectively process and analyze image data. Building on this strength,
+Jiang, Kelly, and Xiu (2023) extended the use of CNNs into the field of asset pricing by
+applying the architecture to predict stock returns. Their innovative approach involved
+encoding stock data as images and employing CNNs to predict subsequent returns. They
+claim that their paper represents the first published large-scale systematic application of
+CNNs for predicting individual stock returns, at least to the best of their knowledge.
+
+                                   4
+Through testing across various time horizons, they found that the shortest horizon - one
+week - produced the best results. This finding serves as the foundation for the time
+period examined in this study. Moreover, they observed that for longer time periods, the
+majority of returns accrued within the first week, highlighting the significance of short-
+term patterns. The authors also tested the generalizability of their model by applying it,
+without retraining, to international markets. This direct inference approach
+demonstrated substantial performance improvements and statistical significance across
+most markets. However, their method did not include retraining or fine-tuning the
+model using data from the local market. Building on their findings, this study advances
+their approach by introducing retraining within the transfer learning framework, aiming
+to investigate the potential to further enhance the model's predictive performance across
+diverse financial markets.
+
+3 Methodology
+The following section outlines the methods and techniques employed in this study.
+Section 3.1 covers the process of encoding stock data into images, followed by Sections
+3.2, 3.3, and 3.4, which discuss the CNN architecture, training procedures, and transfer
+learning, respectively. Section 3.5 compares the CNN-based approach to traditional
+technical analysis, while Section 3.6 details the methods used for evaluating and
+comparing the models.
+
+3.1 Market Data as Images
+
+    Figure 1. Example of Numerical Data Transformed into an Image
+     This figure illustrates how numerical stock data is converted into an image for use with the model. Each
+    stock data point is represented as a pixel value, forming the corresponding image. A detailed explanation
+     of this process is provided in the appendix.
+
+                                   5
+When using machine learning algorithms to predict stock market returns, the input data
+is typically represented as numerical values. In this approach, however, the stock data is
+transformed into images instead. Why encode the data as images? First, CNNs are
+specifically designed for image analysis, making this transformation a natural fit. Second,
+by representing the time-series data as an image, certain features and relationships in the
+data may be interpreted more easily. It is useful to think of how humans usually prefer to
+look at a chart, rather than a table of numerical values. Third, through the creation of
+images the price and volume data of all stocks is converted into a common scale. Jiang,
+Kelly, Xiu (2023) goes into further depth in their analysis of the benefits of stock data
+image encoding.
+      Although stock charts are readily available on many websites, the images used in
+this study are custom-generated from historical stock data using code. Each image
+represents five consecutive trading days, with a resolution of 32 pixels in height and 15
+pixels in width. The width allocation corresponds to three pixels per trading day. The
+image is divided into two distinct sections: the top 24 pixels capture price information,
+while the bottom 7 pixels represent volume information. These sections are separated by
+a single row of empty pixels. To construct the images, daily traded volume and the open,
+high, low, and close (OHLC) prices are used, along with a moving average calculated
+from the close prices. For each day, a vertical bar representing the trading range is created
+in the central pixel column by connecting the high and low values. A single pixel to the
+left of the bar marks the open price, while a pixel to the right marks the close price. The
+moving average is represented by a continuous line connecting the daily average values,
+and a separate bar is drawn to indicate the daily traded volume. Missing data points are
+accommodated by leaving the corresponding pixel space blank. The idea is that the OHLC
+bar provides insights into price trends and volatility, while the moving average serves as
+a reference for longer-term price movements. Traditionally, color are often used in charts
+to represent the direction of intraday price changes. However, in this study, direction is
+conveyed by the relative positions of the open and close pixels, allowing the images to
+remain monochromatic, with white pixels on a black background, simplifying the process
+by avoiding multiple color channels.
+      The United States (U.S.) market data consists of daily stock data for all stocks listed
+on the NYSE, AMEX, and NASDAQ, sourced from the CRSP database and covering the
+period from January 1, 1993, to December 31, 2004. Since the U.S. data is only used for
+training the models, data past this date is not necessary. For the other 22 countries, daily
+stock data for all firms listed on local exchanges is obtained from Refinitiv Eikon, with
+the sample starting in 1993, or the earliest date the data becomes available, until
+September 30, 2024. These data sources are well-known and commonly used in asset
+pricing research. The Eikon data is delivered adjusted for corporate actions. In contrast,
+an accompanying factor is used for this adjustment to the CRSP data. Weekly returns,
+defined in this study as returns over five trading days, are calculated from the daily data.
+                                                                                                                                                             st
+For each examined market, images associated with weekly returns that fall below the 0.1
+                                 th
+percentile or above the 99.9  percentile are excluded from both training and evaluation,
+as these are extreme outliers which may result from erroneous data. All tables reporting
+market-by-market results are sorted in descending order on the number of local training
+images per market. The exact figures are presented in table A1 in the appendix.
+
+                                   6
+3.2 The CNN Architecture
+
+   Figure 2. Overview of the Model
+   This figure provides a schematic representation of the model, illustrating each stage of data processing. The
+   input image, convolution filter, feature matrix, and pooled output are shown at their actual sizes. However, the
+   full model includes two convolutional layers (with 64 and 128 filters per layer), two pooling layers, and the
+   LReLU activation function. Additionally, the fully connected layer in the actual model contains 15,360
+   neurons.
+
+CNNs are modeled after the human visual system, designed to process and interpret visual
+information by mimicking how humans recognize patterns and features in images. Their
+architecture consists of multiple layers that automatically learn patterns at different levels,
+beginning with simple elements like edges and textures in the early layers and advancing
+to more complex features and concepts in the deeper layers. Each component of a CNN's
+architecture serves a distinct role in the data processing pipeline, working together to
+extract and analyze meaningful information from the input.
+      The data enters the model through the convolutional layers, where a series of filters
+are applied to the input. These filters scan horizontally and vertically across the image,
+performing numerical operations to generate feature maps. These maps highlight specific
+patterns, such as edges, corners, or textures, at different locations in the image. During
+training, the filters are continually adjusted to improve their ability to identify the features
+most strongly linked to the model's prediction task. By the end of training, the filters are
+fine-tuned to detect the features most relevant to the desired outcome. In this application,
+the filters are specifically trained to identify features that are most predictive of the
+direction of the subsequent weeks return. The convolutional process is illustrated and
+described in more detail in figure A4 in the appendix. After the convolution operation, an
+activation function is applied to introduce non-linearity into the model. This non-linearity
+allows the model to learn more complex and abstract representations of the data. The
+output of the convolution process is a feature map illustrating where in the images the
+pattern of the filter is the strongest. The filters of the first convolution layer of the U.S.
+model, as well as the resulting feature maps for an example image, are displayed in figure
+A5 and A6 in the appendix. Next, pooling layers are used to downsample the feature maps
+produced by the convolutional layers. This step reduces the computational complexity of
+the model and helps mitigate overfitting. The models in this study use max-pooling layers,
+which operate by selecting the maximum value within each designated region, which not
+
+                                   7
+only simplifies the data but also enhances the network’s robustness. This process helps
+the model handle shifts and distortions in the input data more effectively. Figure A7 in
+the appendix provides a more detailed illustration of the pooling operation.
+      The layers in a CNN are modular, allowing for flexible stacking to build complex
+architectures. The CNN architecture in this study uses two sets of convolutional and
+pooling layers that are applied sequentially. Thus, the output of the first pooling layer
+serves as the input to the second convolutional layer. This enables the model to
+progressively combine previously extracted features into higher-level features as it passes
+through each layer. At the end of the CNN architecture, a fully connected layer processes
+the high-level features extracted by the preceding convolutional and pooling layers. This
+layer learns during training to associate specific input features from the previous layers
+with the possible outcomes, enabling it to make the final prediction. In this model, the
+fully connected layer uses a softmax activation function to output two probabilities: one
+for a positive return and another for a non-positive return. These probabilities always sum
+to 1, since the return can only be either positive or non-positive. A dropout layer is also
+included in the model as a regularization technique. During training, it randomly ignores
+50% of the neurons, helping to prevent overfitting and enhance the model's ability to
+generalize. CNN architectures are highly customizable, allowing adjustments to depth,
+filter sizes, and layer types to suit specific tasks and datasets, making them versatile across
+a range of applications. However, as this paper focuses on exploring the potential of
+transfer learning rather than optimizing CNN structures for stock return prediction, all
+CNN models used in this study are based on the 5-day model used by Jiang, Kelly, and
+Xiu (2023). In summary, the models take an image as input and process it through the
+network to produce a predicted probability of a positive return for that stock over the next
+five trading days. Simply put, the process works as follows: the convolutional layers learn
+and extract patterns from the images, the pooling layers simplify these patterns, and the
+fully connected layer uses these simplified patterns to make the final prediction.
+
+3.3 Training the Models
+The models in this analysis focus solely on predicting the probabilities of a positive or
+non-positive return, without considering the size of the return. This makes it a
+classification task, where images associated with a subsequent positive return are labeled
+as 1, and those with a non-positive return are labeled as 0. Accordingly, the standard
+objective function for classification problems, the cross-entropy function, is used to train
+the model. During training, the model seeks to minimize the loss of this function which
+is defined as
+
+                     𝐿(𝑦, 𝑦̂  ) = −𝑦 log(𝑦̂  ) − (1 − 𝑦) log(1 − 𝑦̂  ),
+
+where  ŷ  is the softmax output from the final step in the CNN.
+     The CNN models were trained using stock data from before January 1, 2005. The
+dataset was divided into two subsets: 70% for training and 30% for validation. This split
+ensured the model had sufficient data to learn effectively while reserving a substantial
+portion for an unbiased evaluation of its performance. During training, a batch size of 256
+images was used, determined through trial and error to suit the specific hardware used for
+training the models. The learning rate was set to 0.001, providing a balance between
+
+                                   8
+steady convergence and stability. This rate helped minimize the risk of overshooting
+optimal parameter values while ensuring the model effectively reduced the loss function.
+The Adam optimizer was used to update model parameters during training. Training was
+conducted iteratively until the model showed no improvement in the validation error for
+two consecutive epochs. This early stopping criterion helped prevent overfitting, ensuring
+the model did not overly adjust its parameters to the training data at the cost of
+generalizing to unseen data. In this study, the models are trained only once on the training
+dataset and are not recursively retrained. Recursive retraining, where models are
+continuously updated as new predictions are made, could improve performance by
+incorporating more data and staying updated with the latest information. However, this
+approach is computationally intensive and was not implemented in this analysis. Training
+neural networks is a stochastic process, meaning that results may vary slightly between
+individual training runs. In this study, however, each model was trained only once.
+Training each model multiple times and averaging the results could enhance the
+robustness of the analysis.
+
+3.4 Transfer Learning
+Transfer learning is a technique in which a pre-trained machine learning model is used as
+a starting point for a new task, rather than training a model from scratch. This method
+allows models trained on large datasets to be adapted to related tasks with smaller
+datasets, improving efficiency and performance. In the context of CNNs, transfer learning
+typically involves taking a network trained on a large, diverse dataset and fine-tuning it
+for a specific target task. This leverages the hierarchical features learned during the initial
+training, such as basic patterns in the earlier layers and more complex, task-specific
+features in the deeper layers. Fine-tuning adjusts these learned weights to better fit the
+specific nuances of the new task. Transfer learning addresses the common challenge of
+limited labeled data, providing a robust starting point that significantly reduces training
+time and computational requirements. By building on the generalized knowledge
+captured by a pre-trained model, transfer learning not only speeds up convergence during
+training but often leads to better overall performance compared to models trained
+exclusively on the smaller target dataset. Jiang, Kelly, and Xiu (2023) refer to transfer
+learning as applying a pre-trained model directly to new data without any retraining or
+fine-tuning. In contrast, this report considers all instances of transfer learning to include
+some degree of retraining to adapt the model to the specifics of the new task. The
+application of a pre-trained model to new data without any modifications is referred to
+here as direct application. This distinction highlights the emphasis in this study on
+leveraging retraining to improve model adaptability and performance across different
+datasets.
+      In finance, transfer learning offers a way to utilize extensive data and learned
+representations from one market or asset class and apply them to another. For instance,
+models trained on data-rich and highly liquid markets can be used as a basis for training
+and fine-tuning models for emerging or less liquid markets with limited data availability.
+This approach relies on the assumption that financial markets share underlying structural
+similarities and behavioral patterns shaped by economic principles, investor psychology,
+and macroeconomic factors. Transfer learning leverages these shared features by
+extracting them from data-rich environments and fine-tuning them to reflect the unique
+dynamics of specific target markets. For this to be effective, the target market must not
+
+                                   9
+only benefit from the additional data but also exhibit distinct characteristics not fully
+captured by the base model. Additionally, the local data must be of sufficient quality and
+quantity to enable the model to identify and adapt to meaningful signals rather than noise.
+      In this study, the transfer learning approach begins with training a CNN on the U.S.
+dataset, which serves as the base model for fine-tuning. The large size of the U.S. dataset
+allows the model to capture a broad range of patterns and behaviors, providing a strong
+foundation for subsequent adaptation. Next, the transfer learning models are fine-tuned
+with data from local markets, enabling the network to adjust its weights and biases to
+better capture and reflect local market conditions. For each market, two transfer learning
+models are trained: one with frozen convolutional layers, referred to as the TL model, and
+another fully trainable model, referred to as the TL FT model. The TL model retains the
+patterns learned from the U.S. base model, focusing exclusively on refining the
+interpretation of these patterns in the fully connected layer. In contrast, the TL FT model
+is fully trainable, allowing adjustments to both the decision-making process and the
+detected patterns, enabling them to better align with the unique characteristics of the local
+data. The fully unfrozen TL FT model provides greater adaptability, allowing it to better
+capture and align with the unique dynamics of the local market. However, this flexibility
+increases the risk of overfitting, as the model may become overly specialized to the
+training data, potentially incorporating irregularities or errors present in the dataset. If the
+local data is insufficient in quality or quantity, this overfitting can reduce the model's
+generalizability, leading to poorer performance on out-of-sample data compared to the
+frozen-layer TL model. On the other hand, when the local data is robust, the TL FT
+model's adaptability can be a significant advantage, enhancing its overall predictive
+capabilities. This trade-off underscores the importance of balancing model adaptability
+with the risk of overfitting. In this study, both approaches are systematically evaluated.
+
+3.5 CNNs Compared to Traditional Technical Analysis
+The use of CNNs for stock chart analysis marks a notable shift from traditional technical
+analysis methods. Although both aim to interpret visualized market data to guide trading
+decisions, their approaches, objectives, and the nature of their signals are fundamentally
+different. Traditional technical analysis relies on predefined patterns and indicators
+historically linked to certain market behaviors. Examples include chart patterns like head
+and shoulders, support and resistance levels, and crossings and other behaviors of
+technical indicators such as moving averages and the Relative Strength Index. These tools
+are based on established heuristics and are often subjectively interpreted by analysts,
+introducing personal bias and variability. Unlike the systematic processes of CNNs, the
+signals derived from traditional technical analysis are largely qualitative, relying heavily
+on an analyst's judgment and experience to distinguish meaningful trends from market
+noise. Furthermore, the validity of these patterns is primarily anecdotal, drawn from
+historical observations rather than being rigorously validated through empirical research.
+In contrast, training a CNN represents a data-driven, learning-based approach that
+eliminates the reliance on predefined patterns. CNNs autonomously identify and
+prioritize relevant features from large volumes of historical price data, without requiring
+explicit human input. This objective process reduces the subjectivity inherent in
+traditional technical analysis, as the model's parameters are adjusted using quantitative
+metrics that measure the accuracy and reliability of its predictions. The signals analyzed
+by CNNs are inherently quantitative, derived directly from numerical data that the
+
+                                  10
+network processes through multiple layers of convolution and pooling to uncover
+complex patterns and dependencies. CNNs rely on large datasets to uncover and validate
+relationships within the data, whereas traditional methods often depend on anecdotal
+evidence derived from selective historical instances. These patterns, while intuitively
+appealing, may not consistently hold across different time periods or market
+environments. CNNs also excel in modeling nonlinear and complex relationships that
+surpass human cognitive capabilities. Constrained by the limitations of manual analysis,
+traditional technical analysis often simplifies data to manage its complexity, which can
+result in a loss of critical information. In contrast, CNNs can analyze vast datasets and
+uncover complex patterns that are difficult for human analysts to detect manually,
+significantly improving predictive accuracy and reliability. In this study, no systematic
+comparison between the CNN approach and traditional technical analysis was made.
+However, Jiang, Kelly, and Xiu (2023) found that their weekly CNN model significantly
+outperformed all the 7,846 technical signals they compared it against. These findings
+highlight the superiority of CNNs over traditional technical analysis.
+
+3.6 Evaluating the Models
+Each model predicts the probability of positive returns for individual stocks in the
+upcoming week. For each period, these predictions are used to sort the stocks by their
+predicted probabilities, dividing them into deciles. An equally weighted, zero-cost long-
+short portfolio is then constructed by taking long positions in the top decile stocks and
+short positions in the bottom decile stocks. These positions are held for five trading days
+before rebalancing. The performance of this portfolio is evaluated by calculating its
+Sharpe ratio, which is used to compare the effectiveness of different strategies. The
+Sharpe ratios are calculated using weekly returns and then annualized. The Sharpe ratio
+is generally defined as
+                                       𝑅𝑝𝑜𝑟𝑡𝑓𝑜𝑙𝑖𝑜 − 𝑅𝑟𝑖𝑠𝑘−𝑓𝑟𝑒𝑒
+                         𝑆𝑅 =
+                                                                       𝜎𝑝𝑜𝑟𝑡𝑓𝑜𝑙𝑖𝑜
+
+Where R is the mean return and 𝜎 is the standard deviation of the returns. As this study
+concerns the relative performance of strategies traded in the same market and at
+the same time, the risk-free rate set to 0 to simplify calculations. This results in the
+following equation:
+
+                                                                   𝑅𝑃𝑜𝑟𝑡𝑓𝑜𝑙𝑖𝑜
+                               𝑆𝑅 =
+                                                                       𝜎𝑃𝑜𝑟𝑡𝑓𝑜𝑙𝑖𝑜
+
+An analysis of the returns generated by the models reveals that they are all static, as
+confirmed by the Augmented Dickey-Fuller test. Additionally, the Breusch-Pagan test
+indicates that the returns of all strategies exhibit heteroskedasticity. When examining the
+Autocorrelation Function (ACF) and Partial Autocorrelation Function (PACF) for the
+returns, no significant autocorrelation is detected.
+      Ledoit and Wolf (2008) note that serial correlation in returns is often negligible and
+argue that volatility clustering, reflected in the correlation of squared returns, is more
+common. When analyzing the ACF and PACF of the squared returns, a few markets show
+
+                                  11
+weak indications of slight autocorrelation, but no consistent trend is observed across
+markets.
+      To conduct hypothesis tests on the Sharpe ratios, an appropriate testing
+methodology must be chosen. Since the true distributions of the Sharpe ratios for each
+strategy are unknown, they must be estimated. The central limit theorem (CLT) is often
+used for large sample sizes, but it assumes that the samples are independent and
+identically distributed (IID), a condition that time-series data typically does not meet.
+These challenges, coupled with the need for confidence intervals and hypothesis testing
+for Sharpe ratios, have prompted extensive research on the subject.
+      Based on a review and comparison of various approaches by Riondato (2018), this
+study adopts the methodology developed by Ledoit and Wolf (2008). Their framework
+estimates the distribution of Sharpe ratio differences between two strategies, adjusts it
+through studentization and computes a two-sided confidence interval for a specific
+statistical significance. The null hypothesis, ΔSR = 0, is then considered rejected at the α
+confidence level if the 1-α confidence interval does not include zero. This approach,
+known as a studentized circular block bootstrap, offers three key features that make it
+well-suited for this task. First, bootstrap sampling with replacement is used to address the
+lack of a known distribution and estimate it. Second, to account for the dependence
+structure in financial time series data, bootstrap sampling is performed in blocks of
+consecutive returns. This helps address heteroskedasticity and autocorrelation in the
+returns. The block size is chosen to minimize the mean squared error of the bias and
+variance, with a penalty for small block sizes. In this study, an analysis across all
+strategies and markets results in a median optimal block size of 45, which is used
+consistently. Third, studentization adjusts the difference between the total sample Sharpe
+ratio and each bootstrapped sample Sharpe ratio using the standard error of the specific
+bootstrapped sample. The resulting distribution of studentized values is then used to
+construct the confidence interval. Additionally, since the strategies compared in this study
+place trades in the same markets and time periods, a paired bootstrap technique is
+employed. This adjustment accounts for common market factors and enhances the
+accuracy of the Sharpe ratio comparisons. While this paired bootstrap is not part of the
+original framework by Ledoit and Wolf (2008), their methodology is designed for general
+Sharpe ratio comparisons and does not require trades to occur in the same market or
+period. Further details and examples of the framework's steps are provided in figure A8,
+A9 and A10 in the appendix.
+
+                                  12
+4 Main Results
+4.1 Returns and Volatility
+
+                 Table 1. Overview of returns
+                The table reports the average annualized return and standard deviation for all
+                models and markets, as well as the average.
+
+This table presents the average returns and standard deviations for all models across all
+markets, expressed in annualized terms. The annualization is done by multiplying the
+mean weekly return by 52, as well as multiplying the standard deviation of the weekly
+return by the square root of 52. The results reveal a wide range of returns and standard
+deviations. The highest return is achieved by the local model in Canada at 170.6%, while
+the lowest return is recorded by the local model in Austria at -24.3%. In terms of volatility,
+the highest standard deviation is observed in Greece with the local model at 67.6%, and
+the lowest in Japan with the U.S. model at 9.8%. Among the models, the TL FT model
+generates the highest average return, followed by the TL model, the U.S. model, and the
+local model. In contrast, the local model exhibits the highest standard deviation, followed
+by the TL model, the TL FT model, and finally the U.S. model, which demonstrates the
+lowest volatility. The return distributions for all strategies, across all markets, are
+displayed in figure A11 in the appendix.
+
+                                  13
+              Figure 3. Average Annual Decile Return Across Markets
+                 The figure displays the average annual decile returns predicted by each model, represented by
+                  individual lines. Each line reflects the average decile return across all examined countries.
+
+When examining the average returns of individual deciles across the analyzed markets, a
+clear correlation emerges between the predicted probability of a positive return and the
+subsequent actual return for all models. The U.S., TL, and TL FT models consistently
+outperform the local model across all deciles, particularly in predicting negative returns.
+The U.S., TL, and TL FT models generally show similar performance across the deciles,
+                                                       st
+with the largest difference observed in the 1  decile. The TL FT model stands out as the
+best performer at both the high and low ends of the deciles, followed closely by the TL
+model in second place and the U.S. model in third.
+
+4.2 Sharpe Ratio Comparison
+To account for the volatility associated with these returns, the Sharpe ratios of the zero-
+cost long-short portfolio for each strategy are calculated and compared. The following
+hypotheses are formulated and tested for each market:
+                                H0: ΔSR = 0
+                               H1: ΔSR ≠ 0
+The hypothesis testing is conducted in three distinct ways, each test with specific
+objectives:
+    1. Comparing the U.S.-based models against the model trained on local data, there
+       are two objectives to be examined. First, validate the finding of Jiang, Kelly, and
+        Xiu (2023), which suggests that a model trained on U.S. data outperforms a locally
+       trained model. Second, examine whether this superiority persists when the U.S.-
+        trained model is retrained using local data.
+
+    2. Comparing the transfer learning models against direct application of the U.S.
+       model, the objective is to evaluate how transfer learning performs relative to the
+        direct application of the U.S.-trained model without retraining.
+
+                                  14
+    3. Comparing the two transfer learning approaches to each other to examine the
+        effects of freezing the convolutional layers during the retraining process.
+
+             Table 2. Sharpe Ratios and Differences Compared to the Local Model
+              This table presents the observed Sharpe ratios of the returns from each model and their
+              differences (ΔSharpe Ratio) relative to the returns from the model trained on local data.
+                The average Sharpe ratios are calculated and reported for all examined markets, as well as
+               for the subset of markets where the ΔSharpe Ratio is statistically significant at any of the
+              reported levels. The countries are sorted in descending order based on the number of
+               images in the training data, which directly reflects the size of the market during the
+             training period. Statistical significance is denoted by ***, *, and * at the 1%, 5%, and 10%
+               levels, respectively. Statistical significance is only computed and reported for the
+                 individual markets, not the averages.
+
+The null hypothesis, ΔSR = 0, is rejected for a substantial number of countries across all
+models. For the U.S. model, the null is rejected in 13 of the 22 countries, with 9 rejections
+at the 1% significance level and 4 at the 5% level. The TL model shows rejection in 14
+countries, with 11 at the 1% significance level, 1 at the 5% level, and 2 at the 10% level.
+The TL FT model exhibits the highest number of rejections, with 15 out of 22 countries
+showing significant results: 11 at the 1% level, 3 at the 5% level, and 1 at the 10% level.
+For all models, none of the five countries with the largest local training datasets showed
+statistically significant improvements in Sharpe ratios. In fact, some of these countries
+demonstrated statistically significant declines in performance. Conversely, all other
+countries with statistically significant results showed improvements in Sharpe ratios
+across all models. The average ΔSR is positive for all models, both when considering the
+entire sample and when focusing solely on the statistically significant subset. Among the
+models, the TL FT model achieves the highest average ΔSR, followed by the TL model
+and the U.S. model. This ranking holds true for both the total sample and the statistically
+significant subset.
+
+                                  15
+           Table 3. Sharpe Ratios and Differences Compared to the U.S. Model
+             This table presents the observed Sharpe ratios for the returns from the transfer learning
+            models and their differences (ΔSharpe Ratio) relative to the returns from the model
+            trained on U.S. data. The average Sharpe ratios are calculated and reported for all
+              examined markets, as well as for the subset of markets where the ΔSharpe Ratio is
+              statistically significant at any of the reported levels. The countries are sorted in
+              descending order based on the number of images in the training data, which directly
+             reflects the size of the market during the training period. Statistical significance is
+            denoted by ***, **, and * at the 1%, 5%, 10% levels, respectively. Statistical
+               significance is only computed and reported for the individual markets, not the averages.
+
+When conducting hypothesis testing with the transfer learning models compared to the
+U.S. model, the null hypothesis is rejected for 8 countries for both transfer learning
+models. For the TL model, 6 of these rejections are statistically significant at the 1% level
+and 2 at the 10% level. For the TL FT model, 3 rejections are at the 1% level, 1 at the 5%
+level, and 4 at the 10% level. In terms of direction, the TL model shows 3 statistically
+significant positive differences and 5 negative ones. For the TL FT model, 4 statistically
+significant differences are positive, and 4 are negative. Despite this balance, the average
+difference among the statistically significant markets is positive, as the magnitude of the
+positive differences tends to outweigh that of the negative ones.
+
+                                  16
+Table 4. Sharpe Ratios and Differences Inbetween the Transfer Learning Models.
+This table displays the observed Sharpe ratios for the returns from the fully trainable transfer learning model (TL FT)
+and the corresponding differences (ΔSharpe Ratio) compared to the returns from the constrained transfer learning
+model (TL).The average Sharpe ratios are calculated and reported for all examined markets, as well as for the subset
+of markets where the ΔSharpe Ratio is statistically significant at any of the reported levels. The countries are sorted in
+descending order based on the number of images in the training data, which directly reflects the size of the market
+during the training period. Statistical significance is denoted by ***, **, and * at the 1%, 5%, 10% levels,
+respectively. Statistical significance is only computed and reported for the individual markets, not the averages.
+
+When directly comparing the Sharpe ratios of the returns from the two transfer learning
+models, the differences are minimal. However, in the majority of markets, including all
+those with statistically significant results, the fully trainable TL FT model demonstrates
+superior performance.
+
+5 Discussion
+5.1 The Effect of U.S. Data on Performance
+Models leveraging U.S. data, either exclusively or as the foundation for transfer learning,
+demonstrates improved performance compared to locally trained models in a majority of
+the markets and on average across all markets. These results align with the findings of
+Jiang, Kelly, and Xiu (2023), while also confirming that the superiority of U.S.-based
+models extends to transfer learning approaches as well. Unlike their study, which
+included data up to 2019, this analysis incorporates nearly five additional years of data,
+covering the COVID-19 pandemic, periods of heightened inflation, interest rate increases,
+and geopolitical instability. Additionally, all code used in this study was developed
+independently, with no reuse of prior implementations. This reinforces the robustness of
+the confirmation of their findings.
+
+                                  17
+An inspection of the ΔSR for the U.S. and transfer learning models compared to the
+locally trained model suggests that the size of the underlying local training data perhaps
+influence the observed ΔSR. Figure A12 in the appendix provides a visual representation
+of this through scatter plots. For all models, none of the five countries with the largest
+local datasets show a statistically significant positive ΔSR. In contrast, several instances
+exhibit statistically significant negative ΔSR values. This could suggest that when the
+local dataset is sufficiently large, there is no advantage – and potentially even a
+disadvantage – to using a model trained on a data-richer market, regardless of whether
+transfer learning is applied or not. Recalculating the average ΔSR while excluding the
+five markets with the largest local training datasets provides a clearer picture of
+performance in smaller-data markets. For the total sample and the significant subset, the
+recalculated ΔSR values are as follows: 0.68 and 0.98 for the U.S. model, 0.60 and 0.77
+for the TL model, and 0.70 and 0.84 for the TL FT model. These results highlight the
+impact of local data size on the effectiveness of models leveraging external data.
+      Jiang, Kelly, and Xiu (2023) also observed that larger local dataset sizes tended to
+negatively affect the ΔSR, although this relationship was weaker in their findings
+compared to mine. While they reported market size based on the number of stocks in each
+market, I chose to report the number of training images instead. This metric better
+captures the total data available for training, as it accounts for both the number of stocks
+and the length of historical data for each stock. However, differences in the time horizons
+of the datasets as well as the specific markets studied and the split dates for training and
+testing most likely also contribute to discrepancies in the results. For instance, Jiang,
+Kelly, and Xiu (2023) found a highly significant and substantially positive ΔSR for
+Canada and Japan, whereas my findings show a substantially negative ΔSR for Canada
+and a ΔSR close to zero and not statistically significant for Japan when comparing the
+U.S. model to the local model. Both studies observed a negative ΔSR for South Korea;
+however, in my study, this result is statistically significant, while in theirs, it is not. Both
+studies found the ΔSR for the United Kingdom to be slightly negative and not statistically
+significant. The indication that introducing a pre-trained model from a data-rich market
+does not improve performance once the local dataset reaches a sufficient size aligns with
+intuitive expectations. This result is consistent with the assumption that pre-trained
+models address the lack of adequate local data. However, when local data is already
+sufficient, the pre-trained model may instead reduce performance by introducing patterns
+that are less relevant or accurate for the specific market. In these markets, gradually
+reducing the training data and observing its impact on results could help identify the
+breakpoint at which incorporating global data is no longer beneficial. It is also worth
+considering that additional data might still be beneficial, but only if paired with a more
+complex model with greater capacity to utilize it effectively. However, exploring
+alternative CNN configurations or increasing model complexity falls outside the scope of
+this paper.
+      In theory, the performance of the U.S. model should serve as a lower bound for the
+TL FT model, while not limiting its potential to improve. Since all layers in the TL FT
+model are trainable, it has the flexibility during training to configure itself identically to
+a model trained solely on local data. When examining countries with a statistically
+significant negative ΔSR for the U.S. model compared to the local model, the negative
+ΔSR are less severe for the transfer learning models, with Canada being the most notable
+example. Although the U.S. model does not strictly serve as a lower performance limit
+for the TL FT model in my results, it is reasonable to expect that with additional training,
+
+                                  18
+the TL FT model would converge toward the same weights as a model trained exclusively
+on local data, thereby reducing this gap. However, this assumes that the local data is of
+sufficient quality and that the training data accurately represents the evaluation data. In
+contrast, this behavior is not anticipated for the TL model, as its frozen convolutional
+layers are not updated during retraining. While this limitation reduces its ability to adapt
+to patterns in the local data, it could, in theory, serve as a safeguard against unreliable
+patterns in low-quality local data by relying on the patterns learned from the base model.
+However, this potential feature was not explored in this paper, and there is no evidence
+in the results to suggest that this effect occurred.
+
+5.2 Retraining Compared to Direct Application
+Moving on to analyzing the performance of the transfer learning models compared to the
+U.S. model. The results suggests that the size of the training dataset perhaps is of
+importance here as well, as all the statistically significant differences are positive for the
+largest markets and negative for almost all the smallest markets. This suggests that
+transfer learning recovers some of the performance lost in large markets when using a
+U.S. model instead of a locally trained model. This is intuitive, as the local data has been
+shown to outperform U.S. data in these markets, and the transfer learning model
+incorporates that advantage. The reasons for inferior performance in smaller markets are
+in contrast likely to be more complex and challenging to identify. Conceptually, transfer
+learning is designed to enhance performance when the specific dataset is relatively small.
+However, smaller datasets also carry the risk that the model learns patterns that fail to
+generalize, reducing its effectiveness. Beyond quantity, the quality of the local data must
+also be considered. In markets with poor data quality, retraining the model on local data
+is disadvantageous. In such cases, applying the U.S. model without retraining is likely a
+better option. Countries that are well-developed today may have accurate recent data, but
+earlier data may suffer from issues linked to historically weak institutions. This poses a
+problem if the training period includes these lower-quality data periods. In such cases,
+setting a cut-off date for when data quality became reliable is essential for retraining on
+local data. Unlike dataset size, evaluating the historical quality of institutions and their
+data is a more complex task. Although this study does not attempt to classify markets by
+data quality, it is an important factor that practitioners should consider when applying
+transfer learning.
+      Looking at the specific markets, we find that the TL and TL FT models significantly
+outperforms the U.S. model in Canada. However, the local model performs the best.
+Australia exhibits the strongest benefit of the transfer learning approach with both models
+outperforming both the U.S. and local models substantially, with statistical significance.
+The transfer learning approach is also superior to the U.S. approach for South Korea.
+However, the performance compared to the local model is not different with statistical
+significance. In contrast, some markets did not experience the same level of improvement.
+In Greece, the performance of both transfer learning models was with statistical
+significance substantially worse compared to the U.S. model. In Germany the same is
+true, however at a smaller scale and with less statistical significance for the TL FT model.
+In Italy, the TL model, but not the TL FT model, also performed statistically significantly
+worse in relation to the U.S. model. In Spain, both transfer learning approaches performed
+equally worse, although with the lowest level of statistical significance.
+      The inherently complex nature of CNNs, as well as neural networks in general,
+makes it challenging to extract meaningful insights from the model to inform future
+
+                                  19
+theory. This limitation is a well-known drawback of neural networks. While it is possible
+to extract elements such as filters, feature maps, and individual weights learned by the
+model, interpreting them in a way that provides meaningful theoretical insights remains
+extremely difficult. Figure A5 and A6 in the appendix illustrates this well.
+      A comparison of the TL and TL FT models indicates that allowing all layers to be
+trainable during fine-tuning results in only small differences in performance. While the
+fully trainable TL FT model achieves slightly higher ΔSRs in all markets with statistically
+significant results, the number of significant markets is limited. This suggests that full
+fine-tuning might be a marginally better approach, but the evidence is neither strong nor
+conclusive. However, in cases where the local dataset is small and there is a high risk of
+overfitting to noise rather than learning valuable patterns, it could be theorized that the
+TL model may provide a more conservative alternative. By freezing the convolutional
+layers, the TL model retains the foundational patterns learned from U.S. data while
+allowing for localized adaptation through fine-tuning the fully connected layer. While
+this approach has theoretical merit, the results of this study do not provide evidence to
+support its effectiveness in practice.
+      A common critique of backtested strategies is that frequent trading may cause them
+to not remain profitable once trading costs are accounted for. While this study does not
+specifically address trading costs, Jiang, Kelly, and Xiu (2023) found that their
+implementation of the CNN model maintained profitability even after adjusting for
+standard trading costs. A note of caution is warranted regarding the high average returns
+and Sharpe ratios observed in some markets. The use of advanced technology to generate
+trading signals during a backtested period, when such technology was not available, may
+inflate these figures, potentially overstating their practical feasibility. However, this does
+not diminish the core findings of the paper. The focus is on the relative performance of
+the strategies, measured through differences in Sharpe ratios, rather than their absolute
+values. This relative approach ensures the validity of the comparative analysis, regardless
+of potential distortions in the absolute figures.
+
+6 Conclusion
+CNN models leveraging U.S. data outperform those trained solely on local data,
+on average and in the most individual markets. This confirms and extends the findings of
+previous studies. However, consistent with the principles of transfer learning and its
+applications in other domains, the results show that transfer learning is not a universal
+solution for performance improvement. The findings further suggest that while using a
+model trained on a larger dataset can be beneficial initially, the advantages diminish and
+can even become disadvantages once the local dataset reaches a certain size.
+      Based on the findings of this study, the TL FT model is likely the best choice if a
+single model is to be used across all markets. However, the average performance metrics
+are heavily influenced by individual markets. Deviations observed in specific countries
+compared to the findings of Jiang, Kelly, and Xiu (2023) further underscore the risks of
+relying solely on averages that are heavily influenced by a few markets when deciding to
+implement these models. Instead, the decision on which model to use is likely best made
+on a market-by-market basis. As general performance improvements across all markets
+should not be expected, transfer learning should be viewed as a tool to selectively leverage
+the strengths of both global and local data under favorable circumstances.
+
+                                  20
+Transfer learning with retraining shows some promise, but its effectiveness varies
+significantly across markets. Further research is needed to better understand the
+conditions under which transfer learning may be successfully deployed. Among the
+markets studied, Australia is the only one where the transfer learning approach is found
+to outperform both the local and U.S. models with statistical significance. Notably,
+transfer learning is not found to be statistically worse than both the local and U.S. models
+in any market. There is no strong evidence to indicate whether freezing the convolutional
+layers during retraining provides a clear advantage or disadvantage in the performance of
+transfer learning models.
+
+                                  21
+                                 References
+Brogaard, Jonathan and Zareei, Abalfazl, 2021, Machine Learning and the Stock
+Market, Proceedings of Paris December 2020 Finance Meeting EUROFIDAI – ESSEC
+Gu, Shihao, Bryan Kelly, and Dacheng Xiu, 2020, Empirical Asset Pricing via Machine
+Learning, The Review of Financial Studies, 33(5), 2223–2273.
+Jiang, Jingwen, Bryan Kelly, and Dacheng Xiu, 2023, (Re-)Imag(in)ing Price Trends,
+The Journal of Finance, 78(6), 3193–3249.
+Krizhevsky, Alex, Ilya Sutskever, and Geoffrey E. Hinton, 2012, ImageNet
+classification with deep convolutional neural networks, In Proceedings of the 25th
+International Conference on Neural Information Processing Systems - Volume 1
+(NIPS'12), 1097–1105.
+Ledoit, Olivier and Wolf, Michael, 2008, Robust performance hypothesis testing with
+the Sharpe ratio, Journal of Empirical Finance, 850-859.
+Riondato, Matteo, 2018, Sharpe Ratio: Estimation, Confidence Intervals, and
+Hypothesis Testing, Two Sigma Technical Report 2018-001
+Sun, Chen, Abhinav Shrivastava, Saurabh Singh and Abhinav Gupta, 2017, Revisiting
+Unreasonable Effectiveness of Data in Deep Learning Era, 2017 IEEE International
+Conference on Computer Vision (ICCV), 843-852.
+
+                                  22
+         Appendix
+
+Table A1. Training Images per Market
+The table reports the number of images used
+to train the local model, as well as retraining
+the transfer learning models.
+
+             23
+Figure A2. Illustration of the Image Creation Process
+This figure demonstrates how calculated pixel-values for open, high, low, close, moving average
+(ma), and volume are used to construct the image. The table provides the corresponding y-values
+for the pixels. The central x-value for each day is determined by multiplying the index value by
+three and adding one.
+
+                             24
+Figure A3. Schematic Overview of CNN Architecture
+This figure illustrates the pipeline used to process each image fed into the models. The same
+architecture is applied across all models. Details are provided on the number of convolutional
+filters in each layer, the sizes of the convolution and pooling filters, and the parameters of the fully
+connected layer.
+
+                             25
+Figure A4. Overview of Convolution Layer Functionality
+This figure provides three simplified examples of how a convolutional layer operates. The
+middle row illustrates a convolution filter designed to identify a price increase pattern,
+represented as a diagonal line sloping upward along the time axis. As the filter traverses the
+input image, it calculates the dot product at each position, with the red dashed lines indicating
+one of these calculations. The resulting values are stored in the feature map. The stronger the
+match between the filter's pattern and a specific region of the image, the higher the corresponding
+value in the feature map. In this example, the price increase pattern is located in the top-left
+corner of the input image, resulting in a relatively high value in the top-left corner of the
+feature map. The other two examples show a similar operation for a flat price filter and a price
+decrease filter, demonstrating how the feature map responds when the filter partially matches
+or matches multiple regions of the input image.
+
+                         26
+Figure A5. Filters from the First Convolution Layer of the U.S. model
+This figure shows the trained convolution filters from the first layer of the
+U.S. model. Darker colors indicate higher weights. These 64 filters
+represent the patterns that the model, trained on U.S. data, identified as
+most predictive of future returns. The figure highlights the complexity of
+interpreting and understanding the patterns learned by the model,
+exemplifying the challenges inherent in making sense of these learned
+features.
+
+                     27
+Figure A6. Resulting Feature Maps from Applying Filters
+This figure shows the feature maps produced by applying the filters from
+Figure A4 to the input image used in Figures A2 and A3. Darker colors
+indicate higher weights. This visualization further highlights the challenges
+in interpreting the inner workings of the CNN.
+
+                      28
+Figure A7. Max-Pooling Example
+This figure demonstrates the max-pooling operation using the feature maps
+generated in Figure A3. A 2x1 max-pooling filter traverses the feature map,
+extracting the highest value within each region. This operation compresses the
+feature map along the height dimension, making the model less sensitive to
+small variations and reducing computational complexity. Unlike the convolution
+filter, the max-pooling filter does not overlap, ensuring that each value is
+covered only once per image.
+
+                       29
+Figure A8. Circle Block Bootstrap for Estimating Sharpe Ratio Distributions
+This figure illustrates the use of a circle block bootstrap to estimate the distribution of Sharpe ratios for a
+strategy's returns. In this example, the block size is set to 3. The dotted lines represent sample blocks,
+demonstrating that samples may overlap, individual values can be included multiple times, and some values
+may not be sampled at all. The second section shows the bootstrapped samples and their corresponding
+Sharpe ratios. The third section presents a histogram of the bootstrapped Sharpe ratios, along with the
+resulting distribution after repeating the bootstrapping process a large number of times.
+
+                              30
+Figure A9. Paired Bootstrap Sampling
+This figure illustrates the paired bootstrap sampling method. By using the same randomly selected indices to
+sample values from both return series, this approach minimizes the influence of external factors. The returns
+used to calculate each bootstrapped Sharpe ratio are drawn from the same market and dates, ensuring that
+each pair of bootstrapped Sharpe ratios remains comparable and is not unevenly affected by external market
+conditions.
+
+Figure A10. Bootstrapped Sharpe Ratio Differences Confidence Interval
+For each bootstrap iteration, the Sharpe ratios of both strategies being compared are calculated. Each
+bootstrapped Sharpe ratio is then studentized by subtracting the full sample Sharpe ratio difference and
+dividing by the standard error of the bootstrap iteration. From the resulting distribution, critical values
+corresponding to a confidence interval of 1 – α are determined. These critical values, along with the total
+sample mean and standard error, are used to compute a confidence interval. If this confidence interval does
+not include 0, the observed Sharpe ratio difference is considered statistically significant at the α level.
+
+                              31
+Figure A11a. The Return Distribution Generated by All Models Across All Markets.
+This graph displays the distribution of weekly returns for Japan, South Korea, Hong Kong,
+Canada, United Kingdom and Australia. All histograms are centered at 0 on the x-axis,
+though the scale of the x-axis varies between countries.
+
+                              32
+Figure A11b. The Return Distribution Generated by All Models Across All Markets
+This graph displays the distribution of weekly returns for France, Germany, Singapore, Switzerland,
+Sweden, Greece, Italy, and Denmark. All histograms are centered at 0 on the x-axis, though the scale
+of the x-axis varies between countries.
+
+                                  33
+Figure A11c. The Return Distribution Generated by All Models Across All Markets
+This graph displays the distribution of weekly returns for France, Germany, Singapore, Switzerland,
+Sweden, Greece, Italy, and Denmark. All histograms are centered at 0 on the x-axis, though the scale
+of the x-axis varies between countries.
+
+                                  34
+Figure A12. Scatter Plots with ΔSR and The Number of Training Images
+Visualizing the observed ΔSR compared to the local model for U.S., TL and TL FT. Each model has two graphs, one
+with the total sample and one with only the statistically significant subsample. Note that the scales of the axes are not
+consistent across the graphs.
+
+                                  35
+                                AI-Appendix
+In the preparation of this paper, I utilized tools powered by artificial intelligence to
+enhance the quality of the writing. The initial drafts were written without the assistance
+of these tools, which were later employed to identify errors and suggest language
+improvements. All code in this study was written exclusively by me. However, the code
+editor I use includes integrated AI features, such as advanced auto-completion and
+suggestions. The tools used in both writing and coding are powered by GPT-4o.
+
+                                  36

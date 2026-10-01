@@ -40,3 +40,25 @@ Hiller-vinnare. Den är därför inkluderad.
 En separat post från 2025, *Leading The Wallet*, har metadata som säger
 “awarded ... 2026”, men ingår ännu inte i den officiella 25-posterssamlingen
 för äldre Finance-vinnare och ligger därför inte i `old_winners/`.
+
+## Icke-vinnande uppsatser (`non_winners/`)
+
+Samtliga 635 kandidatuppsatser i finans i SSE:s bibliotekskatalog (taggade
+"Bachelor Thesis in Finance", 2009–2026) som *inte* ingår i den prisbelönta
+samlingen ovan. Hämtade 1 oktober 2026.
+
+- `non_winners/INDEX.md` — tabell med år, titel, författare, sidantal, länk till
+  originalet i SSE:s arkiv och länk till fulltexten.
+- `non_winners/text/<MediumId>.txt` — fulltext för varje uppsats (layoutbevarande
+  textextraktion ur arkivets PDF; 1801 och 2258 är OCR eftersom PDF:erna har
+  trasig teckenkodning).
+- `non_winners/catalogue_index.json` — rå katalogdata inkl. abstract för alla 660
+  uppsatser (vinnare och icke-vinnare).
+- `non_winners/extraction_meta.json` — sidantal, filstorlek och ordantal per uppsats.
+- `non_winners/thesis_metrics.py` — skript som beräknar strukturmått (referenser,
+  toppjournaler, introduktionslängd, metodnyckelord m.m.) ur textfilerna.
+- `old_winners/text/` — fulltext för de 25 vinnarna, extraherad på samma sätt
+  (2013 *Telling True from False* och 2020 *Chasing Your Own Tail* är OCR).
+
+PDF-filerna (ca 1 GB) är inte incheckade; `non_winners/pdf/` ligger i `.gitignore`
+och varje rad i indexet länkar till arkivets original.

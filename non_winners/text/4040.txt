@@ -1,0 +1,1654 @@
+     Bankruptcy prediction of Swedish SMEs and the
+           importance of CEO characteristics
+
+                Izabella Källholm Fredrika Svanholm
+                 23629@student.hhs.se 23683@student.hhs.se
+
+                                       Bachelor thesis
+                           Stockholm School of Economics
+                                 Department of Finance
+
+                                     Abstract
+___________________________________________________________________________
+
+This thesis investigates whether an accounting-based bankruptcy prediction model based on the
+logit analysis developed by Altman and Sabato (2007) can be enhanced by incorporating CEO
+specific variables. The study concentrates on Swedish non-listed SMEs by reason that the SME
+sector is an important engine to the growth of the Swedish economy. Furthermore, the
+applicability of the original model is evaluated in regard to the new setting of Swedish SMEs
+as well as whether the inclusion of CEO characteristics increases in importance for smaller
+firms. The data encompasses 15,885 non-listed Swedish limited liability companies, out of
+which 226 are failed. By validating the models on an out of sample, it is found that the original
+model using solely financial ratios is applicable to predict bankruptcy among Swedish non-
+listed SMEs. Moreover, the classification accuracy is improved when adding the CEO specific
+variables age and gender, given a predefined cut-off rate. However, the inclusion of CEO
+specific variables does not gain in importance as firm size decreases.
+_________________________________________________________________________
+
+Date: 14 May 2017
+Tutor: Håkan Thorsell
+Acknowledgement: We would like to thank our tutor Håkan Thorsell for his guidance
+throughout the writing of this thesis. His comments and questions were of valuable character
+and challenged the depth of our analysis.
+Keywords: Altman and Sabato, bankruptcy prediction, financial distress, SME, CEO
+characteristics
+
+                                         1
+Table of contents
+
+1. Introduction 4
+
+  1.1 Background information 4
+
+  1.2 Purpose 5
+
+  1.3 Limitation of scope 6
+
+  1.4 Question formulation 7
+
+2. Literature review 8
+
+  2.1 Univariate analysis 8
+
+  2.2 Multi-discriminant-analysis 8
+
+  2.3 The logistic model 9
+
+  2.4 The probit model 9
+
+  2.5 Bankruptcy prediction models for SMEs 10
+
+  2.7 Non-financial information included in models for SMEs 12
+
+  2.8 Previous theses 13
+
+  2.9 Literature summary 14
+
+3. Hypothesis 16
+
+4. Method 18
+
+  4.1 Sample selection 18
+
+    4.1.1 Classification of failed firms 21
+
+    4.1.2 Out of sample 21
+
+  4.2 Statistical methods 22
+
+    4.2.1 Logistic regression 22
+
+    4.2.2 The Wald test and the likelihood ratio test 24
+
+    4.2.3 Psuedo R-square and McFadden R-squared 24
+
+    4.2.4 Classification measures 25
+
+    4.2.5 Receiver operating characteristic and area under the curve 26
+
+5. Results and analysis 27
+
+                                         2
+  5.1 Descriptive statistics and results from the ratio analysis 27
+
+  5.2 Model prediction results 29
+
+  5.3 Correlation analysis 32
+
+  5.4 Analysis of classification performance 34
+
+     5.4.1 Classification analysis given a fixed cut-off 34
+
+    5.4.2 Classification analysis given various cut-offs 36
+
+  5.5 Results from the ROC analysis 38
+
+    5.5.1 Discussion of classification measures 40
+
+  5.6 Examining the relative importance of including CEO characteristics 40
+
+6. Conclusions 42
+
+  6.1 Outlook for further research 42
+
+7. References 44
+
+  7.1 Published articles 44
+
+  7.2 Non-published articles 45
+
+  7.3 Literature 45
+
+  7.4 Theses and dissertations 46
+
+  7.5 Websites and reports 46
+
+  7.6 EU documents 46
+
+                                         3
+1. Introduction
+
+1.1 Background information
+Private companies are somewhat of a puzzle. Information asymmetry and uncertainty regarding
+a company’s financial soundness impose passive investors and creditors with risk. Given
+investors risk appetite and anticipation for luscious returns, the ability to predict the likelihood
+of whether a company will find itself in the state of financial failure reduces uncertainty and
+adds value. In the case of private small and medium sized companies, this matter becomes even
+more evident. Previous research indicates that non-listed firms face the highest risk of corporate
+failure (Altman et. al., 2008).
+
+Bankruptcies are costly, both for internal and external stakeholders. Internal stakeholders such
+as employees and managers risk losing their jobs, while shareholders face the risk of losing
+their equity investment. External stakeholders such as suppliers and creditors risk not being
+paid, while customers risk not receiving their products and services. Moreover, corporate
+bankruptcies have a large negative impact on their societies (Branch, 2002). As a company
+enters the state of bankruptcy, there are few actions available to stakeholders to protect their
+interests.
+
+During 2017, 5,528 Swedish limited companies filed for bankruptcy, slightly more than during
+2016 (5,270 companies) (Nyström, 2018). These statistics indicate that bankruptcy filings
+increased by approximately five percent. Bankruptcy prediction models are of constant interest
+for both investors and creditors by the reason that bankruptcies are affected by the business
+cycles and the macroeconomic stability of the economy (Bhattacharjee et. al., 2009) (Hol,
+2006). Past and present literature portrait multiple definitions for bankruptcy and hence, no
+universal definition can be applied when classifying a firm as bankrupt or failed. The Swedish
+Companies Registration Office however defines bankruptcy as “A procedure where all assets
+of a limited company are turned into money and used to pay off the company’s debts.”. The
+process of closing a limited liability company can be initiated either by the company or a
+creditor and starts with an application for bankruptcy at the district court in the area where the
+company has its registered office (The Swedish Companies Registration Office, 2015).
+
+In recent years, small and medium sized companies (SMEs), usually non-listed, have gained
+escalating dedication from the European Union and its member states. SMEs contribute
+significantly to the European economy by being responsible for 57 % of value added in the EU-
+28 non-financial business sector (European Commission, 2017). The European Union devotes
+
+                                         4
+several campaigns and support programs to SMEs in order to enhance the business-friendly and
+practice sharing environment. An industry report by the European Commission indicates that
+the role of SMEs in the Swedish non-financial business sectors is gaining in importance, as the
+SMEs accounts for 60 % of value added and employment over the period 2008-2013 (European
+Commission, 2017). Moreover, the outlook for Swedish SMEs is positive, underpinned by the
+fact that the value-added by Swedish SMEs increased by 30 % over the period 2010-2015.
+Therefore, it appears necessary to concentrate efforts towards ensuring the financial soundness
+of these companies and invest in SMEs that have the ability to add value in the future. In
+contrast, identifying SMEs with a greater probability of entering the state of financial failure
+allows passive investors as well as creditors to undertake more informed and safer investment
+decisions and loan issues.
+
+The idea that the CEO plays a more important operational role in smaller businesses is widely
+accepted in business practice (Corporate Finance Institute, 2018). The reasoning follows that
+he or she is assumed to have a more active role in not only the executive management team, but
+also in the operations. An active CEO is therefore expected to personally have a
+disproportionally large impact on the survival of the company.
+
+1.2 Purpose
+The purpose of this study is threefold. Firstly, this thesis mimics the study conducted by Altman
+and Sabato (2007) by applying their logistic bankruptcy prediction model uniquely developed
+for SMEs. Given the previous mentioned importance of SMEs to the Swedish economy, it is of
+interest to investigate whether the original model is applicable to Swedish data. Hence, the first
+objective is to investigate how accurate Altman and Sabato’s original model developed for US
+SMEs can predict the likelihood of corporate failure for private Swedish companies. In line
+with Grice and Dugan’s conclusions (2001), the original model is also re-estimated for the
+dataset of Swedish SMEs.
+
+Secondly, this study has the intent to go one step further and assess whether the predictability
+of financial failure can be improved by incorporating CEO specific variables. The dimension
+of CEO characteristics is usually not included in quantitative studies predicting the probability
+of bankruptcy. Partly because this qualitative information is scarce. The studies by Argenti
+(1976) and Sheppard and Chowdhury (2005), however, find a direct correlation between
+bankruptcy-filed companies and the leadership of the company. With these findings in mind, it
+
+                                         5
+is valuable to investigate whether the incorporation of CEO specific variables age and gender
+improve the accuracy of predicting financial failure.
+
+Thirdly, this thesis assesses whether the size of SMEs is a determining factor for the importance
+of the CEO specific variables in the bankruptcy prediction model. As a firm grows larger in
+terms of turnover, the role and tasks of the CEO change. Namely, the CEO becomes less
+involved in the daily operational business. Therefore, it is assumed that the CEO specific
+variables, when included in the model, change in importance as well. Hence, this report
+examines whether the bankruptcy prediction model including CEO variables yields disparities
+in classification power for companies of different sizes.
+
+When analysing the probability of failure for non-listed Swedish SMEs, this thesis connects
+two dimensions, one financial and one non-financial. The informative value derived by the
+present study yields a more extensive assessment of the failure-probability when compared to
+traditional, one-dimensional, bankruptcy prediction models. Moreover, this thesis combines the
+financial ratio variables commonly used in corporate lending, with personal characteristics
+assumed to be used in private lending.
+
+The thesis concludes that Altman and Sabato’s (2007) original model is indeed applicable to
+Swedish SME data. The model’s predictive power is high in reference to identifying failed
+companies. Moreover, the study yields the result that the CEO variables age and gender, when
+added to the model, improve the percent correctly classified companies. Lastly, it cannot be
+confirmed that the CEO variables age and gender increase in importance when the SME in
+terms of turnover is relatively smaller.
+
+Due to these findings, debtholders as well as other external stakeholders such as early stage
+investors, venture capitalists and passive investors are supposed to find the more extensive
+information of value as they now are able to make more informed decisions when infusing
+capital to non-listed SMEs. The study enables stakeholders to discover potential risks and take
+corrective measures before the state of financial failure is realized.
+
+1.3 Limitation of scope
+Bankruptcy prediction models are divided into two categories; accounting-based bankruptcy
+prediction models and market-based bankruptcy prediction models. The accounting-based
+prediction models rely solely on accounting data drawn from the company’s financial
+
+                                         6
+statements, whereas the market-based bankruptcy prediction models also incorporate market
+variables, such as the share price, interest rate and other macroeconomic variables.
+
+Due to the nature of the companies in this study, being private SMEs, market-based variables
+such as share price cannot be applied. Instead, this thesis is based upon Altman and Sabato’s
+(2007) accounting-based bankruptcy prediction model specially developed for SMEs. As this
+model uses input variables from the companies’ financial statements, the prediction for future
+performance is based upon the company’s past performance. Later, a new model is derived by
+incorporating non-financial variables. A motivation for using Altman and Sabato’s logit model
+instead of other accounting-based bankruptcy prediction models is that the ratios are assumed
+to be the most significant when using a dataset concerning Swedish SMEs (Altman and Sabato,
+2007).
+
+It should be noted that the Altman and Sabato model (2007) is solely accounting-based, and
+therefore does not incorporate any macroeconomic variables. Due to the co-movement of the
+macroeconomic environment and the number of bankruptcies in a year, variables capturing the
+macroeconomic conditions are likely to contribute to the model’s overall accuracy rate.
+However, as this study does not seek to find the optimal bankruptcy prediction model, but rather
+aims to investigate whether an accepted accounting-based bankruptcy prediction model applies
+to the Swedish market, as well as whether it can be improved by adding CEO specific variables,
+macroeconomic variables are excluded. Thereto, the lack of data and realistic time-related
+execution are further reasons for the exclusion. Disregarding these external factors does not
+imply that they are viewed as non-value adding, but rather creates opportunities for further
+research within this area.
+
+1.4 Question formulation
+With regards to the above stated purposes, this report answers the following questions:
+
+   - Does the Altman Sabato (2007) bankruptcy prediction model apply when predicting
+       corporate failure for private Swedish small and medium sized companies?
+
+    - Does the incorporation of CEO specific variables improve the classification accuracy of
+       failed private Swedish SMEs?
+
+    - Do the CEO specific variables become more important when assessing failure for
+       smaller SMEs compared to larger?
+
+                                         7
+2. Literature review
+When prognosticating financial failure, accounting-based bankruptcy prediction models have
+gained strong approval since the 1960s. The goal of analysing a company’s financial statements
+is to assess its value. Therefore, a financial statement analysis ensures that all facets relevant to
+the investment decision are identified (Penmann, 1996). The following section outlines
+previous literature on the subject of accounting-based bankruptcy prediction models.
+
+2.1 Univariate analysis
+The pioneering bankruptcy prediction studies from the early 20th century regarding ratio
+analysis are based upon the univariate approach. The univariate approach implies that various
+financial ratios are analysed individually and thereafter, comparisons between failed and non-
+failed firms are made. In a study from 1966, Beaver examines 30 financial ratios to analyse
+their usefulness when predicting failure, where he defines failure as “the inability of a firm to
+pay its financial obligations as they mature” (Beaver, 1966). For his analysis he uses a matched
+sample consisting of 158 paired observations. Beaver acknowledges that the probability of
+failure is smaller for larger asset companies than for smaller asset- and private companies,
+however, his sample is dominated by the former (Beaver, 1966). A conclusion to be drawn from
+the study is that there are a number of accounting ratios that can be used to discriminate between
+failed and non-failed companies. However, the univariate approach is criticized, namely by
+Altman (1968), for being too simplistic.
+
+2.2 Multi-discriminant-analysis
+In 1968, Altman advances Beaver’s findings, by introducing the Z-score to predict the
+probability of corporate bankruptcy (Altman, 1968). The Z-score is based on a multi-
+discriminant-analysis (MDA) and is used to classify an observation into one or another pre-
+established group based upon the observation’s individual characteristics. The benefit of the
+MDA over the univariate approach is that it allows prediction and classification in situations
+where the dependent variable exhibits a qualitative character such as bankrupt and non-
+bankrupt. In particular, the multivariate framework’s primary advantage over the one-
+dimensional ratio analysis when dealing with classification contentions is that this statistical
+approach enables the simultaneous analysis of the entire variable profile (Altman, 1968).
+Furthermore, the Z-score overcomes some of the limitations of the traditional ratio analysis by
+reason that it assesses corporate stability as well as predicts potential corporate failures (Elliot
+& Elliot, 2006).
+
+                                         8
+For his research, Altman uses a sample of 66 listed manufacturing firms that are divided into
+two equally large groups of 33 corporations, which either are classified as bankrupt or non-
+bankrupt. His linear model includes five variables consisting of financial ratios that are based
+on balance sheet and income statement data.
+
+The outcome, known as the Z-score, is compared to a predefined discriminant cut-off value in
+order to classify the observations as bankrupt or non-bankrupt. Corporations with a Z-score
+above the cut-off point of 2.99 are classified as non-bankrupt and firms with a Z-score below
+the cut-off point are classified as bankrupt. Altman concludes that his bankruptcy prediction
+model makes accurate predictions two years prior to the event of bankruptcy, however, the
+accuracy of the model’s predictability declines significantly as the lead time exceeds two years.
+
+Although the MDA approach gained traction among scholars, it also became a victim for
+serious criticism. The main issues with the methodology is that the MDA demands certain
+statistical requirements such as normal the distribution among predictors, and an objective
+matching process. Furthermore, the output from the MDA is considered by some scholars to
+lack intuitive interpretation (Ohlson, 1980).
+
+2.3 The logistic model
+Ohlson is regarded as one of the main critics of the multi-discriminant analysis when used in
+bankruptcy prediction models. As a substitute, he developed a conditional logit model that is
+based upon fewer assumptions and hence is considered superior to the MDA approach (Ohlson,
+1980). Furthermore, the outcome of a logistic regression is a value between 0 and 1, yielding a
+more intuitive interpretation for a dependent variable with a binary outcome.
+
+In his study from 1980, Ohlson develops the O-score using a sample of 105 bankrupt and 2,058
+non-bankrupt U.S. industrial firms over the study-period 1970-1976. He establishes three
+different estimates for predicting bankruptcy within one year, two years and one or two years,
+respectively. The derived model is a nine-factor linear combination of coefficient-weighted
+ratios measuring size, current liquidity and financial structure of the company. The main
+difference between Ohlson’s and Altman’s variables is the number of variables included, where
+Altman uses five, while Ohlson includes seven ratios and two dummy independent variables.
+
+2.4 The probit model
+In a report from 1984, Zmijewski enhances the logistic bankruptcy prediction model by
+introducing the probit model. Similar to the logistic regression, the probit model’s dependent
+
+                                         9
+variables can only take values between 0 and 1. The two methods differ in their assumption of
+the distribution of the error term. In the logit model, error terms are assumed to follow the
+standard logistic distribution, whereas they are assumed to follow a normal distribution in the
+probit model (Wooldridge, 2013).
+
+Zmijewski’s (1984) probit function is based on the ratios 𝑛𝑒𝑡 𝑖𝑛𝑐𝑜𝑚𝑒 / 𝑡𝑜𝑡𝑎𝑙 𝑎𝑠𝑠𝑒𝑡𝑠,
+𝑡𝑜𝑡𝑎𝑙 𝑙𝑖𝑎𝑏𝑖𝑙𝑖𝑡𝑖𝑒𝑠 / 𝑡𝑜𝑡𝑎𝑙 𝑎𝑠𝑠𝑒𝑡𝑠 and current 𝑎𝑠𝑠𝑒𝑡𝑠 / 𝑐𝑢𝑟𝑟𝑒𝑛𝑡 𝑙𝑖𝑎𝑏𝑖𝑙𝑖𝑡𝑖𝑒𝑠. Regardless of the
+model yielding high accuracy rates in the original paper, as well as in the follow-up papers
+(Zmijewski, 1984) (Grice and Dugan, 2001), it has received criticism for the correlation
+between the variables (Shumway, 2001). Moreover, critics comment that ratios are not based
+on theory, but rather on results from prior studies (Grice and Dugan, 2003). However, the latter
+criticism can also be directed to models developed by both Altman (1968) and Ohlson (1980).
+
+Similar to Zmijewski, Skogsvik develops two probit models. His models, however, regard
+Swedish data from the period 1966-1979 and uses a sample consisting of 51 failed and 328 non-
+failed companies. His observations are classified as large cap industrial companies with a head
+count of more than 200 employees or assets of at least 200 million SEK. He defines failed or
+financially failed companies as companies that have gone bankrupt or reached a composition
+agreement, voluntary shut down their primarily production activity or received a substantial
+subsidy by the state (Skogsvik, 1990). Skogsvik’s probit analysis is based upon an extensive
+set of financial ratios that can be categorized into one of the following groups of accounting
+ratios; profitability, cost structure, capital turnover, liquidity, asset structure, financial structure
+and growth (Skogsvik, 1990). The probit analysis results in an outcome value, known as the
+V-score and by using a normal distribution, the V-score is converted into the probability of
+failure. A higher V-score indicates a greater risk of financial failure. The two probit models are
+developed independently, where one of them is based on current costs accounting (CCA) and
+the other on historical cost accounting (HCA). The reasoning behind developing two models is
+to evaluate the models’ respective prediction accuracy and where the latter model is used as a
+reference model. Skogsvik’s findings state that both models yield similar Type I and Type II
+errors, as well as overall performance (Skogsvik, 1990). The HCA model, relying on historical
+information, is therefore considered to be suitable for predicting bankruptcies.
+
+2.5 Bankruptcy prediction models for SMEs
+
+In 1972, Edmister applies an MDA approach to a sample of SMEs over the period of 1954-
+1969 and analyses a set of 19 financial ratios to predict default (Edmister, 1972). Although he
+
+                                        10
+recognizes that only a set of financial ratios should be used when predicting financial default
+for SMEs, he lacks to explain why small firms distinguish themselves from larger, and why
+models for SMEs need adjustments.
+
+Altman and Sabato (2007) capitalize on the lack of quantitative studies of SME defaults, and
+bring Edmister’s work one step further by developing a logistic default prediction model for
+SMEs. They use the Basel 2 definition of SMEs, gathering a sample consisting of 2,010 U.S.
+firms, including 120 default firms, over a sampling period stretching from 1994-2002. Despite
+several scholars recognizing that qualitative information, when added to quantitative financial
+information, can improve the accuracy of bankruptcy prediction models (Lehmann, 2003)
+(Grunet et al, 2004), Altman and Sabato are constrained to solely rely on financial information.
+To construct their logistic model, Altman and Sabato examine a set of financial ratios within
+five accounting ratio categories; leverage, liquidity, profitability, coverage and activity. Five
+financial ratios are selected, predicting SME default in the best manner (Altman and Sabato,
+2007):
+
+𝐿𝑒𝑣𝑒𝑟𝑎𝑔𝑒 = 𝑆ℎ𝑜𝑟𝑡 𝑇𝑒𝑟𝑚 𝐷𝑒𝑏𝑡/ 𝐵𝑜𝑜𝑘 𝑉𝑎𝑙𝑢𝑒 𝑜𝑓 𝐸𝑞𝑢𝑖𝑡𝑦,
+𝐿𝑖𝑞𝑢𝑖𝑑𝑖𝑡𝑦 = 𝐶𝑎𝑠ℎ/ 𝑇𝑜𝑡𝑎𝑙 𝐴𝑠𝑠𝑒𝑡𝑠,
+𝑃𝑟𝑜𝑓𝑖𝑡𝑎𝑏𝑖𝑙𝑖𝑡𝑦 1 = 𝐸𝐵𝐼𝑇𝐷𝐴/ 𝑇𝑜𝑡𝑎𝑙 𝐴𝑠𝑠𝑒𝑡𝑠,
+𝑃𝑟𝑜𝑓𝑖𝑡𝑎𝑏𝑖𝑙𝑖𝑡𝑦 2 = 𝑅𝑒𝑡𝑎𝑖𝑛𝑒𝑑 𝐸𝑎𝑟𝑛𝑖𝑛𝑔𝑠/ 𝑇𝑜𝑡𝑎𝑙 𝐴𝑠𝑠𝑒𝑡𝑠
+𝐶𝑜𝑣𝑒𝑟𝑎𝑔𝑒 = 𝐸𝐵𝐼𝑇𝐷𝐴/ 𝐼𝑛𝑡𝑒𝑟𝑒𝑠𝑡 𝐸𝑥𝑝𝑒𝑛𝑠𝑒𝑠
+
+Altman and Sabato (2007) run two logistic regressions, where the difference lies in whether the
+value of the variables to predict the probability of non-defaulting (KPG) are logged or not. The
+unlogged variable regression, which is the one used in this report, has the following form:
+
+𝐾𝑃𝐺 = + 4.28 + 0.18 ∗ 𝑃𝑟𝑜𝑓𝑖𝑡𝑎𝑏𝑖𝑙𝑖𝑡𝑦 1 − 0.01 ∗ 𝐿𝑒𝑣𝑒𝑟𝑎𝑔𝑒 + 0.08 ∗ 𝑃𝑟𝑜𝑓𝑖𝑡𝑎𝑏𝑖𝑙𝑖𝑡𝑦 2
+              + 0.02 ∗ 𝐿𝑖𝑞𝑢𝑖𝑑𝑖𝑡𝑦 + 0.19 ∗ 𝐶𝑜𝑣𝑒𝑟𝑎𝑔𝑒
+
+Altman and Sabato compare the accuracy ratio (AR) between the two logit models, as well as
+the original Z-score model previously developed by Altman (1968). The cut-off rate is
+arbitrarily set to 30 %. The accuracy ratio, as described by Altman and Sabato (2007), expresses
+the area of the cumulative accuracy profile (CAP) of the model in question versus the CAP of
+a perfect rating model. Altman and Sabato find that the accuracy ratio is the highest for the logit
+model with logged variables (AR = 87 %), in contrast to the logit model with non-logged
+variables (AR = 75 %) and Altman’s Z-score (AR = 68 %). Furthermore, error Type I is reduced
+from 21 % to 12 % when applying the logarithmic transformed variables to the logistic model.
+
+                                        11
+Their study concludes that the performance, in terms of prediction accuracy, is improved when
+applying the logit model with logarithmic variables to the SME sector in contrary to bankruptcy
+prediction models relying upon the statistical technique MDA, such as Altman’s Z-score
+(Altman and Sabato, 2007).
+
+2.6 Non-financial key ratios used for the prediction of financial distress
+Research regarding management behaviour and processes related to business failure and
+bankruptcy is extensive. Managerial incompetence is acknowledged as the most pervasive
+reason for distress and business failures, and deficiencies among management is commonly the
+basis for corporate failure (Altman and Hotchkiss, 2005).
+
+Argenti’s qualitative research (1976) identifies reasons for bankruptcies by studying
+weaknesses among the management and board of directors in financially distressed and
+bankrupt companies. He acknowledges the usefulness of bankruptcy prediction models, such
+as Altman’s Z-score, but argues that these models only analyse the symptoms of failure, and
+not the causes. Argenti’s A-score model suggests that the process of failure follows a
+predictable sequence, beginning with defects, continuing with mistakes and lastly ending with
+the symptoms of failure. In the A-score model, management weaknesses as well as some
+accounting deficiencies such as having no budgetary controls increase the score, and if the total
+score exceeds a certain limit, the result in unsatisfactory. Koponen’s (2003) findings are in line
+with Argenti’s (1976) and conclude that bankruptcy often follows inefficient leadership along
+with uncontrolled growth conflicts and unprofitable investments.
+
+Despite the quantity of qualitative research analysing the relationship between management and
+financial distress, non-financial ratios are seldomly included in the quantitative bankruptcy
+prediction models (Pervan and Kuvek, 2013). However, Grunert et. al. (2005) shows that when
+using data from German banks, the combination of financial and non-financial data results in
+the highest accuracy of predicted bankruptcies. The non-financial variables used by Grunert et.
+al. are factors regarding market position and management quality, as judged by the German
+banks.
+
+2.7 Non-financial information included in models for SMEs
+In a 2008 study, Altman, Sabato and Wilson update the bankruptcy prediction model previously
+developed by Altman and Sabato (2007) by applying the logit model to the UK market.
+Furthermore, they add non-financial and compliance information to the original model (Altman
+et al., 2008). To account for the fact that many SMEs and non-listed companies only provide
+
+                                        12
+limited financial information, they develop a separate model for these firms. The study is based
+on UK data covering of a sample of 5.8 million sets of accounts of non-listed firms during the
+period 2000-2007, out of which approximately 66,000 companies are classified as failed. Due
+to the geographical inconsistency of the financial failure definition, they solely regard small
+business firms that in the time-period 2000-2007 have entered into liquidation, administration
+or receivership (Altman et al., 2008). By exploiting non-financial information such as
+accounting, event, audit and firm specific characteristic data, the accuracy of predicting the
+probability of corporate failure for non-listed firms is improved.
+
+Two models are used in their study; SME1 model is used when full accounting data is accessed
+and SME2 model used when only limited accounting data is accessed. The SME1 model, based
+upon Altman and Sabato’s (2007) logistic model for U.S. SMEs, uses five financial ratios for
+profitability, leverage, liquidity, coverage and activity. The SME2 model, used for companies
+reporting abridged accounts, analyses the impact of the modified balance sheet information as
+well as lack of profit and turnover information. As the focus of the study regards the value
+added of non-financial information, event data such as country court judgements, audited
+accounts, cash flow statements, subsidiaries, late filing days, audit report judgements, age of
+firms and sector information are used. The non-financial information, when added to the
+original model developed by Altman and Sabato (2007), significantly improves the
+classification accuracy by 10 % (Altman et al., 2008).
+
+The SME2 model regards a sample of 3,422,042 non-failed firms and 40,577 failed firms.
+Adding the non-financial information to this model, all the model’s variables are statistically
+significant and remain their signs. Prediction accuracy is improved by 8 % comparing to the
+same sample when non-financial information is excluded. Overall, including non-financial
+information to the logistic model originally established by Altman and Sabato (2007) improves
+the prediction accuracy up to 13 %. In the case of non-listed SMEs, non-financial information
+is proven to be even more value adding as these firms only provide limited financial
+information.
+
+2.8 Previous theses
+Multiple academic theses find the topic of bankruptcy prediction appealing and hence, both the
+Z-score and the O-score, or modified versions, are used to test the models’ predictive power in
+various industries and geographical markets.
+
+                                        13
+Dalberg and Thörnqvist (2012) test whether Altman’s Z-score is applicable for Swedish
+companies, by using a dataset of companies filing for bankruptcy in 2011 and a control group
+based on a random sample of companies not filing for bankruptcy during the same year. Less
+than one third of all bankrupt companies are correctly classified as failed five or three years in
+advance. Hence, they conclude that the Altman Z-score is not applicable for classifying
+bankruptcies among Swedish companies. Rodriguez and Malm (2015), reaches the same
+conclusion when using the Z-score for a dataset of surviving and bankrupt Swedish firms in
+2014.
+
+Alyhr and Holmberg (2012) examine whether the Ohlson’s O-score can be applied to Swedish
+data for listed companies. Their sample includes 533 firms, from which a focus group consisting
+of 48 firms of financial distress is identified. Thereto, they assess whether the incorporation of
+data from audit reports improves the predictability of corporate distress (Alyhr and Holmberg,
+2012). Alyhr and Holmberg conclude that the model can be used on Swedish firms, and that
+embodying the audit report information significantly improves the prediction of the probability
+financial distress.
+
+2.9 Literature summary
+
+The following table summarizes the most relevant previous literature and highlights their main
+contributions to academic research by commenting on each study’s benefits and
+disadvantages.
+
+                                        14
+                    TABLE 1
+                                    Literature summary
+
+                                         Sample Size
+                Statistical     Period of      (Failed/
+Author        technique       study     Non-failed) Comments
+
+Beaver         Univariate       1954-        79/79 - Simple approach
+(1966)           analysis         1964                     - Ratios analysed individually
+
+Altman           Multi-         1946-         33/33 - Widely used among scholars
+(1968)         discriminant       1965                     - Profile ratio analysis
+                  analysis                                    - Classification in one of two groups is
+                                                                   possible when the dependent variable is
+                                                                       qualitative
+                                                           - Many assumptions
+
+Ohlson       Logistic model 1970-       105/2,058 - Intuitive score between 0 and 1
+(1980)                           1976                     - Less restrictive assumptions
+
+Zmijewski     Probit model 1972-        40/800 - External factors included
+(1984)                           1978                     - Variables correlated
+
+Skogsvik      Probit model 1966-        51/328 - Historical accounting information is
+1990                          1979                       suitable when predicting bankruptcy
+
+              Logistic model     1994-       120/2,010 - Specific model developed for SMEs
+Altman
+              with unlogged      2002                     - Model based upon easily obtainable
+and Sabato
+                and logged                                     accounting information
+(2007)
+                 variables                                   - Non-financial information not included
+
+Altman et.                          2000-        66,000/      - Models account for financial and non-
+             Logistic model
+al. (2008)                     2007       5,734,000         financial availability
+
+Grunet et.     Probit analysis 1992-       120 failed     - Combines financial and non-financial
+al. (2005)                         2003         firms           ratios
+                                                             - Management quality is assessed and
+                                                                   incorporated into the model
+
+                                       15
+3. Hypothesis
+
+In this thesis, the applicability of accounting-based bankruptcy prediction models is
+investigated for Swedish data. Moreover, non-financial variables are added to enhance the
+original model developed by Altman and Sabato (2007). The original model is expected to
+perform well when applied to the present data consisting of private Swedish SMEs. This
+hypothesis is based upon the assumption that Altman and Sabato’s model, uniquely developed
+for SMEs, is universal and incorporates the most relevant financial ratios to analyse SMEs’
+creditworthiness. Moreover, it is proven that the model can be applied to not only US but also
+UK SME data.
+
+Hypothesis 1: The original Altman and Sabato (2007) bankruptcy prediction model performs
+well in terms of classification accuracy when applied to private Swedish SMEs
+
+The variables used in bankruptcy prediction models are almost exclusively financial metrics, as
+described in the previous literature section. The idea that financial metrics are good proxies for
+predicting bankruptcy is generally accepted. Metrics measuring performance, liquidity and
+leverage are widely used, whereas non-financial metrics seldom are included. Despite the
+existing knowledge on correlation between firm specific characteristics and the probability of
+bankruptcy, these non-financial metrics often lack presence in quantitative bankruptcy
+prediction models.
+
+Altman and Hotchkiss (2005) states that one of the most common reasons for corporate failure
+is managerial incompetence. In this study the issue that bankruptcy prediction models rarely
+include non-financial variables is addressed by incorporating variables measuring the CEO
+characteristics gender and age. It can be assumed that the CEO’s accumulated industry
+experience is an important predictor for a company’s survival. Due to the non-available data
+regarding the CEO’s industry experience, age will be used as a proxy for experience.
+Furthermore, the incorporation of the variable CEO age is in line with research conducted by
+Platt and Platt (2012), where they find that the CEO of non-bankrupt boards are older, as well
+as the age of the average director on the board.
+
+The debate about the relationship between gender and financial failure is widespread across the
+society. Research yields contrasting results, ranging from that a higher proportion of women in
+top management jobs tends to have positive effects on firm performance (Smith et. al, 2006),
+to the result that there is no relationship between women’s presence on boards and company
+performance (Haslam et. al., 2009). Furthermore, Barber and Odean (2001) show that men trade
+
+                                        16
+more excessively than women and hence are more confident that their investment will result in
+a profit.
+
+This study does not aim to determine which characteristics a CEO should possess in order to
+reduce the probability of bankruptcy. Rather, the aim is to analyse whether the inclusion of the
+CEO age and gender variables contribute to the model by improving classification accuracy.
+Moreover, the two variables CEO age and gender are believed to indicate that creditors view
+the CEO, rather than solely the corporate structure, as a deciding factor when assessing whether
+to grant a loan to a private SME. The second hypothesis is stated as:
+
+Hypothesis 2: The incorporation of CEO specific variables improve the bankruptcy prediction
+for failed companies.
+
+The third hypothesis assumes that the executive management committee, most importantly the
+CEO, plays a more prominent role in smaller companies. As firms grow larger, the corporate
+survival becomes dependent on a more diverse range of factors and individuals, such the middle
+management. Hence, the CEO is expected to become less important for the operational
+performance and firm survival. Furthermore, the hypothesis is based on the assumption that
+creditors, when assessing whether to lend to a SME close to financial failure, view these
+corporate loans similar to a personal loan to the CEO, especially when the company is small.
+
+Hypothesis 3: Including CEO specific variables in the bankruptcy prediction model is more
+important for the first quartile of SMEs based on turnover
+
+                                        17
+4. Method
+
+The model is derived from Altman and Sabato’s theory (2007) concerning SME bankruptcy
+predictability. However, three main differences are identified. Firstly, a distinctive difference
+between Altman and Sabato’s study (2007) and this thesis regards the underlying data; this
+thesis is based upon sample data concerning Swedish non-listed companies, more specifically
+SMEs. Secondly, the present study assesses the probability of default, whereas the study
+undertaken by Altman and Sabato (2007) assess the probability of non-default. Furthermore,
+Altman and Sabato use both non-logged and logged predictor variables in their respective
+models. In this thesis, the variables are solely non-logged. The reasoning behind using non-
+logged predictors is that the sample otherwise would be reduced by approximately two thirds.
+From a statistical point of view, there is no requirement that the independent variables in a
+logistic model need to be normally distributed and therefore, using the model with non-logged
+variables is considered to be superior in this context. Thirdly, the thesis tests whether the
+inclusion of the CEO-variables age and gender improve the classification power for failed
+companies in the logit model.
+
+4.1 Sample selection
+
+Population data for Swedish non-listed companies is obtained using the database Retriever
+Business. The population includes both failed and non-failed companies over the study period
+2008-2018.
+
+The sampling process counts three rounds, where each round sets up information requirements.
+The first round determines the outline for the population data, where the following restrictions
+are made directly on the Retriever database:
+
+    I. The company needs to be a Swedish limited company and possess a Swedish
+       organization number.
+    II. The company is, or has been active, during the past ten years.
+    III. The company is not listed on a Swedish exchange.
+   IV. The company needs to have a turnover of between 10 million and 500 million SEK
+       and a staff head count of more than 10 employees.
+
+Requirements I - III are in line with the research questions. Requirement IV is the first step in
+ensuring that the population solely concerns SMEs. Following Altman and Sabato’s theory
+(2007) and the derived hypothesis concerning non-listed companies, it is natural to limit the
+
+                                        18
+data to SMEs. For the following thesis, the determining factors for identifying a SME are a
+turnover of between 20 million to 500 million SEK and a head staff count of more than ten
+employees (EU recommendation 2003/361). Due to the Retriever database settings, companies
+with a turnover of 10 million to 20 million SEK have later been excluded in STATA. Excluding
+micro companies shelters the sample from being biased towards one-man-companies, as these
+usually possess different characteristics than SMEs. It should be noted that using turnover as a
+determining factor, rather than total assets, can result in observations with total assets exceeding
+the EU SME definition limit being included in the sample. For this report however, this aspect
+is noted, but not addressed, since the EU definition for SMEs states that either turnover or total
+assets are sufficient as determining factor (EU recommendation 2003/361).
+
+The second round in deriving the sample implies that a minimum of financial and non-financial
+information needs to be obtainable for each observation. Table 2 summarizes the information
+that is required from the observations in the second stage of sampling process:
+
+                        TABLE 2
+                              Observation information required
+
+             Financial information Non-financial information
+                I. Turnover I. Bankruptcy status
+             II. EBITDA II. Age of CEO
+               III. Interest costs              III. Gender of CEO
+             IV. Cash                    IV. Firm industry
+              V. Total assets
+             VI. Retained earnings
+            VII. Book value of equity
+            VIII. Short-term debt
+
+The financial-information requirements refer to the financial figures that are needed to calculate
+the ratios used in Altman and Sabato’s logit model (Altman and Sabato, 2007). The study period
+stretches from 2008-2017. The non-financial information-requirements refer to the information
+needed for the dependent variable, as well as for the CEO-variables added to the logit model.
+
+In the third round of the sampling process, three final requirements are formulated:
+
+    I. The firm should not be dissolved through a merger.
+    II. The firm should not have been involved in a liquidation.
+    III. The firm should not be operating within the financial sector.
+
+The first requirement is included since the objective of the thesis is to predict the likelihood of
+financial failure. Firms involved in mergers are excluded from the sample since a merger not
+
+                                        19
+necessarily is related to the financial state of the target company. Strategic reasons and
+economies of scope or scale could provide a solid motivation a merge. Therefore, including
+companies involved in mergers would add unnecessary uncertainties to the analysis. The second
+requirement is put in place by reason that it remains unknown whether liquidation refers to the
+company being compulsory liquidated or not, as well as the reason that a compulsory
+liquidation might refer to a breach of compliance with regulations rather than financial
+instability. The third requirement concerns firms operating in the financial sector. These firms
+are excluded as they might contribute to biased results since financial firms have a different
+capital structure, face a different bankruptcy environment and has to adjust to a different set of
+regulations.
+
+After the three rounds described above, 15,885 observations are compiled in the final sample.
+
+                        TABLE 3
+                              Data summary for derived sample
+
+                                                                                                                                                     th                  th
+                                          Standard                           10         90
+                       N Mean    deviation Min Max    percentile  percentile
+    Turnover 15659 107601 102699 20003 499802 25262 260911
+     EBITDA 15659 8458 22099 (755920) 374915 (678) 22694
+     Interest costs 15659 860 6317 0 349000 3 992
+     Cash 15659 8231 26990 (2659) 1342074 1 18597
+     Total assets 15659 110561 645224 342 55479280 9222 174358
+     Retained earnings 15659 22948 281217 (2089886) 27699024 14 39009
+   Surviving firmsEquity 15659 37630 337320 (753639) 28700716 1135 59129
+     Short term debt 15659 3628 44592 (3141) 3535406 0 5100
+     Turnover 226 91214 97623 20021 486442 22668 218823
+      EBITDA 226 (2716) 15982 (154896) 33106 (12731) 4492
+     Interest costs 226 1441 4081 0 46078 29 3037
+     Cash 226 1663 4127 0 25435 1 3500
+     Total assets 226 56540 128009 2375 1240915 6741 125706
+      Retained earnings 226 (3991) 53120 (468942) 110401 (3825) 10245
+   Failed firms
+     Equity 226 4415 15588 (42997) 130208 (3045) 12610
+     Short term debt 226 6192 23707 0 242441 0 12948
+     Turnover 15885 107368 102644 20003 499802 25225 260877
+     EBITDA 15885 8299 22063 (755920) 374915 (865) 22430
+     Interest costs 15885 868 6291 0 349000 3 1024
+     Cash 15885 8137 26813 (2659) 1342074 1 18486
+     Total assets 15885 109793 640830 342 55479280 9181 173830
+   All firmsRetained earnings 15885 22565 279299 (2089886) 27699024 12 38294
+     Equity 15885 37158 334940 (753639) 28700716 1093 58502
+     Short term debt 15885 3664 44365 (3141) 3535406 0 5253
+
+                                                                                      th                    th
+The table shows number of observations, mean, standard deviation, min, max, 10  percentile and 90  percentile
+for all financial observations included in the in- and out of sample
+.
+
+                                        20
+4.1.1 Classification of failed firms
+
+The final step in the sampling process regards the classification of failed and non-failed
+companies. When identifying the failed companies, the classification derives from the
+company’s status and is extracted from the database. The reasoning behind setting up an own
+definition for failed firms is based on the fact that the paper of Altman and Sabato (2007) does
+not yield a clear-cut definition for how they define financial distress. Moreover, other
+bankruptcy prediction models, focus either on solely defaulting companies, failed companies,
+companies in financial distress or some combination of the different states.
+
+For this thesis, failed companies are subject to at least one of the following status: bankruptcy
+initiated, bankruptcy terminated, bankruptcy filing, or bankruptcy terminated with surplus. The
+frequency and share of observations within each sub-category are summarized in Table 4.
+
+                        TABLE 4
+                                           Distribution of failed firms
+
+                                                                   Freq. Percentage
+          Bankruptcy initiated (Konkurs inledd) 146 64.60%
+         Bankruptcy terminated (Konkurs avslutad) 78 34.51%
+         Bankruptcy filing (Konkursansökan) 1 0.44%
+         Bankruptcy terminated with surplus                       1 0.44%
+           (Konkurs avslutad med överskott)
+         Total 226 100%
+
+          This table shows the failed firms included in the sample, distributed over the type of
+            classification that has resulted in the firm being considered as failed.
+
+4.1.2 Out of sample
+
+To assess the classification accuracy of the estimated model, an out of sample of 4,000
+observations is extracted from the sample. This is made through the “random” selection process
+runiform in STATA. Thereafter the sample is split into two datasets with the out of sample
+counting 3,725 complete observations, while the remaining 12,160 observations without
+missing values are used to regress the models.
+
+4.1.3 Data examination
+
+The requirement that all sample observations need to provide both financial- and CEO specific
+information implies a limitation per se. It is questioned whether the reporting or lack of
+reporting is a signal for failure itself.
+
+                                        21
+Moreover, restrictions in available data concerning past CEOs lead to a bias in the analysis. For
+non-failed companies, the latest available financial report, either from 2016 or 2017, is used for
+the financial ratio calculations. For failed companies, however, the year of the used financial
+report varies with the year of failure since failed companies stop reporting by the time they
+enter into the state of being failed. In addition, it is only possible to obtain the CEO specific
+information for the most recent CEO. Hence, when setting up the model, financial reports for
+non-failed companies regard the reporting period 2016 or, if available, 2017 and for failed
+companies, the reporting period varies over the years 2008-2017, depending on when the firm
+submitted its last report prior to reaching the failed state.
+
+An alternative way to handle the restriction of not being able to use past CEO data would be to
+assume that the CEOs of a company have similar characteristics. This would allow the use of
+financial reports for surviving firms over the same period as the failed firms, while the
+characteristics for the current CEO applied to older periods. However, this latter assumption
+contributes to greater uncertainty in the analysis than the prior of using different reporting
+periods.
+
+4.2 Statistical methods
+
+In order to fulfil the purpose of this report, a set of statistical regressions and tests need to be
+performed. Firstly, the full model including all financial variables in the Altman and Sabato’s
+SME model as well as the two CEO-variables age and gender are analysed through a logistic
+regression analysis. Thereafter, the percent correctly predicted cases are calculated by using the
+regressed model on the out of sample.
+
+Secondly, the percent of correctly classified observations given by the full model is compared
+with the percent correctly classified observations given by using a regressed model solely based
+on Altman and Sabato’s variables, as well as by using the coefficients estimated by Altman and
+Sabato for the US sample.
+
+Thirdly, some emphasis is put on validating and testing the statistical properties used in the
+logistic regression analysis. These include the likelihood ratio test, the pseudo R-square
+measure, correlations as well as the statistical significance of each independent variable.
+
+4.2.1 Logistic regression
+
+In the context of bankruptcy prediction, the logistic regression has several advantages in
+comparison to the other commonly applied econometric methodology, the Multivariate
+
+                                        22
+Discriminant Analysis (MDA). The disadvantages with the MDA, as described by Ohlson
+(1980) can be summarized as:
+
+   - The MDA demands certain statistical requirements on the distribution of predictors.
+       One of these is the requirement of normal distribution among the predictors. This makes
+       dummy independent variables difficult to use.
+    - Using the MDA model, the output is a score that lacks intuitive interpretation. It is
+        essentially an ordinal ranking device.
+    - The matching process typically used in MDA tends to be somewhat subjective. The
+       variables which matching is based upon should be included as predictors rather than
+        solely for the purpose of matching.
+
+Due to the above shortcomings and the advantages of the logistic model, the latter is selected
+for this thesis. Moreover, the choice of model originates in Altman and Sabato’s methodological
+approach.
+
+In a logistic regression, the outcome of the dependent variable is either 0 or 1, and in contrast
+to a linear regression, the change in the estimated parameter does not explain a one-unit change
+in the dependent variable. Instead, the estimates in a logistic regression explain how much the
+natural logarithm of the odds change when the independent variable changes by one unit. This
+type of regression works well with the binary outcome of failed or non-failed.
+
+The odds favouring Y=1 can be described as:
+
+                                             𝑃(𝑌 = 1)
+                            𝜑(𝑌 = 1) =
+                                        1 − 𝑃(𝑌 = 1)
+To produce a linear function, the logit is calculated by taking the natural logarithm of the
+odds:
+
+                                                                     𝑃
+                                  𝐿 = 𝑙𝑛𝜑 = 𝑙𝑛
+                                          1 − 𝑃
+The equation of a logistic model can be written as
+
+                           𝐿𝑖 = 𝛽0 + 𝛽1𝑋1𝑖 + 𝛽2𝑋2𝑖+. . . +𝛽𝑘−1𝑋𝑘−1𝑖
+
+where the logit (𝐿) is a linear function of the 𝑋-variables and 𝑘 is the number of parameters in
+the model. The logit therefore shows the change in the natural logarithm of the odds for 𝑌 = 1
+for a change in the independent variables.
+
+                                        23
+4.2.2 The Wald test and the likelihood ratio test
+A commonly used test to determine the goodness-of-fit between two models is the Wald test.
+The statistic is calculated as:
+                                                                                           𝛽𝑖
+                                          𝑧𝑖 =
+                                                               𝑆𝐸(𝛽𝑖)
+
+The Wald test is similar to the t-statistic in a linear regression, but it follows a standard normal
+distribution, while the square of the statistic follows a chi-squared distribution (Hosmer et. al.,
+2013). One advantage of using the Wald test is that it approximates the likelihood ratio test, but
+only requires the full model to perform the test. However, when the coefficients are large, the
+standard error is inflated, and lead to an increased chance of an error Type II (Mehmetoglu and
+Jakobsen, 2017).
+
+The likelihood ratio test is used to test differences between two nested models. It is commonly
+used when evaluating the difference between two models where one of the models is nested in
+the other. Hence, the likelihood ratio test evaluates whether constraining one or more of the
+variables in the full model to zero will lead to a significantly reduced fit of the model
+(Wooldridge, 2013). The test is therefore used in this report to see whether including the
+variables for CEO age and gender significantly improve the model.
+
+When performing the likelihood ratio test, the log likelihoods of the two models are compared,
+and thereafter it is tested whether the difference received is statistically significant in order to
+reject the null model. The test statistic is calculated as:
+
+                 𝐿𝑅 = −2𝑙𝑛(𝐿(𝑚1))/𝐿(𝑚2)) = 2(𝑙𝑛𝐿(𝑚2) − 𝑙𝑛𝐿(𝑚1)),
+
+where 𝐿(𝑚𝑖) is the likelihood for model i. The statistic derived is distributed through a chi-
+square distribution and its degrees of freedom equals the difference of the degrees between the
+two models.
+
+4.2.3 Psuedo R-square and McFadden R-squared
+
+                       2
+In a linear regression, 𝑅  measures the explained sums of squares compared to the total sums
+of squares and is often used to measure how well the model fits the outcomes. However, when
+
+                                  2
+using a nonlinear regression, the 𝑅  measure cannot be employed. Instead, the goodness-of-fit
+for logistic models is based on maximum likelihood estimates which is estimated through an
+
+                                                                  2
+iterative process. Several measures are constructed to mimic the 𝑅  in order to measure the
+explanatory power of the variables (Wooldridge, 2013).
+
+                                        24
+                ̃ 2                                                    2
+McFadden’s 𝑅   is one of the most commonly used pseudo 𝑅  measures and is included in the
+output when performing a logistic regression in STATA. It is computed as;
+
+                                              ̃  2
+                                 𝑅   = 1 − 𝐿𝑛(𝐵)/𝐿𝑛(𝑦),
+
+where 𝐿𝑛(𝐵) denotes the maximized or fitted log-likelihood value, while 𝐿𝑛(𝑦) denotes the
+log likelihood value given by an intercept-only model. Hence, the ratio of the two likelihoods
+suggests how much the model including predictors improves over the model only containing
+the intercept.
+
+4.2.4 Classification measures
+
+In order to validate the models, their respective classification accuracies are examined. These
+measures display how well a model identifies an observation according to its class, being failed
+or non-failed. The classification test is a variation to the more commonly known goodness-of-
+fit measure (Cameron and Trivedi, 2010). It is based on the distribution between four categories
+and the calculation of percentage correctly classified observations. The analysis quantifies the
+classification accuracy of the logit model when discriminating between two predefined states;
+failed and non-failed. The model’s classification accuracy is measured by its ability to correctly
+classify an observation as failed (𝑦 = 1) or non-failed (𝑦 = 0) (Cameron and Trivedi, 2010).
+The following four classification options are possible:
+
+   - True positive: The company is classified as failed when it actually is failed.
+    - False positive: The company is classified as failed when it is non-failed.
+    - True negative: The company is classified as non-failed when it actually is non-failed.
+    - False negative: The company is classified as non-failed when it is failed.
+
+The true positive rate (TPR) is called sensitivity, and is defined as the fraction of observations
+that are correctly classified as failed in relation to all observations which are classified as failed:
+
+                                                                  𝑇𝑟𝑢𝑒 𝑝𝑜𝑠𝑖𝑡𝑖𝑣𝑒
+                     𝑆𝑒𝑛𝑠𝑖𝑡𝑖𝑣𝑖𝑡𝑦 (𝑇𝑃𝑅):
+                                          𝑇𝑟𝑢𝑒 𝑝𝑜𝑠𝑖𝑡𝑖𝑣𝑒 + 𝐹𝑎𝑙𝑠𝑒 𝑁𝑒𝑔𝑎𝑡𝑖𝑣𝑒
+
+The true negative rate (TNR) is called specificity and is defined as the fraction of observations
+that are correctly classified as non-failed in relation to all observations classified as non-failed.
+
+                                                                 𝑇𝑟𝑢𝑒 𝑁𝑒𝑔𝑎𝑡𝑖𝑣𝑒
+                𝑆𝑝𝑒𝑐𝑖𝑓𝑖𝑐𝑖𝑡𝑦 (𝑇𝑁𝑅) =
+                                           𝑇𝑟𝑢𝑒 𝑁𝑒𝑔𝑎𝑡𝑖𝑣𝑒 + 𝐹𝑎𝑙𝑠𝑒 𝑃𝑜𝑠𝑖𝑡𝑖𝑣𝑒
+
+                                        25
+Both the false positive rate (FPR) and the false negative rate (FNR) are referred to as
+classification error rates. The false positives are more commonly known as error Type I and the
+false negatives as error Type II. The better a model’s predicted outcomes fit actual outcomes,
+the lower the classification error rates.
+
+4.2.5 Receiver operating characteristic and area under the curve
+
+The receiver operating characteristic (ROC) analysis builds on the above discussed
+classification measures. The ROC curve visualizes a model’s classification performance
+(Fawcett, 2006). Moreover, it illustrates the trade-off between sensitivity on the y-axis and 1 –
+specificity on the x-axis. The greater the area under the curve, meaning that the ROC-curve is
+flexed towards the upper left corner, the better the average classification accuracy. This yields
+a situation in which the model achieves high sensitivity and specificity percentages. If all
+observations are correctly classified, both the sensitivity and specificity measures would
+correspond to 100 %.
+
+The ROC diagram illustrates, along with the ROC-curve, a diagonal line that corresponds to
+the outcome of randomly guessing whether the observations belong to one or the other
+predefined groups. Any point above the diagonal line indicates that the model generates a higher
+classification ratio than randomly guessing. The greater the difference between the ROC-curve
+and the diagonal line, the better the classification accuracy and the greater the area under the
+curve. More precisely, the area under the ROC-curve (AUC) is a measure for the model’s ability
+to correctly classify an observation as failed or non-failed.
+
+The benefit of utilizing AUC rates as a measure for classification accuracy is that the rate is
+comparable. Hence, it is possible to make statements regarding which model is better suited to
+make binary classifications. In the context of this thesis, the AUC rate for Model A, being the
+revised logit model including CEO characteristics, is compared to, among other, the rate for
+Model B, the Altman and Sabato’s original logit model (2007). By comparing the areas under
+the curves for the logit models with and without CEO-characteristics, area differences have
+been identified. The results from this analysis are further discussed in section 5.
+
+                                        26
+5. Results and analysis
+The variables in the logistic regressions are a linear combination of Altman and Sabato’s
+financial ratios and the CEO-variables age and gender and are calculated as:
+
+𝐹𝑎𝑖𝑙𝑒𝑑 = 𝑉𝑎𝑙𝑢𝑒 1 𝑖𝑓 𝑓𝑖𝑟𝑚 𝑓𝑎𝑖𝑙𝑒𝑑 𝑎𝑛𝑑 0 𝑖𝑓 𝑠𝑢𝑟𝑣𝑖𝑣𝑖𝑛𝑔
+𝐿𝑒𝑣𝑒𝑟𝑎𝑔𝑒 = 𝑆ℎ𝑜𝑟𝑡 𝑡𝑒𝑟𝑚 𝑑𝑒𝑏𝑡 / 𝐸𝑞𝑢𝑖𝑡𝑦
+𝐿𝑖𝑞𝑢𝑖𝑑𝑖𝑡𝑦 = 𝐶𝑎𝑠ℎ / 𝑇𝑜𝑡𝑎𝑙 𝑎𝑠𝑠𝑒𝑡𝑠
+𝑃𝑟𝑜𝑓𝑖𝑡𝑎𝑏𝑖𝑙𝑖𝑡𝑦 1 = 𝐸𝐵𝐼𝑇𝐷𝐴 / 𝑇𝑜𝑡𝑎𝑙 𝑎𝑠𝑠𝑒𝑡𝑠
+𝑃𝑟𝑜𝑓𝑖𝑡𝑎𝑏𝑖𝑙𝑖𝑡𝑦 2 = 𝑅𝑒𝑡𝑎𝑖𝑛𝑒𝑑 𝑒𝑎𝑟𝑛𝑖𝑛𝑔𝑠 / 𝑇𝑜𝑡𝑎𝑙 𝑎𝑠𝑠𝑒𝑡𝑠
+𝐶𝑜𝑣𝑒𝑟𝑎𝑔𝑒 = 𝐸𝐵𝐼𝑇𝐷𝐴 / 𝐼𝑛𝑡𝑒𝑟𝑒𝑠𝑡 𝑐𝑜𝑠𝑡𝑠
+𝐶𝐸𝑂 𝑔𝑒𝑛𝑑𝑒𝑟 = 𝑉𝑎𝑙𝑢𝑒 1 𝑓𝑜𝑟 𝑚𝑎𝑙𝑒 𝑎𝑛𝑑 0 𝑓𝑜𝑟 𝑓𝑒𝑚𝑎𝑙𝑒
+𝐶𝐸𝑂 𝑎𝑔𝑒 1 = 𝑉𝑎𝑙𝑢𝑒 1 𝑖𝑓 𝐶𝐸𝑂 𝑖𝑠 40 𝑦𝑒𝑎𝑟𝑠 𝑜𝑙𝑑 𝑜𝑟 𝑦𝑜𝑢𝑛𝑔𝑒𝑟, 0 𝑜𝑡ℎ𝑒𝑟𝑤𝑖𝑠𝑒
+𝐶𝐸𝑂 𝑎𝑔𝑒 2 = 𝑉𝑎𝑙𝑢𝑒 1 𝑖𝑓 𝐶𝐸𝑂 𝑖𝑠 𝑜𝑣𝑒𝑟 40 𝑏𝑢𝑡 𝑙𝑒𝑠𝑠 𝑡ℎ𝑎𝑛 𝑜𝑟 𝑒𝑞𝑢𝑎𝑙 𝑡𝑜 50 𝑦𝑒𝑎𝑟𝑠 𝑜𝑙𝑑, 0 𝑜𝑡ℎ𝑒𝑟𝑤𝑖𝑠𝑒
+𝐶𝐸𝑂 𝑎𝑔𝑒 3 = 𝑉𝑎𝑙𝑢𝑒 1 𝑖𝑓 𝐶𝐸𝑂 𝑖𝑠 𝑜𝑣𝑒𝑟 50 𝑏𝑢𝑡 𝑙𝑒𝑠𝑠 𝑡ℎ𝑎𝑛 𝑜𝑟 𝑒𝑞𝑢𝑎𝑙 𝑡𝑜 60 𝑦𝑒𝑎𝑟𝑠 𝑜𝑙𝑑, 0 𝑜𝑡ℎ𝑒𝑟𝑤𝑖𝑠𝑒
+𝐶𝐸𝑂 𝑎𝑔𝑒 4 = 𝑉𝑎𝑙𝑢𝑒 1 𝑖𝑓 𝐶𝐸𝑂 𝑖𝑠 𝑜𝑣𝑒𝑟 60 𝑦𝑒𝑎𝑟𝑠 𝑜𝑙𝑑, 0 𝑜𝑡ℎ𝑒𝑟𝑤𝑖𝑠𝑒
+
+To answer the hypotheses, four models are developed and discussed in the following section.
+The models are described as;
+
+𝑀𝑜𝑑𝑒𝑙 𝐴:
+𝐹𝑎𝑖𝑙𝑒𝑑 = 𝛽1 ∗ 𝐿𝑒𝑣𝑒𝑟𝑎𝑔𝑒 + 𝛽2 ∗ 𝐿𝑖𝑞𝑢𝑖𝑑𝑖𝑡𝑦 + 𝛽3 ∗ 𝑃𝑟𝑜𝑓𝑖𝑡𝑎𝑏𝑖𝑙𝑖𝑡𝑦 1 + 𝛽4 ∗ 𝑃𝑟𝑜𝑓𝑖𝑡𝑎𝑏𝑖𝑙𝑖𝑡𝑦 2 +
+𝛽5 ∗ 𝐶𝑜𝑣𝑒𝑟𝑎𝑔𝑒 + 𝛽6 ∗ 𝐶𝐸𝑂 𝑔𝑒𝑛𝑑𝑒𝑟 + 𝛽7 ∗ 𝐶𝐸𝑂 𝑎𝑔𝑒 1 + 𝛽8 ∗ 𝐶𝐸𝑂 𝑎𝑔𝑒 2 + 𝛽9 ∗ 𝐶𝐸𝑂 𝑎𝑔𝑒 3
+
+𝑀𝑜𝑑𝑒𝑙 𝐵 / 1:
+𝐹𝑎𝑖𝑙𝑒𝑑 = 𝛽1 ∗ 𝐿𝑒𝑣𝑒𝑟𝑎𝑔𝑒 + 𝛽2 ∗ 𝐿𝑖𝑞𝑢𝑖𝑑𝑖𝑡𝑦 + 𝛽3 ∗ 𝑃𝑟𝑜𝑓𝑖𝑡𝑎𝑏𝑖𝑙𝑖𝑡𝑦 1 + 𝛽4 ∗ 𝑃𝑟𝑜𝑓𝑖𝑡𝑎𝑏𝑖𝑙𝑖𝑡𝑦 2 +
+𝛽5 ∗ 𝐶𝑜𝑣𝑒𝑟𝑎𝑔𝑒
+
+𝑀𝑜𝑑𝑒𝑙 𝐶:
+𝐹𝑎𝑖𝑙𝑒𝑑 = 𝛽1 ∗ 𝐿𝑖𝑞𝑢𝑖𝑑𝑖𝑡𝑦 + 𝛽2 ∗ 𝑃𝑟𝑜𝑓𝑖𝑡𝑎𝑏𝑖𝑙𝑖𝑡𝑦 1 + 𝛽3 ∗ 𝑃𝑟𝑜𝑓𝑖𝑡𝑎𝑏𝑖𝑙𝑖𝑡𝑦 2 +
+𝛽4 ∗ 𝐶𝑜𝑣𝑒𝑟𝑎𝑔𝑒 + 𝛽5 ∗ 𝐶𝐸𝑂 𝑔𝑒𝑛𝑑𝑒𝑟 + 𝛽6 ∗ 𝐶𝐸𝑂 𝑎𝑔𝑒 1 + 𝛽7 ∗ 𝐶𝐸𝑂 𝑎𝑔𝑒 2 + 𝛽8 ∗ 𝐶𝐸𝑂 𝑎𝑔𝑒 3
+
+Model A – Model C use coefficients estimated for the sample of Swedish SMEs, while Model
+1 uses the coefficients estimated by Altman and Sabato (2007) for US data.
+
+5.1 Descriptive statistics and results from the ratio analysis
+
+By intuition, the coefficient for the variable Leverage should be positive to indicate that a higher
+leverage increases the probability of bankruptcy. The coefficients for the variables Liquidity,
+Profitability 1, Profitability 2 and Coverage, are assumed to have a negative sign to indicate
+
+                                        27
+that higher liquidity, profitability and interest coverage decrease a company’s probability of
+bankruptcy. As for the gender of the CEO, it is difficult to predict the sign of the coefficient,
+but in reference to the CEO age variable, the coefficient should be of a negative sign, indicating
+that an older CEOs decrease the risk of corporate failure.
+
+Table 5 shows the summary statistics for all ten independent variables separated by failing and
+surviving firms, for the remaining 12,160 observations when the out of sample has been
+extracted.
+
+                        TABLE 5
+                                      Data summary of variables
+
+                                                                                                                                              th                  th
+                                     Standard                            10         90
+                    N Mean   deviation Min Max    percentile  percentile
+      Leverage 11992 0.49 5.18 (9.04) 221.32 0.00 0.60
+      Liquidity 11992 0.15 0.17 (0.19) 0.98 0.00 0.40
+      Profitability 1 11992 0.15 0.33 (10.99) 21.98 (0.02) 0.35
+     Profitability 2 11992 0.16 0.32 (11.92) 6.55 0.00 0.43
+     Coverage 11992 584.27 2794.21 (49678.00) 105788.70 (3.11) 1269.33
+     CEO gender 11992 0.89 0.31 n.a. n.a. 0.00 1.00
+     CEO age 1 11992 0.12 0.33 n.a. n.a. 0.00 1.00
+   Surviving firmsCEO age 2 11992 0.36 0.48 n.a. n.a. 0.00 1.00
+     CEO age 3 11992 0.38 0.49 n.a. n.a. 0.00 1.00
+     CEO age 4 11992 0.13 0.34 n.a. n.a. 0.00 1.00
+     Leverage 168 1.35 4.14 (12.47) 30.40 0.00 4.90
+     Liquidity 168 0.04 0.07 0.00 0.52 0.00 0.13
+      Profitability 1 168 (0.08) 0.37 (3.33) 0.56 (0.34) 0.15
+      Profitability 2 168 0.02 0.49 (5.26) 0.66 (0.09) 0.28
+      Coverage 168 (44.83) 466.94 (5959.00) 343.60 (41.60) 15.66
+     CEO gender 168 0.98 0.15 n.a. n.a. 1.00 1.00
+     CEO age 1 168 0.11 0.31 n.a. n.a. 0.00 1.00
+   Failed firms
+     CEO age 2 168 0.24 0.43 n.a. n.a. 0.00 1.00
+     CEO age 3 168 0.42 0.50 n.a. n.a. 0.00 1.00
+     CEO age 4 168 0.23 0.42 n.a. n.a. 0.00 1.00
+      Leverage 12160 0.50 5.17 (12.47) 221.32 0.00 0.63
+      Liquidity 12160 0.15 0.17 (0.19) 0.98 0.00 0.40
+      Profitability 1 12160 0.14 0.33 (10.99) 21.98 (0.03) 0.35
+     Profitability 2 12160 0.16 0.33 (11.92) 6.55 0.00 0.43
+     Coverage 12160 575.57 2776.35 (49678.00) 105788.70 (3.71) 1243.71
+     CEO gender 12160 0.89 0.31 n.a. n.a. 0.00 1.00
+   All firmsCEO age 1 12160 0.12 0.33 n.a. n.a. 0.00 1.00
+     CEO age 2 12160 0.36 0.48 n.a. n.a. 0.00 1.00
+     CEO age 3 12160 0.38 0.49 n.a. n.a. 0.00 1.00
+     CEO age 4 12160 0.13 0.34 n.a. n.a. 0.00 1.00
+
+                                                                               th                    th
+This table shows number of firms, mean, standard deviation, min, max, 10  percentile and 90  percentile for all
+firms included in the in sample.
+
+As predicted, there are notable differences in the values for the failing and surviving firms.
+Comparing mean values between the two groups, Leverage is almost three times larger the for
+failing firms, while Liquidity, Profitability and Coverage are higher for surviving firms. Failing
+firms have negative, or close to zero mean values for both profitability measures as well as for
+
+                                        28
+Coverage, while surviving firms have positive. Regarding the CEO-variables, failed firms have
+a higher mean value for gender, which indicates that the failed firms have a higher portion of
+male CEOs than the surviving firms. However, both groups are biased towards male CEOs.
+Furthermore, failed firms have a higher mean for the dummy variables measuring the CEO age
+referring to the two older groups than the surviving firms. These findings are the opposite to
+the initial intuition that age and experience decrease the risk of financial failure. The result,
+however, is in line with research conducted by Child (1974), who finds that age tends to be
+associated with less economic growth. Furthermore, Hambrick and Mason (1984) argue that
+older CEOs are more conservative than younger, and hence less likely to present new ideas.
+
+5.2 Model prediction results
+
+Table 6 presents results for coefficients as well as z-statistics and significance for the four
+models. Model 1 corresponds to the original model developed by Altman and Sabato (2007)
+using US coefficients, Model A is the estimated full model based on Swedish SMEs and with
+CEO specific variables included, and Model B is the model based on Swedish SMEs solely
+using the five variables described by Altman and Sabato (2007). Lastly, Model C is similar to
+Model A, but it excludes the variable Leverage.
+
+                                        29
+30
+To test the null hypothesis and prove that there is no relationship between the dependent and
+independent variables, the z-statistic for the individual coefficients is used. The Wald statistic
+is provided for each individual coefficient as well as stars indicating the p-value. For Model A,
+all coefficients except for Leverage are significant at a level of 0.05 or below, indicating that
+there is little chance of a true null hypothesis of coefficients equalling zero. Leverage has a
+Wald statistic of 1.211, corresponding to a p-value of 0.23, which indicates that the variable is
+not significant. As for Model B, all estimates are significant at a 0.01 level except for Leverage.
+
+Another method to test the null hypothesis in a logistic regression is to use the likelihood ratio
+test. The test is similar to an F-test for a linear regression and is considered to be the best when
+evaluating the significance of an individual variable (Menard, 2002). To test whether the model
+is significantly improved by adding the variables for CEO age and gender, the full model is
+compared to the nested model only including the financial variables as in Altman and Sabato’s
+original model (2007). The test statistic gives a value of 33.07, resulting in a p-value close to
+zero. This implies that the model fit is significantly improved by adding the CEO-specific
+variables. Furthermore, it is tested whether adding each of the CEO variables alone improves
+the model, with the result that adding the CEO age dummies and CEO gender on a standalone
+basis does improve the model fit.
+
+Since Leverage is not significant for neither Model A nor Model B when examining the Wald
+statistic, it is tested whether the models are improved by including the variable Leverage,
+compared to a model containing all other variables except for Leverage. The test for both Model
+A and Model B shows that including the variable Leverage in the respective models does not
+lead to a significantly improved fit. To investigate whether the variable for leverage could be
+adjusted to the Swedish SME data, other definitions of the variable are tested. These include
+using total debt instead of only short-term debt and using total assets as a denominator instead
+of equity as well as different combinations of these metrics. However, the significance does not
+improve, indicating that leverage is less important when predicting bankruptcy among Swedish
+SMEs. Therefore, Model C, which includes the variables measuring CEO-characteristics but
+excludes Leverage is constructed. All variables in this model are significant at a 0.05 level or
+below.
+
+In regard to the pseudo R-squared metric, Model A seems to have an overall higher fit than
+Model B, meaning that the bankruptcy prediction is improved by incorporating the CEO
+specific variables for age and gender. The pseudo R-squared values are low overall, which could
+indicate that the model does a poor job fitting the values. However, as described above, the
+
+                                        31
+pseudo R-squared is not the same measure as the R-squared in a linear regression and can
+therefore not be interpreted in the same way. The R-squared shown above is the McFadden R-
+squared, one of many proposed pseudo R-squared for logistic regressions. There is no general
+agreement of which pseudo R-squared that works best for logistic regressions, and R-squared
+is not recommended for comparing non-nested models. Therefore, even though both Model A
+and Model B have a low pseudo R-square overall, the improvement of the fit from Model B to
+Model A indicates that the inclusion of CEO specific variables increases prediction accuracy.
+Comparing Model A to Model C, the results show that Model C has a slightly lower R-squared
+than Model A, which could indicate that Model A, including the variable Leverage, fits the data
+better. However, the improvement is marginal and too much emphasis should not be put on this
+result.
+
+5.3 Correlation analysis
+
+To further investigate whether all variables independently contribute to the models, a
+correlation analysis is performed and presented in Table 7. The table is based on Pearson’s
+product-moment correlation and is calculated as the covariance between two variables, divided
+by the product of the standard deviation of the two variables, holding all other variables
+constant. Hinkle et al. (1988) state that correlations below the absolute value of 0.3 suggest that
+there is little or no association between the two variables. Table 7 shows that no variables except
+the CEO age variables have a correlation above an absolute value of 0.3, suggesting that all
+variables contribute independently to the models. The correlation between the CEO age
+variables is expected since all four variables are dummies based on the age of the CEO.
+Furthermore, the correlations between the gender of the CEO and the different age variables
+are all low, indicating that both CEO specific variables contribute to the models independently.
+
+                                        32
+33
+5.4 Analysis of classification performance
+
+5.4.1 Classification analysis given a fixed cut-off
+
+Predictive power in terms of classification accuracy is analysed for each individual model as
+well as compared across the four models. A model’s predictive power relates to the percent of
+correctly classified observations given a predefined cut-off value. Classification is based upon
+model prediction and not actual outcome. It is common to apply a cut-off value of 0.5, however,
+this rate assumes a symmetric relationship between the two classification error rates.
+Hypothetically, the use of a cut-off value of 0.5 implies that a company with a predicted
+probability of 0.5 or higher is classified as failed whereas a company with a predicted
+probability of less than 0.5 is classified as non-failed. For the present data, the widely used cut-
+off value of 0.5 is rejected due to the dataset’s unbalanced character. In line with recent
+literature (Skogsvik, 2006) the predefined cut-off value of 0.5 would result in an over-
+classification bias for failed companies and an under-classification bias for non-failed
+companies. Therefore, the cut-off rate is set equal to the ratio of failed companies to the total
+numbers of companies in the in-sample and equals approximately 1.38 % (= 168/12160). The
+cut-off rate reflects that the sample is biased towards non-failed companies and not matched as
+in many previous studies.
+
+Table 8 summarizes the classification results for all four models when applied on an out of
+sample. For Model A, the percent correctly classified observations equals 58.95 %, which
+seems to be moderately low. However, to understand this value, it is crucial to analyse the trade-
+off between sensitivity and specificity. Model A scores high on sensitivity, indicating that
+77.59 % of the failed companies are correctly classified as failed. In regard to specificity, the
+model correctly identifies 58.66 % of the non-failed companies. This lower rate is explained by
+the low cut-off value and the model’s emphasis on sensitivity. In the context of bankruptcy
+prediction and the enormous costs that a failed company places on its stakeholders, the model
+follows a prudential approach and places a higher focus on sensitivity rather than specificity.
+
+                                        34
+                    TABLE 8
+                             Classification accuracy and error rates (cut-off 1.38%)
+                         Accuracy rates Error rates
+
+                                % Correctly  False Positive  False Negative       %
+                Sensitivity Specificity    Classified      (Type I)        (Type II)     Misclassification
+
+   Model A 77.59% 58.66% 58.95% 41.34% 22.41% 41.05%
+
+   Model B 86.21% 54.16% 54.66% 45.84% 13.79% 45.34%
+
+   Model C 77.59% 58.36% 58.66% 41.64% 22.41% 41.34%
+
+   Model 1 63.79% 87.65% 87.28% 12.35% 36.20% 12.72%
+
+  This table shows the accuracy rates and error rates for the respective models, given a cut-off rate of 1.38%.
+s Sensitivity refers to correctly classifying a failed firm and specificity refers to correctly identifying a non-failed
+s firm.
+
+In contrast to Model A, the percent correctly classified observations are slightly lower at
+54.66 % for Model B. The higher sensitivity rate of 86.21 % reduces the specificity rate, which
+equals 54.16 % given the cut-off rate of 1.38 %. The classification performance profile for
+Model C is similar to that of Model A, indicating that the variable Leverage does not contribute
+the model’s predictive power. All three models, Model A – C, score high on sensitivity,
+indicating that the respective models embody a prudential approach. In regard to total percent
+correctly classified, Model A and C are superior to Model B.
+
+Model 1 is used as a reference model, as it is based on US coefficients and Altman and Sabato’s
+original financial variables. At first sight, it seems rather surprising that the overall
+classification accuracy is the highest for Model 1. The high rate is explained by the model’s
+emphasis on specificity, placing greater importance on correctly identifying non-failed
+companies. As the sample is strongly biased towards non-failed companies, the higher
+specificity contributes to the higher percent correctly classified firms. However, this comes at
+a cost of the model missing to identify failed firms. From the perspective of passive investors
+and creditors, the cost of missing to identity failed companies is higher, and hence, Model 1
+should be used with caution.
+
+All models have a total error rate that average around 40 %, except for Model 1. The high error
+rates are partially explained by the fact that the sample is biased towards non-failed companies
+and uses a low cut-off value, resulting in a higher false positive rate. It should be acknowledged
+that the chosen cut-off value might not be the optimal value since the different misclassification
+costs regarding the false positives and false negatives are not taken into account (Altman, 1977).
+
+                                        35
+In accordance with Altman and Sabato’s observations, the cut-off value is applied to make
+statements about and compare the classification accuracy for the different models, not to
+identify the optimal cut-off strategy (Altman and Sabato, 2007).
+
+Regarding the first hypothesis, Model 1 scores high on percent correctly classified observations.
+This indicates that the model is well applicable to the present data of Swedish non-listed SMEs.
+The percent correctly classified observations lie above 80 % and continues to increase as the
+cut-off rate become higher as shown in Table 9. Moreover, the sensitivity rate of 63.79 % given
+the cut-off rate of 1.38 % signals that the model does a modest job classifying the failed
+observations as failed. In contrast, Model B using the Swedish coefficients, scores higher on
+sensitivity, but yields a low percent of correctly classified observations. Due to the high rate of
+correctly classified firms for Model 1, the first hypothesis is accepted.
+
+5.4.2 Classification analysis given various cut-offs
+
+Table 9 summarizes the respective models’ sensitivity, specificity and percentage correctly
+classified for a set of different cut-off values when applied to the out of sample. The table
+displays that as the cut-off value increases, sensitivity and specificity move in opposite
+directions. Sensitivity decreases, whereas specificity co-moves with the cut-off values.
+Simultaneously, the percent correctly classified firms increase. For Model A and C, the figures
+for sensitivity, specificity and percent correctly classified are almost identical. This is explained
+by the fact that Leverage is insignificant and does not contribute to the model. Therefore, the
+thesis’ main focus lies on comparing Model B and Model C.
+
+Comparing Model B and C when applying a cut-off rate of 1.00 %, Model B is worse than
+randomly guessing and Model C is slightly better. Up until the cut-off rate of 2.50 %, the
+sensitivity rate falls more drastically for Model C than for Model B. Thereafter, the case is the
+reverse. In line with these findings, the percent correctly classified observations develop
+accordingly. More specifically, Model C yields higher total classification rates for cut-off rates
+below 2.50 %. The table demonstrates the trade-off between either maximizing sensitivity or
+specificity. However, the table alone cannot be used for making conclusions regarding which
+model is preferred. Rather, the cut-off values and resulting classification rates need to be
+analysed in their specific industry context.
+
+                                        36
+37
+In reference to the second hypothesis, the models including CEO specific variables score higher
+in terms of overall classification accuracy, given the fixed cut-off of 1.38 %. Model C, including
+the CEO-variables but excluding Leverage, is superior to Model B in terms of percent correctly
+classified firms and hence, the findings are in line with the hypothesis. Model C is not directly
+comparable to Model 1 as the latter uses US coefficients. The overall prediction accuracy,
+however, comes at a cost of sensitivity. To make statements about which model is preferred
+given the various cut-off rates, a floor for the lowest acceptable sensitivity rate needs to be set.
+The cut-off rate of 2.50 % is considered to correspond to a sensitivity-floor, as this cut-off rate
+corresponds to sensitivity rates of 60.34 % and 53.45% for Model B and Model C, respectively.
+As sensitivity decreases with a higher cut-off rate for all models, a cut-off rate of less than
+2.50 % is preferred. In line with this finding, it can be concluded that Model C is the preferred
+model for cut-off rates below 2.50 %. Hence, the second hypothesis is accepted.
+
+5.5 Results from the ROC analysis
+
+The ROC analysis is another tool to assess the models’ classification power when making
+comparisons between models. The ROC-curve visualizes the trade-off between sensitivity and
+1 minus specificity, and the benefit of the ROC analysis lies in the ease of its interpretation.
+The ROC-curve’s performance is measured by the area under the curve. Another benefit
+embodied by the curve is, that it is insensitive to changes in the distribution of failed to non-
+failed companies in the data (Fawcett, 2006). The insensitivity enables analysis over time when
+the ratio of failed to non-failed companies is subject to changes. This is assumed to be the case
+in the present dataset.
+
+Table 10 summarizes the AUC values for the different models in regard to the out of sample.
+All AUC rates are slightly below 80 %, indicating a high average classification accuracy. The
+ROC-curve for Model C lies well above the random diagonal line, covering an AUC of
+76.35 %. This indicates that Model C, estimated for Swedish private SMEs, performs well in
+predicting failed companies. However, the overall performance is affected by misclassification
+of mainly non-failed companies. Model B, including solely the financial variables originally
+found in Altman and Sabato’s model (2007) and coefficients estimated for Swedish data, yields
+an AUC of 79.55 %. It follows that measuring for varying cut-off rates, the CEO specific
+variables do not improve the overall classification accuracy for failed companies.
+
+                                        38
+                    TABLE 10
+                                   AUC summary
+
+        Variables Model AUC
+        Financial and CEO specific variables Model A 76.32%
+
+        Financial variables Model B 79.55%
+
+        Financial and CEO specific variables, excluding leverage Model C 76.35%
+
+          Financial variables, US coefficients Model 1 n.a.
+
+          The table summarizes the AUC for the respective Model A-C.
+
+The closeness in the models’ classification power is visualized in Diagram 1, as the ROC-curves
+track each other very well. Model A and Model C have almost identical AUC rates, with Model
+C having the highest, further indicating that the variable Leverage should not be included in the
+model. The ROC-analysis does not regard a specific or optimal cut-off value, but rather analyses
+the models’ respective classification power against varying thresholds. Hence, the curve does
+not take into account that the models have different optimal cut-off values, nor does it take into
+account whether the aim is to increase specificity or sensitivity. The sensitivity-specificity
+trade-off is often industry or circumstance-specific and therefore it can be misleading to solely
+compare the models’ AUC to draw final conclusions about the most fit model.
+
+                  DIAGRAM 1
+                                 ROC-curve for Model A, B and C
+
+The diagram shows the ROC-curve and AUC for the respective models for the out of sample. Model A and C share
+approximately the same AUC. Overall model performance is the highest for Model B.
+
+                                        39
+Further examining hypothesis two, the ROC-analysis states that Model B is superior over Model
+C when all possible cut-off rates are examined. Therefore, the conclusion to be drawn regarding
+this hypothesis is less robust and needs to be interpreted with caution.
+
+In order to analyse Model B in terms of average classification accuracy from a more holistic
+perspective, it is set in relation to Model SME1, which is developed by Altman, Sabato and
+Wilson (2008). Both models are built upon the same financial ratios, originally included in
+Altman and Sabato’s logistic regression (2007). The main difference between the thesis’
+estimated Model B and Model SME1 is the coefficients used. The former model uses
+coefficients for Swedish non-listed SME data, while the latter uses coefficients for UK data. A
+comparison of the ROC-analysis is conducted on the model’s respective out of sample. Model
+B yields an AUC of 76 % while Model SME1 yields a lower AUC of 67 %. Hence, the original
+logistic model (Altman and Sabato, 2007) with Swedish coefficients is better in terms of
+classification performance.
+
+5.5.1 Discussion of classification measures
+
+The results from the model validation tests are not necessarily contradicting. The classification
+test assesses a model’s predictive power regarding a specific and predefined cut-off value,
+whereas the ROC and AUC analysis yield a classification performance using all possible cut-
+off rates. It is therefore concluded that the overall classification performance is not enhanced
+by the incorporation of the CEO specific variables when the performance is tested for all
+possible cut-off values. However, when applying low cut-off rates to at least reach the minimum
+acceptable sensitivity rate, Model C performs best in terms of percent correctly classified.
+
+5.6 Examining the relative importance of including CEO characteristics
+
+To address the third hypothesis, stating that including CEO specific variables in the accounting-
+based logit model is more important for smaller SMEs than larger, the dataset is split into two
+
+                                                                     th
+sets, based on firm size. The first dataset consists of the 25  percentile of smallest firms based
+on turnover, corresponding to a turnover up to maximum 35,918 KSEK. The second dataset
+consists of all firms with turnover greater than 35,918 KSEK. However, both groups lie within
+the definition of SME. Table 11 shows the results when using Model C for the two respective
+datasets.
+
+                                        40
+                        TABLE 11
+                                 Results based on firm size, using Model C
+
+                                           th                                           th
+                          Bottom 25  percentile based on turnover Top 75  percentile based on turnover
+                            Significant model improvement when    Significant model improvement when
+ Likelihood ratio test
+                                     including CEO-variables                 including CEO-variables
+ Sensitivity 68.42% 84.62%
+ Specificity 52.16% 62.08%
+ Correctly classified 52.50% 62.39%
+ AUC 72.54% 79.06%
+
+This table shows the results of using Model C to firms of different sizes. The results are obtained after dividing
+                                                                        th
+the dataset in two parts. The first uses data regarding the bottom 25  percentile of firms based on turnover,
+                                                   th
+while the second includes all firms above the 25  percentile.
+
+In line with the second hypothesis, Model C is significantly improved by adding CEO-
+specific variables, both for smaller and larger SMEs. However, the results in Table 11 do not
+support the third hypothesis of CEO-specific variables being more important for smaller
+SMEs than for those relatively larger. On the contrary, the results show that the measures for
+sensitivity, specificity, percent correctly classified and area under the ROC-curve are all
+
+                                                                      th
+higher for the relatively larger firms than for the bottom 25  percentile of firms based on
+
+                                                                                              th
+turnover. This indicates a higher overall model fit for firms that lie above the 25  percentile.
+However, these results should be viewed with caution, since splitting the out of sample results
+in few bankruptcies within each dataset, which could make the predictions distorted. Given
+the superior results for relatively larger SMEs, the third hypothesis is rejected.
+
+                                        41
+6. Conclusions
+This thesis yields answers to the applicability of the bankruptcy prediction model developed by
+Altman and Sabato (2007) and the importance of CEO characteristics. In regard to question
+one, this thesis examines how well the logistic bankruptcy prediction model performs when
+applied to the dataset of non-listed Swedish SMEs. Model 1, based on the same variables and
+coefficients as Altman and Sabato’s original model, results in a 63.79 % sensitivity and
+87.28 % correctly classified firms when using with a cut-off rate of 1.38 %. Given the high
+classification accuracy, the results are in line with the first hypothesis.
+
+In regard to question two, this report examines whether the inclusion of CEO specific variables
+improve the classification accuracy for Swedish SMEs. The results show that including
+variables for CEO age and gender, when added both simultaneously and independently,
+improve the bankruptcy prediction model significantly. Model C including variables for CEO
+age and gender, but excluding the insignificant variable Leverage, yields 58.66 % correctly
+classified firms and a sensitivity of 77.59 % when using the cut-off rate of 1.38 %. Comparing
+this outcome to Model B, using solely financial variables, Model C experiences a lower
+sensitivity but a higher percent of correctly classified firms. When comparing the two models’
+area under the ROC-curve, Model B covers an area of 79.55 %, while Model C covers a slightly
+smaller area of 76.35 %. To draw a conclusion regarding which model performs the best, a
+decision of whether applying a predefined cut-off rate or varying cut-off rates needs to be made.
+Hence, the results are not contradicting. Rather, Model B is superior when measuring the
+classification accuracy against no specific threshold. However, in the context of this thesis, cut-
+off values above 2.5% are not considered relevant due to their low sensitivity rates. As Model
+C achieves a higher rate of correctly classified firms for all cut-off rates below 2.5%, the second
+hypothesis is accepted.
+
+In regard to question three, the thesis test whether the inclusion of CEO specific variables is
+more important for smaller firms than larger. The third hypothesis, suggesting that this would
+be the case is rejected, as Model C performs better on all classification measures as well as the
+area under the ROC-curve on the dataset with larger SMEs.
+
+6.1 Outlook for further research
+The present thesis is of interest for passive investors and creditors when assessing the financial
+soundness of a non-listed company. However, the thesis is subject to a number of limitations,
+creating opportunities for follow-up studies. The two strongest limitations are discussed below.
+
+                                        42
+Firstly, this thesis solely analyses firm-specific variables. It is important to acknowledge that
+firms do not operate in a vacuum and hence, are affected by external conditions related to the
+market and macroeconomic environment. Due to limitations in the data, such factors have not
+been incorporated in Model A – C. Variables controlling for political and economic uncertainty,
+such as booms and recessions as well as inflation, among others, would improve the models’
+respective accuracy rates.
+
+Secondly, an extended analysis of CEO characteristics such as leadership style, industry
+experience and education would yield a more holistic picture of how the CEO contributes to
+firm survival. Due to lack of CEO data, these factors have not been included this report.
+However, a more holistic profile regarding the CEO behaviour is believed to contribute
+significantly to the models. This assumption is in line with findings from qualitative bankruptcy
+prediction studies. If data were available, financial statement data for failed and non-failed firms
+would also be analysed for the same years in order to avoid time-bias. However, this requires
+that past-CEO information is obtainable.
+
+                                        43
+7. References
+
+7.1 Published articles
+
+Altman, E.I. (1968). Financial Ratios, Discriminant Analysis and the Prediction of Corporate
+Bankruptcy. Journal of Finance, Vol. 23, Issue 4, pp. 589 – 609.
+Altman, E.I., Haldeman R.G., Narayanan P. (1977). Zeta-analysis. A new model to identify
+bankruptcy risk of corporations. Journal of Banking & Finance, Vol. 1, pp. 29 – 54.
+
+Altman, E.I., Sabato, G. (2007). Modelling Credit Risk for SMEs: Evidence from the U.S.
+Market. Journal of Financial Services Research, Vol. 43, Issue 3, pp. 332 – 357.
+Altman, E.I., Sabato, G., Wilson, N. (2008). The Value of Non-Financial Information in SME
+Risk Management. Journal of Financial Services Research, Vol.40, pp. 15 – 55.
+Argenti, J. (1976). Corporate planning and Corporate Collapse. Long Range Planning, Vol.
+9, Issue 6, pp. 12 – 17.
+Barber, B.M., Odean, T. (2001). Boys Will Be Boys: Gender, Overconfidence, And Common
+Stock Investment. Quarterly Journal of Economics, Vol. 116, pp. 261 – 292.
+
+Beaver, W.H. (1966). Financial ratios as predictors of failure. Journal of Accounting
+Research, Vol. 4, Empirical Research in Accounting: Selected Studies, pp. 71 – 111.
+
+Bhattacharjee, A., Higson, C., Holly, S., Kattuman, P. (2009). Macroeconomic Instability and
+Corporate Failure: The Role of the Legal System. Review of Law and Economics, Vol. 5, pp.
+Article 1.
+Branch. B. (2002). The Costs of Bankruptcy, A Review. International Review of Financial
+Analysis, Vol. 11, pp. 39 – 57.
+
+Child, J. (1974). Managerial and organizational factors associated with company performance
+part I. Journal of Management studies, Vol. 11, Issue 3, pp. 175 – 189.
+
+Edmister, R.O. (1972). An Empirical Test of Financial Ratio Analysis for Small Business
+Failure Prediction. Journal of Financial and Quantitative Analysis, Vol. 7, No.2, pp. 1477 –
+1493
+Fawcett, T. (2006). An introduction to ROC analysis. Pattern Recognition Letters, Vol. 27,
+No.8, pp. 861 – 874.
+
+Grice, J. S., Dugan, M. (2001). The limitations of bankruptcy prediction models: Some
+cautions for the researcher. Review of Quantitative Finance and Accounting, Vol. 17, Issue 2,
+pp. 151 – 166.
+
+Grice, J. S., Dugan, M. (2003). Re-estimations of the Zmijewski and Ohlson Bankruptcy
+Prediction Models. Advances in Accounting, Vol. 20, pp. 77 – 93.
+
+Grunert, J., Norden, L., Weber, M. (2005). The role of non-financial factors in internal credit
+ratings. Journal of Banking & Finance, Vol. 29, Issue 2, pp. 509 – 531.
+
+Hambrick, D. C., & Mason, P. A. (1984). Upper echelons: The organization as a reflection of
+its top managers. Academy of management review, Vol. 9, Issue 2, pp. 193 – 206.
+
+                                        44
+Haslam, S.A., Ryan, M.K., Kulich, C., Trojanowski, G., Atkins, C. (2009). Investing with
+Prejudice: The Relationship Between Women’s Presence on Company Boards and Objective
+and Subjective Measures of Company Performance. British Journal of Management, Vol. 21,
+Issue 2, pp. 484 – 497.
+
+Hol, S. (2006). The influence of the business cycle on bankruptcy probability. International
+Transactions in Operational Research, Vol. 14, pp. 75 – 90.
+
+Ohlson, J.A. (1980). Financial Ratios and the Probabilistic Prediction of Bankruptcy. Journal
+of Accounting Research, Vol. 18, No. 1, pp. 109 – 131.
+Penman, S.H. (1996). The articulation of price-earnings ratios and market-to-book ratios and
+the evaluation of growth. Journal of Accounting Research, Vol. 34, No. 2, pp. 235 – 259.
+Pervan, I., Kuvek, T., (2013). The relative importance of financial ratios and nonfinancial
+variables in predicting insolvency. Croatian Operational Research Review, Vol.4, pp. 187 –
+197.
+Platt, H., Platt, M. (2012). Corporate board attributes and bankruptcy. Journal of Business
+Research, Vol. 65, No. 8, pp. 1139 – 1143.
+Sheppard, J.P., Chowdhury, S.D. (2005) Riding the Wrong Wave: Organizational Failure as
+Failed Turnaround. Long Range Planning, Vol. 38, Issue 3, pp. 239 – 260.
+
+Shumway, T. (2001). Forecasting bankruptcy more accurately: a simple hazard model.
+Journal of Business, Vol. 74, pp. 101 – 124.
+Skogsvik, K. (1990). Current cost accounting ratios as predictors of business failure: The
+Swedish Case. Journal of Business Finance and Accounting, Vol. 17, pp. 137 – 160.
+
+Smith, N., Smith, V., Verner, M. (2006). Do women in top management affect firm
+performance? A panel study of 2,500 Danish firms. International Journal of Productivity and
+Performance Management, Vol. 55 Issue 7, pp.569 – 593.
+
+Zmijewski, M.E. (1984). Methodological issues related to the estimation of financial distress
+pre-diction models. Journal of Accounting Research, Vol. 22, pp. 59 – 82.
+7.2 Non-published articles
+
+Lehmann, B. 2003. Is it worth the while? The relevance of qualitative information in credit
+rating. Working paper presented at the EFMA 2003 Meetings, Helsinki, pp. 1 – 25.
+Skogsvik, K. (2006). On the choice-based sample bias in probabilistic business failure
+prediction. SSE/EFI Working Paper Series in Business Administration No. 2005:13,
+pp. 2 – 18.
+7.3 Literature
+
+Altman, E.I., Hotchkiss, E. (2005). Corporate Financial Distress and Bankruptcy: Predict
+                                                                        rd
+and Avoid Bankruptcy, Analyze and Invest in Distressed Debt, 3  edition. John Wiley &
+Sons, Inc., USA.
+
+Cameron, A. Colin, Trivedi, Pravin K. (2010). Microeconomics Using Stata: Revised Edition.
+Stata Press, USA.
+
+                                        45
+                                                                                th
+Elliot, B., Elliot, J. (2006). Financial Accounting and Reporting, 10  edition. Harlow:
+Financial Times/ Prentice Hall, United Kingdom.
+Hinkle, D.E., Wiersma, W., Stephen, G.J. (1988). Applied Statistics for the Behavioural
+Sciences. Houghton Mifflin, USA.
+
+                                                                                               rd
+Hosmer, D.W., Lemeshow, S., Sturdivant, R. (2013). Applied Logistic Regression, 3  edition.
+John Wiley & Sons, Inc., USA.
+Mehmetoglu, M., Jakobsen, T.G. (2017). Applied Statistics Using Stata: A Guide for the
+Social Sciences. SAGE Publications Ltd., United Kingdom.
+
+                                                                  nd
+Menard, S.W. (2002). Applied Logistic Regression Analysis, 2  edition. SAGE Publications
+Inc., United Kingdom.
+
+                                                                      th
+Wooldridge, J.M. (2013). Introduction to Econometrics, 5  edition. South-Western Cengage
+Learning, USA.
+7.4 Theses and dissertations
+
+Alyhr, N., Holmberg, M. (2012). Prediction of Financial Distress among Swedish Listed
+Companies. Bachelor thesis, Accounting and Financial Management, Stockholm School of
+Economics.
+
+Dalberg, T., Thörnqvist, J. (2012). Går det att förutspå konkurser? En jämförelse mellan
+olika modeller. Bachelor thesis, Accounting, Södertörn University.
+Koponen, A. (2003). Företagens väg mot konkurs. Dissertation, School of Business,
+Stockholm University
+Rodriguez, E., Malm, H. (2015). Konkursprognostisering: En tillämpning av tre
+internationella modeller. Bachelor thesis, Södertörn University.
+7.5 Websites and reports
+
+Corporate Finance Institute. What is a CEO (Chief Executive Officer)?
+https://corporatefinanceinstitute.com/resources/careers/jobs/what-is-a-ceo-chief-executive-
+officer/ (Visited 2018-05-04)
+
+Magnus Nyström, Statistics Sweden (SCB). Official data regarding bankruptcies in Sweden.
+http://www.statistikdatabasen.scb.se/pxweb/sv/ssd/START__NV__NV1401/KonkurserForet0
+7/table/tableViewLayout1/?rxid=c2ec2a35-c0c3-4a3b-adc2-14f8e5a0f82a
+(Visited 2018-05-06)
+The Swedish Companies Registration Office, Bankruptcy – Limited Companies.
+http://bolagsverket.se/en/bus/business/limited/2.1153/bankruptcy-limited-companies-1.8662
+(Visited 2018-04-13)
+7.6 EU documents
+Commission Recommendation of 6 May 2003 concerning the definition of micro, small and
+medium sized enterprises (2003/ 361/ EC).
+The European Commission (2017). Sweden - 2016 SBA Fact sheet.
+The European Commission (2017). Annual Report - EU SMEs 2016-2017.
+
+                                        46

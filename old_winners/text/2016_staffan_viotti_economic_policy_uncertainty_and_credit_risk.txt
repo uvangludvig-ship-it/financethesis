@@ -1,0 +1,1612 @@
+S T O C K H O L M S C H O O L O F E C O N O M I C S
+Bachelor’s Thesis in Finance (649)
+Department of Finance
+Spring 2016
+
+       E C O N O M I C P O L I C Y U N C E R TA I N T Y A N D C R E D I T R I S K
+
+                  A cross sectional analysis of company specific CDS
+                   spreads across nine industries in the U.S market
+
+                             emma carlsson, 23133
+                           olov ryding hallin, 22690
+
+                                      A B S T R A C T
+
+           We analyse the effects political uncertainty has on the credit risk embedded in the
+           term structure of single name credit default swap spreads across nine industries in
+           the United States. After running a set of panel regressions, we find that economic
+           policy uncertainty has a widening effect on the spreads. Specifically, we find that
+          one standard deviation change in economic policy uncertainty moves the spread
+           about 0.4 % and has an additional trailing effect of 0.7 % the following month. We
+           argue that the numbers reflect the opportunity cost of not being able to postpone
+           the need of credit insurance during periods of political turmoil.
+             Furthermore, we make a comparison of the financial and the non-financial
+           sectors and conclude that the financial sector is up to 3.4 times more sensible to
+           shocks in policy uncertainty then non-financial sectors.
+
+         JEL Codes: C33, D84, D84, G18
+
+Keywords: Credit Default Swap, Credit Risk, Policy Uncertainty, EPU, Policy Making
+
+Supervisor: Irina Zviadadze
+A C K N O W L E D G E M E N T S
+
+We would foremost like to thank our supervisor Irina Zviadadze for her patience,
+support and guidance during the work on this thesis. Special thanks are also directed
+to the Stack Exchange community, which has provided invaluable input regarding R
+programming and statistical methods.
+C O N T E N T S
+
+1 introduction 1
+   1.1 Purpose of Study . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2
+2 theoretical framework & previous research 3
+   2.1 Credit Default Swaps . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+         2.1.1 CDS Pricing . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+   2.2 The Economic Policy Uncertainty Index . . . . . . . . . . . . . . . . . . 5
+   2.3 Policy Uncertainty . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+         2.3.1 Policy Uncertainty & Investments . . . . . . . . . . . . . . . . . 6
+         2.3.2 Policy Uncertainty & Capital Markets . . . . . . . . . . . . . . . 7
+3 data 8
+   3.1 Data on Credit Default Swaps . . . . . . . . . . . . . . . . . . . . . . . . 8
+   3.2 Data on Economic Policy Uncertainty . . . . . . . . . . . . . . . . . . . 8
+   3.3 Data on Control Variables . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+4 methodology 10
+   4.1 Panel Regressions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 10
+   4.2 Model Selection . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12
+5 results 13
+   5.1 Test Outcome & Model Selection . . . . . . . . . . . . . . . . . . . . . . 13
+   5.2 Descriptive Statistics . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 13
+   5.3 Panel Regressions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 14
+         5.3.1 Regression Over All Firms & Industries . . . . . . . . . . . . . . 14
+         5.3.2 A Comparision of Financials & Non-financials . . . . . . . . . . 17
+   5.4 Discussion . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 19
+   5.5 Conclusion . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 20
+
+bibliography 21
+a appendix 24
+   a.1 Summary Statistics . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 24
+   a.2 Tests . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+         a.2.1 Standard F-test . . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+         a.2.2 Breusch-Pagan Test . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+         a.2.3 Hausman Test . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+         a.2.4 Breusch-Godfrey/Wooldridge Test . . . . . . . . . . . . . . . . . 28
+b appendix ii - list of companies 29
+
+                                                                     iii
+                      1
+
+I N T R O D U C T I O N
+
+Policy uncertainty arises when agents are unable to predict the outcome of a policy-
+making process, and there is little or no knowledge about how fiscal or monetary
+policies will change. When policy uncertainty increases, the future development of
+the economy becomes harder to predict. From a policy maker’s perspective, under-
+standing how policy uncertainty affects different levels in society is crucial, as im-
+perfect information in policy making might have not only direct consequences but
+substantial effects on long-term growth prospects and welfare, (Croce, Nguyen, and
+Schmid, 2012). Uncertainty about the Federal Reserve’s future announcements may
+affect private investment, which indirectly have effects on the rate of unemployment,
+(Baker, Bloom, and Davis, 2013; Creal, 2014; Shoag, 2015). Moreover, policy uncer-
+tainty is negatively correlated with both investment and growth, and thus determin-
+ing the pattern of economic development in society, (Aizenman and Marion, 1993).
+  In the last decade, economies and its financial markets all over the world have
+endured periods of significant political turbulence, such as the Global Financial Cri-
+sis, the Eurozone Crisis and the U.S. Debt-Ceiling Dispute. The high level of policy
+uncertainty during these periods had an adverse impact on the rate of recovery,
+(Hendrickson, 2015). To avoid making already unstable situations worse in the fu-
+ture, we need a better understanding of the relationship between financial markets
+and government institutions during periods of political turmoil, (IMF, 2012).
+  Even though the interest in studying the impact of policy uncertainty has grown,
+mainstream finance theory still lacks theoretical models taking it into account, (Pas-
+tor, 2013). It is nevertheless surprising that almost no research exist on how policy un-
+certainty affects credit risk to date. While some studies covering sovereign credit risk
+are provided: (Bekaert, Hoerova, and Duca, 2013; Cuadra and Sapriza, 2008; Manzo,
+2013), the only published work on corporate credit risk is to our knowledge the
+study by Wisniewski (2015). Analysing the relationship between policy uncertainty
+and credit default swap (CDS) indices (Markit CDX IG and iTraxx), they found that
+economic policy uncertainty Granger-cause a positive movement in CDS spreads.
+However, as they merely looked at the relationship, the magnitude of this effect is
+yet to be quantified.
+  Given how central the concepts of risk and uncertainty is in finance and economic
+theory, we want to contribute the understanding of how they are interlinked. We,
+therefore, aim to fill to this void by looking at how different agents respond to
+changes in uncertainty, as well as how governmental inefficiency shape the economic
+landscape.
+
+                                         1
+                                                                 1.1 purpose of study 2
+
+1.1 purpose of study
+
+While Wisniewski et al. primarily looked at how CDS spreads respond to shocks
+in policy risk, we want to capture and quantify how uncertainty alter perceptions
+of credit risk on a broader scale. To this end, instead of a Vector Autoregressive
+framework, we use a broad cross-section of single-name credit default swap spreads.
+By doing so, this study addresses two questions:
+
+   1. Does economic policy uncertainty impact risk perceptions of investors in the
+     U.S economy?
+
+   2. If yes, how large is this effect?
+
+  Answering those questions, our study accomplishes two things: first, we confirm
+that a positive relationship between economic policy uncertainty and CDS spreads
+exist, thus making the findings by Wisniewski et al. more robust. Second, to our
+knowledge, this is the first study to quantify the effect varying political ambiguity
+has firm-specific CDS spreads.
+  After controlling for other market factors, a one standard deviation shock to the
+policy uncertainty index in our model, cause the CDS spread to change by approx-
+imately 0.4 %. We also identify a lagging effect the following month, which corre-
+spond to almost a 0.7 % change in the CDS spread. Moreover, we show that firms
+in the financial sector are several times more sensitive to shocks than other sectors,
+but that the lagging effect one month after is about the same in all industries. Our
+conclusion is that changes in policy uncertainty do alter the perceived risk-level in
+the economy, and we believe this is an expected behaviour due to the psychological
+mechanisms behind loss aversion. We finally argue that the coefficients are inter-
+pretable as the opportunity cost of being unable to postpone the need for credit
+protection during times of political instability.
+  The remainder of this paper is organised as follows: Chapter 2 provide an intro-
+ductory explanation of what a Credit Default Swap is, together with a description of
+our proxy for policy uncertainty. Chapter 3 describe our sampling method, data, and
+selection criteria for explanatory variables. Chapter 4 contains a walk-through of the
+rationale behind our method and a short description of the model selection process.
+Lastly, Chapter 5 is where we conduct the analysis, interpret output, and discuss our
+conclusions.
+                      2
+
+T H E O R E T I C A L F R A M E W O R K & P R E V I O U S R E S E A R C H
+
+The following sections describe the characteristics and dynamics of the CDS contract,
+as well as the components and construction of the Economic Policy Uncertainty In-
+dex (hereafter EPU). We also provide a brief summary of studies on policy uncer-
+tainty and its implications for the capital markets.
+
+2.1 credit default swaps
+
+A CDS is a credit derivative transferring credit risk of an underlying obligation from
+one party to another, (Lipton, 2011). Due to the prevalence of debt financing, CDS
+were originally designed to protect investors (buyers) against loans going bad. A
+CDS allows risk transferal from the buyer (the issuer of debt) to investors who are in
+a better position to bear that risk. The mechanics behind the swap is best described
+as a bilateral over-the-counter contract, consisting of two legs: the protection leg and
+the premium leg. As depicted in Figure 1, the protection buyer (premium leg) pays a
+quarterly or semi-annual premium to the protection seller (protection leg). In return,
+the protection seller guarantees to make the protection buyer whole in the case of
+a credit event, (Lipton, 2011). Two significant differences exist between a CDS and
+regular insurance. First, with insurance you typically have direct economic exposure
+to the underlying asset, with a CDS it is not necessary to hold the underlying bond.
+Second, insurance is not traded on the market, in opposite to CDS contracts, (Stulz,
+2010).
+  The market for CDS has grown rapidly since the late 90’s when the International
+Swap and Derivatives Association (ISDA) introduced their first standardised CDS
+contract, (Hull, Predescu, and White, 2004). However, The Dodd-Frank Wall Street
+Reform Act overhauled the swaps market and mandated central clearing, trading,
+and reporting. These new regulatory requirements, combined with higher capital
+requirements, have increased the costs of trading swaps, (Acharya, 2011). From being
+one of the most common derivative traded, (Lipton, 2011), the market of single name
+CDS has declined, but have still a gross value exceeding $16 trillion in late 2014,
+(International Settlements, 2015).
+  CDS makes the financial market more efficient in several ways. First, if an investor
+believes the default risk of a particular company will increase, it can be much easier
+to buy credit protection using a CDS than short-selling the company’s bonds, (Stulz,
+2010). Second, CDS contracts allow banks to hedge against their credit risks, (Amato,
+2005). Put together, the possibility of risk transferal allows more companies to access
+credit markets since banks can lend more money without severely affecting their risk
+level, (Stulz, 2010). Moreover, the CDS market often more liquid than the corporate
+bond market, (Amato, 2005). The total notional amount outstanding of a CDS can
+often exceed to total amount of debt issued by the underlying company, (Stulz, 2010),
+which makes the data more accurate and hence more useful to analyse.
+
+                                         3
+                                                              2.1 credit default swaps 4
+
+                                Premium
+             Protection
+                                              No payment      Protection
+                 Seller
+                          No credit event                           Buyer
+              (Investor)
+                             Credit event
+                                           Payment      Repayment
+
+                                                                                    Interest
+                                                                  Repayment
+
+                                                                  Reference
+                                                                         Entity
+                                                                             (If present)
+
+  Figure 1: Schematic picture of the parts involved in a CDS. The protection buyer receives
+            interest from the borrower, and in turn pay the protection seller a regular premium
+            to get covered in case of a credit event.
+
+  2.1.1 CDS Pricing
+
+  There is no initial cost in entering into a credit default swap. At inception, a premium
+  (noted in basis points) is decided such that so that the present value for both parties
+  equals each other, making the market value of the CDS zero, (Lipton, 2011). Thus,
+  the value of the premium leg can be expressed as the sum of the present value of all
+  remaining premium payments:
+
+          ∑M
+                       S                        1
+       PVpremuim = N      [1 − F(∆ti−1)] D(∆ti)                              (1)
+                          f
+                        i=1
+
+    In the event of default within the time frame of the contract, the insurer is obliged
+  to compensate the protection buyer for the loss from par. The value of the protection
+  leg is the expected present value of the protection or the cost of default, Lipton
+  (2011).
+
+              ∑M
+                                                                         1
+       PVprotection = N(1 − R − cR)    [F(∆ti) − F(∆ti−1)] D(∆ti)              (2)
+                                   i=1
+
+1 N is the notional of the swap, S is the spread in basis points (premium paid by the protection buyer), f
+  is the frequency of spread payments, F is the cumulative default probability function, c is the coupon
+  of the underlying bond as an annual percentage, and R is the recovery rate of the underlying bond.
+        r∆t∆t
+  D = e     , and represents the continuously compounded discount factor at the horizon ∆t = t − tP ,
+  where tP is the pricing date and r∆t is the spot risk free rate prevailing over [tP , t].
+                                       2.2 the economic policy uncertainty index 5
+
+    The market value of a CDS is the difference between the premium and the pro-
+  tection legs, which constitute the spread. The size of this spread is a reflection of
+  two factors. The first being the default probability, which reflects the likelihood that
+  the issuer will default on its obligations. The second component is the recovery rate,
+  indicating how much a bondholder will recover without having credit protection if
+  the issuer defaults on its obligations.
+
+           ∑M
+           f(1 − R − cR)   i=1[F(∆ti) − F(∆ti−1)]
+      S =        ∑M                                           (3)
+                      i=1 [1 − F(∆ti−1)]
+
+    A wider spread means that investors believe a default is more likely, which is
+  why it is popular to use a CDS as a proxy for credit risk, (Avesani, Li, and Garcia
+  Pascual, 2006; Chan-Lau, 2005; Goodhart, 2009). For information in further detail on
+  the mathematical expressions of CDS spreads, see Hull (2000).
+    Empirical research on the pricing of CDS has shown that firm-specific factors best
+  explain the size of the spread. Ericsson, Jacobs, and Oviedo (2009) found with their
+  structural model that financial leverage and volatility of the underlying explain 60
+  % of the spread expressed in levels, and 23 % of the variation in spread changes.
+  Galil et al. (2014) tested both market and firm-specific variables and concluded that
+  market factors could help explain the spreads, but confirmed earlier findings that
+  the firm-specific factors still provided most explanatory power.
+
+  2.2 the economic policy uncertainty index
+
+  The overall level of policy uncertainty facing an economy depends on such a vast
+  number of constantly changing factors that actual uncertainty level impossible to
+  fully observe. However, to conduct this study, it is crucial to find a good enough
+  proxy for the underlying level of policy uncertainty. The methods used to proxy
+  policy uncertainty are many and have varied over time. One popular approach has
+  been to study the time period surrounding major political events. We are however
+  interested in a ever present kind of policy uncertainty, affecting e. g., non-election
+  years as well, and need thus another kind of proxy.
+                            1
+    As many before us , we use the EPU index of Baker, Bloom, and Davis. The EPU
+  Index consists of three value-weighted components and measures the policy uncer-
+  tainty level on a monthly basis.
+    The first component is an index of search results from ten large newspapers and
+                                                                                           2
+  measures the frequency which certain keywords appear in the articles . The key-
+                                                                                     3
+  words are sorted into three groups: Economy, Uncertainty and Policy . An article has
+  to contain at least one word in each group to count. The collected articles are then
+
+1 A complete list of works using Baker, Bloom, and Davis (2013) EPU index can be found here: http:
+  //www.policyuncertainty.com/research.html
+2 The newspapers included in the EPU index are USA Today, the Miami Herald, the Chicago Tribune, the
+  Washington Post, the Los Angeles Times, the Boston Globe, the San Francisco Chronicle, the Dallas Morning
+  News, the New York Times, and the Wall Street Journal.
+3 The index measures on basis on the following groups of (1) “economic” or “economy”; (2) “uncertain”,
+  “uncertainty” or “uncertainties”; (3) “congress”, “deficit”, “Federal Reserve”, “The Fed”, “legislation”,
+  “regulation” or “White House”
+                                                             2.3 policy uncertainty 6
+
+divided by the total number of articles published in the newspaper they appeared in,
+yielding separate series for each newspaper. Lastly, the figures are normalised and
+summed up to the newspaper index of that month, (Baker, Bloom, and Davis, 2013).
+  The second component of the index draws on reports by the Congressional Budget
+Office (CBO) that compile lists of temporary federal tax code provision. Temporary
+tax measures create uncertainty for both companies and households since Congress
+often decides whether or not to extend them at last minute. As such, the annual
+dollar-weighted numbers of tax code provisions measure the level of uncertainty
+regarding the path that the federal tax code will take in the future, (Baker, Bloom,
+and Davis, 2013).
+  The third component accounts for disagreement among forecasters. Each quarter
+the Federal Reserve Bank of Philadelphia’s Survey of Professional Forecasters (SPF)
+give their view of a range of macroeconomic variables for the coming five quarters.
+Baker et al. use the dispersion between individual forecasters’ predictions about
+future levels of the Consumer Price Index, Federal Expenditures, and State and Local
+Expenditures to construct indices of uncertainty about policy-related macroeconomic
+variables, (Baker, Bloom, and Davis, 2013).
+
+2.3 policy uncertainty
+
+Financial research on the effects of policy uncertainty has foremost been provided
+from two perspectives: (1) the relationship between policy uncertainty and invest-
+ments and (2) policy uncertainty and the capital markets. The former relates to the
+theoretical idea that investments can be seen as real options and therefore there is
+value in waiting to invest during times of uncertainty. The latter is empirically tested
+over a multitude of financial asset, showing how policy uncertainty affects asset
+prices, volatility and risk premia.
+  On a macroeconomic level, research on how policy uncertainty impact factors such
+as GDP and employment is inconsistent, both supporting that is does have an effect,
+and the lack thereof, (Born, 2014). The time frame has shown to matter whether any
+impact can be seen or not, as policy uncertainty have a strong negative short-run
+impact on growth, reducing investment, hiring, and consumption. In the longer-run
+the impact of uncertainty was less clear, as uncertainty had some potentially positive
+effects on R&D, Bloom (2014).
+  Policy uncertainty was found by Foerster (2014) to affect the economy asymmet-
+rically when investigating the symmetry of spikes in policy uncertainty. The reason
+behind this research was to determine if a subsequent decrease will entirely offset a
+temporary increase, or if increases will have more sizable effects. If symmetric, then
+the consequences of a spike will not have any long-lasting impact on the economy.
+The findings, however, showed the contrary. Upward spikes, as in higher levels of
+uncertainty, had more sizable effects than the downward spikes.
+
+2.3.1 Policy Uncertainty & Investments
+
+Bernanke was the first to show the negative relationship between high levels of un-
+certainty and investments. He argued that since firms’ real investments often are ir-
+                                                             2.3 policy uncertainty 7
+
+reversible, i.e., when a machine is purchased and produced it cannot be transformed
+into something else or sold without a substantial economic loss, the investments can
+be seen as real options. When seen as a real option, the value of waiting to invest
+increases and thereby investments simultaneously decreases during times of high
+uncertainty. He further showed that firms’ earnings power are lower during periods
+of considerable uncertainty, (Bernanke, 1983).
+  These findings have been confirmed several times regardless of which proxy for
+uncertainty being used. Rajan and Marwah (1998) concluded that policy uncertainty
+has a negative impact on foreign direct investment. Julio (2012) showed that firms
+reduce investment expenditures by an average of 4.8 %, and that investment is 40 %
+less sensitive to stock prices, during election years compared to non-election years.
+Further, the drop in investment-to-price sensitivity is larger when election results are
+less precise. Durnev (2013) found that election uncertainty leads to inefficient capi-
+tal allocation, reducing company performance. Gulen (2015) could finally attribute
+two-thirds of the drop in corporate investments during the financial crisis to policy
+related uncertainty.
+
+2.3.2 Policy Uncertainty & Capital Markets
+
+Pástor and Veronesi are prominent in both the theoretical and empirical research of
+policy uncertainty and its effects on the equity market. Due to the lack of theoretical
+guidance, they created a model of how stock prices react to political news (Pastor,
+2013). With this they empirically proved that policy uncertainty makes stocks more
+volatile and more correlated. Further, they showed that heterogeneity among the
+potential new government policies increases risk premia since government-related
+risk cannot be fully diversified away, (Pastor, 2013). The model was later applied to
+a cross section of 20 countries to investigate if elections and global summits affected
+option pricing. By doing so, they showed that political uncertainty is priced in the
+options market in such a way that protection against price, variance, and tail risks is
+more expensive before a political event, (Kelly, Pastor, and Veronesi, 2014).
+  Brogaard and Detzel (2015) found similarly that EPU positively forecasts log excess
+market returns, and that innovations in during times of high EPU earn a significant
+negative risk premium. On the debt side of the market, Ulrich (2012) found that
+uncertainty about future government spending is a risk factor in the bond market
+and that a one standard deviation change in EPU increases the slope of the yield
+curve by 0.2 %.
+                      3
+
+D ATA
+
+The following sections describe our sampling methods, sampling criterion, and sources
+of data. We also provide a detailed description of the control variables included in
+our model and the rationale behind them.
+
+3.1 data on credit default swaps
+
+Data on CDS spreads used in this study is obtained from Thomson Reuters Datas-
+tream. All spreads in our sample are daily mid-market, U.S. Dollar CDS contracts,
+quoted in basis points. We choose to concentrate the study to five-year bonds, partly
+due to availability, but also to ensure uniformity of the dataset. Moreover, five-year
+contracts have been the most frequently traded the last decade (Blanco, Brennan, and
+Marsh, 2005).
+  We decide only to cover CDS contracts referencing modified restructuring, and in
+that way make sure that each firm represented in the dataset only has one CDS
+spread tied to it. Further, to increase liquidity, we exclude all spreads showing zero
+trading activity in an accumulated number of six months or more. We also require
+each firm to be listed on a U.S. stock exchange, with data on both share price and PE-
+ratio available. Remaining after these selection criteria are 254 spreads from 254 dif-
+ferent firms, stretching over a 1,781 day period. Thomson Reuters has already sorted
+the firms in nine different industries: Banks, Consumer Goods, Electrical Power, En-
+ergy Companies, Other Financial Companies, Manufacturing, Services, Telephone
+and Transportation, which we will stick to in this study. The time frame is selected
+such that we avoid the direct impact of the U.S. sub-prime mortgage crisis, and spans
+from June 2009 to January 2016. A complete list the firms included in our sample can
+be found in the appendix, A.2.4.
+
+3.2 data on economic policy uncertainty
+
+Data on economic policy uncertainty (described in 2.2) is publicly available on the
+website of Baker, Bloom and Davis. We use the monthly index, constructed of three
+components, and cover the whole sampling period.
+
+3.3 data on control variables
+
+To rinse for market information already embedded in the CDS spreads, one has to
+choose the control variables with care, since factors related to the credit risk within
+in different industries are nearly infinite. We determine which variables to include
+in the model based on three criterion:
+
+   1. There should be both company-specific and global variables included in our
+     model.
+
+                                         8
+                                                     3.3 data on control variables 9
+
+   2. The variables should be selected such that they altogether remove as much
+     of already embedded market information in the CDS spread movements as
+      possible.
+
+   3. While still achieving the two first criterion, the correlation between our vari-
+      ables should be as low as possible to avoid multicollinearity.
+
+company specific variables We use the negative correlation between equity
+and its default probability, first suggested by Merton (1974), to capture the economic
+state of the specific firm. By including each firm’s corresponding share price and
+price-earnings ratio, we try to capture any changes in their equity premium. Share
+prices are also proved to be significant factors in explaining the CDS spread, (Galil et
+al., 2014). We further believe that the accumulated stock price movements will partly
+reflect the overall state of the economy, due to the variety and number of companies
+included in our dataset. Our data source of share prices and PE-ratios is Thomson
+Reuters Datastream.
+
+corporate yield spread Inspired by Longstaff et al. (2011), we use changes in
+the spreads of investment-grade bonds, specifically the five-year Thomson Reuters
+BBB and AAA bond indices. By doing so, we aim to catch the range of variation in
+investment-grade bond yields and thus purge the CDS spreads from movements tied
+to changes in the systematic risk within the economy.
+
+the state of the economy Another factor that might reflect the global state of
+the economy is the changes of the Standard and Poor’s Goldman Sachs Commodity
+Index (GSGC), since gold is a hedge against stocks on average and a safe-haven in
+extreme stock market conditions, (Baur, 2010).
+  Trying to capture any other external economic factors that might influence the
+credit spread, we use the fact that sovereign credit risk is more correlated across
+countries than the equity index returns for the same countries, (Longstaff et al., 2011).
+Since the U.S economy affects financial markets all over the world, we choose to
+include the U.S sovereign CDS spread as a control variable as well. We retrieve data
+on GSGC and U.S. Sovereign CDS’s from Thomson Reuters Datastream.
+
+partisan conflict index The last control variable we chose to include is the
+Partisan Conflict Index (PCI), constructed by Azzimonti (2013). To measure PCI, Azz-
+imonti used a methodology very similar to that of Baker, Bloom, and Davis (2013).
+The main difference between PCI and EPU is that PCI measures government dys-
+function rather than the degree of economic policy uncertainty.
+  Under extreme values of the PCI, such as during a shutdown, disagreement is
+intense, which means that agents ought to know with high certainty that the status-
+quo will remain unchanged, (Azzimonti, 2013). By including PCI in our model, we
+hope to rinse for periods where the two indices overlap and thus isolate the effects
+of EPU yet further. Data on the PC Index is publicly available on the website of the
+Federal Reserve Bank of Philadelphia.
+                      4
+
+M E T H O D O L O G Y
+
+In the following sections, we describe our methodological approach and the rationale
+behind it. We also give a detailed description of the data tidying process and provide
+summary statistics on some of the data used in the study.
+
+4.1 panel regressions
+
+This study aims to first answer is if economic policy uncertainty impacts risk percep-
+tions of investors in the U.S economy. If present, the second purpose is to quantify
+this effect. We address this by constructing panel data frame, and then regress the
+changes in CDS spreads on the EPU index. Empirical evidence suggests that the
+impact of uncertainty is asymmetric, meaning that that a sudden peak in the EPU
+index may very well have sustained effects, (Foerster, 2014). We, therefore, include
+EPU from both the current and the previous month in our model. Besides, adding
+potential explanatory power to the model, there is a value from investor perspective
+to add the latter. Since EPU is published with one month delay, the lagged version is
+the most currently available to investors.
+  The first regression is performed on the index alone; we then add the control
+variables step by step. This allows us to dodge some of the criticism of the EPU index;
+its composition catches not only political uncertainty but uncertainty embedded in
+the financial markets as well. Including stock, credit and commodity markets in the
+model enable us to clean the EPU index from financial and economic information,
+leaving out only the political part.
+  Since the financial sector is more exposed to policy making, one can assume that
+this industry also is more sensible to policy uncertainty. We will investigate this by
+extending our model with a set of dummy variables: financials, covering banks and
+financial_other, and non_financials representing the rest of the industries included in
+our dataset.
+  To make interpretation easier, we choose to demean and scale both EPU and PCI,
+such that their mean take a value of zero, and their standard deviation is one. We
+can thus measure the impact of EPU on CDS spreads in terms of standard error
+movements, and hence, avoid any arbitrary metrics for a normal shocks to the policy
+uncertainty index.
+  CDS spreads, stock prices, leverage, and stock volatility are non-stationary in levels
+but stationary in first differences, (Galil et al., 2014). We, therefore, apply first log-
+differences to all variables and thus remove any firm-specific trends. The outcome of
+these measures is illustrated in Figure 5.
+  We use logarithms for two reasons. First, we want to scale the variables such that
+any exceptional values do not absorb all variance. Secondly, log-differences can be
+interpreted as percentage changes later in the regression output. This applies to all
+variables except PE-ratios, PCI and EPU. PE-ratios are not logarithmised due to the
+presence of negative values.
+
+                                        10
+                                                               4.1 panel regressions 11
+
+                           banks                      0.08
+                      consumer_goods
+                           electrical_power
+    0.015                  energy_companies
+                              financial_other               0.06
+                         manufacturing
+                           services
+    0.010                   telephone
+                              transportation                0.04
+    density                                             density
+
+    0.005                                                      0.02
+
+    0.000                                                      0.00
+          0     100    200    300    400    500            −50      −25      0       25      50
+                      spread                                      delta_spread
+                       (a) (b)
+
+Figure 2: Density plots of the firm-specific CDS spreads grouped by industry, expressed in
+          levels to the left and log-differences to the right. The log changes are scaled such
+          that they are interpretable as percentage points.
+
+    500                                                   20
+
+    400
+                                                          10
+
+    300
+                                                           0
+   spread
+    200
+                                                    delta_spread
+                                                        −10
+    100
+
+                                                        −20
+      0
+         2010  2011  2012  2013  2014  2015  2016             2010  2011  2012  2013  2014  2015  2016
+                       (a) (b)
+
+Figure 3: Smoothed trends of firm-specific CDS spreads, grouped by industry over the sam-
+         pling period. Spreads are expressed in levels to the left and log changes to the
+          right, where the log changes are scaled such that they are interpretable as percent-
+         age points. The shaded area represents the standard error bounds for each industry
+        and month.
+                                                                 4.2 model selection 12
+
+  For each firm, we compute the monthly CDS spread by first creating monthly
+mid-spreads. We do this by collapsing the daily spreads for each firm into monthly
+averages. Then, we calculate the log-difference between present and previous month,
+such that the monthly log-difference of firm i at time t can be expressed as:
+
+      ∆ ln(CDSi,t) = ln(CDSi,t) − ln(CDSi,t−1) (4)
+
+4.2 model selection
+
+To select the most suitable panel method for our sample, we rely on the guidance
+from a set of different tests. The following section will give a short description and
+purpose of the tests performed.
+
+test of poolability First, we conduct a standard F-test under the hypothesis
+that the fixed effect are equal across all units. Rejecting this assumption means that
+the fixed effects are non-zero. A significant F-test tells us that a pooled OLS regres-
+sion will be biassed, which is the outcome we expect to get.
+
+breusch-pagan test We make sure that the assumption of heteroskedasticity
+applies to our dataset by performing a Breusch-Pagan Test. The Breusch–Pagan Test
+tests for conditional heteroscedasticity, with a null hypothesis of homoscedasticity.
+If chi-squared is significant, the null hypothesis of homoscedasticity is rejected and
+heteroskedasticity assumed.
+
+the hausman test We use the Hausman Test to investigate how the non-zero
+fixed effects are correlated with the time-varying explanatory variables. The purpose
+of this test is to compare the fixed and the random effects models, under which
+the null hypothesis is that the random effects model is the more efficient (has the
+smallest asymptotic variance).
+
+breusch-godfrey/wooldridge test With this test, we investigate the pres-
+ence of general serial correlation excluded from the proposed model. If present, the
+conclusions drawn from other tests, or the estimates of model parameters could be
+misleading and should be interpreted carefully. If the original model’s errors are
+uncorrelated then fixed effect residuals are negatively serially correlated.
+
+robust covariance matrix estimation Bertrand, Duflo, and Mullainathan
+(2004) show that the usual standard errors of the fixed effects estimator are drastically
+understated in the presence of serial correlation. We will, therefore, estimate the
+regression model without control for within-cluster error correlation, and then post-
+estimate cluster-robust standard errors. We use agglomerative clustering on a firm
+level. In the fixed effect model, the Arellano estimation is preferred, which allows
+a full general structure w.r.t. heteroskedasticity and serial correlation, (Marcellino,
+Stock, and Watson, 2006).
+                      5
+
+R E S U LT S
+
+5.1 test outcome & model selection
+
+The outcome of the F-test allows us to accept the alternative hypothesis of instabil-
+ity and confirm the presence of non-zero fixed effects. Following the F-test is the
+Breusch-Pagan test, which allows us to assume heteroskedasticity at an equally high
+significance level.
+  When performing the Hausman-test, we conclude that a fixed effects model is
+preferable to a random effects model. The Breusch-Godfrey/Wooldridge-test indi-
+cate that the idiosyncratic error terms are serially correlated. The model used in the
+upcoming regressions will thus have the following expression:
+
+     ∆ ln(Yt,i) = β1∆EPUt + β2∆EPUt−1 + γχi,t + αi + ui,t (5)
+
+where Yi,t is the firm specific change in the CDS spread at time t, EPU is the eco-
+nomic policy uncertainty index, χt,i is our set of control variables, and αi is the
+firm-specific fixed effects. To control for serial correlation and heteroscedasticity, we
+post-cluster all error terms by group on a firm-level. Complete output of all test is
+included the appendix, A.2.
+
+5.2 descriptive statistics
+
+Presented in Table 4, the average CDS spread between June 2009 and January 2016
+was 161.00 basis points, and the corresponding mean change per month was -0.62
+bps. The overall trend is negative, as in decreasing spread sizes. This pattern is ex-
+pected since our sample period begins at the end of the global financial crisis. As Oh
+(2016) showed, distress for individual firms has reduced since the crisis, although
+the joint probability of distress is higher now than before the crisis. The CDS spreads
+expressed in levels show high positive skewness, meaning that their distribution has
+a longer and flatter right tail and shorter and fatter left tail. This indicates a bigger
+disparity among the larger spreads.
+  Table 5 displays the correlation matrix of all variables in our model, where the first
+column represents the relationship between the independent variable and the depen-
+dent variables. We note that delta_spread and delta_share_price are the most correlated,
+with a negative relationship. Among the explanatory variables, delta_share_price and
+delta_PE_ratio have the highest correlation, but only about 0.35. Hence, we assume
+that the risk of multicollinearity is rather low, and will not interfere with our conclu-
+sions below.
+
+                                        13
+                                                               5.3 panel regressions 14
+
+                                                           5
+    250
+
+                                                           0
+    200
+
+    spread                                           −5
+    150                                               delta_spread
+
+                                                        −10
+    100
+
+         2010  2011  2012  2013  2014  2015  2016             2010  2011  2012  2013  2014  2015  2016
+                       (a) (b)
+
+Figure 4: Illustration of trends in CDS spreads across all 254 firms over the sampling period.
+          Spreads are expressed in levels to the left and log-changes to the right, log changes
+         are scaled such that they are interpretable as percentage points. The shaded area
+         represents the standard error bounds for each industry and month.
+
+5.3 panel regressions
+
+5.3.1 Regression Over All Firms & Industries
+
+Regression output found in Table 1 shows overall high statistical significance. In the
+first regression (column 1), delta_EPU and the lag(delta_EPU,1) are roughly equal in
+size. A change of one standard deviation in delta_EPU leads to 1.3 % change in the
+                                                                           2
+CDS spreads, both in the present and the forthcoming month. The adjusted R  is low
+at 0.02.
+  In the following regressions (columns 2–5) the remaining variables are successively
+added to account for information already embedded in the financial market. When
+adding the first control variable, delta_PCI, the EPU coefficients increases somewhat.
+As PCI measure government inaction, it serves to clean the EPU Index from shocks
+where turbulence might be high, but the true ambiguity is low. In our third regres-
+                                                              2
+sion, the firm-specific variables are added, which increases R  with more than a
+factor seven. This substantial increase (from 0.03 to 0.20) confirms the findings by
+Ericsson, Jacobs, and Oviedo (2009) and Galil et al. (2014) et al., that firm-specific
+variables are the most useful to explain CDS spreads. The inclusion of the firm-
+specific variables further reduce the coefficients to 0.50 and 0.87 respectively. Lastly,
+the global variables are added which lowers the effects of EPU further, down to 0.38
+and 0.67 the following month. Conclusively, our model suggests that shocks of pol-
+icy uncertainty with the magnitude of a standard deviation will have a widening
+effect on a given CDS spread of 0.4 % immediately, and 0.7 % the following month.
+As expressed in basis points, one can interpret the median spread as increasing first
+from 91.58 basis points to 91.93 basis points, and then to 92.54 in the month after
+(ceteris paribus).
+  We believe the results to be reasonable since policy uncertainty makes it harder for
+investors to value the collateral. Accordingly, creditors will demand higher interest
+rates and limit their lending, (IMF, 2012). Further, Bernanke (1983) showed that firms’
+                                                               5.3 panel regressions 15
+
+earnings power are lower during times of high uncertainty, and when uncertainty
+increases, firms and consumers postpone their decisions, lowering economic activity.
+The market value of equity should thus go down and the probability of default
+should go up. By the same logic, investors demand a higher premium during periods
+of increasing uncertainty as compensation for the possibility of greater default risk.
+In the light of previous research, we also regard the magnitude as plausible. Our
+estimates of 0.4 % and 0.7 % (lagged) are in the same region as the results of Ulrich
+(2012), who showed that one standard deviation shock to EPU increases the slope of
+the yield curve by 0.2 %. Further, it can be compared to the findings of Born (2014),
+who concluded that a two standard-deviations shock generates a 0.025 % drop in
+company output. The lagging effect is in line with Foerster (2014), who showed
+that the impact of uncertainty is asymmetric and that a decrease in uncertainty not
+necessarily offset the effects of a preceding increase. As a result, spikes in uncertainty
+may produce persistent declines in economic activity, (Foerster, 2014).
+  Although not our main focus, we examine the remaining variables to see if the
+model works as expected. PCI improves the fit somewhat. An increase in share price
+by 1 % reduces the CDS spreads with about -0.6 % seems plausible given that Galil et
+al. (2014) found about twice the magnitude when using fewer controlling variables.
+The change in PE-ratio seems at first glance to have more impact on the spreads,
+but it is important to remember the unit differences. One unit of delta_share_price is
+approximately 1 % change whereas one unit of delta_PE_ratio is the absolute change
+in PE-ratios, i. e., from 12 to 13. Since the former is much more common than the
+latter, share price still is the greater impact. The remaining global variables have
+overall lower coefficients, with gold being the largest with 0.2.
+                                                               5.3 panel regressions 16
+
+                                                                                                                                                                ;
+                                                                               )                   05
+                                                                                                                                                                .
+                                                                                0
+                                                     <
+                                                             20362                p
+                                                                                                                                        ;
+       ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗    )                8                   ∗∗
+                                                                                                           ;
+)      381110672068543072620042175150208023094007017010                             1.
+5         .    .    .    .    .    .    .    .    .    .    .    .    .    .    .    .       653,    213 210                            0
+(      0  0(   0  0(   0  0(   0  0(   1  0(   0  0(   0  0(   0  0(        .   .   (df =
+               −    −    −             −     20 0  0               <
+                                                                   p
+                                                                           ∗∗∗                ∗
+                                                                                                           ,
+                                                                                           966.
+                                                                                2016
+                                                                    689
+                                                                               )
+
+               20363
+                  ;
+       ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗∗∗  )                       7                    to January
+
+ )      374109635072522073620042157151200021094007
+4         .    .    .    .    .    .    .    .    .    .    .    .    .    .                 653,    213 210
+(      0  0(   0  0(   0  0(   0  0(   1  0(   0  0(   0  0(               .   .   (df =              2009
+                −    −    −                     20 0  0
+                                                                               ∗∗∗
+                                                                                           943.
+                                                                    787
+                                                                               )
+
+                          20365
+                                                                                                                                        ;
+      ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗∗∗  )                                   5
+
+ )      501108870069273072645042098149
+3        .    .    .    .    .    .    .    .    .    .                                    653,    202199(df =
+(       0  0(   0  0(   0  0(   0  0(   1  0(                              .   .
+               −    −    −                    20 0  0
+                                                                               ∗∗∗
+                                                                                           388.
+                                                                                           030,
+                                                                    1
+                                                                               )
+
+                                    20367
+                                      ;
+      ∗∗∗ )  ∗∗∗ )  ∗∗∗ )                                         3
+
+ )      638096459074772072
+2        .    .    .    .    .    .                                                    653,    028027
+(       1   0(   1   0(   0   0(                                              .   .   (df =
+                 −                                  20 0  0
+                                                                               ∗∗∗
+                                                                                           756.
+                                                                    192
+                                                                               )
+
+                                         20368
+                                              ;
+      ∗∗∗ )  ∗∗∗ )                                               2
+
+ )      318079343072
+1       .    .    .    .                                                          653,    024023
+(       1   0(   1   0(                                                        .   .   (df =
+                                                         20 0  0
+                                                                               ∗∗∗
+                                                                                           979.
+                                                                    246
+              )             01
+                 1                                                                                                 .
+                               0
+                                                      <
+                                                            p
+                                           2
+
+                                             (share_price), PE-ratios (PE_ratio), the GSGC Gold Price Index (GSGC), U.S. Sovereign CDS spreads (US_CDS), and the monthly differencebetween AAA and BBB grade corporate bonds (CB_diff). All variables are in log-differences, except PE-ratios which is unaltered, EPU andPCI, which are standardised. Those in log changes are scaled such that they are interpretable as percentage points. Firm fixed effects included.Arellano post-estimated robust standard errors grouped across firms. Monthly sample period July∗∗∗
+                                                  : Panel regressions of CDS spread changes on the policy uncertainty index (EPU), Partisan Conflict Index (PCI), firm-specific stock returns
+                                     1
+
+
+                                                                   2
+      delta_EPUlag(delta_EPU,delta_PCIdelta_share_pricedelta_PE_ratioGSGC US_CDSCB_diff ObservationsR  Adjusted RF StatisticTable
+                                                               5.3 panel regressions 17
+
+5.3.2 A Comparision of Financials & Non-financials
+
+We already know that uncertainty affects different firms in varying degrees, depend-
+ing on factors such as investment irreversibility and reliance on government spend-
+ing, (Bernanke, 1983; Gulen, 2015). Monetary policy is mainly implemented through
+the financial sector, which makes it more exposed to economic policy decisions, both
+in a regulatory way and more direct to changing interest rate levels. Further has the
+financial sector endured hefty turmoil and frequent government intervention in the
+last decade.
+  Common for banks and other financial services is that both have, on average, a
+high debt-to-equity ratio, and a balance sheet mainly consisting of intangibles. When
+modelling the term structure of credit spreads using the structural approach of Mer-
+ton (1974), one assumes that leverage is a major source of financial distress; with
+higher leverage comes higher probability of default. The volatility of the underlying
+assets is also an important factor when valuing investments and securities, and the
+financial sector is one of the most volatile on the market. It is also said that ambiguity
+averse investors dislike assets for which information quality is poor, especially when
+the underlying are volatile, (Epstein and Schneider, 2008). We, therefore, intuitively
+believe that the intangibility of assets in financial organisations, combined with in-
+creased mistrust towards the industry in general, should make the sector more sen-
+sible to shocks in policy uncertainty. We use this intuition to test our model’s ro-
+bustness by expecting larger EPU-coefficients for the financial companies compared
+to the non-financial companies. To investigate this, we perform a second set of re-
+gressions. We modify the model by adding dummies which takes the value of 1
+(0) for banks or financial_other (other sectors), and 1 (0) for other sectors (banks or
+financial_other). The new econometric expression is thus:
+
+      ∆ ln(Yt,i) = β1(financial · ∆EPUt) + β2(financial · ∆EPUt−1)
+               + (non_financial · ∆EPUt) + β2(non_financial · ∆EPUt−1)    (6)
+               + γχi,t + αi + ui,t
+
+  Regression output, presented in Table 2, shows that the financial firms indeed
+are much more sensitive to the immediate economic policy uncertainty, which is the
+expected outcome. Interestingly though, the financial sector seems not to be consider-
+ably more susceptible the following month. According to our model, a one standard
+deviation change in EPU lead to a 1.02 % change in CDS spreads for the financial
+companies compared to 0.30 % for non-financial companies. This difference is only
+0.03% one month after: 0.70 % for financials compared to 0.67 % for non-financials.
+It seems like the effect of a shock in policy uncertainty first hits the financial sector,
+and then transfers with a lag to other sectors, but before we can draw any conclu-
+sions regarding this, further analysis is required. Although beyond our scope, one
+explanation could be the leading role of banks and financial services regarding price
+discovery, and the fact that these sectors are net transmitters of volatility, (Tamakoshi
+and Hamori, 2014, 2016).
+                                                               5.3 panel regressions 18
+
+                                                                                                                                                                           ,
+                                                                                                                         )
+                                                                                     2016
+                                                                           20360
+                                                                                                                                                                 ;
+       ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗    )                10
+
+)        015.    258.    701.    174.    298.    111.    670.    074.    544.    072.    620.    042.    173.    150.    208.    023.    094.    007.    017.    010.      653
+5(      1  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  0    ,   214.   211.
+          (      (      (      (  −  (  −  (  −  (      (      (  −  (       0  0  (df =
+                                                                    20                         to January
+                                                                               ∗∗∗
+
+                                                                                           202.                    2009
+
+                                                                                 553
+                                                                                         )
+
+               20361
+                   ;
+       ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗∗∗  )             9
+
+ )      008257667176291111633076523073620042155150201021094007
+4         .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .                  653,     214 211
+(      1  0(   0  0(   0  0(   0  0(   0  0(   0  0(   1  0(   0  0(   0  0(               .   .   (df =
+                         −    −    −                    20 0  0
+                                                                                             ∗∗∗
+                                                                                                           208.
+                                                                                 614
+                                                                                         )
+
+                          20363
+                         ;
+       ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗∗∗  )  ∗∗∗  )                           7
+
+ )      112257893176422109870074274073646042095149
+3         .    .    .    .    .    .    .    .    .    .    .    .    .    .                                      653,    202 199
+(       1  0(   0  0(   0  0(   0  0(   0  0(   0  0(   1  0(                              .   .   (df =
+                         −    −    −                    20 0  0
+                                                                                             ∗∗∗
+                                                                                                           573.
+                                                                                 737
+                                                                                         )
+
+                                   20365
+                                   ;
+      ∗∗∗ )  ∗∗∗ )  ∗∗∗ )  ∗∗∗ )  ∗∗∗ )                                         5
+
+ )      170287538220570098451083773072
+2         .    .    .    .    .    .    .    .    .    .                                                        653,    028027
+(       2  0(   1  0(   1  0(   1  0(   0  0(                                             .   .   (df =
+                            −                                 20 0  0
+                                                                                             ∗∗∗
+                                                                                                           812.
+                                                                                 116
+                                                                                         )
+
+                                      20366
+                                         ;
+      ∗∗∗ )  ∗∗∗ )  ∗∗∗ )  ∗∗∗ )                                                4
+
+ )      840284431221251083333081
+1        .    .    .    .    .    .    .    .                                                                653,    024024
+(       1   0(   1   0(   1   0(   1   0(                                                     .   .   (df =
+                                                                    20 0  0
+                                                                                                               ∗∗∗                           .
+                                                                                        879                    01.
+                                                                                                 .                         0
+                                                           124             <
+                                                                         p
+
+                                                                                            ∗∗∗
+                                                                                                                                                                                ;
+              )                                                                                         05
+              1                                                                        .
+                                                                                        0
+                                                          <
+                                                          p
+                                                                                            ∗∗
+                             ):non_financials ;
+                            1                                                                                   1.
+                                        0
+                                                      <
+                                                                   2                     p
+                               firm-specific stock returns (share_price), PE-ratios (PE_ratio), the GSGC Gold Price Index (GSGC), U.S. Sovereign CDS spreads (US_CDS), andthe monthly difference between AAA and BBB grade corporate bonds (CB_diff). All variables are in log-differences, except PE-ratios which isunaltered, EPU and PCI, which are standardised. Those in log changes are scaled such that they are interpretable as percentage points. Firmfixed effects included. Arellano post-estimated robust standard errors grouped across firms. Monthly sample period July∗
+                                                     : Panel regressions using sector-specific dummies of CDS spread changes on the policy uncertainty index (EPU), Partisan Conflict Index (PCI),
+                                             2
+
+
+                                                                                2
+      financials:delta_EPUfinancials:lag(delta_EPU,delta_EPU:non_financialslag(delta_EPU,delta_PCIdelta_share_pricedelta_PE_ratioGSGC US_CDSCB_diff ObservationsR  Adjusted RF StatisticTable
+                                                                        5.4 discussion 19
+
+5.4 discussion
+
+It is said that an agent experiencing uncertainty can neither be optimistic or pes-
+simistic, which invokes consideration of security, (Damghani, Taghavifard, and Moghad-
+dam, 2009). To cope with doubts, she slants probabilities pessimistically, which adds
+an uncertainty premia to the market price of risk, (Hansen and Sargent, 2006). Our
+results suggest accordingly that political indecisiveness induces a higher degree of
+mistrust in the economy. Given that periods with much uncertainty present depress
+private investment, we argue that our coefficients can proxy for the opportunity cost
+of waiting during times of political ambiguity. If an investor in need of credit pro-
+tection is unable to postpone her investment until turbulence abates, the price she
+has to pay for insurance is 0.4 % higher on average and has a trailing effect of 0.7%.
+It aligns with Slovic’s theories about uncertainty and trust: uncertainty erodes con-
+fidence in our financial systems and catalyses the perceived risk among investors,
+which accordingly demands higher risk premia as compensation.
+  One should however interpret our results conservative; they apply in a post-financial-
+crisis setting and for one proxy of policy uncertainty. During the sampling period,
+the liquidity of CDS markets decrease substantially. The implication of this is that
+the instrument could lose some value as a economy-wide proxy for credit risk. On
+the other side, before the financial crisis, CD’s were exposed to a high degree of
+pure speculation. One important discussion is also whether the uncertainty index of
+Baker, Bloom, and Davis (2013) measures anything different than the uncertainty as-
+sociated with bad states of the economy. If one assume that policy makers respond to
+economic conditions, and a lot of uncertainty is present in the economy, the outcome
+of policy making processes may be uncertain as well. It could thus be hard to ar-
+gue for a distinction between economic policy uncertainty and economic uncertainty.
+Another aspect of it is that readers of newspapers have an economically significant
+preference for like-minded news, (Gentzkow and Shapiro, 2010), which means that
+the index could be biassed towards what the public want to read. Hence, when the
+index peak, the real uncertainty of the policy making process might not be higher,
+but still attain higher values.
+  While our findings may or may not be applicable in pricing models or trading
+strategies, they serve foremost to make current research on policy uncertainty more
+robust. There are certainly a large set of additional variables we could have included
+in our model, both firm-specific and global. One should however always worry about
+the pitfall of omitted variable bias, as one never works with a correctly specified model.
+Every additional control variable would make this bias stronger.
+  We hope to draw more attention to this field of study, especially to encourage
+exploration of the relationship between government and the economy. It is a mere
+truism to state that policymakers should avoid ambiguity, still it is important to
+emphasise how damaging the lack of coherence and determination are. Policy un-
+certainty hit our economies on a broad scale and have a sustained impact on many
+levels within society. Even the most desirable reforms recoil if they induce doubts,
+(Rodrik, 1991). As the eminent Robert S. Pindyck already concluded two decades
+ago: “[Thus] if a policy goal is to stimulate investment, stability and credibility may
+be more important than tax incentives or interest rates.” (Pindyck, 1990).
+                                                                      5.5 conclusion 20
+
+5.5 conclusion
+
+Political uncertainty is proved to have an impact on many levels in the economy
+but has hitherto been difficult to quantify. When Baker, Bloom, and Davis (2013)
+constructed the EPU index, they opened a whole new dimension of tools to work
+with. This study aim to quantify the impact changes in EPU has on CDS movements
+and thus complement the findings by Wisniewski (2015). Using CDS data for a cross-
+section of 254 firms in nine industries within the U.S., we run a set of fixed effects
+panel regressions, adding explanatory variables one by one.
+  First, we confirm the findings of Wisniewski (2015), i. e., that changes in levels of
+EPU indeed has a widening effect on the CDS spreads. Secondly, after controlling
+for other market effects, we show that the magnitude of this effect is about 0.4 % the
+same month and 0.7 % the following month. We argue that our results can be viewed
+as an opportunity cost of being unable to postpone the need for credit protection
+during times of uncertainty. As expected proved firm-specific factors to have a strong
+explanatory value in our model as well.
+  Our findings are meant to ignite further interest in the subject. The effects EPU has
+on credit risk and risk perceptions is yet an unknown field, in need of more research.
+It would, for example, be interesting to extend the study by applying the model of
+Pan and Singleton (2008) to decompose the CDS spread into the risk premium and
+default risk component. Especially the premium component co-vary with several eco-
+nomic measures of global event risk, financial market volatility, and macroeconomic
+policy, (Pan and Singleton, 2008).
+  One could also perform another study on CDX indices by decomposing the CDX
+theoretical fair spread, which provides interesting diagnostics when spreads widen.
+In particular, by measuring how fast the fair average spread and the CDX spread
+change indicate if the likelihood of default of a given name increase, or if the global
+credit market deteriorates, (Couderc, 2007).
+B I B L I O G R A P H Y
+
+Acharya, Viral V (2011). Regulating Wall Street. John Wiley.
+Aizenman, Joshua and Nancy P. Marion (1993). “Policy Uncertainty, Persistence and
+    Growth.” In: Rev International Economics 1.2, pp. 145–163. doi: 10.1111/j.1467-
+     9396.1993.tb00012.x.
+Amato, Jeffery D (2005). “Risk aversion and risk premia in the CDS market.” In: BIS
+    Quarterly Review. (Visited on 04/27/2016).
+Avesani, Renzo G., Jing Li, and Antonio Garcia Pascual (2006). “A New Risk Indica-
+    tor and Stress Testing tool: A Multifactor Nth-to-Default CDS Basket.” In: IMF
+    Working Papers 06.105, p. 1. doi: 10.5089/9781451863659.001.
+Azzimonti, Marina (2013). “Partisan Conflict.” In: SSRN Electronic Journal. doi: 10 .
+     2139/ssrn.2457406.
+Baker, Scott R., Nicholas Bloom, and Steven J. Davis (2013). “Measuring Economic
+     Policy Uncertainty.” In: SSRN Electronic Journal. doi: 10.2139/ssrn.2198490.
+Baur Dirk G.Lucey, Brian M. (2010). “Is Gold a Hedge or a Safe Haven? An Analysis
+    of Stocks, Bonds and Gold.” In: Financial Review 45.2, pp. 217–229. doi: 10.1111/
+     j.1540-6288.2010.00244.x.
+Bekaert, Geert, Marie Hoerova, and Marco Lo Duca (2013). “Risk, uncertainty and
+    monetary policy.” In: Journal of Monetary Economics 60.7, pp. 771–788.
+Bernanke, Ben S. (1983). “Irreversibility, Uncertainty, and Cyclical Investment.” In:
+    The Quarterly Journal of Economics 98.1, p. 85. doi: 10.2307/1885568.
+Bertrand, M., E. Duflo, and S. Mullainathan (2004). “How Much Should We Trust
+    Differences-In-Differences Estimates?” In: The Quarterly Journal of Economics 119.1,
+    pp. 249–275. doi: 10.1162/003355304772839588.
+Blanco, Roberto, Simon Brennan, and Ian W. Marsh (2005). “An Empirical Analysis
+    of the Dynamic Relation between Investment-Grade Bonds and Credit Default
+    Swaps.” In: The Journal of Finance 60.5, pp. 2255–2281. doi: 10 . 1111 / j . 1540 -
+     6261.2005.00798.x.
+Bloom, Nicholas (2014). “Fluctuations in Uncertainty.” In: SSRN Electronic Journal.
+     doi: 10.2139/ssrn.2363082.
+Born BenjaminPfeifer, Johannes (2014). “Policy risk and the business cycle.” In: Jour-
+    nal of Monetary Economics 68, pp. 68–85. doi: 10.1016/j.jmoneco.2014.07.012.
+Brogaard, Jonathan and Andrew Detzel (2015). “The Asset-Pricing Implications of
+    Government Economic Policy Uncertainty.” In: Management Science 61.1, pp. 3–
+    18. doi: 10.1287/mnsc.2014.2044.
+Chan-Lau Jorge A.Gravelle, Toni (2005). “The End: A New Indicator of Financial and
+    Nonfinancial Corporate Sector Vulnerability.” In: IMF Working Papers 05.231, p. 1.
+     doi: 10.5089/9781451862508.001.
+Couderc, Fabien (2007). “Measuring Risk on Credit Indices: On the Use of the Basis.”
+    In: RiskMetrics Journal, 2007.
+Creal Drew D. Wu, Jing Cynthia (2014). “Interest Rate Uncertainty and Economic
+     Fluctuations.” In: SSRN Electronic Journal. doi: 10.2139/ssrn.2504590.
+
+                                        21
+                                                                       Bibliography 22
+
+Croce, Mariano M, Thien T Nguyen, and Lukas Schmid (2012). “The market price of
+    fiscal uncertainty.” In: Journal of Monetary Economics 59.5, pp. 401–416.
+Cuadra, Gabriel and Horacio Sapriza (2008). “Sovereign default, interest rates and
+    political uncertainty in emerging markets.” In: Journal of International Economics
+    76.1, pp. 78–88.
+Damghani, K Khalili, MT Taghavifard, and R Tavakkoli Moghaddam (2009). “Deci-
+    sion making under uncertain and risky situations.” In: 15.
+Durnev, Art (2013). “The Real Effects of Political Uncertainty: Elections and Invest-
+    ment Sensitivity to Stock Prices.” In: SSRN Electronic Journal. doi: 10.2139/ssrn.
+     1695382.
+Epstein, Larry G and Martin Schneider (2008). “Ambiguity, information quality, and
+    asset pricing.” In: The Journal of Finance 63.1, pp. 197–228.
+Ericsson, Jan, Kris Jacobs, and Rodolfo Oviedo (2009). “The Determinants of Credit
+    Default Swap Premia.” In: JFQ 44.01, p. 109. doi: 10.1017/s0022109009090061.
+Foerster, Andrew (2014). “The Asymmetric Effects of Uncertainty.” In: Federal Reserve
+    Bank of Kansas City Economic Review - Third Quarter 2014.
+Galil, Koresh, Offer Moshe moshe Shapir, Dan Amiram, and Uri Benzion (2014).
+    “The Determinants of CDS Spreads.” In: SSRN Electronic Journal. doi: 10.2139/
+     ssrn.2361872.
+Gentzkow, Matthew and Jesse M Shapiro (2010). “What drives media slant? Evidence
+    from US daily newspapers.” In: Econometrica 78.1, pp. 35–71.
+Goodhart C. A. E. Segoviano Basurto, Miguel A. (2009). “Banking Stability Mea-
+    sures.” In: IMF Working Papers 09.4, p. 1. doi: 10.5089/9781451871517.001.
+Gulen HuseyinIon, Mihai (2015). “Policy Uncertainty and Corporate Investment.” In:
+    Rev. Financ. Stud. hhv050. doi: 10.1093/rfs/hhv050.
+Hansen, Lars Peter and Thomas J Sargent (2006). “Fragile beliefs and the price of
+    model uncertainty.” In:
+Hendrickson, Joshua R (2015). “Interest Rates, Policy Uncertainty, and Investment.”
+     In: Policy Uncertainty, and Investment (June 18, 2015).
+Hull John C. White, Alan D. (2000). “Valuing Credit Default Swaps I.” In: The Journal
+    of Derivatives 8.1, pp. 29–40. doi: 10.3905/jod.2000.319115.
+Hull, John C., Mirela Predescu, and Alan White (2004). “Bond Prices, Default Prob-
+    abilities and Risk Premiums.” In: SSRN Electronic Journal. doi: 10 . 2139 / ssrn .
+     2173148.
+IMF (2012). World economic outlook, October 2012. International Monetary Fund.
+International Settlements, Bank for (2015). 1st ed. Monetary and Economic Depart-
+    ment. url: http://www.bis.org/publ/otc_hy1511.pdf (visited on 05/02/2016).
+Julio Brandon, Yook Youngsuk (2012). “Political Uncertainty and Corporate Invest-
+     ment Cycles.” In: SSRN Electronic Journal. doi: 10.2139/ssrn.1349267.
+Kelly, Bryan, Lubos Pastor, and Pietro Veronesi (2014). The price of political uncertainty:
+    Theory and evidence from the option market. Tech. rep. National Bureau of Economic
+    Research.
+Lipton Alexander, Rennie Andrew (2011). The Oxford Handbook of Credit Derivatives.
+    Oxford University Press.
+                                                                       Bibliography 23
+
+Longstaff, Francis A, Jun Pan, Lasse H Pedersen, and Kenneth J Singleton (2011).
+    “How Sovereign Is Sovereign Credit Risk?” In: American Economic Journal: Macroe-
+    conomics 3.2, pp. 75–103. doi: 10.1257/mac.3.2.75.
+Manzo, Gerardo (2013). “Political Uncertainty, Credit Risk Premium and Default
+    Risk.” In: Credit Risk Premium and Default Risk (August 31, 2013).
+Marcellino, Massimiliano, James H. Stock, and Mark W. Watson (2006). “A compari-
+    son of direct and iterated multistep AR methods for forecasting macroeconomic
+    time series.” In: Journal of Econometrics 135.1-2, pp. 499–526. doi: 10 . 1016 / j .
+     jeconom.2005.07.020.
+Merton, Robert C. (1974). “On the Pricing of Corporate Debt: The Risk Structure of
+    Interest Rates.” In: The Journal of Finance 29.2, p. 449. doi: 10.2307/2978814.
+Oh Dong Hwan Patton, Andrew J. (2016). “Time-Varying Systemic Risk: Evidence
+    from aDynamic Copula Model of CDS Spreads.” In: Journal of Business & Eco-
+    nomic Statistics, pp. 1–47. doi: 10.1080/07350015.2016.1177535.
+Pan, Jun and Kenneth J Singleton (2008). “Default and recovery implicit in the term
+    structure of sovereign CDS spreads.” In: The Journal of Finance 63.5, pp. 2345–
+     2384.
+Pastor Lubos, Veronesi Pietro (2013). “Political Uncertainty and Risk Premia.” In:
+     SSRN Electronic Journal. doi: 10.2139/ssrn.1969498.
+Pindyck, Robert S (1990). “Irreversibility, uncertainty, and investment.” In:
+Rajan, Ramkishen S and Sanjay Marwah (1998). “The effects of policy uncertainty
+    on the choice and timing of foreign direct investment: An exploratory firm-level
+    assessment.” In: Journal of Economic Development 23.1, pp. 37–58.
+Rodrik, Dani (1991). “Policy uncertainty and private investment in developing coun-
+    tries.” In: Journal of Development Economics 36.2, pp. 229–242. doi: 10.1016/0304-
+     3878(91)90034-s.
+Shoag DanielVeuger, Stan (2015). “Uncertainty and the Geography of the Great Re-
+     cession.” In: HKS Faculty Research Working Paper Series.
+Slovic, Paul (1993). “Perceived Risk, Trust, and Democracy.” In: Risk Analysis 13.6,
+    pp. 675–682. doi: 10.1111/j.1539-6924.1993.tb01329.x.
+Stulz, Rene M. (2010). “Credit Default Swaps and the Credit Crisis.” In: SSRN Elec-
+     tronic Journal. doi: 10.2139/ssrn.1475323.
+Tamakoshi, Go and Shigeyuki Hamori (2014). “Spillovers among CDS indexes in the
+    US financial sector.” In: The North American Journal of Economics and Finance 27,
+    pp. 104–113.
+— (2016). “Time-varying co-movements and volatility spillovers among financial
+    sector CDS indexes in the UK.” In: Research in International Business and Finance
+    36, pp. 288–296.
+Ulrich, Maxim (2012). “Economic policy uncertainty & asset price volatility.” In: Avail-
+    able at SSRN 1566909.
+Wisniewski Tomasz, Piotr Lambe Brendan John (2015). “Does Economic Policy Un-
+    certainty Drive CDS Spreads?” In: SSRN Electronic Journal. doi: 10.2139/ssrn.
+     2515769.
+               A
+
+A P P E N D I X
+
+a.1 summary statistics
+
+      industry n mean sd median min max range skew kurtosis
+
+            banks 542 −0.919 11.584 −1.382 −34.348 56.822 91.170 1.042 2.776
+   consumer_goods 1, 847 −0.421 9.796 −0.391 −46.484 59.001 105.485 0.424 4.472
+   electrical_power 946 −1.322 9.305 −0.453 −31.231 30.141 61.373 −0.003 1.122
+ energy_companies 1, 768 0.764 15.340 −0.444 −58.892 178.815 237.707 2.097 15.259
+    financial_other 4, 426 −1.130 12.009 −0.840 −83.043 88.400 171.443 0.673 4.973
+    manufacturing 6, 640 −0.586 10.950 −0.254 −99.105 72.495 171.600 0.007 5.594
+           services 4, 297 −0.632 11.281 −0.709 −77.454 67.017 144.471 0.299 3.741
+         telephone 472 −0.168 9.838 −0.076 −32.670 39.565 72.235 0.449 1.936
+     transportation 548 −0.800 10.554 −1.586 −39.104 64.551 103.656 0.756 3.016
+               all 21, 486 −0.619 11.497 −0.535 −99.105 178.815 277.921 0.718 8.069
+
+Table 3: Summary statistics of log-changes in 5-year Credit Default Swap spreads over the
+       monthly period from July 2009 to January 2016. The last row reports summary
+        statistics for all industries combined. The numbers are scaled such that they are
+        interpretable as percentage points.
+
+      industry n mean sd median min max range skew kurtosis
+
+             banks 542 122.923 70.976 101.794 36.270 460.863 424.593 1.942 4.320
+   consumer_goods 1, 847 103.057 142.520 57.933 17.521 1, 229.096 1, 211.575 4.141 20.279
+   electrical_power 946 131.431 121.936 87.890 11.672 736.927 725.255 2.208 5.459
+ energy_companies 1, 768 129.275 177.218 93.347 13.490 4, 422.029 4, 408.539 13.509 274.746
+     financial_other 4, 426 224.933 371.390 122.620 11.261 6, 120.432 6, 109.171 6.138 58.506
+     manufacturing 6, 640 157.421 188.117 94.526 10.786 3, 056.197 3, 045.411 4.147 29.800
+           services 4, 297 155.533 207.033 88.344 11.213 5, 078.964 5, 067.750 6.016 88.253
+         telephone 472 233.067 286.145 90.788 40.758 1, 574.841 1, 534.084 2.383 6.004
+     transportation 548 55.002 37.191 43.812 14.561 214.520 199.959 1.798 3.335
+                all 21, 486 160.996 237.806 91.582 10.786 6, 120.432 6, 109.647 7.256 99.680
+
+Table 4: Summary statistics of 5-year Credit Default Swap spread sizes over the monthly
+        period from July 2009 to January 2016. The last row reports summary statistics for
+        all industries combined.
+
+                                        24
+                                                                       Bibliography 25
+
+               delta_spread delta_share_price delta_PE_ratio CB_diff delta_EPU delta_PCI GSGC US_CDS
+
+    delta_spread 1 -0.427 -0.213 0.068 0.098 -0.002 0.082 0.159
+delta_share_price -0.427 1 0.347 -0.068 -0.167 0.014 -0.052 -0.133
+   delta_PE_ratio -0.213 0.347 1 -0.093 -0.068 -0.063 -0.016 -0.035
+         CB_diff 0.068 -0.068 -0.093 1 0.003 -0.093 0.235 0.035
+      delta_EPU 0.098 -0.167 -0.068 0.003 1 0.383 0.148 0.103
+       delta_PCI -0.002 0.014 -0.063 -0.093 0.383 1 0.043 0.238
+          GSGC 0.082 -0.052 -0.016 0.235 0.148 0.043 1 -0.103
+        US_CDS 0.159 -0.133 -0.035 0.035 0.103 0.238 -0.103 1
+
+Table 5: Correlation matrix of monthly changes between July 2009 and January 2016 between
+        CDS spreads, the policy uncertainty index (EPU), Partisan Conflict Index (PCI), firm-
+        specific stock returns (share_price), PE-ratios (PE_ratio), the GSGC Gold Price Index
+        (GSGC), U.S. Sovereign CDS spreads (US_CDS), and the monthly difference between
+        AAA and BBB grade corporate bonds (CB_diff). All variables are in log-differences,
+        except PE-ratios which is unaltered, EPU and PCI, which are standardised. Those in
+        log changes are scaled such that they are interpretable as percentage points.
+
+      industry mean sd median min max range skew kurtosis
+
+     delta_spread −0.619 11.497 −0.535 −99.105 178.815 277.921 0.718 8.069
+ delta_share_price 0.709 7.192 1.055 −122.216 108.783 230.999 −0.540 18.457
+    delta_PE_ratio 0.049 0.754 0.060 −2.820 2.770 5.590 −0.197 1.588
+          CB_diff 0.011 8.654 −1.028 −21.515 21.870 43.385 −0.117 0.155
+       delta_EPU 0.002 0.984 −0.034 −3.421 2.001 5.422 −0.403 0.667
+        delta_PCI −0.009 1.007 0.009 −4.718 3.386 8.105 −0.711 5.738
+           GSGC 0.120 3.586 −0.134 −7.050 11.192 18.242 0.278 −0.047
+         US_CDS −1.148 12.440 −1.165 −29.939 30.452 60.391 0.271 0.627
+
+Table 6: Descriptive statistics of monthly changes between July 2009 and January in CDS
+        spreads, the policy uncertainty index (EPU), Partisan Conflict Index (PCI), firm-
+        specific stock returns (share_price), PE-ratios (PE_ratio), the GSGC Gold Price Index
+        (GSGC), U.S. Sovereign CDS spreads (US_CDS), and the monthly difference between
+        AAA and BBB grade corporate bonds (CB_diff). All variables are in log-differences,
+        except PE-ratios which is unaltered, EPU and PCI, which are standardised. Those
+        expressed in log changes are scaled such that they are interpretable as percentage
+         points.
+                                                                       Bibliography 26
+
+                                                                                        lll
+                                                                                                                        l
+                                                                        l
+                                                                                        l
+                                                                        l               l
+                                                                                        llllll               l
+           8                                                                     lllllllllllll              l              l
+                                                                                        lllllll
+                                                                        l               lll
+                                                                                        llllll               ll               l
+                                                                                        llll               l
+                                                                                 lllllllll          ll
+                                                                                        llllllllllllllll               l
+                                                                                        llllllllllll               ll
+                                                                                        llllllllllll               llllll               ll
+                                                                        l               lllll               llllll               lllllll
+                                                                                        llllllllll               lll               lllllll
+                                        lll                                               lllllllllllll               llllll               llll
+                                        ll                                                               llllllllll
+                                                                        ll                               lllllll
+                                        lllllllllll
+                                        llllll
+                                        llll                               l
+                                        llllll                               ll
+                                    lllll                    lll
+                                        lllll                               llllll
+                                        lllll                               ll
+                                        lllllll
+                        l               llllllll
+                        lll               lllllllllll
+                        lll               lllllllllll
+          6         llllll          llllllllll
+                                        llllllll
+                                        llllllllllllllllllll
+                                        llll
+
+                                                                                                                                                        lllll
+
+     log(spread)
+
+      4
+
+                                                                        lllllllllll
+                                                                        lllllll
+                                                                                        l
+                                                                                        l
+
+       banks
+                                                   services
+                                                      telephone
+                                 financial_othermanufacturing         transportation
+       consumer_goodselectrical_power
+                   energy_companies
+
+                                                          (a)
+
+                                                                          l
+
+                                                                          l
+
+    100
+
+                                                                                           l
+                                                                          ll
+                                                                          l
+                                                                                           l               l
+                                                                          lll               l                                l
+                                                                          ll               ll               ll                                                l
+                                          l                                lll               l               l               l
+                         l                                                lll               llll               lll               l
+                                                                                           lll               l               ll
+                                                                          l               ll               l               lll
+                         l               ll                                ll               lll               ll               llll
+                                                                          llll               lllllll               lllll               lll
+                         ll               l                                lllll               lllll               lllll               lll
+                         l               llll                                lllllll               llllllll               llll               llllll               l
+                         l               llllll                                llllllllll               llllllllll               lllllllllll               llllllll               l
+                         lll               ll                                llllllllllll               lllllllllllllllll               llllllllllllllllllll               llllll                                l
+                         ll                                                lllllllllllllll               llllllllllllllllllllllll               lllllllllllllll               lllllllllllllll               ll               ll
+                         lll               lllllllll               llllll               llllllllllllllllll               lllllllllllllllllllllll               lllllllllllllllllllll               llllllllllllllllll               ll               l
+                         lllllll               lllllllll               ll               lllllll               llllllllllllllllllllllll               lllllllllllllllllllllllllllllllllllllllllll               lllllllllllllllllllllllll               llllll               lll
+                         lll               llllllllllll               lllllll                                llllllllllllllllllllllllllllllllllllllllllll               llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll               llllllllllllllllllllllllllllllllllll               ll               lllllll
+                                          llllllllllllllllllll               lllllll                                llllllllllllllllllllllllllllllllllll               lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll               lllllllllllllllll               llll               llll
+                                          llllllllllllllllll               lllllllllll                                llllllllllllllllllll               lllllllllllllllllllllllllllllllllllllllllll                                llll
+                                          llllllllllllll
+  delta_spread0
+
+                                          lllllllllllllllllll                                                                                                  ll
+                                          lllllllll               lllllllllllll                                                llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll                                ll
+                                          lllllllll               lllllll                                lllllllllllllllllllllllllllllllllllllllll               llllllllllllllllllllllllllllllllllllllll               llllllllllllllllllllllll               lll               ll
+                         l               ll               lllllll                                llllllllllllllllllllllllllllllllll               llllllllllllllllllllllllllllllll               llllllllllllllllllllll               l               l
+                         ll               llllllll               llll               llllll               llllllllllllllll               lllllllllllllllllllllllll               llllllllllllll               ll               l
+                                          llll               l               llllllll               llllllllllllllllll               llllllllllllll               llllllllll               ll
+                         l               lll                                lllll               lllllllllllll               lllllll               llllll
+                                          llll                                lllll               llllll               llll               lllll
+                                          ll                                l               l               lllllll               ll                                l
+                                                                          l               lllll               llllll
+                                          ll                                                l               llllll               lll
+                                                                                           l               llll               lll
+                                                                                           ll               lll
+                                                                                                                            l
+                                                                          l                                lll
+                                                                                                           ll               l
+                                                                                                                            l
+
+                                                                                           l               ll               l
+                                                                                           l
+
+                                                                                                           l
+   −100
+
+        banks
+                                                     services
+                                                        telephone
+                                  financial_othermanufacturing          transportation
+        consumer_goodselectrical_power
+                    energy_companies
+                                                       (b)
+
+Figure 5: Notched boxplots of the firm-specific CDS spreads grouped by industry, expressed
+         in levels on the top and log-differences on the bottom. The log changes are scaled
+          such that they are interpretable as percentage points.
+                                                                       Bibliography 27
+
+    250                                                   2
+
+    200
+                                                          0
+   EPU150
+
+                                                   delta_EPU−2
+    100
+
+         2010  2011  2012  2013  2014  2015  2016             2010  2011  2012  2013  2014  2015  2016
+                       (a) (b)
+
+Figure 6: Figure illustrating the movements of the EPU index over the sampling period. The
+         left graph shows monthly levels (index points), the right graph displays the corre-
+         sponding monthly changes, demeaned and standardized (sd = 1, mean = 0).
+
+    250
+                                                          2
+    200
+                                        index          0                                index
+                                                       EPU                                                             delta_EPU
+     150                                              PCI                                                              delta_PCI
+   change                                       change−2
+    100
+                                                       −4
+
+          2010 2011 2012 2013 2014 2015 2016                       2010 2011 2012 2013 2014 2015 2016
+                       (a) (b)
+
+Figure 7: Figure illustrating the movements of the EPU index and the PCI index over the
+         sampling period. The left graph displays monthly levels (index points), the right
+         graph shows the corresponding monthly changes, demeaned and standardised (sd
+         = 1, mean = 0).
+                                                                       Bibliography 28
+
+a.2 tests
+
+a.2.1 Standard F-test
+
+     F− s t a t i s t i c
+
+data : d e l t a _ s p r e a d ~ delta_EPU + l a g ( delta_EPU , 1 )
++ d e l t a _ P C I + d e l t a _ s h a r e _ p r i c e + d e l t a _ P E _ r a t i o
++ GSGC + US_CDS + CB_diff
+
+F = 1 . 6 5 9 7 , df1 = 2 2 5 6 , df2 = 1 8 1 0 6 , p−value < 2 . 2 e−16
+a l t e r n a t i v e h y p o t h e s i s : u n s t a b i l i t y
+a.2.2 Breusch-Pagan Test
+
+     s t u d e n t i z e d Breusch−Pagan t e s t
+
+data : d e l t a _ s p r e a d ~ delta_EPU + l a g ( delta_EPU , 1 )
++ d e l t a _ P C I + d e l t a _ s h a r e _ p r i c e + d e l t a _ P E _ r a t i o
++ GSGC + US_CDS + CB_diff
+
+BP = 1 8 2 . 5 2 , df = 8 , p−value < 2 . 2 e−16
+a.2.3 Hausman Test
+
+     Hausman T e s t
+
+data : d e l t a _ s p r e a d ~ delta_EPU + l a g ( delta_EPU , 1 )
++ d e l t a _ P C I + d e l t a _ s h a r e _ p r i c e + d e l t a _ P E _ r a t i o
++ GSGC + US_CDS + CB_diff
+
+c h i s q = 3 6 . 9 8 6 , df = 8 , p−value = 1 . 1 5 8 e−05
+a l t e r n a t i v e h y p o t h e s i s : one model i s i n c o n s i s t e n t
+a.2.4 Breusch-Godfrey/Wooldridge Test
+
+    Breusch−Godfrey/Wooldridge :
+t e s t f o r s e r i a l c o r r e l a t i o n i n panel models
+
+data : d e l t a _ s p r e a d ~ delta_EPU + l a g ( delta_EPU , 1 )
++ d e l t a _ P C I + d e l t a _ s h a r e _ p r i c e + d e l t a _ P E _ r a t i o
++ GSGC + US_CDS + CB_diff
+
+c h i s q = 9 6 0 . 1 1 , df = 7 , p−value < 2 . 2 e−16
+a l t e r n a t i v e h y p o t h e s i s : s e r i a l c o r r e l a t i o n i n i d i o s y n c r a t i c e r r o r s
+                 B
+
+A P P E N D I X I I - L I S T O F C O M PA N I E S
+
+           Code Name Code Name
+       1 ABC5.AR AMERISOURCEBERGEN ITW5.AR ILLINOIS TOOL WORKS
+       2 ABT5.AR ABBOTT LABORATORIES JCI5.AR JOHNSON CONTROLS
+       3 ADM5.AR ARCHER-DANLS.-MIDL. JNJ5.AR JOHNSON & JOHNSON
+       4 AEP5.AR AMER.ELEC.PWR. JPM5.AR JP MORGAN CHASE & CO.
+       5 AET5.AR AETNA K..5.AR KELLOGG
+       6 AFG5.AR AMERICAN FINL.GP.OHIO KFT5.AR MONDELEZ INTERNATIONAL CL.A
+       7 AIG5.AR AMERICAN INTL.GP. KIM5.AR KIMCO REALTY
+       8 AIZ5.AR ASSURANT KMB5.AR KIMBERLY-CLARK
+       9 ALL5.AR ALLSTATE KMG5.AR KMG CHEMICALS
+       10 AMS5.AR AMER.SHARED HOSP.SVS. KO.5.AR COCA COLA
+       11 AOC5.AR AON CLASS A KR.5.AR KROGER
+       12 APA5.AR APACHE KSS5.AR KOHL’S
+       13 APD5.AR AIR PRDS.& CHEMS. LEN5.AR LENNAR ’A’
+       14 ARW5.AR ARROW ELECTRONICS LMT5.AR LOCKHEED MARTIN
+       15 ASH5.AR ASHLAND LNC5.AR LINCOLN NATIONAL
+       16 AVB5.AR AVALONBAY COMMNS. LOW5.AR LOWE’S COMPANIES
+       17 AVP5.AR AVON PRODUCTS LUV5.AR SOUTHWEST AIRLINES
+       18 AVT5.AR AVNET LVL5.AR LEVEL 3 COMMS.
+       19 AX.5.AR AGILENT TECHS. LXK5.AR LEXMARK INTL.
+       20 AXP5.AR AMERICAN EXPRESS MAR5.AR MARRIOTT INTL.’A’
+       21 AZO5.AR AUTOZONE MAS5.AR MASCO
+       22 BAC5.AR BANK OF AMERICA MAT5.AR MATTEL
+       23 BAX5.AR BAXTER INTL. MCD5.AR MCDONALDS
+       24 BBY5.AR BEST BUY MCK5.AR MCKESSON
+       25 BDK5.AR STANLEY BLACK & DECKER MDT5.AR MEDTRONIC
+       26 BDX5.AR BECTON DICKINSON MET5.AR METLIFE
+       27 BGG5.AR BRIGGS & STRATTON MLM5.AR MARTIN MRTA.MATS.
+       28 BHI5.AR BAKER HUGHES MMC5.AR MARSH & MCLENNAN
+       29 BKE5.AR BUCKLE MMM5.AR 3M
+       30 BLK5.AR BLACKROCK MO.5.AR ALTRIA GROUP
+       31 BLL5.AR BALL MOH5.AR MOLINA HEALTHCARE
+       32 BRK5.AR BERKSHIRE HATHAWAY ’A’ MOP5.AR PHILIP MORRIS INTL.
+       33 BUD5.AR ANHEUSER-BUSCH INBEV SPN.ADR MOT5.AR MOTOROLA SOLUTIONS
+       34 BWA5.AR BORGWARNER MRO5.AR MARATHON OIL
+       35 BXP5.AR BOSTON PROPERTIES MS.5.AR MORGAN STANLEY
+       36 C..5.AR CITIGROUP MSF5.AR MICROSOFT
+       37 CA.5.AR CA MTC5.AR MONSANTO
+       38 CAG5.AR CONAGRA FOODS MUR5.AR MURPHY OIL
+       39 CAH5.AR CARDINAL HEALTH MYL5.AR MYLAN
+       40 CAT5.AR CATERPILLAR NEM5.AR NEWMONT MINING
+       41 CB.5.AR CHUBB NEU5.AR NEWMARKET
+       42 CBS5.AR CBS ’B’ NKE5.AR NIKE ’B’
+       43 CCC5.AR CALGON CARBON NOB5.AR NORDSTROM
+       44 CCE5.AR COCA COLA ENTS. NRG5.AR NRG ENERGY
+       45 CGG5.AR CGG ADR NSC5.AR NORFOLK SOUTHERN
+       46 CHK5.AR CHESAPEAKE ENERGY NUE5.AR NUCOR
+       47 CI.5.AR CIGNA NVR5.AR NVR
+       48 CL.5.AR COLGATE-PALM. NWL5.AR NEWELL BRANDS
+       49 CLC5.AR CLARCOR NYT5.AR NEW YORK TIMES ’A’
+       50 CLI5.AR MACK CALI REALTY OCA5.AR OWENS CORNING
+       51 CLX5.AR CLOROX OI.5.AR OWENS ILLINOIS NEW
+       52 CMC5.AR COMMERCIAL MTLS. OLN5.AR OLIN
+       53 CMS5.AR CMS ENERGY OMC5.AR OMNICOM GROUP
+       54 CNP5.AR CENTERPOINT EN. OXY5.AR OCCIDENTAL PTL.
+       55 COF5.AR CAPITAL ONE FINL. PAA5.AR PLAINS ALL AMER.PIPE.LP. UNIT
+       56 COP5.AR CONOCOPHILLIPS PBI5.AR PITNEY-BOWES
+       57 COT5.AR COSTCO WHOLESALE PEP5.AR PEPSICO
+       58 CPB5.AR CAMPBELL SOUP PG.5.AR PROCTER & GAMBLE
+       59 CPT5.AR CAMDEN PROPERTY TST. PHH5.AR PHH
+
+                                          29
+                                                                 Bibliography 30
+
+60 CR.5.AR CRANE PKG5.AR PACKAGING CORP.OF AM.
+61 CSC5.AR COMPUTER SCIS. PKI5.AR PERKINELMER
+62 CSO5.AR CISCO SYSTEMS PNC5.AR PNC FINL.SVS.GP.
+63 CTB5.AR COOPER TIRE & RUB. POM5.AR PEPCO HOLDINGS
+64 CUM5.AR CUMMINS PPC5.AR PPL
+65 CVX5.AR CHEVRON PPG5.AR PPG INDUSTRIES
+66 CZN5.AR FRONTIER COMMUNICATIONS PRX5.AR PRUDENTIAL FINL.
+67 D..5.AR DOMINION RESOURCES PX.5.AR PRAXAIR
+68 DD.5.AR E I DU PONT DE NEMOURS PXD5.AR PIONEER NTRL.RES.
+69 DDR5.AR DDR R..5.AR RYDER SYSTEM
+70 DDS5.AR DILLARDS ’A’ ROK5.AR ROCKWELL AUTOMATION
+71 DE.5.AR DEERE RRD5.AR R R DONNELLEY & SONS
+72 DEL5.AR DELTIC TIMBER RSG5.AR REPUBLIC SVS.’A’
+73 DGX5.AR QUEST DIAGNOSTICS RTN5.AR RAYTHEON ’B’
+74 DHI5.AR D R HORTON SHW5.AR SHERWIN-WILLIAMS
+75 DHR5.AR DANAHER SON5.AR SONOCO PRODUCTS
+76 DIA5.AR DISH NETWORK ’A’ SPG5.AR SIMON PROPERTY GROUP
+77 DIS5.AR WALT DISNEY SPL5.AR STAPLES
+78 DLX5.AR DELUXE STZ5.AR CONSTELLATION BRANDS ’A’
+79 DOV5.AR DOVER SVU5.AR SUPERVALU
+80 DOW5.AR DOW CHEMICAL SXH5.AR SEAGATE TECH.
+81 DRE5.AR DUKE REALTY SYY5.AR SYSCO
+82 DRI5.AR DARDEN RESTAURANTS T..5.AR AT&T
+83 DTE5.AR DTE ENERGY TAP5.AR MOLSON COORS BREWING ’B’
+84 DUD5.AR DUKE ENERGY TDS5.AR TELEPHONE & DATA SYS.
+85 DVN5.AR DEVON ENERGY TE.5.AR TECO ENERGY
+86 EEP5.AR ENBRIDGE ENERGY PTNS.LP TGT5.AR TARGET
+87 EMN5.AR EASTMAN CHEMICAL THC5.AR TENET HEALTHCARE
+88 EMR5.AR EMERSON ELECTRIC TJX5.AR TJX
+89 EOG5.AR EOG RES. TOL5.AR TOLL BROTHERS
+90 EPD5.AR ENTERPRISE PRDS.PTNS.LP. TRV5.AR TRAVELERS COS.
+91 EQR5.AR EQUITY RESD.TST.PROPS. SHBI TSN5.AR TYSON FOODS ’A’
+92 ETN5.AR EATON TSO5.AR TESORO
+93 ETP5.AR ENERGY TRANSFER PTNS. TWD5.AR TIME WARNER CABLE
+94 ETR5.AR ENTERGY TWX5.AR TIME WARNER
+95 EXC5.AR EXELON TXT5.AR TEXTRON
+96 FDX5.AR FEDEX UDR5.AR UDR
+97 FE.5.AR FIRSTENERGY UFX5.AR UNIFLEX
+98 FMR5.AR FORD MOTOR UHS5.AR UNIVERSAL HEALTH SVS.’B’
+99 GD.5.AR GENERAL DYNAMICS UIS5.AR UNISYS
+100 GIS5.AR GENERAL MILLS UNH5.AR UNITEDHEALTH GROUP
+101 GLW5.AR CORNING UNM5.AR UNUM GROUP
+102 GMT5.AR GATX UNP5.AR UNION PACIFIC
+103 GNW5.AR GENWORTH FINANCIAL CL.A UPS5.AR UNITED PARCEL SER.’B’
+104 GPS5.AR GAP URI5.AR UNITED RENTALS
+105 GR.5.AR GOODRICH PTL. USM5.AR UNITED STATES CELLULAR
+106 GS.5.AR GOLDMAN SACHS GP. UTX5.AR UNITED TECHNOLOGIES
+107 HAL5.AR HALLIBURTON UVV5.AR UNIVERSAL
+108 HAS5.AR HASBRO VFC5.AR V F
+109 HCN5.AR WELLTOWER VIA5.AR VIACOM ’B’
+110 HCP5.AR HCP VLO5.AR VALERO ENERGY
+111 HD.5.AR HOME DEPOT VZ.5.AR VERIZON COMMUNICATIONS
+112 HES5.AR HESS WEN5.AR WENDY’S CLASS A
+113 HIG5.AR HARTFORD FINL.SVS.GP. WFC5.AR WELLS FARGO & CO
+114 HIW5.AR HIGHWOODS PROPERTIES WHR5.AR WHIRLPOOL
+115 HNT5.AR HEALTH NET WLB5.AR ANTHEM
+116 HON5.AR HONEYWELL INTL. WMB5.AR WILLIAMS
+117 HOT5.AR STARWOOD H&R.WORLDWIDE WMI5.AR WASTE MANAGEMENT
+118 HPQ5.AR HP WMT5.AR WAL MART STORES
+119 HPT5.AR HOSPITALITY PROPS.TST. SHRE.BENL.INT. WOR5.AR WORTHINGTON INDS.
+120 HSL5.AR HOST HOTELS & RESORTS WRE5.AR WASHINGTON RLST.INV. SHRE.BENEFIT INT.
+121 HSY5.AR HERSHEY WRI5.AR WEINGARTEN REALTY INVRS.
+122 HUM5.AR HUMANA WU.5.AR WESTERN UNION
+123 IBM5.AR INTERNATIONAL BUS.MCHS. WY.5.AR WEYERHAEUSER
+124 INU5.AR INTUIT XCE5.AR XCEL ENERGY
+125 IP.5.AR INTERNATIONAL PAPER XOM5.AR EXXON MOBIL
+126 IPG5.AR INTERPUBLIC GROUP XRX5.AR XEROX
+127 IRC5.AR INLAND REAL ESTATE YUM5.AR YUM! BRANDS

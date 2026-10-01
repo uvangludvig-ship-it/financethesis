@@ -1,0 +1,1576 @@
+       Corporate Bond Yield Spreads:
+     A Search-based Sentiment Approach
+
+         Johan Pettersson* & Christoffer Sjöström**
+                       May 15, 2016
+
+                                 Bachelor Thesis
+                             Department of Finance
+                        Stockholm School of Economics
+
+                                     Abstract
+This study examines the effect of investor sentiment, as measured by internet search activity,
+on corporate bond yield spreads. Specifically, we predict systematic reversal patterns as a result
+of sentiment-induced mispricing: In pessimistic regimes bonds appear underpriced with higher
+yields than indicated by fundamental values. Subsequently, delayed price correction neutralizes
+irrational deviations. We also expect that high-yield issues, who are more likely to be affected
+by subjective valuations and limits to arbitrage, are more sensitive to changes in investor
+sentiment and are characterized by more pronounced reversal patterns. However, our results are
+neither statistically nor economically significant, providing no support for the role of investor
+sentiment in this context. These findings apply to a series of re-specifications with regard to our
+measure of sentiment. Nevertheless, these findings might prove valuable as they possibly
+indicate that corporate bonds display inertia in the incorporation of sentiment relative to stocks.
+
+Keywords: Investor sentiment, Corporate bonds, Yield spreads, Mispricing, Reversal trends
+Thesis Advisor: Irina Zviadadze
+Acknowledgements: We would like to thank Irina Zviadadze for valuable input and support
+
+*
+ 22985@student.hhs.se
+**
+  22997@student.hhs.se
+
+                                        1
+Contents
+1 Introduction ......................................................................................................................................................... 3
+2 Previous literature...............................................................................................................................................4
+2.1 Behavioural Finance and Investor sentiment .....................................................................................................4
+2.2 Sentiment Measures ...........................................................................................................................................5
+2.3 Documentations in Equity Markets ....................................................................................................................7
+
+2.4 Documentations in Debt Markets ....................................................................................................................... 8
+
+3 Data .................................................................................................................................................................... 10
+3.1 Corporate Bond Data........................................................................................................................................ 10
+3.2 Data on Search-activity .................................................................................................................................... 10
+3.1 Other Data ........................................................................................................................................................ 11
+4 Methodology and Hypothesis Development .................................................................................................... 11
+4.1 Economic Theory and Empirical Predictions ................................................................................................... 11
+4.2 Google Trends and the Search Volume Index .................................................................................................. 12
+4.3 Search-based index........................................................................................................................................... 14
+4.4 Bond Yield Spreads.......................................................................................................................................... 16
+4.5 Main Regression .............................................................................................................................................. 16
+4.6 Robustness Tests .............................................................................................................................................. 17
+      4.6.1 Sub-period and Time-horizon Robustness ..............................................................................................................17
+      4.6.2 Re-specification of the Search-based Index ............................................................................................................17
+      4.6.3 Choice of Sentiment Measure .................................................................................................................................18
+5 Empirical Results .............................................................................................................................................. 19
+5.1 Descriptive Statistics ........................................................................................................................................ 19
+         5.1.1 Summary Statistics .................................................................................................................................................19
+      5.1.2 Correlation ..............................................................................................................................................................21
+5.2 Main Results .................................................................................................................................................... 21
+5.3 Robustness Evaluation ..................................................................................................................................... 25
+        5.3.1 Sub-period and Time-horizon Robustness Results .................................................................................................25
+        5.3.2 Re-specification of the Search-based Index Results ...............................................................................................26
+        5.3.3 Choice of Sentiment Measure Results ....................................................................................................................27
+6 Discussion........................................................................................................................................................... 27
+6.1 The Rate of Sentiment Incorporation ............................................................................................................... 27
+6.2 Sentiment Precision .......................................................................................................................................... 28
+6.3 Limitations ....................................................................................................................................................... 29
+7 Conclusion ......................................................................................................................................................... 29
+References ............................................................................................................................................................. 31
+A Appendix: Main Results .................................................................................................................................. 34
+B Appendix: Robustness Evaluation .................................................................................................................. 37
+
+                                        2
+1 Introduction
+
+Conventional financial theory ignores the effect of individual decision making in explaining
+several asset pricing phenomena. Rather it argues that investors process information perfectly
+and therefore infer optimal statistical distributions about expected portfolio returns.
+Competition among rational investors thus gives rise to an equilibrium, in which prices of
+securities mirror rationally discounted values based on fundamental values of risk. Even though
+traditional financial theory acknowledges the presence of irrational investors making
+inconsistent or systematically suboptimal investment decisions, it predicts that their actions will
+be mitigated and fully undone by rational arbitrageurs. Given this framework, there is no room
+for the role of investor sentiment. Behavioural finance challenges this view by asserting that
+arbitrage activity may practically be limited and market participants may assess information
+erroneously. In line with this, a wide range of authors (De Long et al. 1990; Shleifer and Vishny
+1997) document that both cross-sectional and time-series return patterns significantly deviate
+from rational predictions. This has rendered a growing attraction to behavioral biases in
+describing several market anomalies. Biased investor outlooks represent such an aspect and has
+been at the very centre and forefront of research within behavioural finance.
+     Comprehensive research shows that investor sentiment, which is commonly defined as
+the general level of optimism or pessimism in the market, has significant effects on stock returns
+over different specifications of time horizons (Baker and Wurgler 2006; Neal and Wheatley
+1998; Da et al. 2014; Qiu and Welch 2004 etc). Even though sentiment is commonly believed
+to have pervasive influence on a wide range of assets, relatively little has been documented in
+corporate bond markets. Previous work has manifested the impact of sentiment on corporate
+bond yield spreads over the long-term and have in common the usage of the same sentiment
+measure. Drawing from this, our study uniquely builds upon and extends previous findings
+by (1) adopting an alternative search-based approach in capturing market pessimism and (2) by
+considering shorter time periods.
+      Based on the great amount of sentiment literature, our study predicts that increased market
+pessimism is associated with overestimation of underlying risks contemporaneously, whereas
+subsequent delayed price correction gives rise to systematic reversal patterns. Accordingly we
+test and postulate the following hypothesis: In periods of pessimism, contemporaneous yield
+spreads are high. After periods of pessimism, subsequent yield spreads are low. Additionally,
+we expect that bonds more prone to subjective valuations and limits to arbitrage are more
+susceptible to shocks in investor sentiment, being marked by more erroneous mispricing and
+
+                                        3
+distinct trends. Therefore, we also hypothesize that: The relation between investor pessimism
+and yield spreads is more pronounced for high-yield bonds with distressed attributes.
+      We empirically test our theoretical predictions by establishing the leading and current
+relationship between corporate bond yield spreads and sentiment through conducting
+regressions for a wide range of different sub-samples using data from 2004-2014. The
+classification of categories relies upon observed trends in yield spreads and includes different
+ratings, maturities and industries. Our results are generally both economically and statistically
+insignificant, not lending any support for our initial hypotheses of systematic reversals. These
+findings remain robust to a wide range of alternate specifications of the sentiment index, time
+horizons and sub-periods. Given that the search-based measure reflects sentiment and that there
+are no systematic reversals, our results might indicate that bonds incorporate sentiment at a
+slower rate relative to stocks. This is broadly consistent with previous documentations on direct
+spillovers between debt and equity markets with stocks leading bonds in the reflection of
+information and that bonds depict considerably limited liquidity.
+      The outline of the remainder of the study is organized as follows: Section 2 reviews
+previous literature. Section 3 describes the data used in the study. Section 4 discusses key
+theoretical concepts underlying our hypotheses and presents our methodology. Section 5
+demonstrates and analyzes obtained empirical results. Section 6 discusses alternative
+interpretations of our findings and the limitations inherent in our study. Section 7 concludes
+and provides suggestions for future research
+
+2 Previous Literature
+
+This section reviews prior literature on the topic and identifies how our study uniquely builds
+on previous findings. First, investor sentiment is discussed in the context of financial
+theory. Then, several common sentiment proxies are described. Finally, documentations of
+sentiment in both debt and equity markets are presented.
+
+2.1 Behavioural Finance and Investor Sentiment
+
+Behavioural finance builds upon the principle of limits to arbitrage, stating that the presence of
+arbitrage constraints may hinder rational arbitrageurs from bringing prices back to intrinsic
+value. In support of this, Shleifer and Vishny (1997) demonstrate that specialized performance-
+based arbitrage may not be sufficient in forcing security prices to fundamental values,
+particularly in several extraordinary circumstances. Additionally, De Long et al. (1990) present
+a simple generations model picturing an asset market in which irrational noise traders with
+
+                                        4
+erroneous stochastic beliefs both affect prices and earn abnormally positive expected returns,
+creating an embedded risk associated with unpredictability of the noise traders that serves as a
+deter for rational arbitraguers to bet against them. As a result, prices can deviate significantly
+from fundamentals even when risk is absent.
+      While the efficient market hypothesis claims that asset prices reflect all publicly available
+information to investors (Fama and Malkiel, 1970), behavioural finance suggests that investors
+do not always process information correctly. Imperfect processing of information among
+investors might render misestimation of potential events and associated cash flows. Behavioral
+biases due to erroneous assessment of information has been unveiled in a range of influential
+papers. For instance, Kahneman and Tversky (1972, 1973) conduct a series of experiments
+claiming that decision makers unproportionately focus on recent beliefs compared to previous
+perceptions in the establishment of market forecasts. Kahneman and Tversky (1972, 1973) also
+show that people tend to conduct exaggerated market forecasts given the degree of uncertainty
+embedded in the material. Analogous to these findings, De Bondt and Thaler (1990) explain
+the P/E-effect by extreme earnings expectations based on recent abnormal performance.
+Similarly, Ball and Brown (1968) were among the pioneers in showing evidence of drifting
+stock prices after earning announcements.
+    Given the setting that behavioural finance brings forth, investor sentiment is allowed to have
+pervasive influence on asset prices and bears the possibility of explaining various anomalies in
+financial markets consistent with previous findings on the topic.
+
+2.2 Sentiment Measures
+
+Investor sentiment is considered to have permeating effects on asset prices, yet there is no
+consensus among practitioners of how it should be measured properly (Da et al., 2014). This
+subsection aims to briefly discuss and present some of the existing measures and their properties
+given in the vast amount of sentiment literature.
+     Perhaps the most popular proxy of investor sentiment is put forward by Baker and
+Wurgler (2006), hereafter BW. The authors form a joint index based on the common variation
+in a number of sentiment proxies represented by different underlying market variables.
+Specifically, these are the NYSE share turnover, the closed-end fund discount, the average first
+day-returns and number of IPOs, the dividend premium on equity holdings and the equity share
+in new issues. The closed-end fund discount is the difference between net asset values of closed-
+end stock fund shares and the corresponding market prices and is claimed to be inversely
+associated with sentiment according to Zweig (1973). Baker and Stein (2004) argue that share
+
+                                        5
+turnover can serve as a sentiment indicator and Jones (2002) claim that high turnover, or
+alternatively liquidity, renders low market returns. According to BW (2006) the IPO market is
+affected by sentiment, with abnormal performance on initial returns being connected to
+optimism. The share of equity issues divided by the total amount of equity is also argued to
+have a linkage to sentiment since high values of equity shares generates to low market returns,
+as proposed by BW (2000). BW (2004) advocates the inclusion of a dividend premium as a
+means of measuring sentiment as it captures relative investor demand for dividend-paying
+stocks.
+      Another market-based variable that has gained a foothold as a signal of sentiment is the
+put-call ratio, which is the ratio of outstanding put options to outstanding call options (Bodie et
+al., 2010). Because higher values of call options depend on rising markets, whereas the opposite
+holds for puts, deviations might forecast return movements. Simon and Wiggins (2001)
+investigates the forecasting power for subsequent returns on S&P 500 futures contracts over
+shorter horizons, using the volatility index, the put-call ratio and the trading index (TRIN). They
+find that these variables are contrarian indicators and that they frequently appear significant
+both economically and statistically. We choose to include the put-call ratio in our robustness
+check as an alternative measure of sentiment.
+      Instead of attempting to capture sentiment with market-based variables, previous research
+has offered a range of different alternatives. As an alternative, some practitioners have been in
+favour of survey-based indices. Brown and Cliff (2005) use a direct survey measure based on
+data from Investor’s Intelligence, which captures the number of market newsletters that are
+labelled either bullish, bearish or neutral. Similarly, Lemmon and Portniaguina (2006) explore
+the time-series relationship between investor sentiment and the small stock-premium using
+consumer confidence as a measure of market optimism. Qiu and Welch (2004) compares
+investor sentiment measures based on consumer confidence surveys with measures extracted
+from the closed-end fund discount, demonstrating that these are relatively uncorrelated.
+Measuring consumer confidence by the UBS/Gallup Index for Investor Optimism, the authors
+show that only this measure correlates well with sentiment.
+     Some empiricists are in favour of retail investor trades as a sentiment measure.
+Greenwood and Nagel (2009) show that relatively younger traders were more prone to a larger
+extent buy stocks at the optimum of the Internet bubble. Similarly, Barber et al. (2009) and
+Kumar and Lee (2006) investigate trading data to find that retail actors pursue buy and sell
+decisions in agreement. Option implied volatility is also a conventional way of measuring
+sentiment (BW, 2007). The market volatility index, hereafter VIX, measures the implied
+
+                                        6
+volatility of options on the S&P 500 stock index. We include VIX as a control variable in our
+regression specifications. Last but not least, insider trading has been suggested in the literature.
+Intuitively, executives may have superior information about the true value compared to external
+investors. Seyhun (2000) brings forth evidence of the possibility of interpreting insider trading
+activity to predict returns.
+     Barberis et al. (1998) develop a unique model of investor sentiment picturing one
+bayesian investor and one asset, with predictions consistent with empirical data findings.
+Feldman (2010) also constructs a unique index, a loss index, being able to predict returns,
+especially for one and two-year horizons.
+      Da et al. (2014) brings forth an alternative measure of sentiment by constructing a
+Financial and Economic Attitudes Revealed by Search index, hereafter referred to as FEARS.
+The authors advocate the usage of a direct measure by tracking Internet search behaviour by
+aggregating the volume of search activity for words using the Google Trends, a software
+application. Specifically, the relative amount of a range of different search terms associated
+with economic pessimism is used as investor sentiment proxies. The sentiment index we
+construct in this study in the desire of relating it to corporate bond yield spreads relies on the
+proposed methodology by Da et al. (2014).
+
+2.3 Documentations in Equity Markets
+
+This subsection aims to describe empirical documentations on sentiment related to equity
+markets. Previous findings in the stock market proves to shed light on how sentiment affects
+bonds. Equity and debt both represent joint positive delta claims on the same assets (Merton,
+1974) and share common risk factors (Fama and French, 1993). Therefore, it is of economic
+interest to briefly discuss prior research as it might improve the understanding of anticipated
+effects of sentiment on bond yield spreads and highlight potential implications.
+      BW (2006) studies how investor sentiment affects the cross-section of stock returns. The
+authors believe that systematic mispricing arises because of both an uninformed demand shock
+and limits to arbitrage. Therefore, investor sentiment is likely to affect asset prices through two
+separate channels: Either sentimental demand shocks vary cross-sectionally, while arbitrage
+limits are constant. Alternatively, the difficulty to arbitrage varies but sentiment is constant. In
+line with this, the authors predict that investor sentiment has larger effects on assets whose
+valuations are highly subjective and difficult to arbitrage. They find that when beginning-of-
+period proxies for sentiments are low, subsequent returns are relatively high, especially for
+small, young, high volatility, unprofitable, non-dividend paying, distressed and extreme growth
+
+                                        7
+stocks. The authors show that these results remain inconsistent with the traditional explanation
+that these results are due to compensation for systematic risks.
+      Perhaps the first documentation on investor sentiment is thanks to Niederhoffer (1971),
+investigating and documenting a short-term relationship between world events and stock prices.
+Similarly, Tetlock (2007) measures the interactions between media and the stock market using
+information on a daily basis from a well-known newspaper column, finding that high media
+pessimism forecasts decreasing prices and subsequent reversals due to systematic price
+correction. Additionally, Livnat and Petrovits (2009) show that holding very good news firms
+after pessimistic sentiment periods earn significantly higher abnormal returns than considering
+the contrarian scenario, namely holding extreme good news firms following optimistic
+sentiment periods. Neal and Wheatley (1998) uses data from 1933 to 1993 and studies the
+forecast power of closed-end funds, the ratio of odd-lot sales to purchases and net mutual fund
+redemptions on returns. The author’s findings are mixed; fund discounts and net redemptions
+have forecasting power about the size premium, whereas there is only little support for the odd-
+lot ratio in forecasting returns. Also, other authors able to identify sentiment related findings in
+explaining the time series return relationships include Shiller (1981, 2000), Kothari and
+Shanken (1997). Lee et al. (1991) claim with their findings that discounts and premium patterns
+on closed-end funds are driven by investor sentiment changes.
+    Da et al. (2014) show that their Financial and Economic Attitudes Revealed by Search index
+predict short-term return reversals in the stock market consistent with theoretical sentiment
+predictions brought forward in BW (2006). Also, the authors find that their proxy of investor
+sentiment reveals patterns of mutual fund flows out of equity funds into bond funds in addition
+to temporary volatility fluctuations.
+
+2.4 Documentations in Debt Markets
+
+Even though investor sentiment is likely to have pervasive influence on a wide array of assets,
+the amount of research regarding sentiment in debt markets is relatively scarce.
+      Laborda and Olmo (2014) studies the relationship of the sentiment based on the market-
+variables proposed by BW (2006) to predict abnormal returns on US government bonds and
+demonstrates the presence of an investor sentiment factor, with characteristics similar to the
+single-return forecasting factor based on the information embedded in the yield curve. Thus
+they find that the market-variables making up the index can be reduced to a single sentiment
+pricing factor and that this factor has predictive power beyond other benchmark factors. Aristei
+and Martelli (2014) also investigate the impact of behavioural factors on sovereign bond yield
+
+                                        8
+spreads in the Euro area using data from 2000-2012, however, founding the analysis on a
+heterogeneous dynamic panel data approach. The authors show that behavioural factors add
+information on yield spreads and that sentiment contributes to widen spreads during
+recessionary economic periods.
+      Huang et al. (2015) explores the relationship between investor sentiment, as measured by
+BW (2006), and corporate bond yield spreads based on transactional bond data. More in detail,
+the paper investigates whether the effect of stock market sentiment bears explanatory power for
+corporate bond yield spreads and whether such a spill-over effect is stronger when considered
+in relation to the recent financial crisis. Sentiment is found to be negatively related to corporate
+bond yield spreads contemporaneously, consistent with the prediction that investors during
+periods of high sentiment tend to overprice corporate bonds and vice versa. They conclude that
+equity market sentiment forecasts the cross-section of corporate bond yield spreads and that
+these results remain robust even after including default risk, bond liquidity and macroeconomic
+variables. They also provide evidence that stock market sentiment is a state variable driving the
+pricing of other assets, i.e. bonds.
+      While Huang et al. (2015) puts more weight on the joint properties and integration of
+equity and debt markets in relation to sentiment, Nayak (2010) puts more emphasis on solely
+investor sentiment, also by using the BW index, related to corporate bond yield spreads. The
+authors find that spreads co-vary with sentiment and that mispricings and reversals very well
+resemble those for stocks as explored in BW (2006). More specifically, bonds are underpriced
+- with high yields - during pessimism and they are overpriced - with low yields - when optimism
+prevails in the market. Reversal patterns result in predictable positive relation trends in post-
+sentiment yield spreads as a result of delayed price correction: When beginning-of-period of
+sentiment is high, subsequent yield spreads are high and vice versa. Consistent with BW, bonds
+whose valuations are highly subjective and difficult to arbitrage, demonstrate greater sensitivity
+to mispricings due to sentiment. In particular, the empirical results show that it holds for high
+yield issues, low ratings, extreme maturities, low durations and bonds with distressed attributes.
+Both papers have in common that they investigate sentiment effects on bond yield spreads over
+longer horizons.
+      Drawing from evidence suggested in these papers, we uniquely contribute to the literature
+by examining whether investor sentiment affects corporate bond yield spreads over shorter-
+time horizons. To our knowledge, we are also the first to consider this relationship through the
+lense of a search-based investor sentiment measure.
+
+                                        9
+3. Data
+
+In this section we describe the data used in our study. Specifically, we demonstrate the
+established screening criteria in the procedure of obtaining a clean bond sample. Then, we
+provide information on data for the search-activity and our control variables.
+
+3.1 Corporate Bond Data
+
+The data on corporate bond issues in the U.S are extracted from SDC Platinum, a Thomson
+Reuters’ software application. We use a 10-year sample spanning the time period 2004-2014.
+SDC platinum includes in depth issue-related information on different bond characteristics. We
+use Standard & Poor’s ratings if these are available. If not so, we use Moody’s ratings. We use
+established screening criteria in the desire of obtaining a clean sample of bond issues. In line
+with this, issues that are convertible are exempt from the analysis (Huang et al. 2015). We
+remove callable, redeemable putable, convertible or asset backed issues. Furthermore, we do
+not include perpetual bonds, variable rate bonds, medium-term notes, rule 144a issues,
+treasuries, foreign issues, agency bonds and municipals. Moreover, we exclude bonds for which
+ratings are missing, not reported or not available. To further clean the sample, we exclude issues
+bearing high (above A+) or low (below C) ratings. Additionally, issues for which yields are
+missing are excluded. For additional details on sample selection criteria, see (Campbell and
+Taksler, 2003; Dick-Nielsen, 2009). Our final dataset consists of 6862 observations.
+
+3.2 Data on Search-activity
+
+Our search-based measure builds upon the relative interest for different search queries
+associated with economic sentiment. The search volume data is extracted from Google Trends
+
+                                     1
+and is presented on a weekly basis. When typing a word into the Google Trends application, it
+returns a search volume index (hereafter SVI) for the search query in question, scaled by its
+time-series maximum. The day, in which the search activity is the most intense for the search
+term, is assigned the value of 100. All other data points are given values in proportion to this
+observation. Thus, SVI does thus represents a relative measure, not an absolute one.
+
+1
+ As of 2009, Google accounted for 72.11 % of aggregated search activitity in the US, claimed by Hitwise.
+
+                                       10
+3.3 Other Data
+
+Our controls used within the search-based framework include a high frequency measure of
+concurrent macroeconomic conditions published by the Federal Reserve Bank of Philadelphia.
+This measure is called the Auroba-Diebold-Scotti business conditions index, hereafter ADS and
+is proposed in Auroba et al. (2012). Its underlying seasonally adjusted indicators include weekly
+initial jobless claims, monthly payroll employment, industrial production, personal income less
+transfer payments, manufacturing and trade sales as well as quarterly real GDP. An increase in
+the index indicates above average conditions.
+      An economic policy uncertainty measure, the EPU, developed by Baker et al. (2015) with
+the purpose of capturing economic uncertainty related to economic policies is a news-based
+measure and represents our second control in the specification of our main regression. It is
+constructed by counting the number of articles from a database, NewsBank Access World
+News, containing at least one term from three categories of terms with economic connection.
+      VIX, the market volatility index, is published by the Chicago Boards Options Exchange
+(CBOE) and is collected from WRDS (Wharton Research Data Base) and measures the implied
+volatility of options on the S&P 500 stock index. We include VIX as a control variable in the
+regression specification using the google index. Similarly, the CBOE publishes data on the put-
+call ratio, which is used for the purpose of demonstrating the robustness of our results.
+
+4. Methodology and Hypothesis Development
+
+This section aims to describe the methodology and the economic intuition underlying the
+hypotheses. To begin with, the empirical predictions are presented in accordance with the
+postulated hypotheses. Then, the relevance of the index is briefly demonstrated. Next, the
+construction process of the search-based measure and the related technicalities are discussed in
+detail. This is followed by a description of the main test and robustness checks.
+
+4.1 Economic theory and empirical predictions
+
+When market participants are negative about the economy, prevailing pessimism will lead to
+overestimation of underlying risks and investors will thus underbid bonds resulting in
+underpriced bonds with yield spreads being higher than values suggested by risk-based
+fundamentals. The process of delayed price correction for this irrational underpricing - which
+is triggered by rising sentiment or due to arbitrageurs’ rational price exploitation - results in
+higher subsequent prices or lower spreads. Thus investor pessimism and corporate bond yield
+spreads are deemed to be positively related contemporaneously, whereas pessimism and
+
+                                       11
+subsequent yield spreads are predicted to be inversely related. Hence, we look for systematic
+reversal patterns as a result of temporary sentiment induced-mispricings. Accordingly, we
+postulate and test the following hypothesis:
+
+     Investor sentiment, as measured by internet search activity, is related to yield spreads
+       on U.S corporate bonds. In periods of pessimism, contemporaneous yield spreads are
+       high. After periods of pessimism, subsequent yield spreads are low.
+
+We also think that high yield issues are more sensitive to sentiment and are marked by more
+erroneous mispricing and more distinct reversal trends. Specifically, during pessimistic
+regimes, investor demand decreases relatively less for safe low-yield issues compared to
+speculative high yield bonds. Therefore, we predict that distressed bonds are subject to greater
+underpricing than low-yield issues. Also, high yield bonds are more prone to subjective
+valuations and arbitrage constraints and should therefore be more sensitive to mispricing errors,
+as put forward in BW (2006). In line with this, we also hypothesize:
+
+     The relation between investor pessimism and yield spreads is more pronounced for high-
+       yield bonds.
+
+The hypotheses brought forward are in line with previous research (Nayak, 2010). As opposed
+to sentiment literature related to equity using returns, our study relates to bond yield spreads
+instead of bond returns. However, the fact that bond prices are inverse functions of yields make
+inference analysis identical to equity literature (Nayak, 2010). More concretely, an equity
+analogy can be made by the implications of our hypothesis: when investors are pessimistic, we
+hypothesize that subsequent yield spreads are lower for high yield issues in relation to safe
+bonds, indicating that this bond set earns relatively higher returns.
+
+4.2 Google Trends and the Search Volume Index
+
+Figure 1 plots the relationship for search interest in the word: “Financial crisis” for our sample
+period (2004-2014). Search activity for this word is clearly aligned with economic intuition as
+queries increased dramatically in 2008.
+
+                                       12
+This figure shows the search-activity for the word “Financial Crisis” over a ten-year period (2004-2010) obtained
+from Google Trends.
+
+The search-based measure in Da et al. (2014) is our sentiment measure of choice as it offers
+several appealing properties as opposed to other established methods. First and foremost, a
+direct measure with high frequency availability is appropriate given our desire to investigate
+short-term sentiment effects on yield spreads. Measures based on market variables on the one
+hand have the benefit of being available at a relatively high frequency, but on the other hand
+have the shortcoming of being the result of multiple financial forces beyond investor sentiment
+(Da et al. 2014). Specifically, there is a difficulty in making theoretical input-output predictions
+with output measures. One of the advantages of a search-based index as opposed to survey-
+based indices include the high frequency availability of search-based sentiment, which
+compares to survey-based indices being available only for monthly or quarterly intervals.
+Additionally, Da et al. (2014) demonstrate that their sentiment index even forecasts monthly
+survey outcomes of consumer confidence. In line with Da et al. (2014), we advocate the usage
+of a search-based measure because it uncovers attitudes directly. Singer (2002) show that there
+is often little incentive to answer surveys carefully, supporting the observation that search
+volume may potentially reveal more personal information, particularly when there are several
+respondents missing.
+
+                                       13
+4.3 Search Based Index
+
+As hinted by the previous section, our index relies upon extracting sentiment from pessimism
+revealing words. The reason for this is that it conforms to text analytics literature. Tetlock
+(2007) argues that it appears that terms with a negative tone in the English language are most
+useful in mirroring sentiment. Specifically, Da et al. (2014) follow the General Inquirer’s
+Harvard IV-4 Dictionary and the Lasswell Value Dictionary (Tetlock, 2007; Tetlock et al.,
+2008) and select words that reveal economic conditions. After passing on several screening
+criteria, the authors are left with the thirty words that have had the largest negative impact in
+terms of correlation with equity market returns. We restrict the number of words to thirty as it
+is commonly viewed that it is the minimum number of observations needed to diversify
+idiosyncratic noise (Da et al. 2014). Below are the words forming our index listed according to
+their respective relative importance:
+
+Table 1: Search Terms
+
+                           Search Term
+1 GOLD PRICES
+2 RECESSION
+3 GOLD PRICE
+4 DEPRESSION
+5 GREAT DEPRESSION
+6 GOLD
+7 ECONOMY
+8 PRICE OF GOLD
+9 THE DEPRESSION
+10 CRISIS
+11 FRUGAL
+12 GDP
+13 CHARITY
+14 BANKRUPTCY
+15 UNEMPLOYMENT
+16 INFLATION RATE
+17 BANKRUPT
+18 THE GREAT DEPRESSION
+19 CAR DONATE
+20 CAPITALIZATION
+21 EXPENSE
+22 DONATION
+23 SAVINGS
+24 SOCIAL SECURITY CARD
+25 THE CRISIS
+26 DEFAULT
+27 BENEFITS
+28 UNEMPLOYED
+29 POVERTY
+30 SOCIAL SECURITY OFFICE
+This table demonstrates the thirty search terms used in the construction of the sentiment index. They are derived
+from Da et. al. (2014) who obtain the words from the Harvard IV-4 and Laswell dictionaries. The search terms
+correspond to the words with the largest negative correlation with the equity market, ordered from most negative
+to least negative.
+
+                                       14
+Even though these words are developed for equity markets, it remains very likely that these are
+valid for debt markets too. Put differently, it is reasonable that investor sentiment extracted
+from equity markets has impact on corporate bond yield spreads as well. First and foremost,
+Huang et al. (2015) provides evidence that stock market sentiment is a state variable driving
+prices of bonds. Second, there are substantial direct information spillovers between stocks and
+bonds (Downing et al., 2009; Kwan 1996). Third, bonds and stocks both represent positive delta
+claims on a firm’s asset (Merton, 1974) and share common risk factors (Fama & French, 1993).
+Also, stock returns and bond returns are well correlated (Collin-Dufresne et al., 2001).
+
+For each search term 𝑗, we define the weekly change as:
+
+                            ∆𝑆𝑉𝐼𝑗,𝑡 = ln(𝑆𝑉𝐼𝑗,𝑡) − ln(𝑆𝑉𝐼𝑗,𝑡−1)                                (1)
+
+Next, we winsorize each time-series at the 1% level to mitigate the effect of outliers. To adjust
+for seasonality we develop a seasonality dummy model, in which ∆𝑆𝑉𝐼𝑗,𝑡 is regressed on month
+dummies. Deterministic seasonality,𝑆𝑡, can be written as a function of seasonal dummy
+variables where 𝑠 = 12 for monthly frequencies. Thus we regress ∆𝑆𝑉𝐼𝑗,𝑡 on an intercept and
+monthly dummy variables𝐷𝑖,𝑡, omitting one season (January) and keep the residuals:
+
+                                                    𝑠−1
+                                ∆𝑆𝑉𝐼𝑗,𝑡 = ∝ + ∑ 𝛽𝑖 𝐷𝑖,𝑡 + 𝜀                                    (2)
+
+                                                        𝑖=1
+
+Also, to make each-time series comparable, each time series is standardized by scaling with the
+time-series standard deviation. Finally, we have our adjusted, e.g winsorized, deasasonalized
+and standardized weekly SVI, ∆𝐴𝑆𝑉𝐼𝑗 , for each of the thirty search terms. Having the adjusted
+SVI for each word, we proceed with forming the search-based index, being equally weighted
+for the thirty search terms:
+
+                                                         𝑗=𝑛
+                                              ∑ 𝑗=1 (∆𝐴𝑆𝑉𝐼𝑗,𝑡)
+                       𝑆𝑒𝑛𝑡𝐼𝑛𝑑𝑒𝑥 =                                          (3)
+                                                    𝑡
+                                                                     𝑛
+
+                                       15
+4.4 Bond Yield Spreads
+
+The yield spreads of corporate bonds constitute the dependent variable of our main tests. We
+define the yield spread for a specific bond 𝑖 as:
+
+                𝑌𝑖𝑒𝑙𝑑𝑆𝑝𝑟𝑒𝑎𝑑𝑖 = 𝑌𝑖𝑒𝑙𝑑𝑡𝑜𝑀𝑎𝑡𝑢𝑟𝑖𝑡𝑦𝑖 − 𝑇𝑟𝑒𝑎𝑠𝑢𝑟𝑦𝑅𝑎𝑡𝑒                   (4)
+
+Where 𝑇𝑟𝑒𝑎𝑠𝑢𝑟𝑦𝑅𝑎𝑡𝑒 is the corresponding treasury yield.
+
+Next, we form various sub-samples based on different bond characteristics. Specifically, we
+categorize our bond sample according to industry, namely whether firms are financial or
+nonfinancial as indicated by the SIC-code. Also, bond issues are grouped according to their
+respective ratings and maturities. This classification is necessary as we expect to detect larger
+effects of sentiment on speculative, high-yield issues.
+
+Each corporate bond issue in a given week 𝑡 within a specific sub-sample as defined above is
+included in forming weekly average yield spreads:
+
+                                                                                         𝑛
+                                                   ∑ 𝑖=1 𝑌𝑖𝑒𝑙𝑑𝑆𝑝𝑟𝑒𝑎𝑑𝑖,𝑡                  (5)
+                𝐴𝑣𝑒𝑟𝑎𝑔𝑒𝑊𝑒𝑒𝑘𝑙𝑦𝑌𝑖𝑒𝑙𝑑𝑆𝑝𝑟𝑒𝑎𝑑𝑡 =
+                                                                                   𝑛
+
+4.5 Main Regression
+
+The test includes identifying yield spread reversals by running the following regression on the
+search-based index contemporaneously as well as up to four weekly yield spread leads:
+
+                                                                              𝑛              (6)
+  𝑌𝑖𝑒𝑙𝑑𝑆𝑝𝑟𝑒𝑎𝑑𝑡+𝑘 = 𝛼 + 𝛽 ∗ 𝑆𝑒𝑛𝑡𝐼𝑛𝑑𝑒𝑥𝑡 + ∑ 𝛾𝑛𝐶𝑜𝑛𝑡𝑟𝑜𝑙𝑉𝑎𝑟𝑖𝑎𝑏𝑙𝑒𝑡 + 𝜀𝑡+𝑘
+                                                                                       𝑛
+
+Where 𝑌𝑖𝑒𝑙𝑑𝑆𝑝𝑟𝑒𝑎𝑑𝑡+𝑘 corresponds to the average weekly yield spread within a specific sub-
+sample as defined in equation (5) for different leads. As aforementioned, the control variables
+include the volatility index (VIX), changes in the economic policy uncertainty (EPU) measure
+as well as changes in the Auroba-Diebold-Scotti Index (ADS Index). We also include a one
+week lag of the yield spread as a control variable. This regression is conducted for each and
+every sub-sample as previously defined.
+
+                                       16
+4.6 Robustness Tests
+
+In this section we describe the tests to evaluate the robustness of our findings. This analysis
+represents an essential part of our analysis regarding the ability of our index to capture investor
+sentiment as well as the validity of our findings over different-time horizons and sub-periods.
+
+4.6.1 Sub-period and Time-horizon Robustness
+
+Our empirical results are dependent upon predictable spread patterns following sentiment-
+driven mispricings when these are corrected on a weekly basis. Perhaps are such corrections
+unlikely to occur in a week. Previous documented results between investor sentiment and
+corporate bond yield spreads are mainly focused on identifying reversals on longer horizons.
+On the other hand, to investigate whether such reversals can be readily observed on a daily basis
+for corporate bonds, similar to what Da et al. (2014) finds in the stock market, we re-index our
+weekly google data into a daily frequency. In addition to investigating whether our findings
+remain robust to alternative specifications of different time lags in identifying yield spread
+reversals, we consider different sub-periods within our ten-year sample period (2004-2014).
+We do this by splitting the sample into a pre-onset subsample and a post-onset subsample of
+the financial crisis, the former being 2004-2007 and the latter being 2007-2010. This
+specification is motivated by the assertion that corporate bonds and stocks were riskier after the
+initiation of the financial crisis, making it more probable that stock market sentiment more
+strongly influences the corporate bond market level of sentiment. Additionally, the crisis may
+have rendered increased arbitrage activity with regard to firm capital structure becoming more
+attractive, potentially engaging more investors to such a strategy. As a result, bond markets are
+more related to equity sentiment after the onset of the crisis (Huang et al. 2015).
+
+4.6.2 Re-specification of the Search-based Index
+
+Another crucial question pertaining to the construction of the index regards the ability of it to
+correctly capture sentiment with the target being the majority of investors in the U.S corporate
+bond market, in particular institutional investors (Campbell and Taksler, 2003). Since the
+inclusion of all specific words forming our index might be controversial and open to debate as
+to whether they optimally reflect biased investor outlooks of these market participants, we
+exclude a range of words that intuitively might be related to the beliefs of retail investors as
+opposed to institutional investors. As an additional measure, we add words that may be more
+attributable to the institutional investors predominating the bond market. The inclusion and
+exclusion of words is based on terms from text analytics literature, specifically the Harvard IV-
+
+                                       17
+4 Dictionary and the Laswell Value Dictionary. We exclude the words in column 1 and add
+words in column 2, as indicated by Table 2. The words are listed below:
+
+Table 2: Words added and excluded to the sentiment index
+      Words Excluded Words Added
+     SOCIAL SECURITY CARD FILING BANKRUPTCY
+     SOCIAL SECURITY OFFICE BANKRUPTCY COURT
+     CAR DONATE CHAPTER 7
+     DONATION DEBT COLLECTION
+     CHARITY NATIONAL DEBT
+     BENEFITS INFLATION
+
+In addition to this, one might raise the concern that some of the words are relatively more
+important in revealing sentiment than others. Consequently, we re-specify our index by
+assigning weights to the different search terms in order to check whether our empirical results
+
+                                   2
+conform to our main findings . The weights are based on the relative importance of each search
+term’s correlation with stock returns as obtained by Da et al. (2014). This procedure is carried
+out for the original list of search terms.
+
+4.6.3 Choice of Sentiment Measure
+
+Separately, we repeat our tests using a market variable sentiment indicator, namely the put-call
+ratio to test the robustness of our findings to an alternate measure of sentiment. We regress yield
+spreads on the put-call ratio to potentially observe whether this variable have forecasting
+power beyond that contained in our sentiment index. This indicator is widely regarded as an
+indicator of pessimism, and its relationship with yield spreads conforms to the established
+hypothesis. Thus, we expect this variables to enter with the same signs in our regression
+outcomes as for our index. Specifically, we estimate:
+
+                                                                                                                                      𝑛
+ 𝑌𝑖𝑒𝑙𝑑𝑆𝑝𝑟𝑒𝑎𝑑𝑡+𝑘 = 𝛼 + 𝛽 ∗ ∆𝑃𝑢𝑡𝐶𝑎𝑙𝑙𝑅𝑎𝑡𝑖𝑜𝑡 + ∑ 𝛾𝑛𝐶𝑜𝑛𝑡𝑟𝑜𝑙𝑉𝑎𝑟𝑖𝑎𝑏𝑙𝑒𝑡 + 𝜀𝑡+𝑘    (7)
+                                                                                             𝑛
+
+2
+ The weights are based on the words’ respective t-statistic obtained by Da et al. (2014) when regressing the
+words on market returns.
+
+                                       18
+5 Empirical Results
+
+In this section, the empirical findings are presented and analyzed. First, the obtained descriptive
+statistics with regard to both the full sample and different categorization criteria are discussed.
+Next, a presentation of the regression outputs accompanied by an analysis with respect to the
+different sub-samples. Finally, we validate and evaluate the robustness of our findings with
+different measures.
+
+5.1 Descriptive Statistics
+
+This section presents the descriptive statistics, including tabulated summary statistics for a
+range of different sub-samples as well as basic correlation analysis.
+
+5.1.2 Summary Statistics
+
+Table 3. Summary statistics of bond sample 2004-2014
+                        Number of observations Mean Spread Median Spread
+All bonds 6862 2,46 1,73
+
+Industry
+Financial 2057 1,95 1,45
+Nonfinancial 4805 2,68 1,85
+
+Rating
+A 2637 1,37 1,05
+BBB 2583 2,09 1,7
+BB or less 1642 4,81 4,35
+
+Maturity
+Short-term 3133 2,91 1,9
+Long-term 3729 2,09 1,65
+
+Rating & Maturity
+A, short maturity 1198 1,29 0,88
+A, long maturity 1439 1,44 1.16
+BBB, short maturity 915 2,18 1,6
+BBB , long maturity 1668 2,04 1,7
+BB or less, short maturity 1020 5,48 5,04
+BB or less, long maturity 622 3,72 3,43
+
+This table reports the number of observed bond issues over the sample period as well as the average and median
+yield spread in percentages for different categories of bonds on the basis of rating, maturity and whether issuing
+firms are financial or non-financial as indicated by their main SIC-code. Short- and long-term bonds have
+maturities of 1-10 years old and >10 years, respectively. The A-category includes issues bearing A+, A or A-
+ratings. The BBB-category includes issues bearing BBB+, BBB or BBB- ratings. The BB-category includes issues
+bearing BB+ or lower (junk bonds).
+
+                                       19
+Table 3 presents the summary statistics for different bond categories. The sample in its entirety
+covers 6862 observations with an average spread 2.46 % and a median spread of 1.73 %. For
+each and every sub-sample, the median spread is lower than the average spread which embodies
+the fact that the median is more insensitive and not affected by outliers. Financials exhibit lower
+spreads (roughly 70 bp) than nonfinancial firms, with the categorization being based on SIC-
+codes. The pre-onset period of the financial crisis is characterized by significantly lower spreads
+compared to the post onset period of the financial crisis, which proves valuable in conducting
+our robustness evaluation. Figure 2 displays the time trend of bond yield spreads for A-
+categories and verify this observation. A very apparent, yet intuitive, relationship between
+ratings and yield spreads prevails; relatively higher ratings indicate relatively lower spreads and
+vice versa. The magnitude of the difference is largest between the BBB and the less than BB
+sub-categories, which is reasonable since the latter group covers a wider array of relatively
+lower rated issues. Unexpectedly, long-term bonds exhibit higher spreads than either short- or
+long-term bonds, especially the latter. This could possibly be due to the pre-set cut-off level
+with regard to maturity. Therefore, we account for ratings as well; for high rated bonds, spreads
+are higher for longer maturity and vice versa.
+
+           Figure 2: Average Weekly Yield Spreads for A-rated Bonds
+6,00%
+
+5,00%
+
+4,00%
+
+3,00%
+
+2,00%
+
+1,00%
+
+0,00%
+       2004 2007 2010 2013
+
+This figure shows the average weekly yield spreads over the sample period (2004-2014) for the A-rated category
+(A+, A or A-).
+
+                                       20
+5.1.3 Correlation
+
+As a general exercise, basic correlation analysis of both contemporaneous, leading bond yield
+spreads and sentiment for our junk-bond category (BB or less rated bonds) is displayed in
+Appendix table A.5.
+     Given our hypothesis, the correlation of contemporaneous yield spreads and current
+pessimism should expectedly be marked by positive values, while the expected correlation on
+a leading basis should exhibit the reverse. It seems that the opposite is the case at hand initially,
+yet the correlation does not exhibit either statistical or economic significance. These
+preliminary results do not lend initial support to the postulated hypothesis. Similar results are
+valid for the rest of the sub-samples as well.
+
+5.2 Main Results
+
+The correlation matrix hints that there is no obviously pronounced relationship between
+sentiment and yield spreads. Having intuitively reasoned about anticipated economic effects,
+we know turn to investigating the relationship between sentiment and yield spreads by running
+our main regression (equation number 6).
+      As aforementioned, a key prediction of investor sentiment theories is reversal. This
+phenomenon reflects a sentiment induced mispricing due to emotional biases giving rise to
+uninformed demand shocks which, in the presence arbitrage constraints, cause prices to
+temporarily deviate from fundamental values. Accordingly, we hypothesize that in periods of
+increased pessimism, contemporaneous yield spreads are high. Following periods of pessimism,
+subsequent yield spreads are low. In order to find evidence of reversals, we look for systematic
+sentiment-driven mispricings and subsequent mispricing corrections. Translating this into
+statistical terms, we wish to detect positive coefficients of our index contemporaneously,
+implying that prevailing market pessimism causes overestimation of underlying risks, resulting
+in higher yield spreads. When regressing our index on leading yield spreads, we wish to extract
+negative coefficients of our index variable, embodying delayed price correction. Also, in line
+with the postulated hypothesis, the coefficients should bear higher values in order to account
+for the prediction that relatively higher-yield issues are characterized by higher sensitivity to
+investor sentiment. All empirical results posted in this have robust standard errors.
+       Table 5 reports the regression outputs for the A category, including A+, A and A- bonds.
+The coefficient of the sentiment index for the contemporaneous yield spread is marked by a
+positive sign, which conforms to economic intuition. This is followed by a negative coefficient
+
+                                       21
+for the one-week lead yield spread, which indicates a reversal pattern. However, both
+coefficients remain statistically insignificant. Additionally, the standard errors are larger than
+the values of the coefficients, further strengthening the notion that sentiment and yield spreads
+might not be related in line with our predictions. Thus, these results cannot not be given any
+relevance. Similarly, the coefficients of the two and three week lagged yield spreads remain
+statistically as well as economically insignificant. The four week lead yield spread is negative
+but cannot be given any economic importance when considering this jointly with other leads.
+Taken together, the irregularities and insignificance among the coefficients cannot support our
+initial hypothesis.
+
+Table 5: Regression outputs for A-rated bonds
+                                       (1) (2) (3) (4) (5)
+ VARIABLES YSt YSt+1 YSt+2 YSt+3 YSt+4
+
+ SentIndex 0.00608 -0.00834 0.0257 0.0616 -0.0272
+                                   (0.0339) (0.0296) (0.0371) (0.0463) (0.0517)
+ ADS -0.0266 0.0355 0.0568 0.0312 -0.0739
+                                    (0.214) (0.199) (0.227) (0.300) (0.337)
+ EPU 0.000213 -0.000301 -0.000144 -0.000673 0.000747
+                                 (0.000548) (0.000661) (0.000621) (0.000738) (0.000754)
+ VIX 0.0380*** 0.0396*** 0.0444*** 0.0429*** 0.0401***
+                                  (0.00504) (0.00450) (0.00464) (0.00444) (0.00455)
+ YSt-1 0.460*** 0.440*** 0.368*** 0.375*** 0.398***
+                                   (0.0647) (0.0502) (0.0541) (0.0585) (0.0598)
+ Constant -0.0203 -0.0249 -0.0226 0.00228 0.0280
+                                   (0.0466) (0.0485) (0.0514) (0.0522) (0.0543)
+
+ Observations 513 512 511 510 509
+ R-squared 0.726 0.725 0.705 0.688 0.669
+                                        Robust standard errors in parentheses
+                                         *** p<0.01, ** p<0.05, * p<0.1
+This table reports the coefficients of the regression relating weekly average yield spreads for bonds rated A (A+,
+A or A-) to the sentiment index. The dependent variables include contemporaneous (average) yield spread (column
+1) and (average) yield spreads over the following three weeks (columns (2), (3), (4) and (5), respectively). The
+sentiment index is the independent variable. The change in the macroeconomic conditions (ADS) index, market
+volatility (VIX), the change in the economic policy uncertainty index (EPU) and a lagged yield spread are included
+as control variables. *, ** and *** denote significance at 10%, 5% and 1%, respectively.
+
+                                       22
+Table 6 reports the regression coefficients for the category with second highest ratings, the BBB
+sub-sample, including BBB+, BBB and BBB- bonds. Unexpectedly, the contemporaneous
+coefficient of the index enters with a negative sign in conflict with economic intuition:
+Increasing pessimism indicates underestimation of risks, with lower yield spreads than normal
+rather than the opposite. This is followed by a positive sign for the first-week lead yield spread,
+which similarly, has no underlying economic support. Put differently, this reversal-pattern
+indicates no systematic price correction. These results are furthermore statistically insignificant.
+Subsequent two-week, three-week and one-month lead yield spreads represent non-systematic
+irregularities and are insignificant both from an economical and statistical point of view.
+However, the majority of the coefficients except for the two-week and three-week yield spread
+leads are relatively larger compared to those for the A category, demonstrating only vague
+indications that relatively higher-yield issues are more susceptible to changing sentiment
+(regardless of the signs of the coefficients). Additionally, as there is no statistical significance
+supporting this claim, such a claim would be nothing but highly controversial and questionable.
+
+Table 6: Regression outputs for BBB-rated bonds
+                                     (1) (2) (3) (4) (5)
+ VARIABLES YSt YSt+1 YSt+2 YSt+3 YSt+4
+
+ SentIndex -0.0423 0.0103 0.00235 -0.00686 -0.0841
+                                 (0.0753) (0.0501) (0.0403) (0.0466) (0.0688)
+ ADS 0.0976 0.0945 0.106 0.00122 0.149
+                                  (0.285) (0.274) (0.284) (0.300) (0.331)
+ EPU -0.000425 0.000623 -0.000213 0.00150** 3.46e-05
+                               (0.000779) (0.000917) (0.000847) (0.000754) (0.000889)
+ VIX 0.0506*** 0.0600*** 0.0616*** 0.0599*** 0.0708***
+                                (0.00595) (0.00690) (0.00586) (0.00549) (0.00633)
+ YSt-1 0.463*** 0.391*** 0.385*** 0.399*** 0.292***
+                                 (0.0534) (0.0602) (0.0503) (0.0521) (0.0476)
+ Constant 0.107 0.0728 0.0557 0.0510 0.0616
+                                 (0.0713) (0.0707) (0.0656) (0.0634) (0.0764)
+
+ Observations 507 507 507 505 504
+ R-squared 0.705 0.715 0.726 0.752 0.713
+                                    Robust standard errors in parentheses
+                                     *** p<0.01, ** p<0.05, * p<0.1
+This table reports the coefficients of a regression relating weekly average yield spreads for bonds rated BBB
+(BBB+, BBB or BBB-) to the sentiment index. The dependent variables include contemporaneous (average) yield
+spread (column 1) and (average) yield spreads over the following three weeks (columns (2), (3), (4) and (5),
+respectively). The sentiment index is the independent variable. The change in the macroeconomic conditions
+(ADS) index, market volatility (VIX), the change in the economic policy uncertainty index (EPU) and a lagged
+yield spread are included as control variables. *, ** and *** denote significance at 10%, 5% and 1%, respectively.
+
+                                       23
+Turning to the last category of investigation, shown in Table 7, namely the BB or less group
+(junk bonds), we find once again that the results are generally statistically insignificant and
+inconsistent with theoretical economic predictions. Even though that the three-week lead yield
+spread enters with a sign being significant at the 10 % level, there is no meaningful economic
+interpretation, especially considering it jointly with the other coefficients. The negative
+contemporaneous sentiment-yield-spread-relationship remains and the subsequent findings
+persist with positive signs. Similar to above, the BB category demonstrates the largest
+susceptibility to investor sentiment in relation to all the categories being under consideration in
+the rankings-based sample (regardless of the coefficient signs). However, one should not rely
+on these findings as there is no statistical significance justifying the results. Therefore, they
+remain dubious. Similar to other sub-samples, the standard errors are generally larger than the
+values of the coefficients.
+
+Table 7: Regression outputs for junk (BB-rated) bonds
+
+                                        (1) (2) (3) (4) (5)
+ VARIABLES YSt YSt+1 YSt+2 YSt+3 YSt+4
+
+ SentIndex -0.0837 0.0463 0.0154 0.257* 0.210
+                                    (0.114) (0.117) (0.122) (0.136) (0.148)
+ ADS -0.450 -0.173 -0.185 -0.136 -0.176
+                                    (0.732) (0.778) (0.732) (0.732) (0.790)
+ EPU -0.000228 0.000884 0.000565 4.21e-05 0.00169
+                                  (0.00184) (0.00194) (0.00184) (0.00195) (0.00196)
+ VIX 0.0984*** 0.118*** 0.122*** 0.126*** 0.124***
+                                   (0.0104) (0.0105) (0.0111) (0.0110) (0.0119)
+ YSt-1 0.349*** 0.205*** 0.186*** 0.136*** 0.170***
+                                   (0.0489) (0.0517) (0.0508) (0.0516) (0.0527)
+ Constant 1.401*** 1.743*** 1.757*** 1.927*** 1.801***
+                                    (0.187) (0.183) (0.195) (0.207) (0.193)
+
+ Observations 508 507 506 505 504
+ R-squared 0.538 0.503 0.492 0.477 0.482
+                                     Robust standard errors in parentheses
+                                      *** p<0.01, ** p<0.05, * p<0.1
+This table reports the coefficients of a regression relating weekly average yield spreads for junk bonds (bonds rated
+BB+ or lower) to the sentiment index. The dependent variables include contemporaneous (average) yield spread
+(column 1) and (average) yield spreads over the following three weeks (columns (2), (3) (4) and (5), respectively).
+The sentiment index is the independent variable. The change in the macroeconomic conditions (ADS) index,
+market volatility (VIX), the change in the economic policy uncertainty index (EPU) and a lagged yield spread are
+included as control variables. *, ** and *** denote significance at 10%, 5% and 1%, respectively.
+
+                                       24
+To explore the consistency of these results, the same regression is conducted for other bond
+characteristics than rating. The regression is repeated for bonds with maturities longer than 10
+years (Appendix table A.1) and for bonds with maturities shorter than 10 years (Appendix table
+A.2), consistent with the categorization of long-term and short-term bonds. Similarly, the
+regression is conducted on an industry basis (Appendix table A.3 and A.4). With regard to
+economic and statistical significance, the results are generally similar and do not support any
+systematic reversal-patterns being the outcome of sentimental demand shocks and correction of
+erroneous mispricings.
+     To summarize, we find no evidence of sentiment-driven mispricings giving rise to
+systematic reversals, neither statistically nor economically. The relationship between investor
+sentiment, as measured by search activity, and corporate bond yield-spreads appears to be weak
+as revealed by our tests, at least on a weekly basis.
+
+5.3 Robustness Evaluation
+
+In this subsection, the robustness of our findings are demonstrated. Specifically, we attempt to
+display the robustness of our results according to different sub-periods, time horizons as well
+as re-specifications of our index in terms of reweighting the impact of certain words within the
+index and removing (adding) potential search queries associated with retail (institutional)
+investor sentiment.
+
+5.3.1 Sub-period and Time Horizon Robustness
+
+Because there is reason to believe that the effect of sentiment may be different under
+specifications of different sub-periods as mentioned previously, we divide our sample into a
+pre-onset and post-onset period of the financial crisis, namely 2004-2007 and 2007-2010,
+respectively. Appendix table B.1 shows the regression output for the regression outlined in
+previous sections based on these specifications for our BB (junk bond) category for the pre-
+onset period.
+      There is still no evidence of systematic sentiment-induced reversals. Regardless of the
+5% significance level of contemporaneous yield spreads, little relevance can be attributed to
+such a result as it conflicts with economic intuition: Contemporaneous returns are still
+negatively related to investor sentiment. Considering subsequent yield spread leads, these are
+mostly marked by positive values with neither economical nor statistical significance, except
+for the third lead which does not alter the total interpretation. Hence, no support can be given
+
+                                       25
+to systematic sentiment-induced reversals. Generally, this applies to each and every sub-
+category of ratings.
+      Appendix table B.2 shows the obtained regression outputs for the post-onset period,
+which should be marked by larger values of coefficients and stronger trends during the crisis to
+account for potentially increased sentiment susceptibility as outlined in previous sections. The
+majority of the coefficients are indeed larger, but no interpretational importance can be
+attributed to these findings as none of them appear statistically or economically insignificant.
+All in all, our results remain robust to alternate specifications of sub-periods.
+     Next, we consider the presence of systematic reversals due to sentiment-induced
+mispricing on an even shorter horizon, i.e. on a daily frequency. As similar to the sub-period
+categorization, we find no results of reversal trends. However, given that we only consider
+issuance data that renders relative scarcity of observations, it is virtually impossible to relate
+yield spreads on a daily horizon to investor sentiment. Consequently, no absolute conclusion
+can be drawn regarding the absence of systematic reversals on a daily basis. The outputs from
+this robustness check is not included due to its very limited relevance.
+
+5.3.2 Re-specification of the Search-based Index
+
+Because our sentiment relies upon the identification of sentiment revealing terms, we re-weight
+the impact of different words to test for the robustness of our findings. Appendix table B.3
+displays the regression outputs based on a different weighting schedule, namely according to
+the magnitude of the relative importance of each search term (rather than equal weights), based
+on the BB-rated category.
+      Also with regard to the re-weighting schedule, our findings remain robust. The results
+resemble the obtained results in our main tests in some considerations; generally, the estimates
+are somewhat lower under the alternative weighting schedule and the third-week leading yield
+spread is significant at the 10 % level. While it is statistically significant to some extent,
+economic intuition does not support, nor allows any meaningful interpretation of the coefficient.
+For other leads, the results are both economically and statistically insignificant. This holds for
+the rest of our different categories as well.
+      It is not only essential that our index reveals sentiment, but also captures sentiment first
+and foremost of the investors predominating the bond market. As a result, we remove potential
+words that are likely to be relatively uncorrelated with institutional sentiment and add search
+queries that intuitively would correlate well with institutional sentiment. Appendix table B.4
+shows the BB-category under this re-specification. Our results remain robust and similar to
+
+                                       26
+those obtained previously, with the results being valid for different rating categories as well as
+other categories.
+
+5.5.3 Choice of Sentiment Measure
+
+Appendix table B.5 displays the regression outputs obtained when the put-call ratio is the
+underlying sentiment indicator for the junk bond (BB or less) sub-sample. The coefficients are
+positive with no exception indicating that increased pessimism renders higher yield spreads,
+consistent with overestimation of underlying risks. However, these results are statistically
+insignificant. Furthermore, there is no indication of systematic mispricing. Thus, our results
+appear similar to this alternate measure of sentiment in interpretational terms. This holds for
+the rest of the sub-samples as well.
+
+6 Discussion
+
+In this section an attempt to discuss the implications of our results is made. First, the results are
+discussed in relation to other asset classes and the assumptions underlying the hypotheses.
+Then, we proceed with a discussion of the limitations inherent in the study.
+
+6.1 The rate of sentiment incorporation
+
+Previous research has found evidence of sentiment-induced mispricings in corporate bond
+markets. Systematic patterns of erroneous pricing have been documented on both a monthly
+(Huang et al., 2015) as well as on an annual and semiannual basis (Nayak, 2010), with both
+having in common the usage of a market variable based index as suggested by BW. This study
+attempts to explore the prediction of reversals on a shorter horizon, namely on a weekly basis,
+using a search-based approach of measuring sentiment. As demonstrated by the empirical tests,
+we find no evidence of such reversals.
+      To explore whether systematic mispricing errors might occur on an even shorter time
+horizon, we test whether sentiment impacts corporate bond yield spreads on a daily basis, with
+the results still not revealing any reversals. However, due to the lack of a sufficient amount of
+observations on a daily frequency, the possibility of reversals occurring on an even shorter
+horizon cannot be fully dismissed. However, equity literature has manifested analogous
+reversals over both short and long-term horizons (see previous literature).
+      Given that the sentiment index satisfactorily reflects institutional investor sentiment and
+that there are no reversals occurring on either a weekly or daily time-horizon, these results
+might possibly shed some light on the rate of which corporate bonds are likely to incorporate
+
+                                       27
+sentiment in relation to stocks. Direct information-spillovers between debt and equity markets
+have been demonstrated. Downing et al. (2009) explore the relative informational efficiency of
+stocks and bonds demonstrating that stock returns lead bond returns for non-convertible junk-
+and BBB-rated bonds, and that stock returns lead bond returns for convertible bonds in all rating
+classes. The authors claim that these results indicate that the corporate bond market is less
+informationally efficient than the stock market. In an influential paper, Kwan (1996) shows that
+stocks lead non-convertible bond returns even for bonds which are solidly investment grade
+and most importantly, that stocks leads bond in reflecting information. Additionally, this might
+be consistent with the observation that corporate bonds are traded more infrequently and depict
+considerably limited liquidity (Campbell and Taksler, 2003; Bao et al., 2011). Drawing from
+these findings, our results could potentially indicate that bonds incorporate sentiment at a
+relatively slower rate compared to equity markets. Once again, we want to emphasize that this
+eventuality is strongly conditional on non-occurring reversal trends on a shorter horizon. Apart
+from this, such an observation relies on the assumption that the index adequately captures the
+appropriate sentiment. This issue is discussed below.
+
+6.2 The Precision of the Sentiment index to capture Institutional sentiment
+
+Implicit is the assumption that the sentiment index captures the appropriate sentiment. By
+nature, a search-based sentiment approach is more aligned towards capturing the sentiment of
+retail investors, which have pervasive influence in equity markets (Da et al., 2014). More
+specifically, search-behavior can perhaps be claimed to not capture sentiment accurately in
+terms of not including the correct key players, i.e. institutional investors.
+      However, there is reason to believe that there is a strong linkage, at least indirectly,
+between search activity and institutional investor sentiment due to broad information spill-
+overs, market integration and intra-effects of sentiment. A number of papers has tested and
+confirmed the hypothesis that individual investors are net buyers of attention-grabbing stocks,
+e.g. stocks appearing in news (Barber and Odean, 2008). This hints that individual investors
+mimic institutional investor behaviour that might give rise to media attraction and that
+individual investor demand to some degree might reflect the beliefs prevailing among
+institutional investors. Also both individual and professional investors have been claimed to
+behave in a similar fashion with regard to different types of assets, such as company stock
+options (Heath et al, 1999), real estate (Genesove and Mayer, 2001) and futures (Locke and
+Mann 2000; Heisler 1994). Taken together, it remains likely that our index pictures and reflects
+institutional investor sentiment satisfactorily, particularly with consideration to our robustness
+
+                                       28
+tests yielding similar results to those obtained previously when reweighting and
+adding/removing words intuitively being linked to institutional/retail sentiment.
+
+6.3 Other Limitations
+
+Additionally, we would like to notify the reader of several limitations to be aware of. First,
+corporate bonds trade infrequently and inter-trade gaps are often large (Nayak, 2010), making
+a short-term sentiment approach more difficult to adopt for corporate bonds. Second, we
+consider data on bond issues in our analysis and not transactional data, for which we are not
+granted any access. This might affect the reliability of our test to some extent in general.
+
+7. Conclusion
+
+This study sets out to examine whether investor sentiment, as measured by search-based
+activity, helps to explain yield spreads on U.S corporate bonds. Building on previous findings
+having detected systematic reversals as an outcome of sentiment-induced mispricing, we
+attempt to extend these results by considering shorter time horizon and adopting a non-
+conventional measure of sentiment. Specifically, our study addresses two questions: Do biased
+investor outlooks affect yield spreads? Are such effects stronger and more pronounced for
+speculative high-yield issues?
+      As suggested by our empirical findings, no evidence of systematic reversal patterns is
+found. The findings are generally both economically and statistically insignificant, providing
+no support for our initial hypotheses. In particular, there is no support that increasing
+contemporaneous pessimism gives rise to overestimation of underlying risks rendering higher
+yield spreads than indicated by fundamental values. In subsequent time periods, there is no
+evidence of delayed price correction due to changing sentiment or rational price exploitation by
+arbitrageurs. These results remain the same for sub-samples based on ratings, maturity and
+industry. These results remain robust to a range of different re-specifications with regard to the
+sentiment index, sub-periods, time-horizons and an alternate measure of sentiment.
+      Given that the composite index measure satisfactorily reflects sentiment and that there
+are no deviations from fundamental values giving rise to systematic reversals on weekly and
+daily timescales, our results might indicate that bonds incorporate sentiment at a slower rate
+than stocks, for which such results have been found. This is consistent with previous
+documentations on direct spillovers between debt and equity markets with stocks leading bonds
+in the reflection of information, that bonds depict considerably limited liquidity and that these
+markets are well integrated.
+
+                                       29
+      Since bonds trade infrequently and trade gaps are often large, the usage of bond issuance
+data instead of including transactional data depicts a limitation of our study. It would indeed be
+interesting and valuable if future research aimed at complementing our findings by further
+investigating the short-term relationship between sentiment and corporate bond yield spreads,
+both by adopting alternate indicators of sentiment and including transactional data as this would
+be ideal.
+
+                                       30
+8. References
+
+Aristei, David and Duccio Martelli. 2014."Sovereign Bond Yield Spreads and Market Sentiment and Expectations:
+Empirical Evidence from Euro Area Countries." Journal of Economics and Business. 76:pp. 55-84.
+
+Aruoba, S. Borağan; Francis X. Diebold and Chiara Scotti. 2012."Real-Time Measurement of Business Conditions."
+Journal of Business & Economic Statistics.
+
+Baker, Malcolm and Jeffrey Wurgler. 2007. “Investor sentiment in the stock market” Journal of Economic Perspectives,
+21, pp. 129-151.
+
+Baker, Malcolm and Jeremy C. Stein. 2004."Market Liquidity as a Sentiment Indicator." Journal of Financial Markets
+7:3, pp. 271-99.
+
+Baker, Malcolm and Jeffrey Wurgler. 2006."Investor Sentiment and the cross‐section of Stock Returns." The Journal of
+Finance 61:4, pp. 1645-80.
+
+Baker, Malcolm and Jeffrey Wurgler. 2004."A Catering Theory of Dividends." The Journal of Finance 59:3, pp. 1125-
+65.
+
+Baker, Malcolm and Jeffrey Wurgler. 2000."The Equity Share in New Issues and Aggregate Stock Returns." The Journal
+of Finance 55:5, pp. 2219-57.
+
+Baker, Scott R.; Nicholas Bloom and Steven J. Davis. 2015."Measuring Economic Policy Uncertainty” National Bureau
+of Economic Research. No. w21633.
+
+Ball, Ray and Philip Brown. 1968."An Empirical Evaluation of Accounting Income Numbers." Journal of Accounting
+Research pp. 159-78.
+
+Bao, Jack; Jun Pan and Jiang Wang. 2011."The Illiquidity of Corporate Bonds." The Journal of Finance 66:3, pp. 911-
+46.
+
+Barber, Brad M. and Terrance Odean. 2008."All that Glitters: The Effect of Attention and News on the Buying Behavior
+of Individual and Institutional Investors." Review of Financial Studies. 21:2, pp. 785-818.
+
+Barber, Brad M.; Terrance Odean and Ning Zhu. 2009."Systematic Noise." Journal of Financial Markets 12:4, pp. 547-
+69.
+
+Barberis, Nicholas; Andrei Shleifer and Robert Vishny. 1998."A Model of Investor Sentiment." Journal of. Financial
+Economics. 49:3, pp. 307-43.
+
+Bodie, Z., Kane, A. & Marcus, A.J. (2014). Investments, Tenth Edition. McGraw-Hill Education, New York, USA.
+
+Brown, Gregory W. and Michael T. Cliff. 2005."Investor Sentiment and Asset Valuation*." The Journal of Business
+78:2, pp. 405-40.
+
+Campbell, John Y., and Glen B. Taksler. "Equity volatility and corporate bond yields." The Journal of Finance 58.6
+(2003): 2321-2350.
+
+Collin‐Dufresne, Pierre; Robert S. Goldstein and J. Spencer Martin. 2001."The Determinants of Credit Spread Changes."
+The Journal of Finance 56:6, pp. 2177-207.
+
+Da, Zhi; Joseph Engelberg and Pengjie Gao. 2015."The Sum of all Fears Investor Sentiment and Asset Prices." Review
+of Financial Studies 28:1, pp. 1-32.
+
+De Bondt, Werner FM and Richard H. Thaler. 1990."Do Security Analysts Overreact?" American Economic Review pp.
+52-7.
+
+                                       31
+De Long, J. Bradford; Andrei Shleifer; Lawrence H. Summers and Robert J. Waldmann. 1990."Noise Trader Risk in
+Financial Markets." Journal of Political Economy pp. 703-38.
+
+Dick-Nielsen, Jens. 2009."Liquidity Biases in TRACE." Journal of Fixed Income 19:2.
+
+Downing, Chris; Shane Underwood and Yuhang Xing. 2009."The Relative Informational Efficiency of Stocks and
+Bonds: An Intraday Analysis." Journal of Financial and Quantitative Analysis 44:05, pp. 1081-102.
+
+Edmans, Alex; Diego Garcia and Øyvind Norli. 2007."Sports Sentiment and Stock Returns." The Journal of Finance
+62:4, pp. 1967-98.
+
+Fama. Eugene F. and Burton G. Malkiel. 1970."Efficient Capital Markets: A Review of Theory and Empirical Work."
+The Journal of Finance 25:2, pp. 383-417.
+
+Fama, Eugene F. and Kenneth R. French. 1993."Common Risk Factors in the Returns on Stocks and Bonds." Journal of
+Financial Economics 33:1, pp. 3-56.
+
+Feldman, Todd. 2010."A More Predictive Index of Market Sentiment." Journal of Behavioral Finance 11:4, pp. 211-23.
+
+Genesove, David and Christopher Mayer. 2001."Loss Aversion and Seller Behavior: Evidence from the Housing
+Market." National bureau of economic research No. w8143
+
+Greenwood, Robin and Stefan Nagel. 2009."Inexperienced Investors and Bubbles." Journal of Financial Economics.
+93:2, pp. 239-58.
+
+Heath, Chip; Steven Huddart and Mark Lang. 1999."Psychological Factors and Stock Option Exercise." Quarterly
+Journal of Economics pp. 601-27.
+
+Heisler, Jeffrey. 1994."Loss Aversion in a Futures Market: An Empirical Test." Review of Futures Markets 13:3, pp.
+793-826.
+
+Huang, J,. Rossi, M. & Wang, Y. 2015. “Sentiment and Corporate Bond Valuations before and after the Onset of the
+Credit Crisis” Journal of Fixed Income, Forthcoming. Available at SSRN 2298491.
+
+Jones, Charles M. 2002."A Century of Stock Market Liquidity and Trading Costs." Available at SSRN 313681.
+
+Kahneman, Daniel and Amos Tversky. 1973."On the Psychology of Prediction." Psychological Review 80:4, pp. 237.
+
+Kahneman, Daniel and Amos Tversky. 1972."Subjective Probability: A Judgment of Representativeness." Cognitive
+Psychology 3:3, pp. 430-54.
+
+Kapadia, Nikunj and Xiaoling Pu. 2012."Limited Arbitrage between Equity and Credit Markets." Journal of Financial
+Economics 105:3, pp. 542-64.
+
+Kothari, Smitu P. and Jay Shanken. 1997."Book-to-Market, Dividend Yield, and Expected Market Returns: A Time-
+Series Analysis." Journal of Financial Economics 44:2, pp. 169-203.
+
+Kumar, Alok and Charles Lee. 2006."Retail Investor Sentiment and Return Comovements." The Journal of Finance
+61:5, pp. 2451-86.
+
+Kwan, Simon H. 1996."Firm-Specific Information and the Correlation between Individual Stocks and Bonds." Journal
+of Financial Economics 40:1, pp. 63-80.
+
+Laborda, Ricardo and Jose Olmo. 2014."Investor Sentiment and Bond Risk Premia." Journal of Financial Markets
+18:pp. 206-33.
+
+Lee, Charles; Andrei Shleifer and Richard H. Thaler. 1991."Investor Sentiment and the closed‐end Fund Puzzle." The
+Journal of Finance 46:1, pp. 75-109.
+
+                                       32
+Lemmon, Michael and Evgenia Portniaguina. 2006. “Consumer confidence and asset prices: Some empirical evidence.”
+Review of Financial Studies 19.4. pp 1499-1529.
+
+Livnat, Joshua and Christine Petrovits. 2009."Investor Sentiment, Post-Earnings Announcement Drift, and Accruals."
+Financial Accounting and Reporting Section (FARS) Paper. Available at SSRN 1262757.
+
+Locke, Peter R. and Steven C. Mann. 2000."Do Professional Traders Exhibit Loss Realization Aversion." Working
+paper.
+
+Merton, Robert C. 1974."On the Pricing of Corporate Debt: The Risk Structure of Interest Rates." The Journal of Finance
+29:2, pp. 449-70.
+
+Nayak, Subhankar. 2010."Investor Sentiment and Corporate Bond Yield Spreads." Review of Behavioral Finance 2:2,
+pp. 59-80.
+
+Neal, Robert and Simon M. Wheatley. 1998."Do Measures of Investor Sentiment Predict Returns?" Journal of Financial
+and Quantitative Analysis 33:04, pp. 523-47.
+
+Niederhoffer, Victor. 1971."The Analysis of World Events and Stock Prices." The Journal of Business 44:2, pp. 193-
+219.
+
+Qiu, Lily and Ivo Welch. 2004."Investor Sentiment Measures." National Bureau of Economic Research No. w10794
+
+Seyhun, Hasan Nejat. 2000."Investment Intelligence from Insider Trading.". MIT press.
+
+Shiller, Robert J. 1981."Do stock prices move too much to be justified by subsequent changes in dividends?" American
+Economic Review 71, pp. 421-436.
+
+Shiller, Robert J. 2000."Irrational Exuberance." Princeton University Press.
+
+Shleifer, Andrei and Robert W. Vishny. 1997."The Limits of Arbitrage." The Journal of Finance 52:1, pp. 35-55.
+
+Simon, David P. and Roy A. Wiggins. 2001."S&P Futures Returns and Contrary Sentiment Indicators." Journal of
+Futures Markets 21:5, pp. 447-62.
+
+Singer, E. 2002. “The use of incentives to reduce nonresponse in household surveys”. Working Paper, University of
+Michigan.
+
+Tetlock, Paul C. 2007."Giving Content to Investor Sentiment: The Role of Media in the Stock Market." The Journal of
+Finance 62:3, pp. 1139-68.
+
+Tetlock, Paul C.; Maytal Saar‐Tsechansky and Sofus Macskassy. 2008."More than Words: Quantifying Language to
+Measure Firms' Fundamentals." The Journal of Finance 63:3, pp. 1437-67.
+
+Tversky, Amos and Daniel Kahneman. 1973."Availability: A Heuristic for Judging Frequency and Probability."
+Cognitive Psychology 5:2, pp. 207-32.
+
+Zweig, Martin E. 1973."An Investor Expectations Stock Price Predictive Model using closed‐end Fund Premiums." The
+Journal of Finance 28:1, pp. 67-78.
+
+                                       33
+A Appendix: Main Results
+
+Table A.1: Regression outputs for maturities above 10 years.
+
+                                       (1) (2) (3) (4) (5)
+ VARIABLES YSt YSt+1 YSt+2 YSt+3 YSt+4
+
+ SentIndex -0.212** 0.00540 0.119* -0.0472 -0.0852
+                                   (0.0875) (0.0606) (0.0684) (0.0815) (0.0966)
+ ADS 0.452 0.567 0.608 0.535 0.577*
+                                    (0.591) (0.503) (0.407) (0.404) (0.338)
+ EPU -3.82e-05 0.000192 -2.89e-05 0.00128 -0.000179
+                                  (0.00102) (0.00106) (0.00110) (0.00121) (0.000929)
+ VIX 0.0508*** 0.0570*** 0.0572*** 0.0522*** 0.0578***
+                                  (0.00555) (0.00581) (0.00559) (0.00697) (0.00543)
+ YSt-1 0.224*** 0.175*** 0.165*** 0.222*** 0.159***
+                                   (0.0531) (0.0422) (0.0421) (0.0804) (0.0361)
+ Constant 0.704*** 0.696*** 0.711*** 0.662*** 0.691***
+                                   (0.0900) (0.0897) (0.0869) (0.115) (0.0923)
+
+ Observations 488 487 487 487 485
+ R-squared 0.406 0.396 0.404 0.428 0.433
+                                     Robust standard errors in parentheses
+                                       *** p<0.01, ** p<0.05, * p<0.1
+This table reports the coefficients of a regression relating weekly average yield spreads for bonds with maturities longer than 10 years to the
+sentiment index. The dependent variables include contemporaneous (average) yield spread (column 1) and (average) yield spreads over the
+following three weeks (columns (2), (3), (4) and (5), respectively). The sentiment index is the independent variable. The change in the
+macroeconomic conditions (ADS) index, market volatility (VIX), the change in the economic policy uncertainty index (EPU) and a lagged
+yield spread are included as control variables. *, ** and *** denote significance at 10%, 5% and 1%, respectively.
+
+Table A.2: Regression outputs for maturities below 10 years.
+
+                                       (1) (2) (3) (4) (5)
+ VARIABLES YSt YSt+1 YSt+2 YSt+3 YSt+4
+
+ SentIndex -0.225** 0.0689 -0.0327 0.143 -0.00353
+                                    (0.105) (0.109) (0.118) (0.121) (0.117)
+ ADS 0.342 -0.0122 -0.300 -0.400 -0.421
+                                    (0.604) (0.637) (0.659) (0.637) (0.587)
+ EPU 0.000174 0.000814 -0.00141 0.000584 0.000353
+                                  (0.00146) (0.00151) (0.00155) (0.00162) (0.00152)
+ VIX 0.0606*** 0.0689*** 0.0719*** 0.0717*** 0.0700***
+                                  (0.00811) (0.00757) (0.00801) (0.00876) (0.00788)
+ YSt-1 0.330*** 0.253*** 0.238*** 0.237*** 0.228***
+                                   (0.0453) (0.0486) (0.0424) (0.0464) (0.0419)
+ Constant 0.772*** 0.837*** 0.820*** 0.817*** 0.866***
+                                    (0.162) (0.158) (0.152) (0.155) (0.146)
+
+ Observations 508 507 506 505 504
+ R-squared 0.386 0.359 0.365 0.371 0.356
+                                     Robust standard errors in parentheses
+                                      *** p<0.01, ** p<0.05, * p<0.1
+This table reports the coefficients of a regression relating weekly average yield spreads for bonds with maturities of 10 years or less to the
+sentiment index. The dependent variables include contemporaneous (average) yield spread (column 1) and (average) yield spreads over the
+following three weeks (columns (2), (3), (4) and (5), respectively). The sentiment index is the independent variable. The change in the
+macroeconomic conditions (ADS) index, market volatility (VIX), the change in the economic policy uncertainty index (EPU) and a lagged
+yield spread are included as control variables. *, ** and *** denote significance at 10%, 5% and 1%, respectively.
+
+                                       34
+Table A.3: Regression outputs for financial firms
+
+                                        (1) (2) (3) (4) (5)
+ VARIABLES YSt YSt+1 YSt+2 YSt+3 YSt+4
+
+ SentIndex 0.125 -0.0538 -0.0197 -0.0238 0.209*
+                                   (0.0943) (0.0702) (0.0888) (0.0932) (0.108)
+ ADS 0.394 0.221 0.870* 1.635*** 0.745
+                                    (0.438) (0.475) (0.459) (0.599) (0.466)
+ EPU 0.000302 0.000704 -0.00247 0.000278 0.000923
+                                  (0.00125) (0.00145) (0.00154) (0.00143) (0.00206)
+ VIX 0.0644*** 0.0872*** 0.0823*** 0.0882*** 0.0815***
+                                   (0.0112) (0.0143) (0.0115) (0.0112) (0.0108)
+ YSt-1 0.320*** 0.253*** 0.300*** 0.254*** 0.244***
+                                   (0.0614) (0.0529) (0.0562) (0.0519) (0.0477)
+ Constant 0.178 -0.0748 -0.0884 -0.110 0.0432
+                                    (0.138) (0.205) (0.177) (0.160) (0.144)
+
+ Observations 444 444 441 442 444
+ R-squared 0.398 0.449 0.471 0.449 0.436
+                                     Robust standard errors in parentheses
+                                      *** p<0.01, ** p<0.05, * p<0.1
+
+This table reports the coefficients of a regression relating weekly average yield spreads for bonds issued by financial firms to the sentiment
+index. The dependent variables include contemporaneous (average) yield spread (column 1) and (average) yield spreads over the following
+three weeks (columns (2), (3), (4) and (5), respectively). The sentiment index is the independent variable. The change in the macroeconomic
+conditions (ADS) index, market volatility (VIX), the change in the economic policy uncertainty index (EPU) and a lagged yield spread are
+included as control variables. *, ** and *** denote significance at 10%, 5% and 1%, respectively.
+
+Table A.4: Regression outputs for non-financial firms
+
+                                        (1) (2) (3) (4) (5)
+ VARIABLES YSt YSt+1 YSt+2 YSt+3 YSt+4
+
+ SentIndex -0.426*** 0.0822 0.0923 0.149 -0.190*
+                                   (0.0973) (0.0917) (0.0907) (0.110) (0.104)
+ ADS 0.270 -0.00767 -0.328 -0.625 -0.435
+                                    (0.421) (0.462) (0.485) (0.428) (0.457)
+ EPU 0.000267 -0.00107 0.00107 0.000362 0.000226
+                                  (0.00123) (0.00134) (0.00144) (0.00127) (0.00120)
+ VIX 0.0440*** 0.0541*** 0.0545*** 0.0473*** 0.0548***
+                                  (0.00604) (0.00640) (0.00647) (0.00662) (0.00642)
+ YSt-1 0.365*** 0.233*** 0.234*** 0.355*** 0.252***
+                                   (0.0416) (0.0488) (0.0468) (0.0484) (0.0428)
+ Constant 0.874*** 1.042*** 1.027*** 0.825*** 0.957***
+                                    (0.116) (0.127) (0.126) (0.123) (0.121)
+
+ Observations 511 510 509 509 507
+ R-squared 0.399 0.325 0.329 0.396 0.350
+                                     Robust standard errors in parentheses
+                                      *** p<0.01, ** p<0.05, * p<0.1
+
+This table reports the coefficients of a regression relating weekly average yield spreads for bonds issued by non-financial firms to the sentiment
+index. The dependent variables include contemporaneous (average) yield spread (column 1) and (average) yield spreads over the following
+three weeks (columns (2), (3), (4) and (5), respectively). The sentiment index is the independent variable. The change in the macroeconomic
+conditions (ADS) index, market volatility (VIX), the change in the economic policy uncertainty index (EPU) and a lagged yield spread are
+included as control variables. *, ** and *** denote significance at 10%, 5% and 1%, respectively.
+
+                                       35
+Table A.5: Basic correlation analysis
+
+                    SentIndex
+ YSt -0.0206
+
+ YSt+1 0.00958
+
+ YSt+2 -0.0253
+
+ YSt+3 0.0800
+
+ YSt+4 0.0464
+
+ N 520
+t statistics in parentheses
+*          **          ***
+ p < 0.05,   p < 0.01,    p < 0.001
+
+This table reports correlations between the sentiment index and contemporaneous as well as leading yield spreads for our
+sample period (2004-2014).
+
+                                       36
+B Appendix: Robustness Evaluation
+
+Table B.1: Regression outputs for sub-period 2004-2007 (BB-bonds)
+
+                                        (1) (2) (3) (4) (5)
+ VARIABLES YSt YSt+1 YSt+2 YSt+3 YSt+4
+
+ SentIndex -0.387** 0.0598 -0.113 0.329* 0.284
+                                    (0.186) (0.186) (0.169) (0.176) (0.234)
+ ADS 1.282 1.588 1.343 1.179 1.267
+                                    (0.945) (0.975) (0.971) (0.893) (0.986)
+ EPU 0.00237 -0.00249 0.000206 -0.00140 0.00313
+                                  (0.00368) (0.00347) (0.00386) (0.00443) (0.00421)
+ VIX 0.111** 0.102** 0.0811 0.0375 0.0447
+                                   (0.0474) (0.0494) (0.0501) (0.0425) (0.0440)
+ YSt-1 0.0316 -0.105 -0.0630 -0.0891 -0.0965
+                                   (0.0679) (0.0708) (0.0764) (0.0951) (0.0661)
+ Constant 2.543*** 3.255*** 3.367*** 4.056*** 3.975***
+                                    (0.703) (0.683) (0.743) (0.638) (0.640)
+
+ Observations 153 152 151 150 149
+ R-squared 0.073 0.054 0.034 0.034 0.037
+                                     Robust standard errors in parentheses
+                                      *** p<0.01, ** p<0.05, * p<0.1
+
+This table reports the coefficients of a regression relating weekly average yield spreads for junk bonds (BB-rated or less) during 2004-2007 to
+the sentiment index. The dependent variables include contemporaneous (average) yield spread (column 1) and (average) yield spreads over the
+following four weeks (columns (2), (3) (4) and (5), respectively). The sentiment index is the independent variable. The change in the
+macroeconomic conditions (ADS) index, market volatility (VIX), the change in the economic policy uncertainty index (EPU) and a lagged
+yield spread are included as control variables. *, ** and *** denote significance at 10%, 5% and 1%, respectively.
+
+Table B.2: Regression outputs for sub-period 2007-2010 (BB-bonds)
+
+                                        (1) (2) (3) (4) (5)
+ VARIABLES YSt YSt+1 YSt+2 YSt+3 YSt+4
+
+ SentIndex -0.166 -0.265 0.212 0.156 0.433
+                                    (0.204) (0.207) (0.301) (0.324) (0.263)
+ ADS -1.787* -2.197* -2.507** -1.882 -1.764
+                                    (1.067) (1.115) (1.098) (1.162) (1.278)
+ EPU 0.000841 0.00453* 0.00371 0.00174 0.00232
+                                  (0.00356) (0.00265) (0.00314) (0.00349) (0.00408)
+ VIX 0.0804*** 0.115*** 0.135*** 0.143*** 0.137***
+                                   (0.0160) (0.0128) (0.0184) (0.0190) (0.0188)
+ YSt-1 0.511*** 0.294*** 0.170** 0.0741 0.113
+                                   (0.0720) (0.0685) (0.0828) (0.102) (0.0812)
+ Constant 1.151*** 1.652*** 1.965*** 2.402*** 2.332***
+                                    (0.301) (0.321) (0.355) (0.407) (0.326)
+
+ Observations 151 150 149 148 147
+ R-squared 0.723 0.706 0.665 0.625 0.605
+                                     Robust standard errors in parentheses
+                                      *** p<0.01, ** p<0.05, * p<0.1
+
+This table reports the coefficients of a regression relating weekly average yield spreads for junk bonds (BB-rated or less) during 2007-2010 to
+the sentiment index. The dependent variables include contemporaneous (average) yield spread (column 1) and (average) yield spreads over the
+following four weeks (columns (2), (3) (4) and (5), respectively). The sentiment index is the independent variable. The change in the
+macroeconomic conditions (ADS) index, market volatility (VIX), the change in the economic policy uncertainty index (EPU) and a lagged
+yield spread are included as control variables. *, ** and *** denote significance at 10%, 5% and 1%, respectively.
+
+                                       37
+Table B.3: Regression outputs using the re-weighted index
+
+                                        (1) (2) (3) (4) (5)
+ VARIABLES YSt YSt+1 YSt+2 YSt+3 YSt+4
+
+ WeightedSentIndex -0.0524 0.0579 0.0654 0.242* 0.214
+                                    (0.111) (0.120) (0.122) (0.133) (0.146)
+ ADS -0.447 -0.175 -0.195 -0.141 -0.182
+                                    (0.732) (0.778) (0.731) (0.732) (0.788)
+ EPU -0.000264 0.000837 0.000441 -5.70e-05 0.00158
+                                  (0.00183) (0.00193) (0.00184) (0.00195) (0.00196)
+ VIX 0.0984*** 0.118*** 0.122*** 0.126*** 0.124***
+                                   (0.0104) (0.0105) (0.0111) (0.0110) (0.0119)
+ YSt-1 0.349*** 0.205*** 0.187*** 0.137*** 0.171***
+                                   (0.0488) (0.0516) (0.0507) (0.0518) (0.0527)
+ Constant 1.402*** 1.742*** 1.753*** 1.924*** 1.798***
+                                    (0.187) (0.183) (0.195) (0.207) (0.193)
+
+ Observations 508 507 506 505 504
+ R-squared 0.537 0.503 0.492 0.477 0.482
+                                     Robust standard errors in parentheses
+                                      *** p<0.01, ** p<0.05, * p<0.1
+
+This table reports the coefficients of a regression relating weekly average yield spreads for junk bonds (BB-rated or less) to the weighted
+sentiment index. The dependent variables include contemporaneous (average) yield spread (column 1) and (average) yield spreads over the
+following four weeks (columns (2), (3) (4) and (5), respectively). The sentiment index is the independent variable. The change in the
+macroeconomic conditions (ADS) index, market volatility (VIX), the change in the economic policy uncertainty index (EPU) and a lagged
+yield spread are included as control variables. *, ** and *** denote significance at 10%, 5% and 1%, respectively.
+
+Table B.4: Regression outputs using alternative words
+
+                                        (1) (2) (3) (4) (5)
+ VARIABLES YSt YSt+1 YSt+2 YSt+3 YSt+4
+
+ OtherWordsSentIndex -0.0543 0.0773 0.0493 0.248* 0.202
+                                    (0.113) (0.114) (0.120) (0.131) (0.145)
+ ADS -0.450 -0.173 -0.189 -0.133 -0.171
+                                    (0.733) (0.777) (0.732) (0.733) (0.792)
+ EPU -0.000278 0.000822 0.000497 1.66e-05 0.00168
+                                  (0.00184) (0.00193) (0.00183) (0.00195) (0.00196)
+ VIX 0.0984*** 0.118*** 0.122*** 0.126*** 0.124***
+                                   (0.0104) (0.0105) (0.0111) (0.0110) (0.0119)
+ YSt-1 0.349*** 0.205*** 0.186*** 0.136*** 0.170***
+                                   (0.0489) (0.0516) (0.0507) (0.0517) (0.0527)
+ Constant 1.402*** 1.742*** 1.755*** 1.926*** 1.801***
+                                    (0.187) (0.183) (0.195) (0.207) (0.194)
+
+ Observations 508 507 506 505 504
+ R-squared 0.537 0.503 0.492 0.477 0.482
+                                     Robust standard errors in parentheses
+                                      *** p<0.01, ** p<0.05, * p<0.1
+
+This table reports the coefficients of a regression relating weekly average yield spreads for junk bonds (BB-rated or less) to the sentiment index
+(based on the new words). The dependent variables include contemporaneous (average) yield spread (column 1) and (average) yield spreads
+over the following four weeks (columns (2), (3) (4) and (5), respectively). The sentiment index is the independent variable. The change in the
+macroeconomic conditions (ADS) index, market volatility (VIX), the change in the economic policy uncertainty index (EPU) and a lagged
+yield spread are included as control variables. *, ** and *** denote significance at 10%, 5% and 1%, respectively.
+
+                                       38
+Table B.5: Regression outputs using Put-Call Ratio
+
+                                        (1) (2) (3) (4) (5)
+ VARIABLES YSt YSt+1 YSt+2 YSt+3 YSt+4
+
+ PutCall 1.272 1.663 1.409 2.361 0.448
+                                    (1.708) (1.598) (1.691) (1.672) (1.730)
+ ADS -0.452 -0.185 -0.187 -0.138 -0.161
+                                    (0.730) (0.776) (0.731) (0.735) (0.800)
+ EPU -0.000244 0.00113 0.000742 0.000670 0.00211
+                                  (0.00186) (0.00192) (0.00183) (0.00196) (0.00200)
+ VIX 0.0983*** 0.118*** 0.122*** 0.128*** 0.124***
+                                   (0.0104) (0.0105) (0.0110) (0.0111) (0.0122)
+ YSt-1 0.350*** 0.206*** 0.186*** 0.134** 0.168***
+                                   (0.0485) (0.0518) (0.0507) (0.0525) (0.0531)
+ Constant 1.396*** 1.733*** 1.751*** 1.907*** 1.800***
+                                    (0.187) (0.182) (0.195) (0.209) (0.198)
+
+ Observations 508 507 506 505 504
+ R-squared 0.538 0.504 0.493 0.476 0.480
+                                     Robust standard errors in parentheses
+                                      *** p<0.01, ** p<0.05, * p<0.1
+
+This table reports the coefficients of a regression relating weekly average yield spreads for junk bonds (BB-rated or less) to the Put-Call Ratio.
+The dependent variables include contemporaneous (average) yield spread (column 1) and (average) yield spreads over the following four weeks
+(columns (2), (3) (4) and (5), respectively). The sentiment index is the independent variable. The change in the macroeconomic conditions
+(ADS) index, market volatility (VIX), the change in the economic policy uncertainty index (EPU) and a lagged yield spread are included as
+control variables. *, ** and *** denote significance at 10%, 5% and 1%, respectively.
+
+                                       39

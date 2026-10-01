@@ -1,0 +1,1059 @@
+INVENTORY EFFECTS
+
+MARKET MAKERS’ IMPACT ON SHORT-TERM RETURNS
+
+  ELIAS NORD BODÉN
+
+  SIMON RULANDER
+
+   Bachelor Thesis
+
+  Stockholm School of Economics
+
+  2024
+Inventory Effects: Market Makers’ Impact on Short-term Returns
+
+Abstract:
+
+   According to the inventory paradigm, market makers are not risk-neutral and demand risk
+   premiums for holding positions. An order book imbalance can lead to inventory build-up
+   of market makers. Price pressures caused by market makers' unloading of positions
+   following build-up of inventory can potentially affect prices and, in extension, returns.
+   This paper investigates whether stock trading strategies that trade in the direction of the
+   previous day's order imbalances are profitable and the relationship between the order
+   imbalance one day and the returns of the next day, using linear regressions. Even if it is
+   not profitable to trade directly on lagged order imbalances, it should be of interest to
+   anyone trading the markets if there exists a relationship between lagged order imbalances
+   and returns. We cannot prove a relationship between one day’s order imbalance and the
+   following day’s return, and the tested trading strategies do not produce statistically
+   significant returns.
+
+Keywords:
+
+   Inventory effect, Market maker, Order imbalance, Short-term return, Stock
+
+Authors:
+
+   Elias Nord Bodén (25319)
+
+   Simon Rulander (25326)
+
+Tutor:
+
+   Ran Xing, Assistant Professor, Stockholm University
+
+Examiner:
+
+   Adrien d’Avernas, Assistant Professor, Department of Finance
+
+Bachelor Thesis
+Bachelor Program in Business and Economics
+Stockholm School of Economics
+© Elias Nord Bodén and Simon Rulander, 2024
+
+                                    1
+                                     I. Introduction
+     Several studies have found a relationship between order imbalances and returns for
+stocks. This paper examines imbalance-based trading strategies that have been found to yield
+statistically significant returns and the relationship between lagged order imbalances and
+returns for stocks included in the OMX Stockholm 30 (OMXS30) index. The trading strategies
+are based on taking positions in the direction of the previous day's order imbalance. The Lee-
+Ready algorithm, which classifies transactions as either buyer- or seller-initiated, is used for
+calculations of the order imbalance during a trading day.
+      The inventory paradigm suggests that market makers are not risk-neutral and demand
+risk premiums for holding positions. If this is true, a market maker should seek to get out of a
+position following a day or period where it has ended up with excess inventory as a result of
+other market participants buying and selling activity. A market maker should even be willing
+to offer favorable prices to get out of the position if the risk premium it demands is sufficiently
+large. Market makers typically set both bid and ask quotes and let other market participants
+either buy or sell from them. If there is an equal volume bought and sold of a security, a market
+maker should be able to make a profit made up by the difference between the prices it buys and
+sells at. What might happen in practice, however, is that there is more volume bought from or
+sold to the market maker. When this happens, the market maker will end up with a change in
+its inventory.
+      The market makers’ selling or buying activity following a build-up of inventory can
+impact prices in the short term, which, in extension, also affects returns. Consider, for example,
+a case where a market maker has ended up with a big position in a particular stock as a result
+of other market participants’ selling activity. If the market maker wants to get out of this
+position, it is likely forced to offer other market participants favorable terms to do so. By
+trading against the market makers in instances where they have had a build-up of inventory,
+and in a sense providing them liquidity, one can potentially achieve excess returns. The returns
+would stem from getting favorable prices when entering positions and unloading them later
+when prices have returned to normal levels. One possible implementation would be to enter
+positions in the direction of the previous day’s order imbalance, in the beginning of the trading
+day and unload the position at the end of the trading day. Even if it is not profitable to trade
+directly on lagged order imbalances, it should be of interest to anyone trading the markets if
+there exists a relationship between lagged order imbalances and returns. We do not find
+statistically significant relationships between lagged order imbalances and returns for stocks,
+and we do not get statistically significant returns from following the trading strategies.
+
+Related Literature
+      Chordia, Roll, and Subrahmanyam (2002) study market-wide returns for the Standard &
+Poor’s 500 index and find that returns are affected by order imbalances, even after controlling
+for aggregate volume and liquidity. Their results are largely supportive of the inventory
+paradigm’s theoretical implications, which suggests that market makers set quotes in a way
+that encourages trading on the side that lets them get out of their position(s) when they have
+accumulated excess inventory. Further, they argue that a significant portion of the daily
+movement in stock prices can be explained by the general public’s buy and sell activity. We
+study the relationship between lagged order imbalances and contemporaneous returns for
+individual stocks, with the inventory paradigm serving as our main theoretical framework.
+     Chordia and Subrahmanyam (2004) examine the relationship between order imbalances
+and daily stock returns for stocks on the New York Stock Exchange (NYSE) in the period 1988
+to 1998. They argue that much of modern financial theory is based on an intermediation
+paradigm, where market makers provide liquidity to buyers and sellers from the general public.
+
+                                    2
+This indicates that order imbalances should be strongly related to changes in price. They find
+trading strategies trading in the direction of the previous day’s order imbalance, which yields
+statistically significant returns. Their results align with the inventory paradigm, which suggests
+that market makers set quotes to evoke trading on one side of a market after an event has caused
+a significant inventory imbalance on the other market side. Chordia and Subrahmanyam (2004)
+argue that it can be profitable for market makers to offer favorable prices for a period of time
+if it lets them unload unwanted inventory. They further argue that there is some room for traders
+with low transaction costs to take advantage of these favorable prices.
+     While Chordia and Subrahmanyam (2004) find a relationship between lagged order
+imbalances and returns and trading strategies that yielded significant returns, the financial
+markets have changed since their sample period (1988 to 1998). This paper investigates
+whether there is a relationship between lagged order imbalances and returns for individual
+stocks and if the strategies tested by Chordia and Subrahmanyam (2004) are profitable today
+and in a different market. Several arguments could be made as to why the profitability of the
+trading strategies might have changed. It is possible that the risk tolerance of market makers
+has changed over time. The risk tolerance of market makers will directly affect how favorable
+prices they should be willing to offer to get out of positions and, in turn, how profitable it is to
+take advantage of the favorable prices. It is also plausible that the competition for these
+favorable prices has increased over time as market participants have found out about them,
+which will affect how profitable it is to take advantage of them. Market makers may also have
+become more proficient in encouraging trading on the side that lets them get out of a position,
+in which case, they are not as dependent on setting favorable prices to get out of positions.
+      Lee and Ready (1991) evaluate different methods for classifications of trades as either
+market buys or market sells. They discuss two common ways to classify the direction of a trade:
+the “tick test” and a method where the trade price is compared to the prevailing quotes. The
+“tick test” compares the trade price to the preceding trade(s) price. If the trade price is higher
+(lower) than that of the preceding trade(s), the trade is classified as an uptick (downtick) and is
+considered buyer- (seller-) initiated. If the trade price is equal to the price of the adjacent
+trade(s), the direction of the trade is set equal to that of the adjacent trade(s). The other method,
+using prevailing quotes, compares the trade price to the order books at the time of the trade. A
+trade that takes place at the current ask (bid) is considered buyer- (seller-) initiated. A trade can
+also take place somewhere in between the current best ask and bid quotes. This can sometimes
+be due to data issues relating to timing, but when controlling for this, Lee and Ready (1991)
+find that many trades still happen inside the spread. Two possible ways to deal with these trades
+are to simply ignore them or to classify them as buyer- (seller-) initiated if they happen above
+(below) the midpoint of the current best bid and ask prices.
+      Lee and Ready (1991) define a classification method, commonly referred to as the Lee-
+Ready algorithm, that combines the two classification methods. They highlight problems with
+using current quote midpoints for classification and argue that looking at the midpoint five
+seconds prior to the trade improves the classification accuracy. The Lee-Ready algorithm
+defines the direction of a trade based on the best bid offer midpoint five seconds prior to the
+trade and at what price the trade takes place relative to that midpoint. If the price is higher than
+the prior midpoint, the transaction is classified as buyer-initiated, and if the price is lower than
+the midpoint, it is classified as seller-initiated. If the price is equal to the midpoint five seconds
+prior, the “tick test” is used, where a transaction with an uptick is classified as buyer-initiated,
+and a transaction with a downtick is classified as seller-initiated. If the trade price happens to
+be the same as the previous transaction’s price, the direction of the trade is set equal to that of
+the prior transaction.
+      The Lee-Ready algorithm is used to classify transactions as either buyer-initiated or
+seller-initiated in this paper. This transaction classification is then used to calculate the order
+
+                                    3
+imbalances for individual stocks. Measuring market makers’ inventory build-up with perfect
+accuracy is impossible without direct access to their books. Order imbalances can, however,
+provide valuable insights and be used for approximations of market makers’ changes in
+inventory. As market makers typically do not initiate transactions, but rather make it possible
+for other market participants to initiate transactions by continuously providing a market, they
+are likely to be sellers in buyer-initiated transactions and buyers in seller-initiated transactions.
+The Lee-Ready algorithm, therefore, allows us to approximate changes in the inventory of
+market makers.
+
+                                     II. Methodology
+
+A. Classifying transactions
+      We collect historical level 1 order book data, aggregated by milliseconds and level 1
+order book data when the transactions happen from the NASDAQ HFT database, along with the
+number of shares traded and the transaction prices for each transaction. This allows us to
+classify all transactions as either buyer- or seller-initiated through the use of the Lee-Ready
+algorithm (Lee and Ready, 1991). For all transactions, we classify them by matching them with
+the order book data that is closest to five seconds prior. We allow for a maximum of six seconds
+and a minimum of four seconds prior to the transaction. If order book data cannot be found
+within that span, we assume the data is faulty and do not classify the transaction.
+
+B. Defining order imbalance measures
+      We use two measures to quantify the order imbalance of a stock during a trading day.
+We define OISVOL as the order imbalance in SEK divided by total SEK volume and OIBNUM
+as the order imbalance in terms of the number of transactions divided by the total number of
+transactions. Further, we define buyer-initiated transactions as 1 and seller-initiated
+transactions as -1.
+
+  𝐿𝑅𝑠,𝑑,𝑖 ∶= Lee-Ready classification for the i-th transaction on the d-th day for stock s
+
+                𝑇𝑠,𝑑 ∶= The number of transactions on the d-th day for stock s
+
+                          1    if the transaction is classified as buyer-iniated
+               LR𝑠,𝑑,𝑖 = {
+                     −1   if the transaction is classifed as seller-iniated
+
+                                                                                               𝑇𝑠,𝑑
+                                                       ∑𝑖 =1 𝐿𝑅𝑠,𝑑,𝑖 ⋅ 𝑆𝐸𝐾 𝑣𝑜𝑙𝑢𝑚𝑒𝑠,𝑑,𝑖
+                              𝑂𝐼𝑆𝑉𝑂𝐿𝑠,𝑑 =        𝑇
+                                                                                                                      𝑠,𝑑
+                                                        ∑𝑖 =1 𝑆𝐸𝐾 𝑣𝑜𝑙𝑢𝑚𝑒𝑠,𝑑,𝑖
+
+                                                                                                                       𝑇𝑠,𝑑
+                                                                  ∑𝑖 =1 𝐿𝑅𝑠,𝑑,𝑖
+                                      𝑂𝐼𝐵𝑁𝑈𝑀𝑠,𝑑 =
+                                                                                                     𝑇𝑠,𝑑
+
+      OISVOL is a measurement of the amount of volume that is buyer- versus seller-initiated
+during a day, and OIBNUM is a measurement of the number of transactions that are buyer-
+versus seller-initiated during a day. If market makers were the sellers in every buyer-initiated
+transaction and buyers in every seller-initiated transaction, OISVOL would be a direct measure
+of their change in inventory, adjusted for the total volume during the day. As this is not
+
+                                    4
+necessarily the case, we also study the proportion of buyer- versus seller-initiated transactions
+made during a day.
+
+C. Tests for the relationship between lagged order imbalances and returns
+     Market makers should be the most concerned about getting out of positions when the
+inventory build-up is the greatest. They should, therefore, be willing to offer the most favorable
+prices when the build-up of inventory is the greatest. If this holds, some linear relationship
+between lagged order imbalances and returns should exist. To test the hypothesis that the
+previous day’s order imbalance is related to the current day’s return and whether we can give
+support to the inventory theory, where market makers are not risk-neutral and seek to exit the
+positions accumulated during a trading day. We run the following linear regressions between
+OISVOL and OIBNUM against the following day’s return:
+
+                                            𝐶𝑙𝑜𝑠𝑖𝑛𝑔 𝑚𝑖𝑑𝑝𝑜𝑖𝑛𝑡𝑠,𝑑
+                                       − 1 = 𝛽0 + 𝛽1𝑂𝐼𝑆𝑉𝑂𝐿𝑠,𝑑−1 (1)
+                                            𝑂𝑝𝑒𝑛𝑖𝑛𝑔 𝑚𝑖𝑑𝑜𝑖𝑛𝑡𝑠,𝑑
+
+                                              𝐶𝑙𝑜𝑠𝑖𝑛𝑔 𝑚𝑖𝑑𝑝𝑜𝑖𝑛𝑡𝑠,𝑑
+                                        − 1 = 𝛽0 + 𝛽1𝑂𝐼𝐵𝑁𝑈𝑀𝑠,𝑑−1 (2)
+                                            𝑂𝑝𝑒𝑛𝑖𝑛𝑔 𝑚𝑖𝑑𝑜𝑖𝑛𝑡𝑠,𝑑
+
+                                       𝐶𝑙𝑜𝑠𝑖𝑛𝑔 𝑎𝑢𝑐𝑡𝑖𝑜𝑛 𝑝𝑟𝑖𝑐𝑒𝑡𝑠,𝑑
+                                           − 1 = 𝛽0 + 𝛽1𝑂𝐼𝑆𝑉𝑂𝐿𝑠,𝑑−1 (3)
+                                             𝑂𝑝𝑒𝑛𝑖𝑛𝑔 𝑚𝑖𝑑𝑜𝑖𝑛𝑡𝑠,𝑑
+
+                                      𝐶𝑙𝑜𝑠𝑖𝑛𝑔 𝑎𝑢𝑐𝑡𝑖𝑜𝑛 𝑝𝑟𝑖𝑐𝑒𝑠,𝑑
+                                         − 1 = 𝛽0 + 𝛽1𝑂𝐼𝐵𝑁𝑈𝑀𝑠,𝑑−1 (4)
+                                            𝑂𝑝𝑒𝑛𝑖𝑛𝑔 𝑚𝑖𝑑𝑜𝑖𝑛𝑡𝑠,𝑑
+
+       We also test the correlation between OISVOL, OIBNUM, and the following day’s
+return.
+
+D. The trading strategies
+     We test the profitability of the trading strategies implemented by Chordia and
+Subrahmanyam (2004). We use OISVOL and OIBNUM to determine when there has been a
+positive or negative order imbalance during a day. We classify a day with a positive OISVOL
+(OIBNUM) as a day with a positive order imbalance and a day with a negative OISVOL
+(OIBNUM) as a day with a negative order imbalance. OISVOL and OIBNUM values are
+calculated for each trading day and each stock. After having examined if the order imbalance
+is positive or negative during a day, we test if the strategy of buying (selling) one share at the
+ask (bid) corresponding to the first transaction of the next day when the order imbalance has
+been positive (negative). The position is unloaded at the best bid or ask corresponding to the
+last transaction of the day. All transactions where we buy are calculated using the best ask
+quotes and all the transactions where we sell are calculated using the best bid quotes. Chordia
+and Subrahmanyam (2004) found the same trading strategies profitable in their sample for
+stocks on the NYSE (1988 to 1998).
+      The logic for why these strategies could be profitable is the following: A positive
+(negative) order imbalance during a day implies that market makers are likely to have gathered
+a position. They will, according to the inventory paradigm, want to exit this position. Market
+makers will, therefore, offer favorable terms in order to elicit trading on the side that lets them
+get out of their position. They will want to exit their positions early to limit their risks. By the
+end of the day, market makers are likely to have been able to get out of their positions and the
+bid and ask prices at the end of the day will be fairer. By getting favorable terms in the entries
+
+                                    5
+and fair prices in the exits, one could potentially get excess returns. The potential problems and
+limitations with this strategy are, however, that you are paying a spread in every trade, and a
+positive (negative) OISVOL or OIBNUM does not necessarily mean that there has been a
+build-up of inventory of market makers big enough for them to offer favorable terms. We also
+test the results of the same strategy of buying or selling, but only when the order book
+imbalance is big, compared to a historical average for each stock. To do so, we only trade when
+OISVOL or OIBNUM is one, respective, two standard deviations away from zero for each
+stock. This should exclude the cases where the change in inventory is negligent to the market
+maker.
+      To limit the spreads paid, we also test the same strategies but where we exit the positions
+in the closing auction. The trading strategies are based on getting favorable prices when
+entering positions following a previous day's order imbalance, but theory does not suggest that
+you will get favorable prices when exiting the positions. By exiting the positions in the closing
+auction, we should get prices that are equally fair, but without having to pay a spread in half of
+the transactions. This strategy should therefore improve the returns of the trading strategies.
+We also report the results of the different trading strategies with the spread loss added back. It
+is theoretically possible to trade without having to pay a spread through the use of dark pools,
+where the prices are matched based on the mid-point offers on the central order book. It is,
+however, not possible to know or test if one would be able to get an order filled at a specific
+point in time.
+
+E. Adjusting returns for market returns
+      After examining the returns of the trading strategies, we adjust the returns of the trading
+strategies for the market returns during the holding periods. We calculate the return of the
+OMXS30 index each trading day. For a long (short) position in a stock, we subtract (add) the
+OMXS30 return times the stock’s beta from the stock’s trading return.
+
+                                                1, 𝑙𝑜𝑛𝑔 𝑝𝑜𝑠𝑖𝑡𝑖𝑜𝑛
+                                  𝐿𝑆𝑠,𝑑 = {
+                                       −1, 𝑠ℎ𝑜𝑟𝑡 𝑝𝑜𝑠𝑖𝑡𝑖𝑜𝑛
+
+                                                              𝐶𝑙𝑜𝑠𝑖𝑛𝑔 𝑖𝑛𝑑𝑒𝑥 𝑜𝑓 𝑂𝑀𝑋𝑆30𝑑
+                 𝑅𝑒𝑡𝑢𝑟𝑛 𝑓𝑜𝑟 𝑂𝑀𝑋𝑆30𝑑 =                       − 1
+                                                             𝑂𝑝𝑒𝑛𝑖𝑛𝑔 𝑖𝑛𝑑𝑒𝑥 𝑜𝑓 𝑂𝑀𝑋𝑆30𝑑
+
+𝐴𝑑𝑗𝑢𝑠𝑡𝑒𝑑 𝑡𝑟𝑎𝑑𝑒 𝑟𝑒𝑡𝑢𝑟𝑛𝑠,𝑑 = 𝑇𝑟𝑎𝑑𝑒 𝑟𝑒𝑡𝑢𝑟𝑛𝑠,𝑑 − 𝐿𝑆𝑠,𝑑 ∙ 𝑅𝑒𝑡𝑢𝑟𝑛 𝑓𝑜𝑟 𝑂𝑀𝑋𝑆30𝑑 ∙ 𝛽 𝑚𝑎𝑟𝑘𝑒𝑡,𝑠
+
+       We also run the following regressions to see whether the relationship between lagged
+order imbalances and returns differs when we adjust for the market returns:
+
+    𝐶𝑙𝑜𝑠𝑖𝑛𝑔 𝑚𝑖𝑑𝑝𝑜𝑖𝑛𝑡𝑠,𝑑
+                     − 1 − 𝑅𝑒𝑡𝑢𝑟𝑛 𝑓𝑜𝑟 𝑂𝑀𝑋𝑆30𝑑 ⋅ 𝛽𝑚𝑎𝑟𝑘𝑒𝑡,𝑠 = 𝛽0 + 𝛽1𝑂𝐼𝑆𝑉𝑂𝐿𝑠,𝑑−1 (5)
+    𝑂𝑝𝑒𝑛𝑖𝑛𝑔 𝑚𝑖𝑑𝑜𝑖𝑛𝑡𝑠,𝑑
+
+    𝐶𝑙𝑜𝑠𝑖𝑛𝑔 𝑚𝑖𝑑𝑝𝑜𝑖𝑛𝑡𝑠,𝑑
+                    − 1 − 𝑅𝑒𝑡𝑢𝑟𝑛 𝑓𝑜𝑟 𝑂𝑀𝑋𝑆30𝑑 ⋅ 𝛽𝑚𝑎𝑟𝑘𝑒𝑡,𝑠 = 𝛽0 + 𝛽1𝑂𝐼𝐵𝑁𝑈𝑀𝑠,𝑑−1 (6)
+    𝑂𝑝𝑒𝑛𝑖𝑛𝑔 𝑚𝑖𝑑𝑜𝑖𝑛𝑡𝑠,𝑑
+
+  𝐶𝑙𝑜𝑠𝑖𝑛𝑔 𝑎𝑢𝑐𝑡𝑖𝑜𝑛 𝑝𝑟𝑖𝑐𝑒𝑠,𝑑
+                       − 1 − 𝑅𝑒𝑡𝑢𝑟𝑛 𝑓𝑜𝑟 𝑂𝑀𝑋𝑆30𝑑 ⋅ 𝛽𝑚𝑎𝑟𝑘𝑒𝑡,𝑠 = 𝛽0 + 𝛽1𝑂𝐼𝑆𝑉𝑂𝐿𝑠,𝑑−1 (7)
+      𝑂𝑝𝑒𝑛𝑖𝑛𝑔 𝑚𝑖𝑑𝑜𝑖𝑛𝑡𝑠,𝑑
+
+𝐶𝑙𝑜𝑠𝑖𝑛𝑔 𝑎𝑢𝑐𝑡𝑖𝑜𝑛 𝑝𝑟𝑖𝑐𝑒𝑠,𝑑
+                      − 1 − 𝑅𝑒𝑡𝑢𝑟𝑛 𝑓𝑜𝑟 𝑂𝑀𝑋𝑆30𝑑 ⋅ 𝛽𝑚𝑎𝑟𝑘𝑒𝑡,𝑠 = 𝛽0 + 𝛽1𝑂𝐼𝐵𝑁𝑈𝑀𝑠,𝑑−1 (8)
+    𝑂𝑝𝑒𝑛𝑖𝑛𝑔 𝑚𝑖𝑑𝑜𝑖𝑛𝑡𝑠,𝑑
+
+                                    6
+      As the regressions involve correlated variables, the value of the regression results will be
+somewhat limited. The returns of one stock will affect the return of the OMXS30. Further, the
+return of one stock could affect the returns of other stocks included in the index. Order
+imbalances might also be correlated across stocks. If order imbalances are correlated across
+stocks, and if there is a relationship between lagged order imbalances and returns for the
+individual stocks, an order imbalance of one stock would have predictive power of the other
+stocks’ returns the next day. We test the correlation between order imbalances across stocks to
+see if such prediction power could exist.
+
+                                    III. Data Description
+      The datasets for the order book data are available through Swedish House of Finance.
+We collect the orderbook data for the 30 companies included in the Swedish Stock index
+OMXS30 and classify all transactions as either buyer- or seller-initiated during the period
+2021-10-12 to 2023-10-11, which is the last two years for which we can access the orderbook
+data. The index OMXS30 is revised twice a year, but revisions can also be made when a stock
+is no longer eligible for continued inclusion. As we do not have access to all revisions made
+during the sample period, we use the stocks included in the index per the date per the date
+2024-05-02. The datasets are based on NASDAQ OMX Historical ITCH files and should
+therefore be reliable. It is, however, possible that the data sets contain some data errors. Beta
+values for the different stocks are retrieved from Yahoo Finance and are average monthly betas
+for the last five years. Intraday returns for OMXS30 are calculated using the index open and
+closing prices each trading day. The Yahoo finance data for NASDAQ OMX Stockholm is
+provided by ICE Data Services.
+     OMXS30 consists of the 30 most traded stocks on the Swedish stock exchange NASDAQ
+Stockholm. By analyzing stocks with higher liquidity, we make sure that a successful trading
+strategy would be viable and executable with size. If it is not possible to execute the trading
+strategy with size, it is likely that transaction costs will eat up a big portion of the profits.
+Further, the spread is typically lower in bigger stocks and the spread paid has a big impact on
+the returns when a strategy revolves around buying and selling over the spread. We chose to
+analyze companies on Nasdaq Stockholm, because it is the only stock exchange for which we
+are able to access detailed historical order books.
+
+                                    7
+                                     IV. Data analysis
+                                                Table I
+               Regression Results – Returns on lagged order imbalances
+This table shows the regression results for the next day’s return, on orders imbalances. The first
+regression (Equation 1) uses OISVOL, and the second regression (Equation 2) uses OIBNUM,
+as the order imbalance measure. Returns are calculated using the first and last best bid and ask
+midpoints. Returns and lagged order imbalances are calculated for all stocks and all trading
+days. All data points are then used in the calculations of the regression coefficients. Standard
+errors are reported in parenthesis.
+
+                                               Dependent variable:
+
+                                                   Return
+                                           (1) (2)
+
+                                                          *
+     OISVOL lagged 0.003
+                                       t = 1.850
+                                     p = 0.065
+                                      (0.002)
+
+     OIBNUM lagged 0.003
+                                                                            t = 1.387
+                                                                       p = 0.166
+                                                                         (0.002)
+
+      Constant -1.601 -1.337
+                                      t = -0.855 t = -0.696
+                                    p = 0.393 p = 0.487
+                                       (1.872) (1.921)
+
+     Observations 11,790 11,790
+
+        2
+     R                          0.0003 0.0002
+
+                                                                                       *         **           ***
+     Note:  p<0.1;  p<0.05;   p<0.01
+
+      With a p-value of 0.0643 for the coefficient OISVOL lagged (Table I), we have some
+indications of a linear relationship between the OISVOL and the next day’s return. The p-value
+of 0.166 for the coefficient OIBNUM lagged (Table I) suggests that there is less of a linear
+relationship between OIBNUM and the next day’s return, compared to when using OISVOL
+as the order imbalance measure. We are however not able to conclude a relationship between
+lagged order imbalances and returns with statistical significance.
+
+                                    8
+                                                Table II
+   Regression Results – Returns on lagged order imbalances – exits in closing auction
+This table shows the regression results for the next day’s return, adjusted for the market return,
+on orders imbalances. The first regression (Equation 3) uses OISVOL, and the second
+regression (Equation 4) uses OIBNUM, as the order imbalance measure. Returns are calculated
+using the first best bid and ask midpoints and closing auction prices. Returns and lagged order
+imbalances are calculated for all stocks and all trading days. All data points are then used in
+the calculations of the regression coefficients. Standard errors are reported in parenthesis.
+
+                                              Dependent variable:
+
+                                        Return – exit in closing auction
+                                            (1) (2)
+
+                                                            *
+    OISVOL lagged 0.003
+                                         t = 1.934
+                                      p = 0.054
+                                        (0.002)
+
+    OIBNUM lagged 0.002
+                                                                               t = 0.959
+                                                                          p = 0.338
+                                                                            (0.002)
+
+    Constant -0.885 -0.843
+                                       t = -0.448 t = -0.416
+                                     p = 0.655 p = 0.678
+                                      (1.976) (2.027)
+
+    Observations 11,790 11,790
+
+      2
+   R                            0.0003 0.0001
+
+                                                                                         *         **           ***
+    Note:  p<0.1;  p<0.05;   p<0.01
+
+      We run the same regressions, but instead of using quote midpoints at the end of the
+trading day, we are using closing prices, and the results are similar (Table II). Again, we find
+indications of a linear relationship between OISVOL and the next day's return and find that
+OIBNUM has less of a linear relationship between the next day’s return, and we cannot
+conclude a relationship with statistical significance.
+
+     Correlations between lagged order imbalances and the following day’s return
+The correlation between OISVOL and the following day’s return is 0.0177
+The correlation between OIBNUM and the following day’s return is 0.0139
+
+      We find very low correlation between OISVOL and the next day’s return as well as for
+OIBNUM and the next day’s return. Again however, OISVOL seems to be more related to the
+next day’s return in comparison to OIBNUM.
+
+                                    9
+      Logic suggests that OISVOL should be a more direct measure of market makers' build-
+up of inventory compared to OIBNUM, as OISVOL accounts for the volume of each
+transaction. OIBNUM simply measures the number of transactions that are buyer- versus
+seller-initiated and can therefore be sensitive to very small transactions. If a single share is sold
+to a market maker repeatedly, for example, it will not affect the inventory in a significant way,
+but it will have a big impact on the OIBNUM measure. Market makers, as long as they demand
+premiums for holding inventory, should be willing to offer the most favorable terms when the
+build-up of inventory is the greatest. It, therefore, makes sense that there should be a linear
+relationship between OISVOL and the next day’s return and less of a linear relationship
+between OIBNUM and the next day’s return. We do indeed see indications of a linear
+relationship between OISVOL and the next day’s return, and less of a relationship when using
+OIBNUM as the order imbalance measure. We do however observe low R-squared statistics in
+both regressions.
+
+                   Correlation between order imbalance measures
+The correlation between daily OISVOL and OIBNUM is 0.762.
+
+     OISVOL and OIBNUM are highly correlated, which could make the returns of the
+trading strategies quite similar no matter which of the two measures of order imbalances is
+used. OISVOL should nonetheless, if anything, be the superior determinant of market makers’
+build-up of inventory.
+
+                                    10
+                                                Table III
+                      Mean returns of trading strategies (in BPS)
+This table reports average returns of trading strategies described in Section II.D. We calculate
+order imbalances in terms of OISVOL and OIBNUM for individual stocks. After having
+examined if the order imbalance is positive or negative during a day, we buy (sell) one share
+at the ask (bid) corresponding to the first transaction of the next day when the order imbalance
+has been positive (negative). The position is unloaded at the best bid or ask corresponding to
+the last transaction of the day. All transactions where we buy are calculated using the best ask
+quotes and all the transactions where we sell are calculated using the best bid quotes. The same
+strategies are implemented but where positions are only entered when OISVOL or OIBNUM
+is one, respective, two standard deviations away from zero for each stock. In the Negative
+(Positive) column, we report the average returns of trading exclusively on days following a
+negative (positive) order imbalance. T-statistics are reported in relation to a return of 0 (no
+trading).
+               Strategy Positive or       Negative        Positive
+                                       Negative
+                                 Mean        Mean        Mean
+                                                       (t-statistic)         (t-statistic)         (t-statistic)
+                                          n=obs.          n=obs.          n=obs.
+
+               OISVOL -10.247          -8.472          -12.465
+                                              t = -5.221        t = -3.217        t = -4.235
+                                            n=11790          n=6549           n=5241
+
+              OIBNUM -10.573          -9.115          -12.939
+                                               t = -5.383         t = -3.65         t = -4.068
+                                            n=11770          n=7281           n=4489
+
+         OISVOL one Std Dev -5.321           -5.217           -5.471
+                                              t = -1.502        t = -1.133        t = -0.988
+                                            n=3621           n=2141           n=1480
+
+         OIBNUM one Std Dev -6.282           -6.026           -6.886
+                                              t = -1.881        t = -1.513        t = -1.125
+                                            n=4073           n=2861           n=1212
+
+         OISVOL two Std Dev -1.321           -7.601           8.313
+                                              t = -0.151        t = -0.676         t = 0.597
+                                            n=593            n=359            n=234
+
+         OIBNUM two Std Dev -8.506          -10.773          -1.767
+                                              t = -1.076        t = -1.179        t = -0.112
+                                            n=727            n=544            n=183
+
+                                    11
+                                    Table IV
+        Mean returns of trading strategies (in BPS) – exits in the closing auction
+This table reports average returns of trading strategies described in Section II.D. We calculate
+order imbalances in terms of OISVOL and OIBNUM for individual stocks. After having
+examined if the order imbalance is positive or negative during a day, we buy (sell) one share
+at the ask (bid) corresponding to the first transaction of the next day when the order imbalance
+has been positive (negative). The position is unloaded in the closing auction. The same
+strategies are implemented but where positions are only entered when OISVOL or OIBNUM
+is one, respective, two standard deviations away from zero for each stock. In the Negative
+(Positive) column, we report the average returns of trading exclusively on days following a
+negative (positive) order imbalance. T-statistics are reported in relation to a return of 0 (no
+trading).
+               Strategy Positive or       Negative        Positive
+                                       Negative
+                                   mean         mean         mean
+                                                       (t-statistic)         (t-statistic)         (t-statistic)
+                                               df               df               df
+            OISVOL (close) -6.323           -5.202           -7.723
+                                               t = -3.381        t = -2.073)        t = -2.754
+                                    n=11790       n=6549        n=5241
+
+            OIBNUM (close) -7.07            -6.183           -8.509
+                                               t = -3.778        t = -2.598)        t = -2.808
+                                    n=11770       n=7281        n=4489
+
+      OISVOL one Std Dev (close) -2.594           -3.793           -0.859
+                                               t = -0.769        t = -0.864)        t = -0.163
+                                    n=3621        n=2141        n=1480
+
+     OIBNUM one Std Dev (close) -2.969           -2.465           -4.157
+                                               t = -0.933        t = -0.649)        t = -0.713
+                                    n=4073        n=2861        n=1212
+
+     OISVOL two Std Dev (close) 3.041           -3.817          13.563
+                                               t = 0.365        t = -0.356)        t = 1.022
+                                     n=593         n=359         n=234
+
+     OIBNUM two Std Dev (close) -8.171          -11.629          2.108
+                                               t = -1.085        t = -1.336)         t = 0.14
+                                     n=727         n=544         n=183
+
+      Table III and Table IV reports the average return per trade of the various strategies of
+buying (selling) in the beginning of the trading day and unloading the position at the end of the
+trading day, based on the previous day's order imbalance. The results show that the trading
+strategies implemented by Chordia and Subrahmanyam (2004) do not yield significant positive
+
+                                    12
+returns for OIBNUM nor OISVOL in our sample. Chordia and Subrahmanyam (2004) found
+significant returns on the NYSE between 1988-1998. We tested the strategies on stocks
+included in the Swedish index OMXS30 between the dates 2021-10-12 and 2023-10-11. These
+markets differ quite a lot and the financial markets have changed a lot since their sample period.
+The tested trading strategies are also quite simplistic, and easy to implement, as long as you
+have access to the order book data. While retail traders typically would not be able to access
+the order book data and do calculations on a daily basis for several stocks, the strategies would
+be easy to implement by professionals with access to the order book data. It is unlikely that a
+profitable strategy that is easy to implement is allowed to exist for a very long time, when
+market actors have knowledge of its existence.
+     We do see better returns when considering OISVOL than OIBNUM, which could
+potentially be explained by a stronger relationship between the previous day’s order imbalance
+measured by OISVOL and the next day’s return, as compared to when measured by OIBNUM.
+While the returns for the strategies are typically negative, it should be considered that a spread
+is paid in each trade. The strategy of unloading the positions in the closing auction improved
+the result of the trading strategies, as we are able to avoid paying a spread when exiting
+positions. Table V reports the average spread losses, and Table VI reports the returns with the
+spread losses added back.
+
+                                     Table V
+                 Mean spread losses for trading strategies (in BPS)
+This table describes the average spread losses in the tested trading strategies described in
+Section II.D. “(Close)” signifies that positions are exited in the closing auction instead of at
+best bid and ask prices.
+                             Strategy Spread Loss
+
+                                buy 12.539
+                               buy (close) 8.972
+                                     sell 12.578
+                                 sell (close) 9.004
+
+                                       Table VI
+        Mean returns of trading strategies with spread loss added back (in BPS)
+This table reports average returns of trading strategies described in Section II.D. We calculate
+order imbalances in terms of OISVOL and OIBNUM for individual stocks. After having
+examined if the order imbalance is positive or negative during a day, we buy (sell) one share
+at the ask (bid) corresponding to the first transaction of the next day when the order imbalance
+has been positive (negative). The position is unloaded at the best bid or ask corresponding to
+the last transaction of the day or in the closing auction. The transactions where we buy are
+calculated using the best ask quotes and the transactions where we sell are calculated using the
+best bid quotes. The same strategies are implemented but where positions are only entered
+when OISVOL or OIBNUM is one, respective, two standard deviations away from zero for
+each stock. In the Negative (Positive) column, we report the average returns of trading
+exclusively on days following a negative (positive) order imbalance. “(Close)” signifies that
+positions are exited in the closing auction instead of at best bid and ask prices.
+
+                                    13
+       Strategy Positive or       Negative        Positive
+                               Negative
+                           Mean        Mean        Mean
+                                            (t-statistic)         (t-statistic)         (t-statistic)
+                                  n=obs.          n=obs.          n=obs.
+                                     spread-loss       spread-loss       spread-loss
+      OISVOL 2.313          3.887          0.346
+                                     t = 1.178         t = 1.476         t = 0.118
+                                   n=11790          n=6549           n=5241
+                                         12.56             12.359             12.811
+
+      OIBNUM 1.99           3.292          -0.122
+                                     t = 1.013         t = 1.318        t = -0.038
+                                   n=11770          n=7281           n=4489
+                                        12.563             12.407             12.817
+
+ OISVOL one Std Dev 6.814           6.578           7.155
+                                     t = 1.924         t = 1.428         t = 1.292
+                                    n=3621           n=2141           n=1480
+                                        12.134             11.795             12.625
+
+OIBNUM one Std Dev 5.632          5.647           5.597
+                                    t = 1.687         t = 1.417         t = 0.914
+                                    n=4073           n=2861           n=1212
+                                        11.914             11.672             12.484
+
+OISVOL two Std Dev 10.463          4.497          19.614
+                                      t = 1.196          t = 0.4          t = 1.408
+                                    n=593            n=359            n=234
+                                        11.783             12.098             11.301
+
+OIBNUM two Std Dev 2.734          0.486          9.419
+                                     t = 0.346         t = 0.053         t = 0.598
+                                    n=727            n=544            n=183
+                                        11.241             11.259             11.186
+
+   OISVOL (close) 2.666           3.598           1.502
+                                     t = 1.426         t = 1.434         t = 0.536
+                                   n=11790          n=6549           n=5241
+                                           8.989               8.8               9.225
+
+   OIBNUM (close) 1.921           2.692           0.671
+                                     t = 1.027         t = 1.131         t = 0.221
+                                   n=11770          n=7281           n=4489
+                                         8.992              8.875              9.181
+
+                             14
+     OISVOL one Std Dev (close) 6.162           4.655           8.341
+                                              t = 1.826         t = 1.061          t = 1.58
+                                            n=3621           n=2141           n=1480
+                                                    8.756              8.449               9.2
+
+     OIBNUM one Std Dev (close) 5.567           5.823           4.964
+                                               t = 1.75          t = 1.534         t = 0.851
+                                            n=4073           n=2861           n=1212
+                                                   8.536              8.288              9.121
+
+     OISVOL two Std Dev (close) 11.629          5.102          21.642
+                                              t = 1.395         t = 0.476         t = 1.631
+                                            n=593            n=359            n=234
+                                                   8.588              8.919              8.079
+
+     OIBNUM two Std Dev (close) -0.253           -3.704          10.005
+                                              t = -0.034        t = -0.425         t = 0.667
+                                            n=727            n=544            n=183
+                                                   7.918              7.925              7.898
+
+      Even with the spread loss added back, we cannot see statistically significant returns from
+following any of the trading strategies. The t-statistics do however indicate that some
+relationship exists between the order imbalances one day and the returns the next day. We can
+also observe that the returns are the biggest when we have high order imbalances measured by
+OISVOL. This is what is predicted by theory, as market makers should be willing to offer the
+most favorable terms when they have had a big build-up of inventory.
+      In the implementation of any trading strategy, the transaction costs have to be considered.
+The proposed strategies involve frequent buying and selling, and the transaction costs will,
+therefore, determine the profits or losses to a large extent. Retail investors typically have to pay
+high brokerage commissions and are not able to access detailed order book data on a daily
+basis. The proposed trading strategies should, therefore, only be considered by professionals
+with access to low transaction cost. While the tested trading strategies at best can be said to be
+marginally profitable, if one were to get filled in the dark pools, they do show some potential
+for the design of trading strategies revolving around lagged order imbalances that could yield
+good profits. The tested trading strategies are quite simplistic, and it is likely that the trading
+strategies could be tweaked and improved in ways that would improve the returns. One such
+example would be to define a measure that captures the build-up of market makers’ inventory
+better than the measures we used. Adding more lagged imbalances could also improve the
+results. Further, it is likely that adding order imbalances as a factor to some other trading
+strategy could improve its results. While we show some potential for the design of a profitable
+trading strategy trading on lagged order imbalances, we have yet to adjust them for market
+returns during the holding periods.
+
+                                    15
+                                          Table VII
+           Regression results – Adjusted returns on lagged order imbalances
+This table shows the regression results for the next day’s return, adjusted for the market return,
+on orders imbalances. The first regression (Equation 5) uses OISVOL, and the second
+regression (Equation 6) uses OIBNUM, as the order imbalance measure. Returns are calculated
+using the first and last best bid and ask midpoints. Returns and lagged order imbalances are
+calculated for all stocks and all trading days. All data points are then used in the calculations
+of the regression coefficients. Standard errors are reported in parenthesis.
+
+                                              Dependent variable:
+
+                                                Adjusted Returns
+                                        (1) (2)
+
+    OISVOL lagged -0.001
+                                     t = -0.547
+                                   p = 0.585
+                                    (0.002)
+
+    OIBNUM lagged -0.002
+                                                                           t = -1.012
+                                                                       p = 0.312
+                                                                         (0.002)
+
+    Constant -2.513 -2.927
+                                    t = -1.191 t = -1.352
+                                  p = 0.234 p = 0.177
+                                   (2.110) (2.165)
+
+    Observations 11,790 11,790
+
+      2
+   R                         0.00003 0.0001
+
+                                                                                         *         **           ***
+    Note:  p<0.1;  p<0.05;   p<0.01
+
+                                    16
+                                          Table VIII
+ Regression results – Adjusted returns on lagged order imbalances – exits in the closing
+                                      auction
+This table shows the regression results for the next day’s return, adjusted for the market return,
+on orders imbalances. The first regression (Equation 7) uses OISVOL, and the second
+regression (Equation 8) uses OIBNUM, as the order imbalance measure. Returns are calculated
+using the first best bid and ask midpoints and closing auction prices. Returns and lagged order
+imbalances are calculated for all stocks and all trading days. All data points are then used in
+the calculations of the regression coefficients. Standard errors are reported in parenthesis.
+
+                                              Dependent variable:
+
+                                      Adjusted Returns - exit in closing auction
+                                         (1) (2)
+
+     OISVOL lagged -0.001
+                                     t = -0.362
+                                   p = 0.718
+                                     (0.002)
+
+     OIBNUM lagged -0.003
+                                                                           t = -1.288
+                                                                       p = 0.198
+                                                                         (0.002)
+
+     Constant -1.797 -2.434
+                                     t = -0.816 t = -1.077
+                                   p = 0.415 p = 0.282
+                                    (2.203) (2.260)
+
+     Observations 11,790 11,790
+
+       2
+    R                         0.00001 0.0001
+
+                                                                                        *         **           ***
+     Note:  p<0.1;  p<0.05;   p<0.01
+
+     We see no linear relationship between one day’s order imbalance and the next day’s
+return for individual stocks when we adjust for market returns during the holding periods (Table
+VIII). This does, however, not necessarily mean that there is no relationship between one day’s
+order imbalances and the next day’s returns for individual stocks. If order imbalances are highly
+correlated across stocks, an order imbalance of one stock could potentially indicate an
+inventory build-up in the same direction for other stocks as well.
+
+                                    17
+               Correlation between daily order imbalances across stocks
+
+                                                 Figure 1.
+              Distribution of the correlations between all stocks’ OISVOL
+
+This figure shows the distribution of the lower triangle of the correlation matrix for all
+stocks’ daily order imbalance measured in OISVOL.
+
+The average correlation between OISVOL for two stocks is: 0.110
+
+                                                Figure 2.
+              Distribution of the correlations between all stocks’ OIBNUM
+This figure shows the distribution of the lower triangle of the correlation matrix for all
+stocks’ daily order imbalance measured in OIBNUM.
+
+The average correlation between OIBNUM for two stocks is: 0.143
+
+      As we have some positive correlations between daily order imbalances across stocks, a
+relationship between lagged order imbalances and returns for individual stocks would not be
+fully captured by the regressions where returns are adjusted for market returns (Table VIII).
+
+                                    18
+                                        Table IX
+        Mean returns of trading strategies (in BPS) - adjusted for market returns
+This table reports average returns of trading strategies described in Section II.D adjusted for
+market returns. We calculate order imbalances in terms of OISVOL and OIBNUM for
+individual stocks. After having examined if the order imbalance is positive or negative during
+a day, we buy (sell) one share at the ask (bid) corresponding to the first transaction of the next
+day when the order imbalance has been positive (negative). The position is unloaded at the best
+bid or ask corresponding to the last transaction of the day or in the closing auction. The
+transactions where we buy are calculated using the best ask quotes and the transactions where
+we sell are calculated using the best bid quotes. The same strategies are implemented but where
+positions are only entered when OISVOL or OIBNUM is one, respective, two standard
+deviations away from zero for each stock. In the Negative (Positive) column, we report the
+average returns of trading exclusively on days following a negative (positive) order imbalance.
+T-statistics are reported in relation to a return of 0 (no trading). “(Close)” signifies that positions
+are exited in the closing auction instead of at best bid and ask prices.
+               Strategy Positive or       Negative        Positive
+                                       Negative
+                                 Mean        Mean        Mean
+                                                         t-statistic           t-statistic          (t-statistic)
+                                          n=obs.          n=obs.          n=obs.
+
+            OISVOL
+                                               -14.716          -12.159          -17.912
+                                              t = -6.729        t = -4.143         t= -5.46
+                                            n=11790          n=6549           n=5241
+
+           OIBNUM
+                                               -15.153          -12.513          -19.435
+                                              t = -6.922        t = -4.496         t= -5.483
+                                            n=11770          n=7281           n=4489
+
+        OISVOL one Std Dev
+                                               -12.581           -8.684           -18.218
+                                              t = -3.188        t = -1.692         t= -2.951
+                                            n=3621           n=2141           n=1480
+
+        OIBNUM one Std Dev
+                                                -12.78           -13.446           -11.21
+                                              t = -3.435        t = -3.028         t= -1.643
+                                            n=4073           n=2861           n=1212
+
+        OISVOL two Std Dev
+                                                -2.49            -7.863            5.753
+                                              t = -0.255        t = -0.627         t= 0.371
+                                            n=593            n=359            n=234
+
+        OIBNUM two Std Dev
+                                               -17.952          -20.877           -9.257
+                                              t = -2.038         t = -2.05         t= -0.527
+                                            n=727            n=544            n=183
+
+                                    19
+           OISVOL (close)
+                                               -10.792           -8.889           -13.169
+                                              t = -5.128        t = -3.148         t= -4.172
+                                            n=11790          n=6549           n=5241
+
+          OIBNUM (close)
+                                                -11.65           -9.581           -15.005
+                                              t = -5.531        t = -3.578          t= -4.4
+                                            n=11770          n=7281           n=4489
+
+     OISVOL one Std Dev (close)
+                                                -9.854            -7.26            -13.607
+                                              t = -2.595         t = -1.47         t= -2.291
+                                            n=3621           n=2141           n=1480
+
+     OIBNUM one Std Dev (close)
+                                                -9.468           -9.885            -8.481
+                                              t = -2.644        t = -2.314         t= -1.292
+                                            n=4073           n=2861           n=1212
+
+        OISVOL two Std Dev
+                                             1.872            -4.08           11.003
+                 (close)
+                                              t = 0.199        t = -0.338         t= 0.737
+                                            n=593            n=359            n=234
+
+        OIBNUM two Std Dev             -17.617         -21.733          -5.382
+                 (close)                      t = -2.079        t = -2.218         t= -0.319
+                                            n=727            n=544            n=183
+
+                                     Table X
+   Mean returns of trading strategies (in BPS) - adjusted for market returns with the
+                               spread loss added back
+This table reports average returns of trading strategies described in Section II.D adjusted for
+market returns and with the spread loss added back. We calculate order imbalances in terms of
+OISVOL and OIBNUM for individual stocks. After having examined if the order imbalance is
+positive or negative during a day, we buy (sell) one share at the ask (bid) corresponding to the
+first transaction of the next day when the order imbalance has been positive (negative). The
+position is unloaded at the best bid or ask corresponding to the last transaction of the day or in
+the closing auction. All transactions where we buy are calculated using the best ask quotes and
+all the transactions where we sell are calculated using the best bid quotes. The same strategies
+are implemented but where positions are only entered when OISVOL or OIBNUM is one,
+respective, two standard deviations away from zero for each stock. In the Negative (Positive)
+column, we report the average returns of trading exclusively on days following a negative
+(positive) order imbalance. T-statistics are reported in relation to a return of 0 (no trading).
+“(Close)” signifies that positions are exited in the closing auction instead of at best bid and ask
+prices.
+
+                                    20
+       Strategy Positive or       Negative        Positive
+                               Negative
+                           Mean        Mean        Mean
+                                              t-statistic         t = t-statistic        t-statistic
+                                  n=obs.          n=obs.          n=obs.
+                                     spread-loss       spread-loss       spread-loss
+
+       OISVOL -2.156            0.2             -5.1
+                                     t = -0.986         t = 0.068         t = -1.555
+                                   n=11790          n=6549           n=5241
+                                         12.56             12.359             12.811
+
+      OIBNUM -2.59           -0.106          -6.618
+                                     t = -1.183        t = -0.038        t = -1.867
+                                   n=11770          n=7281           n=4489
+                                        12.563             12.407             12.817
+
+ OISVOL one Std Dev -0.447           3.111           -5.593
+                                     t = -0.113         t = 0.606         t = -0.906
+                                    n=3621           n=2141           n=1480
+                                        12.134             11.795             12.625
+
+OIBNUM one Std Dev -0.867          -1.773           1.274
+                                     t = -0.233        t = -0.399         t = 0.187
+                                    n=4073           n=2861           n=1212
+                                        11.914             11.672             12.484
+
+OISVOL two Std Dev 9.293           4.234          17.054
+                                     t = 0.953         t = 0.338         t = 1.099
+                                    n=593            n=359            n=234
+                                        11.783             12.098             11.301
+
+OIBNUM two Std Dev -6.712          -9.618           1.929
+                                     t = -0.762        t = -0.945         t = 0.11
+                                    n=727            n=544            n=183
+                                        11.241             11.259             11.186
+
+   OISVOL (close) -1.803           -0.089           -3.944
+                                     t = -0.857        t = -0.031         t = -1.25
+                                   n=11790          n=6549           n=5241
+                                           8.989               8.8               9.225
+
+                             21
+            OIBNUM (close) -2.658           -0.706           -5.824
+                                              t = -1.262        t = -0.264        t = -1.708
+                                            n=11770          n=7281           n=4489
+                                                   8.992              8.875              9.181
+
+      OISVOL one Std Dev (close) -1.099           1.188           -4.407
+                                              t = -0.289         t = 0.241         t = -0.742
+                                            n=3621           n=2141           n=1480
+                                                 8.756             8.449              9.2
+
+     OIBNUM one Std Dev (close) -0.932           -1.597            0.64
+                                               t = -0.26         t = -0.374         t = 0.097
+                                            n=4073           n=2861           n=1212
+                                                   8.536              8.288              9.121
+
+     OISVOL two Std Dev (close) 10.459          4.839          19.082
+                                              t = 1.115         t = 0.401         t = 1.277
+                                            n=593            n=359            n=234
+                                                   8.588              8.919              8.079
+
+     OIBNUM two Std Dev (close) -9.699          -13.808          2.516
+                                              t = -1.144        t = -1.409         t = 0.149
+                                            n=727            n=544            n=183
+                                                   7.918              7.925              7.898
+
+      When controlling for market returns, we find that the returns of the trading strategies are
+not statistically significant (Table IX and Table X), and we cannot prove that a relationship
+exists between the order imbalances one day and the next day’s return for individual stocks.
+
+                                  V. Conclusions
+     We study the relationship between lagged order imbalances and returns and trading
+strategies trading in the direction of the previous day’s order imbalance for stocks included in
+the OMXS30 index. The linear relationship between lagged order imbalances and the returns
+is not statistically significant. We also find that the lagged order imbalances do not explain
+much of the variation in returns, and we cannot reject the null hypothesis that there is no
+relationship between the order imbalance of one day and the returns of the next day for
+individual stocks.
+     The trading strategies implemented by Chordia and Subrahmanyam (2004) do not yield
+statistically significant returns in our sample. We find positive returns for some strategies
+trading on lagged order imbalances when we add back the spread loss, specifically when we
+have big order imbalances measured by OISVOL. Our theories predict that these should be the
+best and most profitable strategies. The returns are, however, small and could be fully explained
+by randomness. Even if the returns of the trading strategies are positive in expectation, few
+market actors would have low enough trading costs to take advantage of the returns.
+      When we adjust for market returns, we find no linear relationship between lagged order
+imbalances and returns. This does however not necessary mean that no relationship exists for
+individual stocks.
+
+                                    22
+                                    References
+
+Chordia, Roll, and Subrahmanyam, 2002, Order imbalance, liquidity and market returns,
+      Journal of Financial Economics, 65(1), 111-130.
+Chordia, Subrahmanyam, 2004, Order imbalance and individual stock returns: Theory and
+      evidence, Journal of Financial Economics, 72(3), 485-518.
+Lee, M.C., and Ready, J, 1991, Inferring Trade Direction from Intraday Data. The Journal of
+      Finance, 46(2), 733-746.
+
+                                    23
+                                Appendix
+
+List 1
+   ● ABB Ltd ABB
+   ● Alfa Laval AB ALFA
+   ● ASSA ABLOY AB ser. B ASSA B
+   ● AstraZeneca PLC AZN
+   ● Atlas Copco AB ser. A ATCO A
+   ● Atlas Copco AB ser. B ATCO B
+   ● Autoliv Inc. SDB ALIV SDB
+   ● Boliden AB BOL
+   ● Electrolux, AB ser. B ELUX B
+   ● Ericsson, Telefonab. L M ser. ERIC B
+   ● ESSITY AKTIEBOLAG SER. B ESSITY B
+   ● Evolution AB EVO
+   ● Getinge AB ser. B GETI B
+   ● Hennes & Mauritz AB, H & M ser HM B
+   ● Hexagon AB ser. B HEXA B
+   ● Investor AB ser. B INVE B
+   ● Kinnevik AB ser. B KINV B
+   ● NIBE Industrier AB ser. B NIBE B
+   ● Nordea Bank Abp NDA SE
+   ● Samhällsbyggnadsbolaget i Nord SBB B
+   ● Sandvik AB SAND
+   ● Sinch AB SINCH
+   ● Skand. Enskilda Banken ser. A SEB A
+   ● SKF, AB ser. B SKF B
+   ● Svenska Cellulosa AB SCA ser. SCA B
+   ● Svenska Handelsbanken ser. A SHB A
+   ● Swedbank AB ser A SWED A
+   ● Tele2 AB ser. B TEL B
+   ● Telia Company AB (publ) TELIA
+   ● Volvo, AB ser. B VOLV B
+
+                                    24
+                               AI-Appendix
+
+- Grammarly has been used to check for punctuation, spelling, and grammar.
+- ChatGPT has been used to write and comment code and in writing the readme file.
+
+                                 25

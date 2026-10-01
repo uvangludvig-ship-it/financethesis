@@ -1,0 +1,1547 @@
+P2P LENDING
+
+AN INVESTOR’S PERSPECTIVE ON THE MEASUREMENT
+OF RETURN AND FACTORS IMPACTING DEFAULT HAZARDS
+
+ALFRED HEDLUND
+
+AMANDA JOHANSSON
+
+Bachelor Thesis
+
+Stockholm  School of Economics
+
+2019
+P2P Lending
+
+Abstract:
+
+   The emergence of peer-to-peer (P2P) lending platforms has caught the attention
+   of  researchers.  However,  limited  attention  has  been  directed  toward  the
+  investors. This paper aims to explore and measure the components of P2P
+   lending returns in Sweden. Using a data set provided  by  one of the leading P2P
+   lending platforms we explore internal rates of return of three subsets of loans.
+   Additionally, we utilize the Cox proportional hazard model to explore what drives
+   the default of borrowers as it has a large effect on investor returns. We find that
+   the existence of a credit loss fund has a vital impact on the return as well as that
+   the hazard of default is significantly impacted by both hard facts such as interest
+   rates but also by unverifiable information such as the purpose of the loan.
+
+Keywords:
+
+   P2P Lending, Peer-to-Peer, IRR, Survival Analysis, Cox Model
+
+Authors:
+
+Amanda Johansson (23876)
+
+Alfred Hedlund (24021)
+
+Tutor:
+
+   Marcus Opp, Associate Professor, Department of Finance
+
+Examiner:
+
+   Adrien d’Avernas, Professor, Department of Finance
+
+  Acknowledgements:
+
+   We would like to thank our tutor Marcus Opp for valuable feedback and input.
+
+Bachelor Thesis
+Bachelor Program in Business and Economics
+Stockholm School of Economics
+© Alfred Hedlund and Amanda Johansson, 2019
+
+                                   1
+Contents
+
+1.       INTRODUCTION...............................................................................................  3
+1.1.     Peer-to-Peer Lending .....................................................................................  4
+1.2.     The Platform Operating Model: An Investor Perspective ...................... 5
+
+2.        PREVIOUS LITERATURE ............................................................................  9
+2.1.      Return: Calculation Methodologies ..............................................................  10
+2.2.      Probability of Default: Survival Analysis  ....................................................  10
+2.3.      Other Risks Associated with P2P Investing .................................................  11
+
+3.        DATA ...............................................................................................................  13
+3.1.      Descriptive Statistics  ......................................................................................  14
+3.2.      Construction of Variables and Data Adjustments ......................................  15
+
+4.       METHODOLOGY .........................................................................................  16
+4.1.      Benchmark Return Calculation ....................................................................  16
+4.2.      Internal Rate of Return  .................................................................................  17
+4.3.      Survival Analysis: The Cox Proportional Hazard Model  .......................... 19
+4.3.1.    Observation Censoring ......................................................................................20
+4.3.2.    Variable Selection  .............................................................................................21
+4.3.3.    The Choice of Origin for the Measurement of Time.........................................21
+
+5.        EMPIRICAL RESULTS  ...............................................................................  23
+5.1.      Benchmark and Internal Rate of Return .....................................................  23
+5.2.      Default: Survival Analysis .............................................................................  26
+5.2.1.    Variable Selection  .............................................................................................26
+5.2.2.    Cox Regression Result  ......................................................................................26
+5.2.3.    Predictions Based on the Cox Model ................................................................27
+
+6.       CONCLUSION ...............................................................................................  30
+6.1.      Concluding Thoughts .....................................................................................  30
+6.2.      Suggestions for Further Research.................................................................  31
+
+7.        REFERENCES ..................................................................................................  33
+
+8.        APPENDIX  .....................................................................................................  37
+8.1.      Appendix 1  ......................................................................................................  37
+8.2.      Appendix 2  ......................................................................................................  38
+
+                                   2
+1.     Introduction
+
+The financial services industry  serves  as an intermediary between those who have
+financial means at their disposal, and those who are in need of funds. The role of
+financial intermediaries is to manage financial contracts used to pool funds, share
+risks and transfer resources. They are compensated for providing these services and
+the income generated from doing this measure the aggregate cost of financial
+intermediation (Philippon, 2015). The potential for cost reductions and more
+effective   financial   intermediation   stemming   from   the   rapid   technological
+development around the turn of the millennium was believed to be high. However,
+the unit cost of financial intermediation in the US has stayed roughly the same since
+the beginning of the 20th century,  which  holds true even after controlling for the
+quality of the intermediation as shown by Philippon (2015). The cost of financial
+intermediation affects both firms who issue debt and equity as well as households
+who borrow money or use asset management services. These costs are often seen
+as a driving  force in the emergence and development of P2P financing in line with
+the theory of financial intermediation (Allen & Santomero, 1997). As pointed out by
+Havrylchyk and Verdier in 2018, it is too early to compare cost-efficiency of
+traditional banks and P2P lending platforms. This is mainly because few P2P lending
+platforms have achieved scale efficiency and profitability at this point in time
+(Havrylchyk & Verdier, 2018). Although yet only in its earliest stages, online
+marketplaces have the potential to replace banks as the traditional intermediary by
+enabling the brokerage of consumer loans directly between borrowers and lenders.
+In this paper we intend to study the attractiveness of the peer-to-peer (P2P) lending
+market as an alternative investment to traditional financial instruments. Hence, our
+research question is:
+
+How can returns on P2P loans be measured and what affects these returns in terms of
+attractiveness?
+
+The attractiveness can be divided into two main components, risk and return, which
+together measure the overall attractivity. Return is the gains or losses resulting from
+an investment and it can be measured in multiple different ways. Risk on the other
+hand is the possibility that the actual return will be different from what was
+expected, at least in its most basic sense from an investor’s perspective. The risk
+component can be divided into two sub-components, usually referred to as
+systematic and idiosyncratic risk, which in turn can be further fractionated. In the
+context of P2P lending, probability of default (PD) is the most significant risk
+whether it is driven by borrower specific characteristics or macroeconomic factors.
+We aim to contribute to a more nuanced view of the P2P lending market by using
+traditional methods for evaluating capital investments and applying them to this
+rather new concept of investing. The issue is analyzed using data from a Swedish
+
+                                   3
+lending platform, hereafter referred to as the Lending Platform. Realized returns are
+calculated with the internal rate of return (IRR) method and a theoretical expected
+return is estimated based on the interest rate charged from the borrowers and the
+service fees. For the purpose of analyzing the PD component, we are performing a
+survival analysis based on the Cox proportional hazard  model. However, both in
+terms of risk and return we are limited by the relative short period of time our data
+stretches over, as well as the general availability of data related to P2P lending on
+the Swedish market. Compared to i.e. listed stocks and bonds, data on P2P loans are
+not publicly available and as such requires the cooperation of specific companies. In
+contrast to the US market, where both Lending Club and Prosper offer to export loan
+data directly from their websites, the Swedish P2P lending companies offer a very
+limited quantity of publicly available data why the study is based merely on data
+provided by the Lending Platform. We find that the IRR of the loans is generally
+above our constructed benchmark return, indicating that the benchmark might be
+unrepresentative. Additionally, as a point of reference an average portfolio on the
+platform earns between 0.43% and 4.59% before taxes depending on assumptions
+regarding reimbursement for credit losses. Furthermore, we find a number of
+significant  variables affecting the default hazard. As we expected, a higher interest
+rate and lower credit score increases the hazard. The results from the Cox
+proportional hazard model have elements in line with previous research but we also
+found   variables   with   contradictory   impact.   For   example,   we   found   loan
+consolidation to have a positive impact on default probabilities rather than being a
+risk contributor. In the remainder of this section we present an introduction to P2P
+lending, while the rest of this study is structured as follows. In Section 2, we present
+previous literature related to P2P lending and how it is related to this paper. In
+section 3 the data set used for the purpose of our study is presented and described
+before we present our method of research in part 4. Section 5 presents our findings
+on a component basis together with an overall evaluation. Finally, in the last section,
+we offer some concluding thoughts together with suggestions for further research.
+
+1.1.     Peer-to-Peer Lending
+
+Since starting in 2005, P2P lending has experienced rapid growth (Milne  &
+Parboteeah,  2016). P2P lending platforms are online intermediaries that match
+borrowers with lenders. People wanting to borrow money either place requests for
+loans online, where private lenders bid to fund these in an auction-like  process or
+are being funded immediately given that their loan application is accepted by the
+platform. Early on, the P2P lending system was seen as offering credit to people who
+would not gain access to it elsewhere. In recent  years however the platforms have
+expanded their reach, targeting a wider audience of both borrowers and lenders.
+The benefits of peer-to-peer platforms could be summarized as follows: borrowers
+
+                                   4
+gain from higher probability of getting a loan funded at lower interest rates than the
+banks can provide, while lenders gain from higher expected returns compared to a
+traditional savings account. For a brief discussion of potential benefits to investors,
+see Morse (2015). On the other hand, there are several disadvantages that should
+also be considered. Loan default is an important matter in P2P lending since
+individual  investors  bear  the  credit  risk,  rather  than  financial  institutions
+specialized in dealing with such risks (Serrano-Cinca  et al.,  2015). Related to this
+matter is the question regarding the agency problems arising when intermediaries
+have no skin in the game, something Holmstrom & Tirole (1997) brought attention
+to with their study on an incentive model of financial intermediation. Keys et al.
+(2010) further studied how loan securitization lowered the incentives of banks to
+screen borrowers, eventually contributing to the financial crisis in 2008. In light of
+this, platform founders often claim to invest money in loans issued by their
+platforms and several operators have adopted a hybrid business model where they
+lend at least part of their own money to borrowers (Havrylchyk & Verdier, 2018).
+As for the Lending Platform, they use something they refer to as performance-based
+fees, meaning that they only collect the service fee from the lender when the
+borrower fulfils their obligations (XXXXXX, 2019). In China, known for its enormous
+shadow banking network1, there is already what could be seen as an ongoing P2P
+lending crisis with several platforms collapsing (Hornby & Zhang, 2018).
+
+1.2.    The Platform Operating Model: An Investor Perspective
+
+Many P2P lending platforms operate in a similar way, with fees being charged both
+from borrowers and investors, but how these fees are structured vary among
+different platforms (Berger & Gleisner, 2009). In this section a simplified example of
+the main characteristics of the Lending Platform's operating model is described
+from an investor's perspective.
+
+Investor A would like to invest some of  their disposable wealth in P2P lending.
+Suppose they are a retail investor which will not have time to actively manage their
+portfolio with regular frequency, leading to them choosing the Lending Platform’s
+option ‘Autoinvest’. Autoinvest is an automated investment account which  spreads
+the money invested across a minimum of 40 to 125 loans depending on the size of
+the investment. The table below presents the relation between money invested and
+the minimum number of loans in the portfolio (XXXXXX, 2019a).
+
+1
+ The shadow banking system is a term for the collection of  non-bank financial intermediaries  that
+provide services similar to traditional  commercial banks  but outside normal  banking regulations. For
+further information, see e.g.  (Ehlers, Kong, & Zhu, 2018).
+
+                                   5
+               Table 1: Number of loans in an Autoinvest portfolio
+             Invested amount (SEK)     Minimum Number of Loans
+              10,000 – 49,999           40
+              49,999 – 99,999           50
+              100,000 – 999,999         60
+              > 1,000,000               125
+              Source:  (2019)
+
+Additionally, the investor has to choose if they want to invest with a  long-  or short-
+time  horizon. According to the Lending Platform’s website, Autoinvest with a  long-
+time  horizon will invest in loans with a maximum time to maturity of 15 years.
+Investors  choosing the short horizon will instead end up with a portfolio of loans
+with a maximum of 5 years to maturity. All loans in the portfolio will be what the
+platform refers to as floating rate annuity loans with monthly payments, as this is
+how all loans on this particular platform are structured. This structure implies that
+the investor will receive equally sized monthly payments consisting of principal and
+interest, given that none of the borrowers are late with their payment. However, if
+one or more investors are late with their monthly payment, the platform has a Credit
+Loss Fund that immediately reimburses the principal part but not the interest part
+of the monthly payment.
+
+As the purpose of this paper is to investigate the return to lenders, it is important to
+understand how the interest rate and annuity payments of a borrower turns into
+return earned by the investor. Hence, we provide the following simplified example
+to show what effect the origination and service fee have on the return to the
+investor2, compared to the interest rate the borrower faces.  See figure 1.
+
+Figure 1. Operating Model
+
+    Borrowers               Lending Platform                Lenders
+
+ Cash Outflow                     Cash Inflow                      Cash Inflow
+
+ - 900 Principal Payment           + 1000                          + 850 Principal Payment
+
+ - 100 Interest Payment             Cash Outflow                     + 50 Interest Payment
+
+ - 1000 Total CF                     - 900                               + 900 Total CF
+
+ Outstanding Balance               + 50 Origination fee               Outstanding Principal
+
+ - 900                              + 50 Service fee                    - 850
+
+                               = 100 Revenue
+
+2
+ Please note that the terms lender and investor are used interchangeably throughout this paper.
+
+                                   6
+If as in the above example the borrower pays their monthly payment consisting of
+1000 SEK, the payment reduces both the outstanding balance toward the investor
+as well as the amount outstanding to the Lending Platform. The latter consists of the
+origination fee which is paid off proportionally to the principal amount belonging to
+the lender. Additionally, it pays one twelfth of the stated interest rate on the opening
+balance. The interest payment can be divided into two parts, the service fee and the
+return  to the lender. Since both parts are calculated based on the outstanding
+amount the monthly percentage return to the investor can be calculated by
+subtracting the fee (%) from the interest (%). For instance, say that the yearly
+interest rates the borrower faces is 12% and the service fee charged by the Lending
+Platform is 3% on a given loan. In any given month, the borrower will pay
+12%/12=1%.  When this payment reaches the Lending  Platform,  they will take out
+their monthly service fee of 3%/12 = 0.25% on the outstanding amount. The return
+in   percent   that   reaches   the   investor   would   then   be   1%-0.25%=0.75%
+corresponding to an investor Annual Percentage Rate (APR) of 0.75%*12=9%.
+Hence, the investor APR can easily be calculated through subtracting the annual fee
+from the annual interest rate the borrower faces. The principal payment can also be
+divided into two parts, the principal that retires part of the outstanding amount
+toward the investor as well as a part of the initial origination fee. The first part
+simply reduces the invested amount for the lender, i.e. the outstanding amount is
+reduced by this part of the principal payment. The origination fee on the other hand
+has no obvious connection to the investor. Instead, one can think of the origination
+fee as  a separate outstanding amount that the borrower has toward the Lending
+Platform. As such, this part of the principal payment reduces the outstanding
+amount toward the platform and does not affect the lender.
+
+Now, what happens if the borrower fails to pay  their monthly payment for some
+reason? A missed payment will result in no cash flow to the platform. Hence, no fees
+will be charged from the lender due to the missed payment. Instead, the lender will
+be reimbursed from the platform’s credit loss fund for the principal part of the
+payment. Therefore, the investor would make a 0% return as the reimbursement
+covers the principal amount. The credit loss fund covers only the investors choosing
+to invest through Autoinvest. Even though this represents roughly 90%  of the
+platform’s current investors, some still chose to manually decide which loans to
+invest in. When investing manually, the lender is presented with information
+regarding the loan,  e.g.  tenure, interest rate and purpose, as well as information
+regarding the borrower, e.g. credit score (A-F6), marital status and age. The only two
+things that differentiates manual investing from automatic investing is that you
+compose your own portfolio and that you are not covered by the credit loss fund in
+the event of  late payments and defaulted loans. In terms of fee structure, there are
+no differences.
+
+                                   7
+In an attempt to create liquidity for lenders, the platform has set up their own
+secondary market. In this market you can sell your entire investment account but
+not  individual loans in that account. However, you can have several investment
+accounts enabling you to sell parts of your invested capital. The price of the portfolio
+is set by the selling party as a percentage of the outstanding amount, before it is
+published on the secondary market where anyone can buy it for your advertised
+price. However, liquidity remains fairly low and as of May 2019 the number of
+transactions per month is about 1700 (XXXXXX, 2019).
+
+                                   8
+2.    Previous Literature
+
+Previous research conducted on P2P lending and its effects has primarily been
+focused on borrower maximizing factors, while the lenders’ perspective has been
+relatively overlooked. Many platforms, including US market leaders Lending Club
+(www.lendingclub.com) and Prosper (www.prosper.com), started out with an
+origination  process  which  included  that  the  lenders  bidded  on  prospective
+borrowers loans based on both hard verifiable numbers and soft unverifiable
+information provided in the loan application. As a result, a vast amount of research
+exists  on borrower characteristics and likelihood of funding success (see  e.g.
+Freedman & Jin, 2017) and herding  behavior  in the bidding process (see  e.g.
+Herzenstein et al., 2011). In a German study by Barasinska (2014) it could be shown
+that gender has no effect on funding success, despite the opposite being proven
+among traditional financial intermediaries in the US. As an explanation the author
+states that gender discrimination seems to be eased by the ‘wisdom of the lending
+crowd’  (Barasinska & Schäfer, 2014). Considering that the Lending Platform does
+not operate in the same way  as the  above-mentioned  platforms, most studies
+focused on funding success does not contribute much to the context of this study.
+
+As previously mentioned, lender returns have received less attention in the
+literature  but  Morse (2015) concludes that at least parts of the cost savings
+generated by the disintermediation of lending seem to benefit investors. However,
+she encourages future research on the risk and portfolio selection of lenders to find
+to what extent these benefits are passed on to investors  (Morse, 2015). Hildebrand
+et al. (2014) compare behavior and outcomes when Prosper removed its origination
+rewards paid to group leaders, hence affecting their incentives. The key takeaway is
+that by having a stake in the game, incentives to perform effective and qualitative
+credit  risk  assessments  is  increased  (Hildebrand  et  al.,  2014).  What  is  left
+unresolved however is how intermediaries as whole can be incentivized, rather than
+just certain group leaders. As mentioned in the introduction, some platforms  are
+implementing hybrid business models to address precisely this issue, but the effects
+of it are yet to be discovered. Emekter et al.  (2015) found that a lower credit grade
+is associated with a higher hazard rate, and probability of default. Furthermore, they
+found that the higher interest rates  charged on the  high-risk  borrowers are not
+enough to compensate lenders for the higher probability of default (Emekter et al.,
+2015). Loan purpose is also considered to be a factor explaining probability of
+default, and Serrano et al. (2015) find that e.g. loan consolidation and small business
+loans are associated with a higher risk of default.
+
+In conclusion, much of the existing literature has been focusing on the  behavioral
+aspects of P2P lending and the borrower side of the exchange. However, limited
+research on investor returns exists, in which further focus on the investor
+
+                                   9
+perspective is often encouraged. To the best of our knowledge, any research using
+Swedish P2P lending data is yet to be published. Hence,  we aim to combine these
+two gaps in the existing literature by using Swedish data to examine investor
+returns.
+
+2.1.    Return: Calculation Methodologies
+
+There are multiple techniques for calculating both expected and realized returns.
+Simply put, the return is the difference between what we invest and what we get
+back. In reality however it gets more complicated than that, especially when taking
+risk, multi-period returns and the time value of money into account. Broadly
+speaking there are three main methods for calculating investment performance
+results: the basic, time-weighted and money-weighted rate of return. The basic
+method, often referred to as return on investment (ROI), is easy to interpret but has
+several limitations. To calculate the ROI, you simply divide the return by the cost of
+the investment, giving the percentage change over a set period. There is an obvious
+risk in evaluating long-term performance with this measure as it does not take the
+time value of money into consideration. Time-weighted return calculations are
+mostly used to measure the performance of portfolio managers (Fabozzi, 2011) and
+will hence not be discussed further in this section. For the purpose of this study, the
+money-weighted rate of return will provide the most accurate measure of return
+since it accounts for the value of cash flows in all given periods. The money-weighted
+rate of return is commonly referred to as the internal rate of return. The IRR method
+was introduced by Dean  (1962)  and became rapidly accepted  among decision-
+makers, although also criticized from the very beginning. In a study from 1980, Rapp
+lists several arguments in favor of using the IRR as an investment profitability
+measure, emphasizing the simplicity  and  flexibility of the method. In order to
+understand why the IRR metric has become so widely popular, Souder (1973) found
+that decision-makers seem to rank models according to the following aspects in
+decreasing order of importance: realism, flexibility, capability, use and cost. Taking
+these  aspects into consideration, the IRR method is often seen to be a suitable way
+to measure an investment’s rate of return.
+
+2.2.    Probability of Default: Survival Analysis
+
+Survival analysis is a branch of statistics for analyzing the expected duration of time
+until one or more events happen. Historically, this type of analysis has been used
+mainly in medicine or engineering where the time until an event is frequently
+analyzed, such as death or machine failure. With the introduction of compliance
+guidelines in the context of financial services business, survival analysis has become
+more common as a result of the increasing need for accurate credit risk calculations
+
+                                  10
+(Dirick  et al.,  2017). Hazard models are a class of models in survival analysis with
+the  feature  to  account  for  time,  making  them  dynamic  as  opposed  to  the
+conventional static models often used for predicting defaults. Lane et al. (1986) first
+introduced the Cox proportional hazard model (D. R. Cox, 1972) in finance literature,
+highlighting its advantages being (1) the lack of underlying assumptions and (2) the
+ability to explicitly  incorporate  the time to failure. They applied the model to the
+prediction of bank failures and found that it tends to identify bankruptcies prior to
+the actual failure date. The Cox model was first used in the credit context by Narain
+(1992) and his work has been followed by several authors, e.g. Banasik (1999) who
+found that applying the ideas of survival analysis give meaningful results in credit
+scoring. In recent years, Cox paper from 1972 has been cited nearly 1,000 times a
+year in scientific literature (Allison, 2014). Hazard models often perform better than
+static models when forecasting default  (Dirick et al., 2017)  and the Cox regression
+is the best all-round method for estimating regression models for event history data
+by the judgement of many. Bellotti and Crook  (2009)  compared the logistic
+regression directly with the Cox proportional hazards model and found that the Cox
+model delivered superior results compared to the logistic regression model, and
+that the addition of macroeconomic variables further improved the predictions.
+Baesens et al.  (2005)  instead compared the Cox model with a neural network
+survival analysis  model, mostly used in the artificial intelligence (AI)  context,  and
+found that it did not significantly outperform the proportional hazards model
+despite its rather complex nature. For further discussion of the advantages and the
+use of the model, see Cox and Oakes (2018).
+
+2.3.    Other Risks Associated with P2P Investing
+
+An area  within P2P lending that seems to be more or less unexplored is how to
+adjust the required return for the liquidity risk that is inherent in the asset class, due
+to the nature of the operating model of most P2P platforms. Research on illiquidity
+premiums originates from Amihud and Mendelson’s (1986) paper where the effect
+on asset pricing is investigated through an analysis of the bid-ask spread as a proxy
+for illiquidity. They find that the market-observed expected return is an increasing
+concave function of the spread  (Amihud & Mendelson, 1986). Inspired by this
+research, Chen et al. finds a liquidity premium in the levels and changes of bond
+yields  (Chen et al.,  2007). Although the characteristics of P2P loans differs from
+corporate bonds in many aspects, it is reasonable to assume that investors would
+require a liquidity premium for investing in P2P loans as well as bonds, especially
+considering the low number of transactions on the secondary market of i.e. The
+Lending Platform. Lastly, there has been some discussions regarding platform
+failure and bankruptcy in recent research. For instance,  (Havrylchyk & Verdier,
+2018)  concludes that P2P lending platforms do not suffer from the risk of
+
+                                  11
+bankruptcy runs like traditional financial intermediaries and that the absence of a
+government guarantee for deposited funds might reduce the moral hazard of
+platforms  compared  to  banks.  Additionally,  Havrylchyk  and  Verdier  (2018)
+comment on the phenomenon that some governments,  e.g.  in the United Kingdom,
+require platforms to set up contracts with third parties to ensure continuation of
+reimbursements to lenders in the event of bankruptcy and that orderly resolution is
+much more likely for platforms than traditional banks. On the other hand, Morse
+(2015) argues that a P2P lending platform experiencing financial distress surely will
+impact the loan performance, and hence the lender  returns  negatively. The P2P
+lending platform we study in this paper have a  third-party  contract with one of the
+leading collection and credit solution agencies in the Nordics, which further assures
+the investors that their monthly payments will be received in the event of insolvency
+(XXXXXX, 2019b). Finally, it should not be forgotten that investing in P2P loans is
+associated with traditional financial  risks such as volatility, market risk and legal
+risk  (Namvar, 2014).
+
+                                  12
+3.    Data
+
+Our empirical analysis of the attractiveness of P2P lending is based on a dataset
+containing 77,887 monthly records reported between 2015-09 and 2019-04, from
+a random sample of  6,218 loans provided by the Lending Platform3. Each record
+contains borrower and loan characteristics as well as information regarding the
+monthly payment. Among the variables describing the loan specifics, loan purpose
+is included where loan consolidation  is the most common by far. The complete list
+of variables including a description is presented in Appendix 1, while an overview
+of the loan purposes can be found in table 2. Important to note is that a vast majority
+of the loans have not reached maturity  yet and  are only in its earliest stages. This
+give rise to a number of issues when trying to adopt the lenders’ perspective, since
+consistency in cash flows and probability of default are two important determinants
+when evaluating the attractiveness of investing in P2P loans.
+
+ Table 2: Summary by loan purpose
+ Loan Purpose             N        Ratio        Avg. DA      Interest Rate    Defaulted
+                                    (%)          (SEK           (%)         Loans
+
+ Business                 12        0.19        126,909         8.64           2
+ Divorce                 16        0.26         37,378          8.39           0
+ Education               62        1.00         48,383          9.24           1
+ Home electronics          49        0.79         40,498          9.09           1
+ Home improvement        389        6.26         57,391          9.06          23
+ Kitchen appliances        155        2.49         41,058          8.27          10
+ Loan consolidation        3216       51.72        86,677          9.28          132
+ Marriage                39        0.63         51,538          9.43           5
+ Move                   76        1.22        53,510          8.59           4
+ NA                    54        0.87        63,315         9.08          3
+ None                   6         0.10        82,500          8.57           2
+ Other                  776       12.48        60,484          8.34          54
+ Personal health           88        1.42         41,500          9.28           3
+ Real estate               2         0.03         35,000          4.41           0
+ Renovation              86        1.38         55,221          9.39           2
+ Vacation                222        3.57         37,788          9.54          12
+ Vehicle                 970       15.60        61,614          8.86          37
+ Total (average)          6,218      100.00       (57,692)         (8.68)         291
+ Notes: Avg. DA represent the average disbursed amount to borrowers and Interest rate represent
+ the average rate stated in the loan terms, i.e. the rate paid by the borrower.
+
+3
+ We have requested a random sample of loans from the Lending Platform, but as the sampling process is
+conducted outside of our control there is an inevitable risk of sampling bias.
+
+                                  13
+3.1.    Descriptive Statistics
+
+A summary of descriptive statistics is presented in table 3. We find that loan tenures
+range from 6 to 180 months and disbursed amount from 5,000 to 350,000 SEK. The
+average loan tenure is a bit over 5.5 years while the average time since origination
+is less than one year, showing that many loans are in the beginning  of their tenure.
+Furthermore, some loans have been reported past their maturity date as the
+minimum remaining tenure is negative 27 months. It is also questionable whether
+someone aged 119 has actually received a loan through the platform, or that
+someone  with a monthly income of 320,000 SEK would be in need of a small,
+unsecured credit. These types of inconsistencies in the data can be troublesome and
+cause noise in parts of the analysis.
+
+ Table 3: Summary statistics
+ Variable                    Mean     Median      Std. Dev.      Min       Max
+ Interest rate (%)                 9.06        8.75         3.43        1.95       17.48
+ Disbursed amount (SEK)          72,382      54,000       52,667       5,000     350,000
+ Origination fee (SEK)            800.15      495.00       1,375.19       0.00     15,000.00
+ Outstanding amount (SEK)        72,102     51,500       49,335       0.00      289,011
+ Loan tenure (months)            66.18       60.00        38.66        6.00      180.00
+ Time since origination (months)    11.53       9.00         8.23        0.00       43.00
+ Remaining tenure (months)        54.36       45.00        40.16       -27.00      179.00
+ Age                          42.44      40.00        14.18       20.00      119.00
+ Monthly income* (SEK)          29,676     27,035       11,867       0.00      320,000
+ UC Score                       4.05        1.83         5.18        0.01       24.93
+ Ever 1 DPD                     0.34        0.00         0.48        0.00       1.00
+ Ever 30DPD                    0.09        0.00         0.29        0.00       1.00
+ Ever 60 DPD                    0.06        0.00         0.25        0.00       1.00
+ N                                            6,218
+ Notes: The statistics are generated from the last record of each loan.
+ *Monthly income is reported by the borrower and not verified by the Lending Platform.
+
+In table 4 the distribution of loans separated by loan status is presented. We find
+that 167 out of the 6,218 loans in our dataset have reached maturity as of 2019-04,
+and that 291 have experienced default. Additionally, 1702 of the loans have been
+repaid early. When comparing the distribution of the number of loans to the
+distribution of the disbursed amount, the ratios indicate that matured loans are
+generally of smaller amounts than defaulted loans. However, this can partially be
+explained by the fact that the loans which have already matured have shorter
+tenures. Hence, it is likely that they are of smaller amounts.
+
+                                  14
+ Table 4: Loan distribution by loan status
+ Status                     N      Ratio N      Disbursed      Ratio DA     Outstanding
+                                (%)       Amount        (%)        Amount
+ Current                    •         •            •             •             •
+ Matured                   •         •            •             •             •
+ Early repayment             •         •            •             •             •
+ Defaulted                   •         •            •             •             •
+ Total
+ Notes: Disbursed amount represent the total amount originated and Ratio DA the proportion per
+ status group. Outstanding amount is the total amount outstanding as of 2019-04.
+
+3.2.    Construction of Variables and  Data Adjustments
+
+Since we aim to adopt a lender’s perspective, some adjustments need to be made to
+the  original  data  set  provided  by  the  Lending  Platform.  To  determine  the
+attractiveness of P2P lending, we are interested in the monthly cash flow received
+by the lender rather than the amount paid by the borrower. Since the reported
+principal payment includes the amortization of the origination fee, it will be adjusted
+proportionally in accordance with equation 1.
+
+                                                          )*+,-+./0  3'.4*&'"+,&
+ !"#$%&'" )*+,-+./0+,&  =  )*+,-+./0 3'.4*&'"+,&  −  (                     ∗  ;4&/0 <*+=. ?''+)  (1)
+                                                   7+%8$*%'" !94$,&+
+
+The total cash flow to the lender is subsequently calculated as the sum of the interest
+amount and the adjusted principal amount. However, in the very first month the
+funds are disbursed to the borrower, as such it represents a negative cash flow from
+the perspective of an investor:
+
+                 B/%ℎ ?04DE,F  =  !"#$%&'"  )*+,-+./0E,F  + H,&'*'%&  )/I9',&E,F             (2)
+                         B/%ℎ ?04DE,K  =  − 7+%8$*%'" !94$,&E
+
+where the  H,&'*'%&  )/I9',&E,F  in our data excludes the Lending Platform’s service
+fee. As such the amount in its entirety is a cash flow received by the investor.  In
+addition to generating these variables, a number of observations have to be
+removed for certain parts of the analysis.  This is a result of inconsistencies in the
+data. For instance, some loans have a  double-booked  last payment, generating
+returns far beyond what is possible in reality. Such observations are believed to be
+data errors and have been removed where they cause  noise in the analysis. We
+contemplated constructing a debt-to-income variable for each loan, as this has
+previously been shown to have an impact on the probability of default (see  e.g.
+Serrano-Cinca et al., 2015). However, as the income data is both inconsistent and
+self-reported, we decided to refrain from using the variable.
+
+                                  15
+4.    Methodology
+
+While there exist several different methodologies to calculate returns, there seems
+to be no industry standard for measuring returns on P2P lending platforms. The
+industry  leader Lending Club uses a method they refer to as  net annualized return
+(NAR). NAR is an annualized measure of the rate of return on the principal invested
+over the life of an investment, meaning that as defaults occur over time the NAR will
+decrease4. It is based on actual borrower payments received each month, net of
+service fees, actual charge offs, and recoveries (Lending Club, 2019). For the purpose
+of this study we use 1) a simplified method for estimating the theoretical expected
+return and 2) the  IRR method for realized returns, both with a similar approach as
+Lending Club in regard to service fees and charge offs5. Additionally, we introduce
+survival analysis by fitting a Cox proportional hazard model to our data in order to
+gain a better understanding of PDs and the factors contributing to default. In this
+study, we have defined default as when a borrower is 90 days past due date, in line
+with the standards proposed by the European Banking Authority (2016). If the loan
+is already written off by the Lending Platform, without having been 90 days past
+due, it is also considered to be in default. However, loans which have recovered from
+being 90 days past due and fulfilled their obligations are not considered as defaulted.
+In the following subsections we outline the methodology behind our return
+calculations as well how we apply the Cox proportional hazard model with respect
+to loan defaults.
+
+4.1.    Benchmark Return Calculation
+
+Average realized returns are often used  as a proxy for expected returns, although
+the accuracy of this approach is often debated (see  e.g.  Elton, 1999). However, we
+will use historical data to construct a benchmark to use as a point of reference for
+expected returns. The benchmark expected return will be constructed using the
+average interest rates as well as the service fee spread presented on the Lending
+Platform’s website. The rate of return for a successful, non-defaulting, loan would
+be the monthly interest rate faced by the borrower minus the monthly fee charged
+by the Lending Platform, as they are both calculated based on the outstanding
+amount.
+
+4
+  For a complete explanation of the NAR method, please see the Lending Club website  (Lending Club, ).
+
+5
+  Note: All return estimates and measures presented throughout this paper is on a before tax basis. Current tax
+regulation as of May 2019 consists of 1) 30% tax on interest received 2) 30% tax on realized capital gains 3) 70% of
+realized capital losses are deductible.
+
+                                  16
+4.2.    Internal Rate of Return
+
+The internal rate of return takes the time-value of money into account and is defined
+as the discount rate at which the net present value (NPV) of the cash flows generated
+from the investment is equal to zero  (Berk  & DeMarzo, 2017).  Even though there is
+no industry standard for calculating return on P2P platforms, the IRR is a common
+measure among investors in many  fields,  as pointed out in the literature section. A
+simple rule is to accept the investment if the IRR is greater than the expected or
+required return and reject the investment if the IRR is less than that. However, it
+should be noted that the IRR has several disadvantages such as the risk of giving
+multiple IRRs if the cash flows change sign more than once or giving opposite
+recommendations as the NPV rule6 in case of upfront cash inflows (Berk & DeMarzo,
+2017). In the context of P2P lending, the investor’s initial cash flow is negative, and
+the following payments are fixed. Hence, there are no sign changes in the cash flows
+other than in the beginning, which further favors the use of the IRR for calculating
+returns. One of the assumptions when using the IRR is that any intermediate cash
+flows are reinvested at the discount rate, although also widely debated whether this
+actually holds true or not (see e.g.  Rapp, 1980  or  Rich & Rose, 2014). However, as
+the IRR is used in our context, it represents the average annual rate of return
+without the effect of compounding. Hence, it is comparable to the yearly interest rate
+the borrower faces, reduced by the service fee charged by the Lending Platform. The
+IRR is calculated through solving the following equation:
+
+                                 R
+                                     B?Q
+                   0 = NPV = P        Q                 (3)
+                                      (1 + H33)
+                                     QSK
+where  B?0  is the initial investment,  B?Q  the monthly cash flows,  n  the number of
+periods and N the loan tenure.
+
+We apply the IRR method of calculating lender return on three subsets of loans. The
+first subset of loans are those that have reached maturity and been fully paid off. As
+for the second subset, it consists of loans that have been repaid in full before
+reaching maturity. Finally, the third subset include all loans that are considered to
+be defaulted. For every subset, the IRR of each individual loan is calculated before it
+is aggregated on a credit score level to enable comparisons across credit scores as
+well as against the benchmark return.
+
+Since the purpose of this paper is not to study portfolio theory or optimization, we
+have not used any sophisticated techniques for constructing portfolios out of the
+subsets of loans described above. However, as we would still like to present a point
+
+6
+  The NPV decision rule specifies that all independent projects with a positive NPV should be accepted.
+
+                                  17
+of reference for what the average expected return of an Autoinvest portfolio might
+look like, we have implemented a simplified approximation. Expected return is
+generally calculated using the equation below (Bodie et al., 2014):
+
+                           U(*)  = V(.W ∗ *W)                         (4)
+                                                   W
+where  .W  is the probability of scenario s and r is the return in that scenario. There
+exist  countless scenarios from investing in most assets, including P2P loans.
+However, very simplified one could think of two main scenarios, either the borrower
+pays their principal and  interest,  or they default after which the investor receives
+nothing7. The equation would then read:
+
+                       U(*)  =  .Y  ∗ *Y  + (1 − .Y) ∗ *Z                   (5)
+
+where  .Y  is the probability of default, *Yis the return if in the event of default and *Z
+the return if the loan is repaid. Traditional financial institutions that lend money
+have to estimate credit loss according to the Basel II framework, a calculation that
+generally relies on three important parameters; 1) Exposure at Default (EAD) 2)
+Loss Given Default (LGD) and 3) Probability of Default  (PD)  (BIS, 2005). The latter
+explains the probability of default in a given portfolio and can be proxied using
+different techniques. EAD on the other hand is an estimation of the outstanding
+amount at risk in the event of default. Finally, the LGD describes in percent how
+much of the amount at risk that is estimated to be lost in the event of default. While
+this method is the industry standard for estimating expected credit losses, it is not
+easily transferred to the P2P lending data we are using for two main reasons. Firstly,
+we are calculating percentage returns and not amounts, which is what the EAD is
+mainly used for. Secondly, the interest rate is used in the event of no default, which
+implies that the downside in event of default should be comparable to this measure,
+i.e. the percentage lost adjusted for received interest. As we would like to avoid the
+use of complicated estimation techniques described by the Basel II framework, for
+the reasons listed above, we have to find an alternative way to estimate these
+parameters. The IRR can be calculated for loans that are defaulted and subsequently
+used as the return in the scenario of default. In the scenario of no default, we will
+use the IRR of matured loans as a proxy for the return. This is presented below in
+equation 6:
+                             *Y,E  =  H33Y,E  , *\,E  =  H33\,E                       (6)
+
+The IRR of defaulted loans will take into account the amount lost when default
+occurs, i.e. include both of the parameters EAD and LGD as described above. The
+estimation of the portfolio return will be done with  two different assumptions
+
+7
+  Note: As of today, the investor would be reimbursed by the credit loss fund. As mentioned previously, this is not a
+guarantee and might not be something investors can count on in times of worse economic conditions.
+
+                                  18
+regarding the credit loss fund, either the fund does not cover any of the future cash
+flows or it covers all of the principal payments. In the former, each credit score will
+be treated as having two scenarios as described earlier  on, either a borrower fulfils
+their obligations and pays the full principal and interest until maturity, in which case
+the average IRR from the subset of matured loans will be used as the return. Or, the
+borrower defaults at some point in time, and for this scenario the average IRR of the
+defaulted loans in that credit score will be used. When full reimbursement is
+considered, the return is assumed to be 0% in the default scenario.
+
+                                       b
+                         U^*_`  =  V Da ∗ U(*a)                       (7)
+                                     aSc
+In line with equation  7, the sum of all weighted returns will represent an
+approximation of the return expected of an Autoinvest portfolio. The approximation
+will be more accurate for an Autoinvest portfolio with a short time horizon, as the
+average IRRs used will be calculated on loans that have maturities below 5 years.8
+
+For this approximation the probability of default,  .Y, will be estimated as the
+percentage of the initial investment that defaults, as described in equation  8.
+
+                                 Y
+                             ∑1  7+%8$*%'" !94$,&Y
+                          .Y,a  =    E                                            (8)
+                             ∑ 1 7+%8$*%'" !94$,&E
+
+where c denotes the credit risk class, d denotes the d:th defaulted loan and i the total
+number of loans. We expect this estimation of PD to be lower than the actual long
+run default rates, as many of the loans in the data set have only existed for a small
+fraction of their total duration. Hence, our next step will be to further investigate the
+default probabilities.
+
+4.3.    Survival Analysis: The Cox Proportional Hazard Model
+
+The purpose of introducing survival analysis in this study is to gain a better
+understanding of the factors affecting the likelihood of default for borrowers on the
+Lending Platform, as defaults are a main contributing factor to the return realized
+by investors. Most models for failure prediction apply probit or logit techniques to
+determine the probability of default9. The Cox proportional hazard model takes this
+approach a step further as it allows predicting not only the probability of default,
+but also the estimated time of this event  (Allison, 2014). The predictions are quite
+limited however as the model cannot predict what happens after the last  observed
+
+8
+  In the data set none of the matured loans have maturities over 5 years.
+
+9
+  Probit and logit models are parametric models where the dependent variable is a binary response, commonly used
+to predict future events. For further information see e.g.  (Aldrich & Nelson, 2006).
+
+                                  19
+time of event in the sample, but it avoids the risk of extrapolation, i.e. assuming that
+any existing trend will continue. In a Cox regression model, the dependent variable
+is expressed as a hazard. The model describes the relation between the occurrence
+of an event and a set of independent variables, usually called covariates. The hazard
+in this context is the probability that a loan  default. It is assumed that the hazards
+stay  constant over time, why it is referred to as a proportional model  (Koletsi &
+Pandis, 2017). To test the assumption of proportional hazard we utilize a Schoenfeld
+residual test  (Schoenfeld, 1982). The Schoenfeld residual is calculated for each
+observation that has a default event and for each individual explanatory variable.  If
+the hazards are in fact proportional, the residuals should be uncorrelated with time.
+The Cox model also allows for the inclusion of time-varying covariates, i.e. covariates
+with the ability to change over time. In such cases, the complexity of the model
+increases significantly, why the inclusion of  e.g.  macroeconomic variables in the
+modelling is considered to be outside the scope of this paper.
+
+One of the main benefits with the Cox model is that it is particularly suitable for
+event data with large amounts of observations, and only a small fraction of events
+occurring. For P2P lending data, the number of periods in which borrowers  do  not
+default composes the vast majority of data points rather than the opposite. The Cox
+model allows for censoring of these observations for which the event  never
+happened;  a process further explained in the following section. While the small
+fraction of events is not causing any problems, time to maturity and the fact that
+most loans are only in its earliest stages are, especially since we cannot tell what
+happens after the last observed event. To address this issue, the time variable could
+be expressed as a  proportion of time,  defining the fraction that is left of the loan
+duration. While this would be interesting and perhaps provide a more accurate
+estimate of survival times during the full period of a loan, we have not been able to
+find any existing literature supporting this approach.
+
+4.3.1.    Observation Censoring
+
+In survival analysis, a certain proportion of the cases is censored. Censoring occurs
+when the event of interest has not yet been observed at the moment of data
+gathering. At this point in time our data set is heavily right censored, meaning that
+for the vast majority of the observations, the event of interest has not yet  occurred.
+An event is the pre-specified endpoint of the study, for instance death or disease
+recurrence. In the context of credit risk, the event of interest is borrower default.
+When applying survival analysis to model time to default, as in the case of this study,
+all cases not having experienced default until the time of data gathering are censored
+at the  last time  recorded. By incorporating these non-event observations, the
+statistical power of the model is significantly increased.
+
+                                  20
+Figure 2. The Censoring Process
+
+                                             Defaulted
+                                         Censored
+   Borrowers
+
+     0       Event time          t
+
+4.3.2.    Variable Selection
+
+The Cox regression investigates the association between time to default and one or
+more predictor variables. Since we are performing the  analysis without time-
+varying covariates, only variables that are constant over time are available for
+selection. For each loan purpose, living status and marital status a dummy variable
+is created, resulting in a total of 30 dummy variables. A complete list of the variables
+is presented in Appendix 1, however using variables related to transaction data is
+not possible since we are not including time varying covariates in our model. Fitting
+the model on all relevant combinations of variables would require a significant
+amount of time, why an iterative stepwise regression is applied instead. Stepwise
+regression means that variables are added and tested successively, and then
+dropped  if not proving statistical significance. Although stepwise regression as a
+method for variable selection has received some criticism, it is still valuable as a way
+of identifying covariates that are likely to have an impact on the dependent variable
+(Frey, 2018). We apply a threshold on the p-value of 0.2 to find variables that might
+have an impact on the probability of default. The resulting variables is then used  in
+the final model.
+
+4.3.3.    The Choice of Origin for the Measurement of Time
+
+One aspect of model choice is the question of when time begins. This question is
+relevant to both parametric and semiparametric regression models, but the
+proportional hazards model offers a wider range of possibilities. The date of issue is
+a natural starting point for calculating time of default, but even in this seemingly
+straightforward example there is room for disagreement. In formulating this hazard
+model, one could let the hazard be a function of a person’s age or calendar time
+rather than time since the issuance of the loan. However, in the case of credit default
+
+                                  21
+the hazard is expected to depend on time since origination, at least to some extent.
+The hazard could also be thought to depend strongly macroeconomic factors and
+vary with historical conditions, that affect all  borrowers in the same way, meaning
+that calendar time would be an appropriate time scale. In the end, we have chosen
+to use time since origination mainly for two reasons. As mentioned in the previous
+section, the inclusion of external time-varying covariates is outside the scope of this
+analysis. Secondly, the time period of our sample ranges only from 2015-09 to 2019-
+04, meaning that no major event of interest has taken place during this period. By
+event of interest one could think of a financial crisis, unusual GDP growth or any
+macroeconomic factor having an impact on the household economy.
+
+Important to note in the context of time is that with discrete time data, as in this
+study, there is a risk that two or more loans experience default at the same recorded
+time. This would cause something called a tie, creating a problem since the Cox
+model takes time as continuous and uses ranks of event times to fit the model. There
+are multiple ways to handle this issue, and we have chosen to use the Efron
+approximation method  (Efron, 1977)  since it is often considered to be the best
+choice (see  e.g.  Borucka, 2014  or  Allison, 2014). This method requires only slightly
+more computational power than  e.g.  the Breslow method10  while yielding a better
+approximation.
+
+10
+   The Breslow Method is an alternative approach to handling ties in the data when using the Cox model.
+
+                                  22
+5.    Empirical Results
+
+In the following section the results from the method outlined in section 4 will be
+presented. First, we will present the results from the return measures, after which
+the results from the survival analysis and its implications on default probabilities
+will be presented.
+
+5.1.    Benchmark  and Internal Rate of Return
+
+The average interest rate per credit score ranged from 4.56% to 13.83% with an
+overall average interest rate of 9.05%. After deducting the service fee spread, we
+arrive at an interval in which one would expect the IRR to lie between for all non-
+defaulted loans. Both the minimum and maximum return is increasing when moving
+toward lower credit scores, which is expected as these return figures are unadjusted
+for expected credit losses as well as the time value of cash flows. The expected credit
+losses are likely to be higher in the lower credit scores, an assumption which is also
+supported by the percentage of defaulted loans in each credit score. The results are
+presented in table 5.
+
+ Table 5: Benchmark return
+
+ Credit Score        N     Interest Rate   Fee Spread   Min Return   Max Return    Defaulted
+                           (%)         (%)        (%)        (%)        Loans
+
+ A (highest)       658       4.56       1.50-3.27      1.29        3.06           •
+ B               852       5.93       2.63-3.75      2.17        3.29          •
+ C               896       7.03       3.45-4.20      2.83        3.58          •
+ D              1334      8.96       3.15-4.50      4.46        5.81          •
+ E              1281      10.51      3.70-5.50      5.01        6.81          •
+ F (lowest)        1197      13.83      4.45-5.50      8.32        9.37          •
+ Total (average)   6,218     (9.05)        NA         NA         NA          •
+ Notes: Interest rate is the average rate charged from the borrowers in each risk class. Fees
+ represent the fee charged by the Lending Platform, retrieved from their website.
+
+In table 6 the results from calculating the IRR on the three subsets of loans is
+presented.   Since the loans in Panel A have reimbursed investors both for the
+principal as well as interest throughout the tenure, all of the loans have a positive
+IRR. Interestingly, all credit scores have maximum IRR that is above the benchmark
+expected  return,  indicating  that  the  investors  on  average  would  have  been
+reimbursed for more than the interest minus service fee. Alternatively, the Lending
+Platform have historically charged lower fees than those presented on their website
+today. Unfortunately, we have no information regarding historical fees. It should be
+noted that each credit score contains a low number of observations, why we refrain
+from drawing any substantial inferences.
+
+                                  23
+In the second subset of early repaid loans the average IRR for each credit score is
+comparable to the ones of matured loans, with only minor discrepancies. For all
+credit scores but F the average IRR is higher for early repaid loans than for the ones
+that are matured. A likely reason for this is that if a loan is retired early there is less
+chance of a loan being late with payments which results in a higher return as the
+time value  of money  is an important determinant of IRR. As can be read from the
+table, each credit score has a minimum IRR of 0%, indicating that the borrower has
+immediately repaid the loan before any interest is accrued. Whether or not this is
+realistic can be debated, however it is not uncommon to refinance your loans as seen
+from the fact that a majority of the loans have the purpose of consolidating  or
+refinancing other loans.
+
+The IRRs of defaulted loans11  were expected to be very negative as the majority of
+loans in the data are far from matured, as presented in section 3. The a priori belief
+of the IRR for different risk classes in this subset is arguable. On one hand, loans with
+a good credit score is believed to have a lower probability of default and possibly
+default later on in the loan, if at all. On the other hand, a low credit score would be
+connected with a higher interest rate, meaning that lenders would have received
+higher cash flows when default occurs, ceteris paribus. Considering that the number
+of defaulted loans is only at 291 and that many loans have not even reached halfway
+through to maturity, the timing of default becomes even more important relative to
+the interest rate. Furthermore, the minimum IRR for each credit score sits at -100%.
+Even though this indicates that the borrowers have defaulted as early as in the first
+month, causing the investor to lose all invested money, other factors could yield an
+IRR extremely close to  -100%. This is because the IRR generates a yearly return.
+Implying, that a borrower defaulting less than a year into the loan, with 80% left to
+pay until the cash flow equals the invested amount will have an IRR lower than  -
+80%.
+
+11
+   The definition of default as presented in section 4 is 90 days delinquent or written off by the Lending Platform.
+
+                                  24
+ Table 6: IRR and maximum benchmark return
+ Credit Score    N     Mean    Median    Std. Dev.     Min      Max     Interest Rate    Max Return
+ Panel A: Matured loans
+     A       34    2.54     2.46      0.85      1.31     3.76       3.38         1.88
+     B       37    2.78     2.59      1.12      1.45     4.53       4.15         1.52
+     C       28     3.37     2.69      1.51      1.42      7.57       4.99         1.54
+     D       25    5.07     4.52      1.06      3.95     7.84       6.67         3.52
+     E       21     6.42     6.24      0.80      5.18     8.02       8.02         4.32
+     F        4     9.54     9.21      1.18      8.60     11.14      11.32        6.87
+ Panel B: Early repaid loans
+     A       139    2.62     2.57      1.06      0.00     5.54       4.02         2.52
+     B       199    3.02     3.15      1.37      0.00     6.67       5.11         2.48
+     C       236    3.68     3.40      1.93      0.00      8.87       6.40         2.95
+     D       294    5.19     5.14      1.87      0.00     9.52       8.11         4.96
+     E       264    6.69     6.73      2.19      -0.11     11.91       9.76         6.07
+     F       193    8.97     9.23      3.06      0.00     15.73      13.36        8.91
+ Panel C: Defaulted loans
+     A        •      •        •        •         •        •          •           •
+     B        •      •        •        •         •        •          •           •
+     C        •      •        •        •         •        •          •            •
+     D        •      •        •        •         •        •          •           •
+     E        •      •        •        •         •        •          •            •
+     F        •      •        •        •         •        •          •            •
+ Notes: Interest rate represent the rate charged from the borrower and max return represent the
+ maximum theoretical benchmark return.
+
+When looking at the average interest rates across the three different subsets an
+interesting pattern is revealed. For each credit score, the lowest interest rate
+appears in the matured section, the second lowest in the early repaid section and
+the highest in the defaulted section. Finding the highest rates in the subset of
+defaulted loans is not surprising though, as high interest rates are one way of
+compensating lenders for a higher probability of default. That the average interest
+rate is higher for all credit scores in the subset of early repaid loans can be due to
+several reasons. Although the causality is unknown, it is imaginable that these
+borrowers repay their loans as a result of finding lower interest rates elsewhere.
+
+Our point of reference for the return of an Autoinvest portfolio, using the IRRs above
+as the measure of return, is presented in table 7. Column 6 describes what each
+credit score contributes to the portfolios overall return, adjusted for default, when
+we assume that the credit loss fund does not reimburse principal payments. The
+total expected return of the portfolio is then only 0.43%. However, when we assume
+reimbursed principal payments the return of the portfolio jumps to a  much higher
+level of 4.95%. Even though the discrepancy between these two figures are very
+
+                                  25
+large, it is not surprising that the effect of not having to bear any principal losses is
+large.
+
+ Table 7: Autoinvest portfolio estimate
+  Credit Score     PD      IRR     Default IRR     Weights     Wt. Return w/o    Wt. Return w
+                (%)      (%)        (%)         (%)         CLF (%)        CLF (%)
+      A         0.80      2.54       -90.01        0.10           0.18           0.25
+      B         3.07      2.76       -71.62        0.15           0.07           0.40
+       C         4.51      3.37       -68.26        0.15           0.02           0.48
+      D         5.92      5.07       -77.57        0.21           0.04           1.00
+       E         9.26      6.42       -75.99        0.21           -0.25           1.22
+       F         7.96      9.54       -84.10        0.18           0.38           1.58
+   Portfolio                                                  0.43           4.95
+ Notes: PD is the probability of default, IRR is the return for non-defaulting loans and default IRR
+ represent the negative return in the case of default. Wt. return w and w/o CLF describes what each
+ credit score contributes with to the portfolios overall return, adjusted for default. Weights
+ approximately represent the overall distribution of loans, i.e. the average Autoinvest portfolio.
+
+5.2.    Default: Survival Analysis
+
+In the following sections, we present the results from the survival analysis. First, we
+present the results of the variable selection after which we present and discuss the
+regression output. Finally, we present results related to the prediction of default.
+
+5.2.1.    Variable Selection
+
+The stepwise regression used to identify variables which have significant impact on
+the hazard rate resulted in an output of 13 variables. When calculating the variance
+inflation factor (VIF), the algorithm suggested that our initial model suffered from
+multicollinearity. If problems with multicollinearity occur, as in this case, it can be
+resolved through the use of a threshold for the VIF. However,  Hair et al.  (2014)
+suggests that a VIF below 10 indicates that it is not severe enough to warrant
+correction of the model. As such, all variables initially suggested was kept  in the
+model, which is presented in table  8.
+
+5.2.2.    Cox Regression Result
+
+The aim when fitting a Cox model to time-to-event data, such as the loan data in this
+study, is to estimate the effect of covariates on the baseline hazard function. The
+baseline cumulative hazard can be used to calculate the survival probability S(t) for
+any borrower at time t, taking its covariate profile12  into account. The hazard
+function h(t) is the conditional probability of defaulting at time t having survived to
+that time. The  Coefficient  reported in table 8 relates to the hazard, with a positive
+
+12
+  Covariate profile represent the specific values for each variable of an individual borrower.
+
+                                  26
+sign indicating a higher likelihood of default. In line with our expectations, the Credit
+score  covariate has a negative sign and hence a positive impact on survival. The
+credit score is assigned by the Lending Platform and a higher score indicates higher
+creditworthiness. The  Hazard rate  is the exponentiated coefficient, which is
+interpreted such that, everything else equal, a one-unit change in  Interest rate  is
+associated with a 11.6%  increase in the hazard rate. A one-unit change in  Credit
+score towards the better is however associated with a 13.9% (1-0.861) lower hazard
+rate, a direction in line with our prior beliefs. Regarding loan purposes, we expected
+loan consolidation to have a  negative impact on survival in line with the study of
+Serrano-Cinca  et al. (2015). This turned out not to be the case in our sample, which
+could potentially be explained by different  behavioral  patterns of UK and Swedish
+borrowers. To test the assumption of proportionality, the Schoenfeld residual was
+calculated for each default observation as described in section 4. If the hazards are
+in fact proportional, the residuals should be uncorrelated with time. Four of our
+explanatory variables, namely  age,  marital status single,  marital status divorced  and
+loan purpose none, seem to be correlated with time as they generate significant p-
+values. However, as noted by Allison (2014) the proportional hazard assumption is
+often a satisfactory approximation even when violated.
+
+ Table 8: Cox regression output
+ Covariates:                           Coefficient         Hazard Ratio        SE(Coef)
+ Interest rate                             0.110 ***             1.116             0.032
+ Credit score                                 -0.149 *               0.861              0.077
+ Age                                      -0.012 **              0.988             0.005
+ Loan tenure                              0.003 *              1.003             0.002
+ Marital status: Single                      0.375 ***              1.455             0.123
+ Marital status: Divorced                   0.808 ***              2.244             0.266
+ Purpose: Loan Consolidation               -0.414 ***             0.661             0.133
+ Purpose: Vehicle                           -0.425 **              0.654             0.194
+ Purpose: Marriage                        0.874 *              2.396             0.460
+ Purpose: Education                         -1.110               0.329             1.006
+ Purpose: Kitchen appliances                0.473               1.605            0.335
+ Purpose: None                            1.193 *              3.296            0.717
+ Living status: Apartment owner             -0.455 **              0.635             0.187
+ N Total = 6178 Event = 291
+ Notes: A positive sign of the coefficient indicates a higher probability of default.
+ Significance codes: 0.01 ‘***’ 0.05 ‘**’ 0.1 ‘*’
+
+5.2.3.    Predictions Based on the Cox Model
+
+Table 9 displays the cumulative survival function  at mean  of all covariates in the
+model. The survival function has a row for every observed time for default, from 3
+to 31, in terms of months since origination. The numbers in the Cumulative survival
+column are the estimated probabilities of “surviving” to each point in time without
+
+                                  27
+defaulting. The survival function can be derived from hazard function and vice versa.
+For example, the probability of a loan making it to month 12 without experiencing
+default is estimated to be 0.960 with a 95% confidence interval ranging from 0.954
+to 0.967. Using this table, we can for example estimate the probability of default
+during the second year of the loan tenure, given that the loan has not defaulted after
+the first year, i.e. in month 12. This probability of defaulting between month 13 and
+24 after origination is calculated as (0.957-0.883)/0.957 = 0.077, indicating a
+baseline probability of default at 7.7%. Note that this is a baseline probability, for
+any individual borrower the likelihood of default will be affected by the profile of its
+explanatory variables.
+
+Table 9: Cumulative survival function
+Number of Observations:                        Total          Event
+                                              6218          291
+    Time       Number at Risk      Number of      Cumulative         SE
+                                     Events         Survival
+     5           4827            19           0.990         0.0013
+     10           2988            14           0.971         0.0026
+     12           2416            11           0.960         0.0034
+     13           2118             8           0.957         0.0036
+     24           500             3           0.883         0.0098
+     26           372             3           0.868         0.0115
+     30           174             1           0.846         0.0152
+     31           141             1           0.838         0.0172
+Notes: The complete table with all rows from 3-31 is found in Appendix 2.
+Time is number of months since origination. Number at risk represent all borrowers still
+at risk in the sample and number of events equals number of defaults each period.
+Cumulative survival is the estimated probability of surviving to each time point, with the
+standard error presented in column 5.
+
+The survival function presented in table 9 stops at month 31, the last observed time
+of default. As such, we cannot tell what the function looks like after that. This causes
+a problem when trying to estimate probability of default over the lifetime of some
+loans, considering that they can range up to 180 months. To address this problem,
+we modified the dependent time variable to be expressed as  a proportion of time13,
+rather than actual months since origination. As mentioned in section 4 however, no
+literature either supporting or speaking against this approach seem to exist, why
+these results should be taken with caution. With the modified time variable, the
+estimated probability of survival until the end of the loan tenure would be
+somewhere around 70%. The last observed time of default occurs at t = 0.958,
+
+13
+  The proportional time variable is calculated as number of months since origination divided by total loan tenure.
+Hence, all records take on a number between 0 and 1.
+
+                                  28
+meaning that it defaulted near the very end of the loan tenure. Figure 3 displays the
+survival curve at mean of all covariates in the model. The instantaneous rate of
+event13, i.e. the rate of defaulting at any time  t, is the slope  at that time point of the
+survival curve.
+
+Figure 3: Survival curve at mean of all covariates with the time variable
+expressed as a proportion of time.
+
+13
+   The instantaneous rate of event is calculated as: (S(t)  - S(t + dt)) / dt, where S(t) is the proportion not defaulting at
+time t.
+
+                                  29
+6.    Conclusion
+
+In this section we will present the conclusions and implications from our empirical
+analysis. In addition, we will provide a  few suggestions for further research related
+to P2P lending.
+
+6.1.    Concluding Thoughts
+
+Throughout this paper we have been concerned with how to measure returns as
+well as the effect on returns of borrowers defaulting on their obligations. Firstly, for
+each credit score we constructed a benchmark return unadjusted for default which,
+in line with our expectations, indicated that the lower the credit score the higher the
+return. Subsequently, we calculated the IRR of the loans for which we had a complete
+set of cash flows. In many of the cases, the average IRR was higher than the
+maximum benchmark return. Although this was a surprising result, there are
+several potential explanations for this disparity. We believe that the most likely
+reason is that the Lending Platform have adjusted their fee structure and that our
+estimated maximum benchmark return is too low. Another explanation, yet not as
+likely, is that our interest payment data is in fact not excluding service fees.
+However, this seems doubtful as it has been clearly specified as the amount without
+fees. Additionally, when manually inspecting a few loans in the data it is evident that
+monthly payments are lower than what the borrower’s interest rate suggests. The
+IRR of defaulted loans were found to lie on average around  -78%, indicating that
+when a borrower defaults the investor loses  a  significant amount of money.
+Furthermore, two points of reference regarding the return of an Autoinvest portfolio
+were introduced. On one hand, we considered a case where the platform’s credit loss
+fund is non-existent, resulting in an overall estimate of 0.43% yearly return in the
+portfolio. On the other hand, we allowed for the credit loss fund to cover the entire
+principal amount, making the investor unable to lose money. The  portfolio returns
+then soared to a level of 4.95% in average yearly return. However, in reality the
+expected return is bound to lie in between these two figures. This is because the CLF
+actually covers the principal amount as of today but is unlikely to be able to
+reimburse investors fully in times of poor macroeconomic conditions and financial
+distress. Whether or not the true expected return is enough to compensate investors
+for additional risk beside default is left uncommented. This is mainly because the
+data used for our analysis is not enough to give a representative view of the long run
+performance of investing in P2P loans on the platform and even more uncertain
+when considering the entire Swedish or European market. As a final remark on the
+expected returns, we noted that the estimation of PD used when constructing the
+default adjusted return of an  Autoinvest portfolio is unlikely to be an ideal
+representation of the long run probability of default. Hence, we introduced survival
+
+                                  30
+analysis to facilitate further examination of significant factors impacting the hazard
+of default. Although our data spanned over a time period not sufficient to predict the
+lifetime probabilities of default, we could still potentially gain an understanding of
+what  might  affect  the  default  probability.  Consequently,  we  fitted  the  Cox
+proportional hazard model on our data and found that both hard figures such as the
+interest rate as well as unverifiable information like the purpose of the loan were
+significant. For instance, the loan purpose consolidation was found to decrease the
+hazard of default in our model which is in line with some of the previous research
+(Polena & Regner, 2018). However, another study found contrasting results, i.e. loan
+consolidation was instead found to be associated with a slight increase of the hazard
+(Serrano-Cinca et al., 2015). For future reference, results could be improved by two
+main efforts. Firstly, when data consisting of a higher proportion of matured loans
+is available both the prediction accuracy and length can be improved significantly.
+Secondly, when the quantity of data increases one could introduce subsets based on
+the loan tenure to better capture the probabilities for each length of the loan.
+
+In conclusion, we find that the IRR of repaid loans are generally higher than our
+benchmark return, indicating that adjustments have been made to the service fees.
+On the other hand, when adjusting for defaults we find an indication that the
+weighted annual return of an Autoinvest portfolio should lie between 0.43% to
+4.95% depending on the reliability of the platform’s credit loss fund. Additionally,
+we find that the default hazard is impacted by both verifiable and unverifiable
+information. All in all, we contribute to the existing literature through exploring the
+investor’s perspective of P2P lending as well as by researching using data from a
+Swedish platform15. The former being under-represented in the existing literature
+and the latter being, to the best of our knowledge, previously unseen in the
+literature.
+
+6.2.    Suggestions for Further Research
+
+Lastly, we would like to propose  some suggestions for further research of the
+investor’s perspective  of  P2P lending. In some ways, this paper was limited to the
+properties of the data obtained. For instance, with very few loans being matured it
+raises questions regarding the robustness of the results presented. We would like to
+encourage research which can validate both the return calculations, but even more
+so the survival analysis used in the P2P lending context. As have been shown in this
+paper, defaulting loans have an immense impact on the potential for returns. As data
+availability increases both quantity wise and time horizon wise, we suggest that the
+
+15
+   Note: We would like to comment on the risk of funding bias as we are using data provided by the Lending
+Platform. None of the authors receive any kind of financial compensation for the work presented in this paper,
+neither are they aware of any other affiliations with the platform, including financial holdings, that may impact
+the objectivity of what is presented in this paper.
+
+                                  31
+Cox model used in this paper is developed further by incorporating time-varying
+covariates. This will allow for the use of macroeconomic factors as covariates,
+meaning that one can potentially see the effect on the default hazard of factors such
+as GDP-growth, employment and stock market performance. Furthermore, this
+would allow for predictions and simulation of how investing in P2P loans might be
+affected by an economic depression. Finally, we also suggest that future research is
+directed at using modern portfolio theory to investigate the attractiveness of adding
+Swedish P2P loans to a market portfolio.
+
+                                  32
+7.     References
+
+Aldrich, John H., Nelson, Forrest D., (2006). Linear probability, logit, and probit
+models.  Newbury Park, Calif.: Sage Publ. Retrieved from /z-wcorg/
+
+Allen, F., & Santomero, A. M. (1997). The theory of financial intermediation. Journal
+    of Banking and Finance, 21(11-12), 1461-1485.
+    doi:10.1016/S0378-4266(97)00032-0
+
+Allison, P. D., (2014).  Event history and survival analysis.  Los Angeles: SAGE.
+    Retrieved from /z-wcorg/
+
+Amihud, Y., & Mendelson, H. (1986).  Journal of Financial Economics,  (17), 223-249.
+
+Baesens, B., Van Gestel, T., Stepanova, M., Van Den Poel, D., & Vanthienen, J. (2005).
+    Neural network survival analysis for personal loan data. Journal of the
+    Operational Research Society, 56(9), 1089-1098.
+    doi:10.1057/palgrave.jors.2601990
+
+Banasik, J., Crook, J. N., & Thomas, L. C. (1999). Not if but when will borrowers
+    default. The Journal of the Operational Research Society, 50(12), 1185-1190.
+    doi:10.2307/3010627
+
+Barasinska, N., & Schäfer, D. (2014). Is crowdfunding different? Evidence on the
+    relation between gender and funding success from a German peer-to-peer
+    lending platform. German Economic Review, 15(4), 436-452.
+    doi:10.1111/geer.12052
+
+Bellotti, T., & Crook, J. (2009). Credit scoring with macroeconomic variables using
+    survival analysis. Journal of the Operational Research Society, 60(12), p. 1699-
+    1707. doi:10.1057/jors.2008.130
+
+Berger, S. C., & Gleisner, F. (2009). Emergence of financial intermediaries in
+    electronic markets: The case of online P2P lending. Business Research, 2(1), 39-
+   65. doi:10.1007/BF03343528
+
+Berk, Jonathan, DeMarzo, Peter., (2017). Corporate finance
+    Retrieved from /z-wcorg/
+
+BIS, Bank for International Settlements. (2005). An explanatory note on the Basel II
+    IRB risk weight functions (July ed.). Basel, Switzerland: Bank for International
+    Settlements.
+
+Bodie et al., (2014). Investments. New York, N.Y.: Mc-Graw-Hill Education.
+    Retrieved from /z-wcorg/
+
+                                  33
+Borucka, J. (2014). Methods of handling tied events in the cox proportional hazard
+    model. Studia Oeconomica Posnaniensia, (2)
+
+CHEN, L., LESMOND, D. A., & WEI, J. (2007). Corporate yield spreads and bond
+    liquidity. The Journal of Finance, 62(1), 119-149.
+    doi:10.1111/j.1540-6261.2007.01203.x
+
+Cox, D.,  R., Oakes,  D.,  (2018).  Analysis of survival data.
+
+Cox, D. R. (1972). Regression models and life-tables. Journal of the Royal Statistical
+    Society. Series B (Methodological), 34(2), 187-220.
+    Retrieved from http://www.jstor.org/stable/2985181
+
+Dean, J., (1962). Capital budgeting. New York; London: Columbia University Press.
+    Retrieved from /z-wcorg/
+
+Dirick, L., Claeskens, G., & Baesens, B. (2017). Time to default in credit scoring
+     using survival analysis: A benchmark study.  Journal of the Operational
+    Research Society, 68(6), 652-665. doi:10.1057/s41274-016-0128-9
+
+Efron, B. (1977). The efficiency of cox's likelihood function for censored data.
+    Journal of the American Statistical Association, 72(359), 557-565.
+    doi:10.2307/2286217
+
+Ehlers, T., Kong, S., & Zhu, F. (2018). Mapping shadow banking in china: Structure
+    and dynamics. BIS Working Paper (701)
+
+Elton, E. J. (1999). Presidential address: Expected return, realized return, and asset
+    pricing tests. The Journal of Finance, 54(4), 1199-1220.
+    doi:10.1111/0022-1082.00144
+
+European Banking Authority, E. (2016). Final report - draft regulatory technical
+    standards on the materiality threshold for credit obligations past due under
+      article 178 of regulation (EU) no 575/2013.
+
+Fabozzi, F. J., (2011).  Handbook of finance. volume 3, volume 3.
+
+Freedman,  S., & Jin, G. Z. (2017).  The information value of online social networks:
+    Lessons from peer-to-peer lending
+    doi:https://doi.org/10.1016/j.ijindorg.2016.09.002
+
+Frey, Bruce B., (2018). The sage encyclopedia of educational research, measurement,
+    and evaluation. Thousand Oaks, California: SAGE Publications. Retrieved from
+    /z-wcorg/
+
+Hair, Joseph F., Black, William C., Babin, Barry J., Anderson,  Rolph E.,  (2014).
+    Multivariate data analysis. (pp. 205). Harlow, Essex: Pearson.
+    Retrieved from /z-wcorg/
+
+                                  34
+Havrylchyk, O., & Verdier, M. (2018). The financial intermediation role of the P2P
+    lending platforms. Comparative Economic Studies, 60(1), 115-130.
+    doi:10.1057/s41294-017-0045-1
+
+Herzenstein, M., Dholakia, U. M., & Andrews, R. L. (2011). Strategic herding
+     behavior in peer-to-peer loan auctions
+    https://doi.org/10.1016/j.intmar.2010.07.001
+
+Hildebrand, T., Puri, M., & Rocholl, J. (2014). Adverse incentives in crowdfunding.
+    Management Science, 63(3)
+
+Holmstrom, B., & Tirole, J. (1997). Financial intermediation, loanable funds, and the
+    real sector. The Quarterly Journal of Economics, 112(3), 663-691. Retrieved
+    from http://www.jstor.org/stable/2951252
+
+Hornby, L., & Zhang, A. (2018, December 27).  Financial Times,
+
+Keys, B. J., Mukherjee, T., Seru, A., & Vig, V. (2010). Did securitization lead to lax
+     screening? evidence from subprime loans.  The Quarterly Journal of Economics,
+    125(1), 307-362. Retrieved from http://www.jstor.org/stable/40506283
+
+Koletsi, D., & Pandis, N. (2017). Survival analysis, part 3: Cox regression.  American
+    Journal of Orthodontics and Dentofacial Orthopedics, 152(5), 722-723.
+
+Lane, W. R., Looney, S. W., & Wansley, J. W. (1986). An application of the cox
+     proportional hazards model to bank failure.  Journal of Banking and Finance,
+    10(4), 511-531. doi:10.1016/S0378-4266(86)80003-6
+
+XXXXXX. Avkastning & avgifter. Retrieved May, 2019,
+    from https://XXXXXX.se/avkastning-avgifter
+
+XXXXXX. (2019a). Retrieved May, 2019,
+    from https://XXXXXX.se/hur-investerar-man
+
+XXXXXX. (2019b). Retrieved April, 2019,
+    from https://XXXXXX.se/Invest/Backup
+
+Lending Club. Retrieved May, 2019, from
+    https://www.lendingclub.com/landing/about-nar-2.action
+
+Milne, Alistair K. L. and Parboteeah, Paul. (2016). The business models and
+     economics of peer-to-peer lending.  ECRI Research Report,  No 17
+
+Morse, A. (2015). Peer-to-peer crowdfunding: Information and the potential for
+     disruption in consumer lending.  Annual Review of Financial Economics,  (7),
+    463-482. doi:10.1146/annurev-financial-111914-041939
+
+                                  35
+Namvar, E. (2014). An introduction to peer-to-peer loans as investments.  Journal of
+    Investment Management, (First Quarter 2014)
+
+Philippon, T. (2015). Has the US finance industry become less efficient? on the
+     theory and measurement of financial intermediation.  The American Economic
+    Review, 105(4), 1408-1438. Retrieved from
+    http://www.jstor.org/stable/43495423
+
+Polena, M., & Regner, T. (2018). Determinants of borrowers’ default in P2P lending
+    under consideration of the loan risk class. Games, 9(4)
+    doi:10.3390/g9040082
+
+Rapp, B.  (1980). The internal rate of return method  -  A critical study.  Engineering
+    Costs and Production Economics, 5(1), 43-52.
+    doi:10.1016/0167-188X(80)90017-8
+
+Rich, S. P., & Rose, J. T. (2014). Re-examining an old question: Does the IRR method
+    implicitly assume a reinvestment rate? Journal of Financial Education, 40(1),
+    152-166. Retrieved from http://www.jstor.org/stable/24331033
+
+Schoenfeld, D. (1982). Partial residuals for the proportional hazards regression
+    model. Biometrika, 69(1), 239-241.
+    doi:10.1093/biomet/69.1.239
+
+Serrano-Cinca, C., Gutiérrez-Nieto, B., & López-Palacios, L. (2015). Determinants of
+    default in P2P Lending. PloS One, 10(10)
+
+Souder, W. E. (1973). Utility and perceived acceptability of R&D project selection
+    models. Management Science, 19(12), 1384-1394.
+    doi:10.1287/mnsc.19.12.1384
+
+                                  36
+8.    Appendix
+
+8.1.    Appendix  1
+
+ Appendix 1: Variables and description
+ Variable Name               Description
+     A.   Loan Characteristics
+ Loan ID                       Key for identification of each loan
+ Interest rate                    Floating annual interest rate paid by the borrower
+ Risk class                       Grade from A-F assigned to the loan by the Lending Platform
+ Disbursed amount              Monetary amount paid out to the borrower
+ Loan tenure                   Loan tenure in months
+ Fee                         Monetary origination fee to be paid by the borrower
+ Origination month              Loan origination month
+ Loan purpose                 Purpose of the loan, categorized by business, divorce, education, home
+                                    electronics, home improvement, kitchen appliances, loan consolidation,
+                                 marriage, move, NA, none, other, personal health, real estate, renovation,
+                                    vacation and vehicle
+ Reporting month               Record reporting month
+ Time since origination           Number of months since origination
+ Remaining tenure              Number of months until maturity
+ Outstanding amount            Borrowers current outstanding amount (including origination fee)
+ Principal amount               Monthly principal amount paid by the borrower
+ Interest payment amount         Monthly interest amount received by the lender
+ 1 day past due                  Dummy variable if ever 1 day delinquent
+ 30 days past due                Dummy variable if ever 30 days delinquent
+ 60 days past due                Dummy variable if ever 60 days delinquent
+ 90 days past due                Dummy variable if ever 90 days delinquent
+ Amount 1 day past due           Outstanding amount when 1 day delinquent
+ Amount 30 days past due         Outstanding amount when 30 days delinquent
+ Amount 60 days past due         Outstanding amount when 60 days delinquent
+ Amount 90 days past due         Outstanding amount when 90 days delinquent
+ Written off                    Dummy variable if loan is written off by the Lending Platform
+ Amount written off              Outstanding principal amount when written off
+ Completed loan                Dummy variable if matured or paid off early
+     B.   Borrower Characteristics
+ Age                         Borrower age at origination date
+ UC score                      Credit score collected from UC
+ Employment status             Employment status, categorized by employed per hour, job seeker,
+                                   pensioner, pensioner early, pensioner sick, permanent employee,
+                                     probation, self-employed and temporary employment
+ Monthly income                Monthly income, reported by the borrower
+ Living status                  Living status, categorized by apartment owner, house owner, renting,
+                                   second hand renting, shared living and weekend cottage
+ Marital status                 Marital status, categorized by apart, divorced, married, none, cohabitant,
+                                 single and widower
+ Notes: Borrower and loan characteristics are reported once are hence constant over time, payment
+ information is reported monthly.
+
+                                  37
+8.2.    Appendix 2
+
+Appendix 2: Cumulative survival function
+Number of Observations:                        Total          Event
+                                              9931          451
+    Time       Number at Risk      Number of      Cumulative         SE
+                                     Events         Survival
+     3           5935            16           0.998         0.0004
+     4           5324            39           0.993         0.0010
+     5           4827            19           0.990         0.0013
+     6           4369            17           0.987         0.0015
+     7           3972            18           0.983         0.0018
+     8           3602            23           0.978         0.0022
+     9           3239            10           0.975         0.0024
+     10           2988            14           0.971         0.0026
+     11           2729            20           0.964         0.0031
+     12           2416            11           0.960         0.0034
+     13           2118             8           0.957         0.0036
+     14           1903             8           0.953         0.0039
+     15           1693            13           0.946         0.0045
+     16           1557            12           0.938         0.0050
+     17           1410             6           0.934         0.0053
+     18           1223             5           0.930         0.0056
+     19           1058            11           0.921         0.0064
+     20           932             7           0.914         0.0069
+     21           835             7           0.906         0.0075
+     22           729             5           0.900         0.0081
+     23           612             7           0.889         0.0091
+     24           500             3           0.883         0.0098
+     25           422             3           0.876         0.0106
+     26           372             3           0.868         0.0115
+     27           332             2           0.862         0.0123
+     28           282             1           0.858         0.0129
+     29           218             1           0.853         0.0138
+     30           174             1           0.846         0.0152
+     31           141             1           0.838         0.0172
+Notes: Time is number of months since origination. Number at risk represent all
+borrowers still at risk in the sample and number of events equals number of defaults each
+period. Cumulative survival is the estimated probability of surviving to each time point,
+with the standard error presented in column 5.
+
+                                  38

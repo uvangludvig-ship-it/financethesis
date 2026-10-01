@@ -1,0 +1,1830 @@
+A cross-county comparison of stock reactions to price
+              changes in commodities
+
+                Niklas Aarnio* Paul Regn´ell**
+
+                          May 18, 2014
+
+                              Abstract
+ We examine whether there is a difference between equity markets’ in the speed at
+ which stock prices reflect new commodity prices. Our study is based on daily com-
+ modity price data, and stock data from the Scandinavian main exchanges and the
+ London Stock Exchange. To explore the potential differences between stock markets,
+ we estimate a simple market model with commodity lag terms and test for differ-
+ ences in reactions to commodity price changes across markets. We find no strong
+ or consistent differences between the markets, and fail to generalize our findings.
+ We conclude that the different stock markets behave in very similar ways on a daily
+ level, but speculate that further studies with higher-frequency data could come to
+ a different conclusion.
+
+ Tutor: Ulf von Lilienfeld-Toal
+
+ *22384@student.hhs.se **22669@student.hhs.se
+                            Contents
+
+1 INTRODUCTION 1
+
+2 PREVIOUS LITERATURE 4
+
+   2.1 The behaviour of commodity prices . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+
+   2.2 The behaviour of stock markets . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
+
+   2.3 Lessons from Peter Tufano’s examination of the gold mining industry . . . . . . 6
+
+3 DATA 7
+
+   3.1 Commodity data . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+
+   3.2 Stock data . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+
+4 METHODOLOGY 9
+
+   4.1 Generating the basic variables . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9
+
+   4.2 Measuring firms’ exposures to commodities . . . . . . . . . . . . . . . . . . . . . 10
+
+   4.3 Defining ”commodity exposed” companies . . . . . . . . . . . . . . . . . . . . . . 10
+
+   4.4 Generating commodity price shock dummies . . . . . . . . . . . . . . . . . . . . . 11
+
+   4.5 Corrections for outliers and missing data . . . . . . . . . . . . . . . . . . . . . . . 12
+
+        4.5.1 Adjusting for extreme outliers . . . . . . . . . . . . . . . . . . . . . . . . . 12
+
+        4.5.2 Correcting for missing data . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+
+   4.6 Obtaining our results . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+
+   4.7 The Market model . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+
+   4.8 Clustering standard errors and fixed effects . . . . . . . . . . . . . . . . . . . . . 15
+
+   4.9 Tests for differences . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
+
+   4.10 The Efficient Market Hypothesis . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
+
+   4.11 Multicollinearity, autocorrelation, heteroscedasticity and robustness . . . . . . . . 17
+
+5 RESULTS 18
+
+   5.1 Descriptive statistics . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 18
+
+   5.2 Results from the market-specific estimates . . . . . . . . . . . . . . . . . . . . . . 23
+
+        5.2.1 Gold . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 23
+        5.2.2 Silver . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 24
+
+        5.2.3 Aluminium . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 24
+
+        5.2.4 Copper . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 25
+
+   5.3 Results from difference testing . . . . . . . . . . . . . . . . . . . . . . . . . . . . 26
+
+        5.3.1 Gold . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+
+        5.3.2 Silver . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+
+        5.3.3 Aluminium . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+
+        5.3.4 Copper . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+
+        5.3.5 Comparison between the complete and limited sample . . . . . . . . . . . 28
+
+   5.4 Robustness tests . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 29
+
+6 CONCLUSIONS AND IMPLICATIONS 30
+
+   6.1 conclusions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 30
+
+   6.2 Limitations and suggestions for further research . . . . . . . . . . . . . . . . . . . 31
+
+7 REFERENCES 32
+
+8 APPENDIX
+                     1 INTRODUCTION
+
+It is well-known and obvious that the price of a commodity is reflected in the stock prices of
+
+                                    1
+firms that deal with the commodity.  For some industries and companies, this effect is minor.
+
+For some, however, the effect can be considered a primary source of volatility in their respective
+
+share prices. This would seem to be especially true for the mining industry dealing in precious
+
+metals, as noted by Tufano (1998). However, it is less clear how rapidly stock prices incorporate
+
+new information and whether the speed differs between markets. If one could find a systematic
+
+difference in speed of incorporation between markets, it might be possible to earn abnormal
+
+profits by implementing commodity information faster in the slower market.
+
+    The rather special nature of commodities and commodity trading should be noted; com-
+
+modities are notoriously volatile. Forecasting long-run trends is generally challenging, if not
+
+                                                                                 2
+impossible, without the aid of insider information or clear general market outlooks.  With this
+
+in mind, it would also appear rational for markets to implement commodity price information in
+
+security pricing.
+
+    No journal or other scientific publication has tackled the relationship between commodities
+
+and stock prices across different equity markets. As such, influential literature that is relevant
+
+to the subject is scarce, and limited to no more than a handful of studies that are varyingly
+
+related to the subject. By combining the two separate kinds of studies, the commodity-stock
+
+relationship and a cross-market comparison, we feel that we contribute to the field of finance.
+
+The aim of this thesis is to investigate the relationship between market size and the reaction to
+
+news about commodity prices. We estimate the market reactions to commodity price changes
+
+for four different commodities: gold, silver, aluminium and copper. We test for the differences in
+
+mean values for the commodity betas, i.e. the effects of commodity price changes, across markets.
+
+We then conclude that the observed differences in values, although statistically significant, are
+
+too small to draw any general conclusions regarding differences in market behaviour or efficiency.
+
+The more generalised conclusion is that the efficient market hypothesis holds for the relevant
+
+markets.
+
+   1
+    See for example Strong (1991)
+   2
+    See for example Bowman et al (2004)
+
+                                      1
+    We form three hypotheses that guide our research:
+
+Hypothesis 1
+
+The different markets behave in the same way, i.e. reactions to commodity price changes are of
+
+similar or identical size and strength, exhibiting a similar or identical total reaction to commodity
+
+price changes during a three-day observation period.
+
+    The null hypothesis is rejected if there is a significant difference between markets in the total
+
+reaction to commodity price changes during the observation period [-2, 0].
+
+Hypothesis 2
+
+The different markets react to changes in commodity prices at similar or identical rates, exhibit-
+
+ing similar or identical values for each observation day.
+
+    The null hypothesis is rejected if there is a significant difference in the individual and com-
+
+bined effect of the lagged variables across markets.
+
+Hypothesis 3
+
+It is not possible to profit from an arbitrage opportunity created by differences in market effi-
+
+ciency, as the different markets implement information at sufficiently similar rates
+
+    The null hypothesis is rejected if significant differences in information diffusion across markets
+
+create an arbitrage opportunity where qualitatively similar securities are traded at considerably
+
+different prices on different markets.
+
+To test these hypotheses, we begin by identifying companies that are particularly exposed to
+
+the prices of commodities on the London Stock Exchange and the three Scandinavian main ex-
+
+changes. We then estimate a simple market model with the help of multiple regressions to acquire
+
+an understanding of how important the changes in commodity prices occurring today, yesterday,
+
+and the day before yesterday are for today’s stock price in these companies. Then, we execute
+
+a series of tests for the difference in market reactions to commodity price changes to establish
+
+whether the markets’ behaviour differ from each other in a statistically significant manner. By
+
+extension, this also means testing the efficient market hypothesis, according to which the new
+
+                                      2
+price information should be incorporated into stock prices at the same speed, or at the very
+
+least, as soon as information is available. In today’s world, there is certain equivalence between
+
+the two statements. Using the above method we obtain statistically significant results on the
+
+differences between markets, but conclude that the estimated differences between markets are
+
+not of sufficient magnitude, nor of a sufficiently consistent and general nature, to imply a distinct
+
+and impactful difference between the two markets. Consequently, we fail to reject all but one
+
+of the null hypotheses, and conclude that the efficient market hypothesis hold for the examined
+
+markets.
+
+                                      3
+                 2 PREVIOUS LITERATURE
+
+To the best of our knowledge, there is no influential paper that does cross country comparisons
+
+of commodity and stock prices in the same or similar manner as we do. A large amount of the
+
+available literature focuses on the behaviour of commodity prices, particularly the speculated and
+
+often cited (excessive) co-movement of commodities. Another field with considerable amounts of
+
+research, and associated literature, is comparisons between international equity markets. Much
+
+of the research has a general focus on market efficiency, correlation and co-movement of markets
+
+and the interaction of markets in terms of transmission of information and volatility. An article
+
+by Tufano (1998) is closely related to the area of our study; the article examines the relationship
+
+between the price of gold and gold mining companies. By combining insights from all of these
+
+separate types of studies we get the theoretical framework required to tackle the problem at
+
+hand. We’ll cover each category of these papers below.
+
+2.1 The behaviour of commodity prices
+
+Much of the financial literature on commodity prices is focused on oil. Oil, however, should be
+
+considered a special case compared to other commodities because of its particularly large effects
+
+on stock prices and macroeconomic variables, which could lead to unexpected and unexplainable
+
+results. Kilian and Park (2009) demonstrate this by showing that shocks in the price of crude oil
+
+can be used to explain as much as 22% of the variation in the US stock returns. They also mention
+
+that there are enormous endogeneity problems inherent in the relationship between oil prices and
+
+stock prices, since they affect each other in complicated ways. Therefore, despite oil’s position
+
+as arguably the most important commodity in today’s economy and its particularly interesting
+
+and observable effects on the global economy, we do not include oil, or other energy sources, in
+
+                                                                                   3
+our study. One of the more studied areas is the co-movement of commodity prices.  Pindyck
+
+and Rotemberg (1988) started some controversy by claiming that the observed co-movements
+
+in commodities are ”excessive”, meaning they aren’t fully explainable by any underlying shared
+
+macro- or microeconomic variables. This ”puzzling phenomenon”, as Pindyck and Rotemberg
+
+   3
+    See for example Leybourne et al (1994), Palaskas and Varangis (1991) or Chatrath et al (2006)
+
+                                      4
+call it, the tendency of commodity prices to move together, has attracted a considerable amount
+
+of attention. It is likely that this is at least partly because of its indirect assault on the efficient
+
+market hypothesis. A collection of studies has since discussed the phenomenon, with a number
+
+of studies apparently rebutting Pindyck’s and Rotemberg’s findings. Deb et al (1996) defend the
+
+notion of excess by co-movement, while Cashin et al (1999), claim to debunk the claimed ”exces-
+
+sive” portion of the co-movement, and Ai et al (2006), present strong evidence evidence against
+
+the excess co-movement hypothesis. Whether or not this co-movement of commodity prices is ex-
+
+cessive, however, is not of high importance to our study. The co-movement phenomenon itself is
+
+of some importance, as a similar behavioural pattern could be used to generalise results obtained
+
+from studying only a limited amount of commodities to some extent. There is also an inherent
+
+drawback to this behaviour: The co-movement of commodity prices could mean that studying
+
+four commodities fails in providing us four times the explanatory power of a single commodity.
+
+2.2 The behaviour of stock markets
+
+Many papers examine many different relationships between different stock exchanges. As previ-
+
+ously mentioned, none of these studies actually conduct cross-country comparisons of the rela-
+
+tionship with commodity prices, but there are still valuable lessons to be learned. Hamao et al
+
+(1990) and Karolyi and Stulz (1996) both make clear that there will be considerable biases when
+
+looking at daily data if the opening hours of the compared exchanges aren’t synchronized. Using
+
+weekly rather than daily data would largely eliminate these biases, but then we would miss the
+
+price adjusting activity that interests us. In order to avoid the problem of non-synchronization
+
+we opt to use London Stock Exchange as the ”large exchange” rather than, for example, the
+
+larger New York Stock Exchange. Masulis and Shivakumar (2002) do an interesting comparison
+
+on the speeds of two different stock markets. They found a statistically significant difference in
+
+speeds, but found much of the differences happen at the scale of 15 or 60 minute intervals. Ball
+
+(1978) also finds that a lot of the market reaction happens within minutes of the news shock.
+
+However, both these papers are from before the age of high frequency trading, which according
+
+to among others Brogaard et al (2012) has increased price efficiency. This tells us that we should
+
+                                      5
+perhaps be looking at data more frequent than daily if we want to capture all the activity.
+
+2.3 Lessons from Peter Tufano’s examination of the gold mining industry
+
+Peter Tufano (1998) provides arguably the best description of a stock-commodity relationship
+
+in his influential paper, ”The Determinants of Stock Price Exposure: Financial Engineering and
+
+the Gold Mining Industry”. It is from him we borrow one of our most important formulas,
+
+which describes the relationship between daily changes in commodity prices and daily changes
+
+in stock prices. He found that the stock price of the average gold mining company moves two
+
+percent for every one-percent change in the price of gold. This gives us an indication of the
+
+magnitudes we can expect to find in our sample. He also notes that stock price exposure to gold
+
+prices varies significantly over time and between firms, which tells us that we must control for
+
+firm fixed effects, cluster by an appropriate time variable and perhaps avoid some time periods
+
+where exposure is unusually low. Furthermore Tufano provides a long list of variables that are
+
+important for commodity exposure. These include size, cost structure, choice of leverage, risk
+
+management policy and more. It is easy to imagine that one or several of these could differ
+
+systematically across the examined regions, which could provide the basis for different speeds of
+
+incorporation for stocks.
+
+                                      6
+                          3 DATA
+
+We use two different sources of data: one for commodity prices and one for stock prices. Our
+
+primary sources of data are the Thomson Reuters Datastream software, used for downloading
+
+the daily commodity prices data, and COMPUSTAT, which is used for the daily stock price data,
+
+both for the London Stock Exchange and the Scandinavian stock exchanges. They both have
+
+the common characteristic of high scrutiny and trustworthiness. All data cover every available
+
+trading day from the years 2002 through 2012.
+
+3.1 Commodity data
+
+We download the prices of the commodities via Thomson Reuters Datastream. We choose the
+
+most commonly quoted prices for the following commodities: gold, copper, silver and aluminium,
+
+                                                                   4
+from the London Buillion Market and the London Metal Exchange.  It should be noted that
+
+both the London Metal Exchange and the London Bullion market are highly established markets
+
+for the trading of certain metals, and can in some cases even be considered the de facto standard
+
+markets.
+
+3.2 Stock data
+
+The commodity data is merged with stock data from COMPUSTAT Global; we use the database
+
+                5
+Security Daily . The resulting panel data consists of daily observations for all of the securities
+
+listed on the London Stock Exchange, the Scandinavian stock exchanges and the four com-
+
+modities. The two datasets are kept separate to avoid excessively large data sets, leaving the
+
+London Stock Exchange data with 6 403 933 observations and 4064 unique securities and the
+
+Scandinavian stock exchanges with 2 293 852 observations and 1393 unique securities.
+
+    We use the London Stock Exchange as our ”large stock exchange”, while the Swedish, Nor-
+
+wegian and Danish main exchanges together form our ”small stock exchanges”. The Swedish,
+
+Norwegian and Danish exchanges are grouped together and essentially treated as a single market
+
+   4
+    The exact names of these indices can be found in the appendix.
+   5
+    See the appendix for a complete list of variables downloaded
+
+                                      7
+                                                                6
+and are referred to by the common name ”Scandinavian”.
+
+    Since Compustat offers data by country rather than by exchange, when downloading data
+
+we inadvertently get some stocks that are listed on other exchanges than the main ones for each
+
+country. For example, our Scandinavian data even inexplicably includes a few firms from the
+
+Australian Stock Exchange. All firms not listed a main exchange are eliminated from the dataset.
+
+We also eliminate stocks that are not listed at least from the first day in 2008 and until the end
+
+of day of 2012. This is done in order to avoid biases caused by not having enough data for a
+
+particular company, delistings, bankruptcies, buy-outs or the volatile period following an IPO
+
+being a disproportionately large part of the data. We expect the effects of these events on stock
+
+prices to be much larger than any commodity price effect, and we don’t want them distorting
+
+our results.
+
+    We actively choose to avoid the year of 2013, because many mining companies suffered great
+
+financial troubles from late 2012 and early 2013 to the end of 2013. When the market learns
+
+that a company might go bankrupt, the stock price will sink regardless of how the underlying
+
+commodity performs; this effect is particularly clear for the Scandinavian mining companies. The
+
+continuously sinking price of such security diminishes the importance of gold price in explaining
+
+the stock price.
+
+   6
+    Note that the daily value weighted average return is naturally still calculated separately for each
+country
+
+                                      8
+                    4 METHODOLOGY
+
+To conduct the study on the differences between markets, we begin by estimating the commodity
+
+betas for both markets, utilising multiple regressions on a simple market model. The aim of these
+
+estimations is to acquire a general understanding of how changes in commodity prices affect the
+
+prices of securities. After obtaining the test results, we proceed to the second part of our study,
+
+executing a series of test for the difference in market reactions to commodity price changes.
+
+This is done by testing for the difference in mean values for the betas across markets, achieved
+
+by interacting the variables through the use of market dummy variables and re-estimating the
+
+market model to test the cross-model hypotheses.
+
+4.1 Generating the basic variables
+
+We begin by calculating the daily stock returns; as the data has a relatively high frequency,
+
+we use log returns both for the daily stock returns and the daily commodity returns. For the
+
+commodity returns, we also include two lag terms and one lead term. Adding one or more lag
+
+term has little effect on the measured betas in the sample, as also noted by Tufano. Since the
+
+purpose of the lead term is to control for whether stock markets lead the commodity markets,
+
+adding more than one lead term should be considered redundant, as such an effect should al-
+
+ready be recorded and observed in a single lead term. The value-weighted returns for each of the
+
+four included markets are calculated as the daily returns for each individual security, weighted
+
+on total market capitalization, establishing the value of the daily value-weighted return as the
+
+weighted mean of all returns on particular trading day.
+
+                                      9
+4.2 Measuring firms’ exposures to commodities
+
+We calculate exposures to changes in commodity prices by estimating the following market model:
+
+                     Rct = αc + βcRct + βcmRmt + βclRml + εt
+
+Where
+
+Rct is the logarithm of the daily return on stock c from t-1 to t
+
+Rmtis the logarithm of the daily value-weighted market return from day t-1 to t for the country
+
+of listing.
+
+Rctis the logarithm of the daily return of the commodity price from day t-1 to t.
+
+αc is the constant term for the regression.
+
+εt is the error term for the regression.
+
+Rml is the logarithm of yesterday’s commodity return.
+
+This regression is the same method used by Tufano (1996) when examining the gold mining
+
+industry.
+
+    We save the coefficients of the betas, and the associated standard deviations, which allows
+
+us to calculate each coefficient’s t-value by dividing the coefficient by the standard deviation.
+
+4.3 Defining ”commodity exposed” companies
+
+We use two different methods to define which companies are considered ”exposed” to their
+
+underlying commodity. In the case of gold and silver we decide that all companies with a SIC
+
+(Standard Industry Classification) code of 1040, defined as ”gold and silver ore”, are considered
+
+exposed to the price of gold and silver price. As noted previously, there are some minor problems
+
+with the Scandinavian data in particular, with some firms facing severe financial troubles. From
+
+                                               7
+this group we exclude two companies completely  because their data behaves erratically.
+
+    In the cases of aluminium and copper there is no single SIC-code that is easily coupled to the
+
+prices of commodities. We therefore decide that firms that under a two-day observation period
+
+exhibit a combined coefficient value, i.e. reaction, that is greater than or equal to 0.3625, are
+
+   7
+    Tricor PLC and Nickel Mountain Group
+
+                                     10
+                                      8
+to be considered ”aluminium-exposed”.  We define the ”copper-exposed” firms using the same
+
+reasoning and method as for aluminium, but with a cut-off value of 0.3408. By using a measure
+
+that combines the effects yesterday’s commodity prices and today’s commodity price, we are
+
+neutral in our selection regarding when the commodity affects today’s stock price.
+
+    Please note that we won’t introduce selection bias into our method as long as we are consistent
+
+across the countries for each individual commodity, so we aren’t restricted to using the same
+
+methods to identify companies that are exposed to different commodities. Regardless of this,
+
+the underlying two groups of commodities, gold and silver, and aluminium and copper, should
+
+be noted when interpreting the results.
+
+    It is also worth noting that these groups of commodity-exposed securities differ significantly
+
+from the general market, exhibiting substantially different reactions to commodity price changes,
+
+                                                    9
+while the market returns are very close to zero.
+
+4.4 Generating commodity price shock dummies
+
+Since we are interested in finding out if the differences between markets are more pronounced
+
+when commodity price changes are stronger, we generate a dummy that is equal to 1 for the
+
+top and bottom 25% of daily price changes. This means that we avoid the middle 50% of data,
+
+which consists of price changes that are very close to zero. The exact cut-offs in terms of the
+
+logarithm of price change are:
+
+    • For gold, when the logarithm of the daily price change is greater than or equal to 0.72%
+
+      or less than or equal to -0.53%.
+
+    • For silver, the equivalent numbers are 1.31% and -1.08%.
+
+   • For aluminium, 0.90% and -0.86%
+
+   • For copper, 1.11% and -0.92%
+
+   8
+    Only statistically significant values are considered; only observations with a t-value of 2 or above
+are considered
+   9
+    See table 1A in the appendix for estimations for the complete sample, including all securities, for an
+example
+
+                                     11
+4.5 Corrections for outliers and missing data
+
+As can be expected when dealing with real-world data, there are some issues with outliers, missing
+
+values and other impurities and irregularities in the data. We employ a number of methods to
+
+adjust for this.
+
+4.5.1 Adjusting for extreme outliers
+
+To prevent extreme outliers from influencing our results too much, we winsorise the top and
+
+bottom 1% of daily differences in commodity prices. The box plots below, figure 1 and figure 2,
+
+illustrate the effect this has on our data. One can clearly see that it’s feasible to exclude such
+
+extreme outliers for log returns, as their deviation from the rest of the sample is considerable
+
+enough to dramatically influence the estimates on particular trading days.
+
+                                     12
+                Figure 1: Daily commodity returns, pre-winsorization
+
+These box plots show the distribution of the logarithm of daily changes in commodity prices, bro-
+
+ken down by commodity. In the figure above, we see the distribution before winsorizing the top
+
+and bottom percent, and in the figure below we have the same data after wisorization. Note the
+
+difference in scale.
+
+                Figure 2: Daily commodity returns, post-winsorization
+
+                                     13
+We find that some of our data hasn’t been adjusted for splits or reverse stock splits. This means
+
+that a few of our firms have a few very extreme value for daily stock returns, with prices nomi-
+
+nally increasing hundreds of percent over night. Strangely, this is usually corrected and adjusted
+
+for in the days following the actual change in shares outstanding. To eliminate these extreme
+
+outliers, we winsorize the top and bottom percent of daily stock returns, for a total of 98%
+
+winsorization.
+
+       Figure 3: Daily stock returns,              Figure 4: Daily stock returns,
+             pre-winsorization                          post-winsorization
+
+These box plots show the distribution of the logarithm of daily price changes in stocks. In the
+
+figure to the left, we see the distribution of daily stock reruns before winsorization. In the figure
+
+to the right, we see the same data after a 98% winsorization. Note that the scales are 2 orders
+
+of magnitude from each other, and the unreasonable extreme values before winsorization.
+
+                                     14
+4.5.2 Correcting for missing data
+
+In some cases, information about the number of shares outstanding is found to be missing for
+
+several days in a row. In some cases, this is also true for returns, which are highly relevant for
+
+our study. When data on number of shares outstanding or returns is missing, we carry forward
+
+the preceding values. We argue this to be the most correct method, as some of the companies
+
+are traded rarely enough for there not be any trades on a particular day, and missing prices
+
+tend to occur on such dates. We manually verify that no price is carried forward in a strange or
+
+inconsistent manner.
+
+4.6 Obtaining our results
+
+To obtain our results, we regress the logarithm of double lag, lag, daily, lead, daily value weighted
+
+average return on the daily stock returns, while using company fixed effects, clustering by unique
+
+quarter and using robust standard errors.
+
+4.7 The Market model
+
+We estimate the following market model to obtain the betas for the different commodities:
+
+                         Rct = αc + βcRct + βcmRmt + εt
+
+The two samples are first treated separately. The model estimations are executed in an identical
+
+manner for all of the different commodities and markets. Any differences in coefficients are likely
+
+to appear already at this point.
+
+4.8 Clustering standard errors and fixed effects
+
+In our model estimations, we cluster standard errors in the time dimension, by unique quarter.
+
+Due to the nature of the sample, we would expect observations within companies and within
+
+unique quarters to be similar. However, we only choose to cluster by quarter, although we
+
+perform tests where we cluster standard errors by two dimensions. The two methods are then
+
+compared. As Tufano notes, stock price exposures to gold prices vary substantially over time
+
+                                     15
+and between firms, and thus we decide to use firm fixed effects. Since it is likely that securities
+
+exhibit varying levels of company-specific effects, we include company fixed effects. To adjust
+
+for heteroscedasticity, we use robust standard errors.
+
+4.9 Tests for differences
+
+After obtaining our results for the estimations for all commodities, run separately for both
+
+samples, we test for differences in the betas across markets in two ways. Our tests is a Student’s
+
+t-test, used to test equality of the mean values of the obtained coefficients. This is achieved by
+
+interacting all of the explanatory variables with a dummy variable taking on the value of 1 for
+
+observations belonging to the Scandinavian stock markets and 0 for observations belonging to
+
+the London Stock Exchange, respectively. The rest of the estimation formula remains the same,
+
+with robust standard errors, standard errors clustered in the time dimension by unique quarter
+
+and firm fixed effects. These regressions are also run separately for only the days previously
+
+defined as ”event days”. This is done partly as to see if this has an effect on coefficients, the
+
+observed differences between markets or significance levels, and partly as a robustness test. In
+
+its simple form, the estimation formula is as follows:
+
+                    Rct = αc + βcRct + βcmRmt + δ00d + δ01d + εt
+
+Where
+
+Rct is the logarithm of the daily return on stock c from t-1 to t
+
+Rmt is the logarithm of the daily value-weighted market return from day t-1 to t for the country
+
+of listing.
+
+δ00 is betacRct
+
+δ01 is betacmRmt
+
+d is the dummy variable
+
+αc is the constant term for the regression.
+
+εt is the error term for the regression.
+
+                                     16
+4.10 The Efficient Market Hypothesis
+
+A well-established and popular concept, the efficient market, as defined by Fama (1970), is of
+
+particular interest to our study. Fama describes markets as efficient in regards to information,
+
+meaning that markets and securities fully reflect all available information. Three different forms
+
+are often cited: weak-form efficiency, semi-strong form efficiency and strong-form efficiency. In
+
+weak-form efficiency, markets are assumed to reflect all historical information, and exhibit no
+
+serial correlations, meaning that security prices cannot be predicted based on historical informa-
+
+tion. Thus it is not possible to earn abnormal returns based on historical returns, at least not in
+
+the long run. In semi-strong form, markets reflect all publicly available information, and thus it
+
+is not possible to earn abnormal returns by trading on such information. Finally, in strong-form
+
+efficiency, markets reflect all available public and private information, and thus it is not possible
+
+to earn abnormal returns by trading on such information. This implies that no one can earn
+
+abnormal returns.
+
+4.11 Multicollinearity, autocorrelation, heteroscedasticity and robustness
+
+We need to test for some common problems in the data.
+
+We begin by performing a test for serial correlation in the model, as discussed by Wooldridge
+
+(2002) and written by Drukker (2003); in the Wooldridge test, a Wald test is used to test the
+
+null hypothesis of no autocorrelation.
+
+    Multicollinearity tests are performed as written by Ender (2010), producing a number of
+
+collinearity diagnostics including VIF, tolerance, eigenvalues, condition index, and R-squared.
+
+    A robustness test is also performed by systematically excluding and including each of the
+
+testing variables and estimating a set of regressions on the core variables, as written by Barslund
+
+(2007). The tests are performed for each model estimation, thus testing for each of the four
+
+commodities separately, including the daily price change of the commodity and value-weighted
+
+returns as core variables.
+
+                                     17
+                         5 RESULTS
+
+The following section begins with a set of descriptive statistics and correlations for our dataset.
+
+The values shown in the tables indicate no major differences between the two markets. We
+
+analyze these further through the use of multiple regressions and difference testing to establish
+
+whether there is any observable or significant difference between the two markets. We then
+
+conclude the section by conducting several measures to test for robustness.
+
+5.1 Descriptive statistics
+
+                            Table 1: Cross-correlation table
+                          This table shows the correlation between prices at
+                            a daily level for the commodities we examine.
+                  Variables Gold Silver Aluminium Copper
+                 Gold 1.000
+                  Silver 0.945 1.000
+                 Aluminium 0.109 0.272 1.000
+                  Copper 0.735 0.785 0.686 1.000
+
+Table 2 shows the results for cross-correlations of the different commodities. The results are con-
+
+sistent with what has been observed in the vast literature on the correlations between commodity
+
+prices; as predicted we find a high degree of correlation between our four examined commodities.
+
+    The main descriptive statistic on the number of commodity-sensitive firms included in the
+
+market-specific datasets are shown in table 2. Generally, there is large variation in the values;
+
+the mean and maximum values are very far apart. However, the values are very similar across
+
+markets, and thus it is however difficult to draw any conclusions on the differences between
+
+markets.
+
+                                     18
+                          Table 2: Descriptive statistics
+This table shows how we categorize the firms and observations in our data as sensitive to differ-
+ent commodity price changes. We show this for the London Stock Exchange, the Scandinavian
+stock exchanges and an aggregate of the two markets. We also include mean returns for days
+with high commodity returns.
+
+                                          Stock Exchange Location
+                                    London  Scandinavian          Total
+                                      Stock       Stock
+                                 Exchange   Exchanges
+Number of distinct companies 6,763 2,837 9,600
+% of total sample 70.4% 29.6% 100.0%
+Total no. observations in sample 16,461,446 7,072,642 23,534,088
+
+Gold companies
+Gold sensitive companies 112 17 129
+% of sample 1.7% 0.6% 1.3%
+Observations included
+Included 288,935 28,932 317,867
+% of sample 1.8% 0.4% 1.4%
+Stock return on high-return days*
+Mean stock return 0.648% 0.500% 0.634%
+Max. stock return 11.00% 9.531% 11.00%
+
+Silver companies
+Silver sensitive companies 112 17 129
+% of total sample 1.7% 0.6% 1.3%
+Observations included
+Included 288,935 28,932 317,867
+% of sample 1.8% 0.4% 1.4%
+Stock return on high-return days*
+Mean stock return 0.782% 0.622% 0.768 %
+Max. stock return 9.531% 11.00% 11.00%
+
+Aluminium companies
+Aluminium sensitive companies 139 19 157
+% of total sample 2.0% 0.7% 1.6%
+Observations included
+Included 297,005 60,580 357,584
+% of total sample 1.8% 0.9% 1.5%
+Stock return on high-return days*
+Mean stock return 1.473% 1.516 % 1.481 %
+Max. stock return 9.531% .11.00% 11.00%
+
+Copper companies
+Copper sensitive companies 82 27 109
+% of total sample 1.2% 1.0% 1.1%
+Observations included
+Included 213,359 58,609 271,968
+% of total sample 1.3% 0.8% 1.2%
+Stock return on high-return days*
+Mean stock return 2.656% 2.110 % 2.538%
+Max. stock return 9.531% 11.00% 11.00%
+
+ *High-return days are defined as the upper 5% of daily commodity returns
+
+                                  19
+          Figure 5: Mean stock returns for gold-sensitive companies by quartile
+ This figure shows mean stock returns for gold-sensitive companies on days that correspond to the upper
+                                   and lower 5% of daily gold returns
+
+                     5
+
+                                                                                              London Stock Exchange
+                     0
+                                                                                                   Scandinavian stock exchanges
+
+                     Daily stock returns, %
+
+                   −5
+
+                          1 2 3 4
+
+Figure 5 and figure 6 illustrate the mean stock returns on days with high commodity price changes.
+We observe that the sensitive groups are clearly not entirely homogeneous. Differences across
+stock markets are very small, although the London Stock Exchange would seem to exhibit a slightly
+stronger negative reaction.
+
+         Figure 6: Mean stock returns for silver-sensitive companies by quartile
+This figure shows mean stock returns for silver-sensitive companies on days that correspond to the upper
+                                   and lower 5% of daily silver returns
+
+                     5
+
+                                                                                              London Stock Exchange
+                     0
+                                                                                                   Scandinavian stock exchanges
+
+                     Daily stock returns, %
+
+                   −5
+                          1 2 3 4
+
+                                      20
+      Figure 7: Mean stock returns for aluminium-sensitive companies by quartile
+ This figure shows mean stock returns for aluminium-sensitive companies on days that correspond to the
+                           upper and lower 5% of daily aluminium returns
+
+                     5
+
+                                                                                               London Stock Exchange
+                     0
+                                                                                                    Scandinavian stock exchanges
+
+                     Daily stock returns, %
+
+                   −5
+
+                          1 2 3 4
+
+Figure 7 and figure 8 illustrate the mean stock returns on days with high commodity price changes.
+Once again, we observe that the groups defined as ”sensitive” are not entirely homogeneous. As
+with gold and silver, the observed differences between the different stock markets are very small,
+although rather surprisingly, the Scandinavian stock exchanges would seem to exhibit a slightly
+stronger reaction to both positive and negative news regarding the prices of commodities.
+
+        Figure 8: Mean stock returns for copper-sensitive companies by quartile
+   This figure shows mean stock returns for copper-sensitive companies on days that correspond to the
+                              upper and lower 5% of daily copper returns
+
+                     5
+
+                                                                                              London Stock Exchange
+                     0
+                                                                                                   Scandinavian stock exchanges
+
+                     Daily stock returns, %
+
+                   −5
+
+                          1 2 3 4
+
+                                      21
+        Table 3: Regression results, by market
+ This table shows the coefficients of daily stock returns regressed
+ on commodity price changes for the observation period [-2;1] for
+the firms sensitive to the particular commodities. Value-weighted
+ return is used as a control variable, we cluster on unique quarter
+  and use firm fixed effects. We use robust standard errors. We
+report the results separately for the Scandinavian stock exchanges
+               and the London Stock Exchange.
+
+                           Scandinavia London Stock Exchange
+                         Daily stock returns Daily stock returns
+                                      ∗ ∗∗
+ Gold return day -2 0.0831               0.0682
+                               (2.23) (3.35)
+                                     ∗∗∗ ∗∗∗
+ Gold return day -1 0.128                0.181
+                               (4.50) (9.75)
+                                     ∗∗∗ ∗∗∗
+ Gold return day 0 0.230                0.311
+                               (4.36) (10.38)
+ Gold return day 1 0.0199 0.0145
+                               (0.67) (1.34)
+                                     ∗∗∗ ∗∗∗
+ Value-weighted return 0.432                0.406
+                               (7.95) (12.63)
+                                                                          ∗∗∗
+ Constant -0.00109 -0.00150
+                                (-1.78) (-4.65)
+ Observations 5033 50639
+
+                                                                         ∗∗∗
+ Silver return day -2 0.0345 0.0413
+                               (1.57) (3.77)
+                                     ∗∗∗ ∗∗∗
+ Silver return day -1 0.0794                0.0844
+                               (5.40) (7.70)
+                                     ∗∗∗ ∗∗∗
+ Silver return day 0 0.151                 0.182
+                               (5.67) (15.49)
+                                                                         ∗∗∗
+ Silver return day 1 0.0337 0.0545
+                               (1.72) (6.02)
+                                     ∗∗∗ ∗∗∗
+ Value-weighted return 0.414                0.375
+                               (7.47) (12.12)
+                                                                          ∗∗∗
+ Constant -0.00101 -0.00141
+                                (-1.79) (-4.97)
+ Observations 5033 50639
+
+                                   ∗
+ Aluminium return day -2 0.0846               -0.00366
+                                (2.38) (-0.21)
+                                     ∗∗∗ ∗∗∗
+ Aluminium return day -1 0.136                0.112
+                               (5.93) (7.19)
+                                     ∗∗∗ ∗∗∗
+ Aluminium return day 0 0.238                0.238
+                               (7.87) (11.39)
+ Aluminium return day 1 -0.0259 0.0155
+                               (-1.15) (1.24)
+                                     ∗∗∗ ∗∗∗
+ Value-weighted return 0.836                0.820
+                               (22.89) (19.21)
+
+ Constant -0.000415 -0.000451
+                                (-1.06) (-1.91)
+ Observations 10796 50297
+
+                                   ∗
+ Copper return day -2 0.0559               -0.00126
+                                (2.58) (-0.11)
+                                     ∗∗∗ ∗∗∗
+ Copper return day -1 0.115                0.115
+                               (8.55) (7.09)
+                                     ∗∗∗ ∗∗∗
+ Copper return day 0 0.195                0.290
+                               (6.93) (11.55)
+ Copper return day 1 -0.0147 -0.000418
+                                (-0.65) (-0.04)
+                                     ∗∗∗ ∗∗∗
+ Value-weighted return 0.813                1.002
+                               (22.47) (18.97)
+ Constant -0.000363 -0.000176
+                                (-1.01) (-0.66)
+ Observations 10388 38215
+
+  t statistics in parentheses
+ ∗        ∗∗        ∗∗∗
+   p < 0.05,   p < 0.01,    p < 0.001
+                       22
+5.2 Results from the market-specific estimates
+
+Regression results are presented in table 3. The following subsections discuss the results for each
+
+commodity in detail.
+
+5.2.1 Gold
+
+For both exchanges we see that all of the coefficients are significant in explaining today’s stock
+
+return, except for the lead variable. As is reasonable to expect, their relative importance de-
+
+creases the further back in time the price changes occur. The coefficient for the day before
+
+yesterday is approximately the same across the markets, and certainly not significantly different.
+
+The difference in coefficients for the effect of today’s gold price and yesterday’s gold price are
+
+more noticeable. Rather surprisingly, the effect of yesterday’s gold price on today’s stock prices
+
+of gold-sensitive companies would seem to be more noticeable on the London Stock Exchange
+
+than on the Scandinavian stock exchanges. However, if we see the sum of the lagged variables as
+
+a proportion of the sum of the lagged coefficients and today’s coefficient, we find that older prices
+
+are proportionately more important for Scandinavian firms. That the London Stock Exchange
+
+has a larger absolute value for total exposure during the three-day event- and pre-event obser-
+
+vation period is not surprising, as the average gold exposure of gold companies on the London
+
+                                                                                     10
+Stock Exchange is higher than that of similar firms on the Scandinavian stock exchanges.   Since
+
+they are statistically different, it is reasonable to check the proportions of explanatory power that
+
+comes from the lagged variables:
+
+Scandinavia
+
+      Return[−2]+Return[−1]              0.0831+0.1280
+Return[−2]+Return[−1]+Return[0] = 0.08306+0.1280+0.2302 ≈ 0.4783
+
+London
+
+     0.0682+0.1815
+0.0682+0.1815+0.3112 ≈ 0.4452
+
+  10
+    This is an interesting notion, but unfortunately beyond the scope of this thesis
+
+                                     23
+This gives us a rough indication of how, when predicting the stock prices of gold companies, the
+
+explanatory power of the lagged variables is slightly larger on the Scandinavian stock exchanges
+
+than on the London Stock Exchange.
+
+5.2.2 Silver
+
+Silver behaves very similarly across the different markets. The differences are small throughout,
+
+and none of these are likely to be statistically significant. The relative importance of the lagged
+
+variables decreases with the relative distance from today, as expected. In contrast to what can be
+
+observed in regards to gold, and the Scandinavian stock exchanges, the lead term is statistically
+
+significant, although the effect is rather small. The difference for individual coefficients is formally
+
+tested in the next section.
+
+5.2.3 Aluminium
+
+The results for aluminium are extremely similar across both markets in terms of today’s and
+
+yesterday’s price changes. However, we observe a significant difference in the coefficient for the
+
+second lag term. This difference would seem to point towards a bias, with the Scandinavian
+
+stock exchanges exhibiting a positive effect from the commodity price changes from two days
+
+before, and the London Stock Exchange exhibiting an effect that is essentially zero.
+
+                                     24
+5.2.4 Copper
+
+The Scandinavian stock exchanges exhibit the same apparent bias for copper as they do for alu-
+
+minium. However, unlike for aluminium, there seems to be a significant difference in the effect
+
+of today’s copper price, and the total effect as well. The coefficients for the first lagged variable
+
+are more or less identical both in size and significance across markets. Much like in the same
+
+way as for the gold price, we can reason that the commodity prices from the day before and the
+
+day before yesterday are proportionately more important in explaining today’s stock price for
+
+the copper-sensitive companies in the Scandinavian stock exchanges than on the London Stock
+
+Exchange. Using the same calculation as before (we omit one of the variables for the London
+
+Stock Exchanges, since it is not significantly different from zero):
+
+Scandinavia
+
+     0.0559+0.1147
+0.0559+0.1147+0.1948 ≈ 0.4669
+
+London
+
+    0.1148
+0.1148+0.2904 ≈ 0.2834
+
+    The proportion difference is larger than than for gold and substantial.
+
+                                     25
+5.3 Results from difference testing
+
+Although the results from the separate estimations already provide some information on the
+
+differences and similarities in reactions across markets, they alone are not sufficient for us to
+
+determine whether there is an observable difference, and thus we conduct tests for the differences
+
+in the coefficients’ means. We use a Student’s t-test, which is appropriate given the reasonable
+
+assumption of normal distribution. Given that the assumption of normality holds, the test should
+
+have greater efficiency than other comparable tests. We run the same test for two samples: first
+
+the complete sample, and then a limited sample, including only days previously defined as ”event
+
+days”, thus excluding the middle 50% of observations. Given its nature, the latter test also partly
+
+serves as a robustness test.
+
+    Again, we comment our results one commodity at a time. The results for the regressions are
+
+presented in table 4.
+
+                                     26
+                                         Table 4: Difference testing results
+  This table shows the coefficients for daily stock returns regressed on commodity price changes for the observation period [-2;1] for
+   firms sensitive to a particular commodity price. Value-weighted return is used as a control variables for the firms sensitive to a
+  particular commodity. We cluster on unique quarter and use firm fixed effects and use robust standard errors. We also include all
+these variables interacted with a dummy variable which is 1 for the Scandinavian Stock Exchanges, thus giving us a value for the size
+of the difference between markets, and the significance of the difference. The left column in both figures shows the results for all daily
+commodity price changes, and the right column shows the results for only the top and bottom 25% of daily commodity price changes.
+
+                                Complete sample Excluding zero-return days                                     Complete sample Excluding zero-return days
+                                Daily stock returns Daily stock returns                                         Daily stock returns Daily stock returns
+                                             ∗∗ ∗∗∗
+  Gold return, day -2 0.0678               0.0945             Aluminium return, day -2 -0.00394 -0.0107
+                                       (3.33) (3.80)                                                     (-0.23) (-0.57)
+                                            ∗∗∗ ∗∗∗                                                          ∗∗∗ ∗∗∗
+  Gold return day -1 0.181                 0.187              Aluminium return day -1 0.112                 0.106
+                                      (9.79) (8.38)                                                     (7.20) (5.79)
+                                            ∗∗∗ ∗∗∗                                                          ∗∗∗ ∗∗∗
+  Gold return day 0 0.311                 0.310              Aluminium return day 0 0.238                 0.225
+                                     (10.38) (10.01)                                                   (11.46) (12.40)
+                                            ∗∗∗ ∗∗∗                                                          ∗∗∗ ∗∗∗
+  Value-weighted return 0.407                 0.399               Value-weighted return 0.819                 0.870
+                                     (12.64) (10.80)                                                   (19.17) (20.12)
+                                                                                                                                ∗∗ ∗∗
+  Difference in Gold return, day -2 0.0152 -0.0357            Difference in Aluminium return, day -2 0.0885               0.0890
+                                       (0.41) (-0.58)                                                     (3.53) (2.77)
+  Difference in Gold return day -1 -0.0533 -0.00985           Difference in Aluminium return day -1 0.0243 0.0133
+                                      (-1.71) (-0.27)                                                     (1.27) (0.51)
+  Difference in Gold return day 0 -0.0808 -0.0783            Difference in Aluminium return day 0 -0.000248 0.000974
+                                       (-1.95) (-1.75)                                                     (-0.01) (0.03)
+  Difference in Gold return day 1 0.0199 0.0604            Difference in Aluminium return day 1 -0.0259 -0.0193
+                                       (0.67) (1.47)                                                     (-1.15) (-0.71)
+  Difference in value-weighted return 0.0256 0.0161            Difference in value-weighted return 0.0162 0.00491
+                                      (0.57) (0.36)                                                     (0.34) (0.11)
+                                                ∗∗∗ ∗∗∗                                                                                       ∗
+  Constant -0.00145              -0.00160             Constant -0.000443 -0.000691
+                                       (-4.36) (-3.74)                                                     (-1.91) (-2.40)
+  Observations 55672 28258            Observations 55672 28258
+                                            ∗∗∗ ∗∗
+  Silver return, day -2 0.0412                0.0471             Copper return, day -2 -0.00125 0.00146
+                                       (3.59) (3.11)                                                     (-0.11) (0.08)
+                                            ∗∗∗ ∗∗∗                                                          ∗∗∗ ∗∗∗
+  Silver return day -1 0.0841                0.0827              Copper return day -1 0.115                 0.102
+                                      (7.73) (5.70)                                                     (7.12) (5.48)
+                                            ∗∗∗ ∗∗∗                                                          ∗∗∗ ∗∗∗
+  Silver return day 0 0.177                 0.172               Copper return day 0 0.290                 0.285
+                                     (15.52) (15.47)                                                   (11.60) (12.60)
+                                            ∗∗∗ ∗∗∗                                                          ∗∗∗ ∗∗∗
+  Value-weighted return 0.389                 0.417               Value-weighted return 1.002                 1.010
+                                     (12.16) (10.11)                                                   (18.97) (19.32)
+                                                                                                                  ∗∗
+  Difference in Silver return, day -2 -0.00667 -0.0253            Difference in Copper return, day -2 0.0572                0.0451
+                                      (-0.25) (-0.74)                                                     (2.78) (1.85)
+  Difference in Silver return day -1 -0.00466 -0.00597           Difference in Copper return day -1 -0.000144 -0.00749
+                                       (-0.28) (-0.24)                                                     (-0.01) (-0.36)
+                                                                                                                                ∗ ∗
+  Difference in Silver return day 0 -0.0260 -0.0225            Difference in Copper return day 0 -0.0957               -0.0899
+                                       (-1.02) (-0.87)                                                     (-2.42) (-2.22)
+  Difference in Silver return day 1 0.0337 0.0378            Difference in Copper return day 1 -0.0147 -0.0139
+                                       (1.73) (1.55)                                                     (-0.65) (-0.44)
+                                                                                                                               ∗∗ ∗∗
+  Difference in value-weighted return 0.0244 0.0247             Difference in value-weighted return -0.189                -0.199
+                                       (0.49) (0.52)                                                     (-3.16) (-2.89)
+                                             ∗∗∗ ∗∗∗
+  Constant -0.00133              -0.00139             Constant -0.000216 -0.000409
+                                       (-4.42) (-3.75)                                                     (-0.93) (-1.21)
+  Observations 55672 28899            Observations 48603 25272
+
+  t statistics in parentheses                                                                   t statistics in parentheses
+  ∗       ∗∗       ∗∗∗                                                       ∗       ∗∗       ∗∗∗
+    p < 0.05,   p < 0.01,    p < 0.001                                                        p < 0.05,   p < 0.01,    p < 0.001
+
+                                                27
+5.3.1 Gold
+
+None of the differences in coefficient means across the models are statistically significant at the
+
+5% level, implying that there are no statistically significant differences between the different
+
+markets. However, the estimated difference in today’s coefficient is significant on the 10% level,
+
+with the first lagged variable also showing some significance.
+
+5.3.2 Silver
+
+As our preliminary observations on the first estimations seemed to indicate, there is no apparent
+
+difference in reactions between markets. Generally, the significance levels are low, and the
+
+estimated difference coefficients have very low values.
+
+5.3.3 Aluminium
+
+The cross-model difference test estimates exhibit an expected pattern, confirming what the first,
+
+market-specific, estimations seem to indicate. Only the difference coefficient for the second lag
+
+term is significantly different between markets.
+
+5.3.4 Copper
+
+The estimated differences between markets show significance for today’s copper price (on the
+
+1% level) and for the second lag term (on the 5% level). The difference tests confirm the the
+
+indicated difference the market-specific estimates.
+
+5.3.5 Comparison between the complete and limited sample
+
+As previously described, we also run the same regressions while excluding the middle 50% of
+
+daily commodity price changes. This 50% is highly concentrated around zero, accounting for
+
+roughly 25% of the total range in returns. The results from these estimations are very similar to
+
+the ones with the complete sample
+
+                                     28
+5.4 Robustness tests
+
+Apart from the previously described regressions on the limited sample, we also conduct a series
+
+of robustness tests. The Wooldridge test for serial correlation within panels includes a Wald test
+
+to test the null hypothesis of no serial correlation. The test returns F-values that are sufficiently
+
+low for us not to reject the null hypothesis.
+
+    We perform various collinearity tests. None of the calculated collinearity diagnostics point
+
+towards any problems with multicollinearity in the data.
+
+    We also check for robustness of the data by systematically excluding and including each of
+
+the testing variables and estimating a set of regressions on the core variables. The tests are
+
+performed for each model estimation, thus testing for each of the four commodities separately,
+
+always including the daily price change of the commodity and value-weighted returns as core
+
+variables.
+
+    Apart from these tests, we re-do our difference estimations by clustering standard errors by
+
+two dimensions: not only time (unique quarter) but also on the firm level. The regressions do
+
+not include firm fixed effects. The results do not differ significantly from our main estimates.
+
+    From the above tests we conclude that there are no significant issues with the data included
+
+in the model estimates. All of the above test results are included in the appendix.
+
+                                     29
+            6 CONCLUSIONS AND IMPLICATIONS
+
+6.1 conclusions
+
+We have examined three different hypotheses regarding differences in market efficiency, informa-
+
+tion diffusion and the speed at which commodity price information is implemented in stock prices
+
+across different markets. By analyzing stock and commodity price information, we have studied
+
+whether there is a quantitative difference in the reaction to commodity prices, whether the mar-
+
+kets exhibit differing qualitative reactions and whether it would be possible to earn abnormal
+
+returns by trading on commodity price information.
+
+    The observed effects, and the differences in particular, are generally of high significance, but
+
+of limited magnitude. Although we observe some differences in the proportionate effects of the
+
+lagged variables in regard to the effect of today’s commodity price, particularly for gold and
+
+copper, these differences in particular are hard to generalize. We fail to see a predictable pattern
+
+that could be generalized across markets or commodities, thus the estimation results can only
+
+be seen to apply for the specific commodities and markets.
+
+    On average, however, we would seem to have one rather weak indicator for each commodity
+
+suggesting that the Scandinavian stock exchanges might exhibit slightly slower reactions and of
+
+lower magnitude. These indicators are inconsistent between commodities and many are only
+
+barely statistically significant on the 5% level.
+
+    An important point to note is that generally, stock markets seem to follow each other, and
+
+the New York Stock Exchange in particular; as noted by Eun et al. (1989), no single stock
+
+market has any noticeable effect on the global market, except for the NYSE, which exhibits a
+
+strong tendency to lead the global market. We cannot rule out the possibility of both of our
+
+included markets exhibiting a stronger tendency to follow the NYSE, rather than the prices of
+
+commodities.
+
+    By observing differences in reactions to commodity pricing information, we reject the null
+
+hypothesis of different markets exhibiting a similar or identical total reaction to commodity price
+
+changes. We are, however, unable to reject the second null hypothesis, as the results are mixed
+
+and inconclusive; this is also true for the third null hypothesis, as it would not appear possible to
+
+benefit from a potential arbitrage opportunity and earn abnormal returns based on commodity
+
+                                     30
+price information alone. We therefore find evidence that supports both the weak and semi-strong
+
+form of the efficient market hypothesis.
+
+6.2 Limitations and suggestions for further research
+
+As noted previously, a large amount of the reaction to new information occurs within minutes,
+
+or at most a few hours. We are unable to determine whether the Scandinavian Stock Markets
+
+react differently, although our estimates seem to point in such direction. The inclusion of data
+
+of higher frequency would warrant further research on the topic, but require significantly larger
+
+computational resources, time and better data access. To further increase significance and reduce
+
+standard errors, including other smaller stock exchanges would be a viable option.
+
+                                     31
+                      7 REFERENCES
+
+Ai, Chatrath, & Song, F, 2006, On the comovement of commodity prices, American Journal of
+Agricultural Economics, 88(3), 574-588.
+
+Barslund, Rand, Tarp, & Chiconela, J. 2007, Understanding victimization: the case of Mozam-
+bique, World Development, 35(7), 1237-1258.
+
+Bowman, & Husain, 2004, Forecasting Commodity Prices: Futures Versus Judgment.
+
+Brogaard, Hendershott, & Riordan, 2012, High frequency trading and price discovery.
+
+Cashin, McDermott, & Scott, 1999, The myth of comoving commodity prices. International
+Monetary Fund, Research Department.
+
+Deb, Trivedi, & Varangis, 1996, The excess co?movement of commodity prices reconsidered.
+Journal of Applied Econometrics, 11(3), 275-291.
+
+Drukker, D. M. (2003). Testing for serial correlation in linear panel-data models. Stata Journal,
+3(2), 168-177.
+
+Eun,& Shim, 1989, International transmission of stock market movements. Journal of finan-
+cial and quantitative Analysis, 24(02), 241-256
+
+Hamao, Masulis, & Ng, 1990, Correlations in price changes and volatility across international
+stock markets, Review of Financial studies, 3(2), 281-307.
+
+Karolyi, & Stulz, 1996, Why do markets move together? An investigation of US?Japan stock
+return comovements, The Journal of Finance, 51(3), 951-986.
+
+Leybourne, Lloyd, & Reed, 1994, The excess comovement of commodity prices revisited, World
+Development, 22(11), 1747-1758.
+
+Masulis, & Shivakumar, 2002, Does market structure affect the immediacy of stock price re-
+sponses to news? Journal of Financial and Quantitative Analysis, 37(4), 617-648.
+
+Palaskas, & Varangis, 1991, Is there excess co-movement of primary commodity prices?: a co-
+integration test (Vol. 758) World Bank Publications.
+
+                                     32
+Pindyck, & Rotemberg, 1993, The comovement of stock prices, The quarterly journal of eco-
+nomics, 108(4), 1073-1104.
+
+Kilian, & Park, 2009, THE IMPACT OF OIL PRICE SHOCKS ON THE US STOCK MAR-
+KET* International Economic Review, 50(4), 1267-1287.
+
+Strong, 1991, Using oil share portfolios to hedge oil price risk, Quarterly Review of Economics
+and Business, 31(1), 48-63.
+
+Tufano, 1998, The determinants of stock price exposure: Financial engineering and the gold
+mining industry, The Journal of Finance, 53(3), 1015-1052.
+
+Wooldridge, 2010, Econometric analysis of cross section and panel data.
+
+                                     33
+                    APPENDIX
+
+                             Table A.1: Market returns
+  This table shows the coefficients for daily stock returns regressed on commodity price changes for the
+observation period [-2;1] for all firms in the dataset for all commodities. We use value-weighted returns as
+ a control variable, firm fixed effects and cluster by unique quarter. We use robust standard errors. We
+   present the coefficients separately for the Scandinavian exchanges and the London Stock Exchange.
+
+                                                      Scandinavia London Stock Exchange
+                                                      Daily stock returns Daily stock returns
+
+                             Gold return, day -2 0.00171 0.00380
+                                                            (0.26) (0.63)
+
+                             Gold return day -1 0.00195 0.0176
+                                                            (0.23) (1.68)
+
+                                                                                                                     ∗∗
+                             Gold return day 0 0.00484 0.0244
+                                                            (0.45) (2.75)
+
+                             Gold return day 1 0.00235 -0.00452
+                                                             (0.32) (-0.97)
+
+                                                                   ∗∗∗ ∗∗∗
+                                Value-weighted return 0.519                0.424
+                                                           (21.32) (41.95)
+
+                                                                                                                       ∗
+                             Constant -0.000340 -0.000457
+                                                             (-1.76) (-2.50)
+
+                             Observations 1258682 2928438
+
+                                                                   ∗∗∗ ∗
+                                Silver return, day -2 0.0150                0.0121
+                                                            (3.64) (2.66)
+
+                                                                    ∗ ∗∗
+                                Silver return day -1 0.00763              0.0136
+                                                            ( 2.09) (2.81)
+
+                                                                   ∗∗∗ ∗∗∗
+                                Silver return day 0 0.0232               0.0259
+                                                            (4.22) (4.53)
+
+                                                                                                                      ∗
+                              Silver return day 1 0.00740 0.00490
+                                                            (1.86) (2.08)
+
+                                                                   ∗∗∗ ∗∗∗
+                                Value-weighted return 0.514                0.418
+                                                           (21.33) (40.38)
+
+                                                                                                                       ∗
+                             Constant -0.000376 -0.000476
+                                                             (-1.98) (-2.65)
+
+                             Observations 1258682 2928438
+
+                                                                    ∗ ∗
+                                Aluminium return, day -2 0.0205              0.0220
+                                                            (2.25) (2.66)
+
+                                                                   ∗∗∗ ∗∗∗
+                                Aluminium return day -1 0.0368              0.0505
+                                                            (4.56) (6.35)
+
+                                                                   ∗∗∗ ∗∗∗
+                               Aluminium return day 0 0.0437              0.0237
+                                                            (4.44) (4.61)
+
+                             Aluminium return day 1 0.00190 0.00443
+                                                            (0.35) (1.01)
+
+                                                                   ∗∗∗ ∗∗∗
+                                Value-weighted return 0.505                0.416
+                                                           (20.05) (40.42)
+
+                                                                                                                      ∗∗
+                             Constant -0.000347 -0.000443
+                                                             (-1.97) (-2.70)
+
+                             Observations 1258682 2928438
+
+                                                                    ∗ ∗∗
+                                Copper return, day -2 0.0184              0.0179
+                                                            (2.20) (2.75)
+
+                                                                   ∗∗∗ ∗∗∗
+                                Copper return day -1 0.0375              0.0453
+                                                            (5.09) (6.78)
+
+                                                                   ∗∗∗ ∗∗∗
+                                Copper return day 0 0.0437              0.0214
+                                                            (4.83) (5.23)
+
+                             Copper return day 1 0.000998 0.00148
+                                                            (0.28) (0.36)
+
+                                                                   ∗∗∗ ∗∗∗
+                                Value-weighted return 0.496                0.411
+                                                           (20.17) (36.94)
+
+                                                                     ∗ ∗∗
+                               Constant -0.000390            -0.000480
+                                                             (-2.27) (-2.91)
+
+                             Observations 1258682 2928438
+
+                                     t statistics in parentheses
+
+                               ∗       ∗∗       ∗∗∗
+                                     p < 0.05,   p < 0.01,   p < 0.001
+The tables A.2 through A.5 show the results for robustness testing. The tests systematically excludes and
+includes each of the testing variables and estimates a set of regressions on the core variables.
+
+                                Table A.2: Robustness tests
+
+    Core variables Max Min Mean Average Standard Deviation PercSigni Perc+ Perc- Average T-value Obs
+
+  Gold return day 0 0.2894 0.2871 0.2883 0.0192 1 1 0 15.039 8
+  Value-weighted return 0.7050 0.7017 0.7034 0.0257 1 1 0 27.367 8
+
+ Target variables Max Min Mean AvgSTD PercSigni Perc+ Perc- AvgT Obs
+
+  Gold return day -2 0.0465 0.0442 0.0453 0.0168 1 1 0 2.703 4
+  Gold return day -1 0.1248 0.1234 0.1241 0.0157 1 1 0 7.884 4
+  Gold return day 1 0.0194 0.0174 0.0184 0.0119 0 1 0 1.551 4
+
+                                Table A.3: Robustness tests
+
+    Core variables Max Min Mean Average Standard Deviation PercSigni Perc+ Perc- Average T-value Obs
+  Silver return day 0 0.1618 0.1570 0.1593 0.0088 1 1 0 18.155 8
+  Value-weighted return 0.6899 0.6886 0.6892 0.0250 1 1 0 27.596 8
+ Target variables Max Min Mean AvgSTD PercSigni Perc+ Perc- AvgT Obs
+  Silver return day -2 0.0319 0.0273 0.0296 0.0088 1 1 0 3.372 4
+  Silver return day -1 0.0595 0.0568 0.0581 0.0074 1 1 0 4
+  Silver return day 1 0.0227 0.0167 0.0196 0.0116 0.25 1 0 1.693 4
+
+                                Table A.4: Robustness tests
+
+      Core variables Max Min Mean Average Standard Deviation PercSigni Perc+ Perc- Average T-value Obs
+  Aluminium return day 0 0.1784 0.1756 0.1770 0.0134 1 1 0 13.179 8
+  Value-weighted return 0.6509 0.6461 0.6485 0.0267 1 1 0 24.323 8
+ Target variables Max Min Mean AvgSTD PercSigni Perc+ Perc- AvgT Obs
+  Aluminium return day -2 0.0291 0.0248 0.0270 0.0142 0.50 1 0 1.899 4
+  Aluminium return day -1 0.1166 0.1153 0.1159 0.0143 1 1 0 8.133 4
+  Aluminium return day 1 0.0020 0.0014 0.0016 0.0118 0 1 0 0.138 4
+
+                                Table A.5: Robustness tests
+
+    Core variables Max Min Mean Average Standard Deviation PercSigni Perc+ Perc- Average T-value Obs
+
+  Copper return day 0 0.1615 0.1544 0.1580 0.0137 1 1 0 11.506 8
+  Value-weighted return 0.6152 0.6133 0.6142 0.0269 1 1 0 22.804 8
+
+ Target variables Max Min Mean AvgSTD PercSigni Perc+ Perc- AvgT Obs
+
+  Copper return day -2 0.0246 0.0185 0.0216 0.0100 0.50 1 0 2.169 4
+  Copper return day -1 0.1147 0.1131 0.1139 0.0105 1 1 0 10.878 4
+  Copper return day 1 0.0014 -0.0001 0.0007 0.0062 0 0.75 0.25 0.117 4
+                  Table A.6: Wooldridge tests for serial correlation
+    The table shows the results for the Wooldridge test for each of the commodity regressions.
+                         A Wald test is used to test for the null hypothesis.
+                        H0 : No serial correlation within panels
+
+     Variables Scandinavian Stock Exchanges         Variables London Stock Exchange
+
+Gold, F(1, 2) 2.484                Gold, F(1, 25) 0.006
+Probability>F 0.255             Probability>F 0.937
+Silver, F(1, 2) 2.318                Silver, F(1, 25) 0.054
+Probability>F 0.267             Probability>F 0.817
+Aluminium, F(1, 4) 0.650               Aluminium, F(1, 24) 0.713
+Probability>F 0.465             Probability>F 0.406
+Copper, F(1, 4) 0.113                Copper, F(1, 16) 0.091
+Probability>F 0.754             Probability>F 0.766
+                              Table A.7: Collinearity tests
+The table shows the results for collinearity tests for each of the regressions used in the difference tests.
+                          The results indicate no observable multicollinearity.
+
+               Variable VIF VIF, Square root Tolerance R-Squared
+
+ Gold return day -2 1.15 1.07 0.8699 0.1301
+ Gold return day -1 1.15 1.07 0.8701 0.1299
+ Gold return day 0 1.16 1.08 0.8636 0.1364
+ Gold return day 1 1.15 1.07 0.8695 0.1305
+ Value-weighted return 1.25 1.12 0.7971 0.2029
+ Difference in Gold return, day -2 1.15 1.07 0.8699 0.1301
+ Difference in Gold return, day -1 1.15 1.07 0.8702 0.1298
+ Difference in Gold return, day 0 1.16 1.08 0.8642 0.1358
+ Difference in Gold return, day 1 1.15 1.07 0.8694 0.1306
+ Difference in value-weighted return 1.25 1.12 0.7978 0.2022
+ Mean VIF 1.17
+
+ Silver return day -2 1.15 1.07 0.8661 0.1339
+ Silver return day -1 1.16 1.08 0.8617 0.1383
+ Silver return day 0 1.18 1.09 0.8439 0.1561
+ Silver return day 1 1.17 1.08 0.8514 0.1486
+ Value-weighted return 1.29 1.13 0.7766 0.2234
+ Difference in Silver return, day -2 1.16 1.07 0.8658 0.1342
+ Difference in Silver return, day -1 1.16 1.08 0.8610 0.1390
+ Difference in Silver return, day 0 1.19 1.09 0.8434 0.1566
+ Difference in Silver return, day 1 1.17 1.08 0.8530 0.1470
+ Difference in value-weighted return 1.28 1.13 0.7782 0.2218
+ Mean VIF 1.19
+
+ Aluminium return day -2 1.15 1.07 0.8693 0.1307
+ Aluminium return day -1 1.15 1.07 0.8676 0.1324
+ Aluminium return day 0 1.36 1.16 0.7375 0.2625
+ Aluminium return day -1 1.15 1.07 0.8687 0.1313
+ Value-weighted return 1.47 1.21 0.6809 0.3191
+ Difference in Aluminum return, day -2 1.15 1.07 0.8692 0.1308
+ Difference in Aluminum return, day -1 1.15 1.07 0.8685 0.1315
+ Difference in Aluminum return, day 0 1.33 1.15 0.7547 0.2453
+ Difference in Aluminum return, day 1 1.15 1.07 0.8685 0.1315
+ Difference in value-weighted return 1.44 1.20 0.6962 0.3038
+ Mean VIF 1.25
+
+ Copper return day -2 1.15 1.07 0.8685 0.1315
+ Copper return day -1 1.15 1.07 0.8663 0.1337
+ Copper return day 0 1.52 1.23 0.6588 0.3412
+ Copper return day 1 1.15 1.07 0.8660 0.1340
+ Value-weighted return 1.64 1.28 0.6083 0.3917
+ Difference in Copper return, day -2 1.15 1.07 0.8677 0.1323
+ Difference in Copper return, day -1 1.16 1.08 0.8653 0.1347
+ Difference in Copper return, day 0 1.46 1.21 0.6829 0.3171
+ Difference in Copper return, day 1 1.16 1.08 0.8649 0.1351
+ Difference in value-weighted return 1.59 1.26 0.6290 0.3710
+ Mean VIF 1.31
+                                    Table A.8: Table caption
+   This table shows the coefficients for daily stock returns regressed on commodity price changes for the observation
+period [-2;1] for firms that are sensitive to price changes in a particular commodity. Value-weighted return is used as a
+control variables for the firms sensitive to a particular commodity. We also include all these variables interacted with a
+ dummy variable which is 1 for the Scandinavian Stock Exchanges, thus giving us a value for the size of the difference
+        between markets, and the significance of the difference. We cluster on unique quarter and company.
+                                               (1)                                                             (2)
+
+                                        Daily stock returns                                               Daily stock returns
+                                                           ∗∗∗
+   Gold return, day -2 0.0677            Aluminium return, day -2 -0.00363
+                                                 (3.41)                                                               (-0.22)
+                                                          ∗∗∗                                                                        ∗∗∗
+   Gold return day -1 0.181            Aluminium return day -1 0.112
+                                                 (7.36)                                                               (5.88)
+                                                          ∗∗∗                                                                        ∗∗∗
+   Gold return day 0 0.311            Aluminium return day 0 0.238
+                                                 (4.66)                                                               (8.01)
+                                                          ∗∗∗                                                                        ∗∗∗
+   Value-weighted return 0.407             Value-weighted return 0.819
+                                                 (7.30)                                                               (8.39)
+                                                                                                                                      ∗∗∗
+   Difference in Gold return, day -2 0.0154           Difference in Aluminium return, day -2 0.0883
+                                                       (.)                                                                      (5.63)
+                                                           ∗∗∗
+   Difference in Gold return day -1 -0.0532            Difference in Aluminium return day -1 0.0241
+                                                 (-5.69)                                                               (1.41)
+   Difference in Gold return day 0 -0.0807           Difference in Aluminium return day 0 -0.000476
+                                                  (-1.36)                                                                (-0.01)
+                                                                                                                                       ∗
+   Difference in Gold return day 1 0.0200           Difference in Aluminium return day 1 -0.0259
+                                                 (0.88)                                                               (-2.20)
+   Difference in value-weighted return 0.0257           Difference in value-weighted return 0.0162
+                                                 (0.36)                                                               (0.10)
+                                                            ∗∗∗
+   Constant -0.00149           Constant -0.000443
+                                                  (-3.86)                                                                (-1.61)
+   Observations 55672           Observations 61093
+                                                           ∗∗∗
+   Silver return, day -2 0.0411            Copper return, day -2 -0.00106
+                                                 (3.72)                                                               (-0.10)
+                                                           ∗∗∗                                                                        ∗∗∗
+   Silver return day -1 0.0840            Copper return day -1 0.115
+                                                 (7.18)                                                               (5.49)
+                                                          ∗∗∗                                                                        ∗∗∗
+   Silver return day 0 0.177             Copper return day 0 0.291
+                                                 (7.85)                                                               (8.38)
+                                                          ∗∗∗                                                                        ∗∗∗
+   Value-weighted return 0.389             Value-weighted return 1.002
+                                                (7.06)                                                             (10.06)
+                                                                                                                                      ∗∗∗
+   Difference in Silver return, day -2 -0.00612          Difference in Copper return, day -2 0.0566
+                                                 (-0.28)                                                               (6.13)
+   Difference in Silver return day -1 -0.00408          Difference in Copper return day -1 -0.000675
+                                                  (-0.58)                                                                (-0.04)
+   Difference in Silver return day 0 -0.0254           Difference in Copper return day 0 -0.0963
+                                                  (-1.07)                                                                (-1.65)
+   Difference in Silver return day 1 0.0342           Difference in Copper return day 1 -0.0150
+                                                 (1.85)                                                               (-0.84)
+   Difference in value-weighted return 0.0244           Difference in value-weighted return -0.189
+                                                 (0.32)                                                               (-1.17)
+                                                            ∗∗∗
+   Constant -0.00133           Constant -0.000216
+                                                  (-3.64)                                                                (-0.90)
+   Observations 55672           Observations 48603
+
+   t statistics in parentheses                                             t statistics in parentheses
+   ∗         ∗∗         ∗∗∗                                      ∗         ∗∗         ∗∗∗
+     p < 0.05,   p < 0.01,    p < 0.001                                 p < 0.05,   p < 0.01,    p < 0.001

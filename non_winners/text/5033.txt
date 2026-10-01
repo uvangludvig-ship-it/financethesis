@@ -1,0 +1,1416 @@
+Stockholm School of Economics
+Department of Economics, Department of Finance
+659 Degree project in Economics
+Spring 2021
+
+ Hot Commodity? The Commodity Currency Hypothesis
+     and the Financialisation of Commodity Markets
+
+                  Hannes Ludvigsson (24377) and Erik Ekelund (24352)
+
+Abstract: Movements in the commodity markets can have profound effects on the global
+economy by affecting the cost of food, metal, and energy goods. As such, the prospect of
+predicting commodity price fluctuations, thereby allowing for better inflation control,
+production planning and even humanitarian aid, has long generated great interest. The
+Commodity Currency Hypothesis offers such a possibility, allowing researchers and
+practitioners to predict commodity prices by studying the movements of the so-called
+commodity currencies. These currencies are thought to move in close tandem with, but ahead
+of, certain commodities and sometimes even commodity indices, thereby allowing for
+improved predictions of those commodities. This study has, using more recent data than major
+studies in the field, provided some support in favour of the Commodity Currency Hypothesis.
+Moreover, we have also shown that the direction and significance of the commodity-currency
+relationship described is likely to be time-variant and provided some indications on why this
+might be the case. Furthermore, we discuss the possible implications of this for the practicality
+of the Currency Commodity Hypothesis. Our results are of great importance for policy makers
+and business practitioners.
+
+Keywords: Commodity Currency Hypothesis, Exchange Rates, Time Series Analysis,
+Granger-causality,
+
+JEL: C32, E31, E37
+
+Supervisors: Julius Andersson, Adrien d’Avernas
+Date submitted: 17 May 2021
+Date examined: 27 May 2021
+Discussants: Malcolm McGrath, Nils Wägmark
+Examiner: Johanna Wallenius
+
+                                    1
+Acknowledgements
+
+Below is a non-exhaustive list of the people who collectively helped us finish this essay in
+time and in style. Thank you all.
+
+Johanna Wallenius
+Julius Andersson
+Adrien d’Avernas
+Chen, Rogoff, & Rossi
+Binnur Balkan
+Ritvik Kharkar
+Malcolm McGrath & Noak Prahl
+Clara Magnusson & Hanna Larsson
+Axel Hellbom Almström
+Louise Dahlström
+Ethan O’Leary
+Casimir Messner
+
+For providing the data we thank the following organisations:
+
+IMF
+Bank of Canada
+Reserve Bank of Australia
+The Australia and New Zealand Banking Group Limited (anonymous employee)
+
+We also thank Rouse AB for offering up office space for us in a dire time.
+
+                                                                                            i
+Table of Contents
+
+1. Introduction 1
+2. Theoretical background 4
+  2.1 Commodity Currencies 4
+  2.2 The Present-Value Approach to Exchange Rate Determination 5
+  2.3 The Commodity Currency Hypothesis 5
+  2.4 Commodity and Foreign Exchange Markets 7
+  2.5 Our Contribution 8
+3. Data Description and Selection 9
+  3.1 Exchange Rates 9
+  3.2 Commodity Price Indices 9
+  3.3 Individual Commodity Price Data 10
+  3.4 Data Considerations 10
+     3.4.1 Choice of Frequency 11
+     3.4.2 Spot vs. Futures 11
+4. Method 13
+  4.1 Preparatory Data Analysis 13
+  4.2 Granger-causality 14
+  4.3 VAR and Granger-causality 15
+  4.4 Rolling Window Regression and Volatility Analysis 16
+5. Results 17
+  5.1 Granger-causality 17
+  5.2 Rolling Window Regression 20
+6. Discussion 24
+  6.1 The Commodity Currency Hypothesis and Granger-causality 24
+  6.2 Time Variance in the Commodity Currency Connection 25
+    6.2.1 Norway Case Study 27
+  6.3 Comments on The Methodology 30
+  6.4 Practical Relevance and Further Research 31
+7. Conclusion 33
+8. References 35
+APPENDIX A: Commodity Index Providers 38
+APPENDIX B: Commodities Exported 38
+APPENDIX C: Granger-causality Analysis, Results 40
+
+                                                                                            ii
+1. Introduction
+
+A commodity is generally defined as a, in part or completely, fungible economic good (e.g.
+wheat, gold, crude oil). The first marketplaces for commodities are thought to have originated
+around 4500-4000 BC in Sumer, today’s Iraq, and developed as a way for producers and buyers
+to hedge against the various risks they faced. Since then, commodity markets have grown
+
+                                                                         1
+immensely and various derivative instruments have been introduced.  After the dot com crash
+in the early 2000s, many investors turned to commodities as an opportunity to hedge their risks
+through diversification, causing, among other things, the market for commodity indices-related
+instruments to grow substantially; upwards of 1300 percent between 2003 and 2008 (Nissanke,
+2012; Tang and Xiong, 2012).
+
+However, commodities are not only hedging assets. Commodities are also the basic input goods
+for much economic activity, and, as such, price movements in the commodity markets can have
+large effects on other markets. Movements in the commodity markets also affect the general
+cost levels in society and thereby contribute to inflationary or deflationary pressures, which
+was evident during the time leading up to the financial crisis of the late 2000s (Bernanke, 2008).
+Furthermore, energy and food security are issues of national security, and movements in these
+markets can have profound economic and political consequences.
+
+Because of the above-mentioned factors, the possibility of better predicting the movements
+
+                                                                                               2
+in commodity markets has been studied at length, although with few definite results. An
+original and promising approach is to look at the exchange rates for the so-called commodity
+currencies. Commodity currencies are generally defined as a group of currencies whose values
+are largely determined by the price(s) of one or a group of commodity export(s). As commodity
+export prices are fundamental exchange rate determinants for commodity currencies, these
+currencies should, prima facie, react to recent movements in the corresponding commodity
+
+1
+ Financial derivatives are securities that derive their value from an underlying asset or benchmark, e.g. futures,
+swaps, indices.
+2
+ One way of deriving forecasts for commodity prices has been to look at the commodity futures markets, a
+theoretically sound approach however not successful (Bernanke, 2008). Others have focused on developing
+commodity pricing models taking into account microeconomic factors, such as storage costs, which, while also
+theoretically plausible, have failed to effectively predict movements in commodity markets (Frankel and Rose,
+2010).
+
+                                    1
+prices. However, it appears as if it has been possible for currency traders to anticipate
+commodity price changes in future periods and react ahead of time, thereby causing exchange
+rates to lead commodity prices.
+
+An influential paper by Chen, Rogoff and Rossi (2010) (henceforth Chen et al.) showed that
+the movements of commodity currencies can in fact be used to forecast the movement of
+specific commodity prices and even broader commodity indices under certain conditions, a
+relationship often referred to as the Commodity Currency Hypothesis (CCH). They show the
+effect to be surprisingly robust, a result also found in numerous other studies (e.g. Frank and
+Garcia, 2010; Kato, 2012).
+
+However, these papers may possibly present too narrow a view of a complex relationship
+between currencies and commodities. Many papers have since provided nuance and contention.
+Zhang et al. (2016), inter alia, showed that commodity price movements generally lead and
+
+                                                                  3
+exchange rates follow, as would initially have been expected.  Others yet, for example Chan,
+Tse and Williams (2011), have argued that the movements of exchange rates and commodity
+prices are contemporaneous. While these results appear contradictory, it should be noted that
+there are differences between the studies, such as the frequency of the data used, the choice of
+commodities, and the time period studied. Certain studies (for example Kato, 2012) also argue
+that the recent financialisation of the commodity markets might have affected the relationship,
+introducing additional complexity. These discrepancies in time, commodities, and frequency,
+etc. make the studies hard to compare, but, as we shall see later, suggest ways of reconciling
+their results.
+
+Our study aims to further investigate the nature of the relation between commodity
+currencies and commodity prices. Our research question is as follows: Is the Commodity
+Currency Hypothesis still relevant? And if so: How can we explain the contradictory results of
+earlier studies?
+
+Our main purpose is to test the commodity-currency-relationship anew, using recent data on
+exchange rate and export commodity prices for Australia, Canada, Chile, New Zealand,
+
+3
+ Zhang et al. also find, in accordance with Chen et al., that currencies can lead commodities, however they
+argue that this effect is lesser in magnitude and therefore less relevant.
+
+                                    2
+Norway and South Africa, from the approximate time of their introducing floating exchange
+rates up to the present. We will employ tests for Granger-causality to answer the main research
+question, and a Rolling Window Regression methodology, to our knowledge never before used
+in the field, to further the discussion and answer the second part of the research question. This
+way, we will be able confirm or reject the existence of a currency-commodity-relationship and,
+subsequently, to discuss how the contradicting results obtained in previous studies can perhaps
+be reconciled.
+
+The rest of the study will be structured as follows: First, we will present the subject matter of
+the study, as well as discuss the current state of research. Then we will describe our data set
+and the methods we will use to perform our tests. Lastly, we will present our results and briefly
+discuss them in the context of our research question.
+
+                                    3
+2. Theoretical background
+
+In the following section, we will present and briefly discuss the theoretical underpinnings of
+our study as well as our contribution to the literature. We will start by presenting the commodity
+currency concept. We then introduce the Present-value approach to exchange rate
+determination (the theoretical fundament of the study) and the Commodity Currency
+Hypothesis. Lastly, we discuss the commodity spot and future markets more generally.
+
+2.1 Commodity Currencies
+
+Commodity currencies are defined as currencies whose values are to a large extent determined
+by the price of one or a few commodities. This effect stems from the fact that the countries that
+
+                                                                                         4
+issue them are heavily dependent on the export of the associated commodities,  and that
+exchange rates generally reflect terms of trade determined by the prices of exported
+commodities relative to all other goods in the world market (Chen and Rogoff, 2003). Free
+floating commodity currencies are especially useful for research, as there are relatively fewer
+endogenous shocks affecting their value. While domestic policy may have some effect on
+exchange rate determination, its effect is generally negligible for countries with floating
+exchange rates (Chen et al., 2010), and their fluctuations can therefore overwhelmingly be
+attributed to some exogenous shock.
+
+The canonical example of a commodity currency is that of the Chilean peso. Chile is a small
+open economy with a (partially) floating exchange rate since the late 1970’s. Chile historically
+exports upwards of a third of the world's copper (Mardones and Del Rio, 2019), but is generally
+a price taker (as shown in exogeneity tests by Chen et al., 2010) meaning that it cannot by itself
+influence the value of its exports or imports, which reduces the issue of endogeneity. As a high
+price in copper yields high dollar-profits for Chilean companies, the demand for the peso
+depends largely on the supply of, and demand for, this single good.
+
+4
+  In theory, this also extends to import dependent countries. This is, however, a more complicated situation as
+one would have to take into consideration the fact that many countries refine and re-export goods. For more
+information, we refer to Krönmark and Storckenfeldt, 2009.
+
+                                    4
+2.2 The Present-Value Approach to Exchange Rate Determination
+
+As a (floating) exchange rate is in essence the relative price of two currencies, its value should
+be determined by the relative supply and demand of the two currencies (Frankel and Rose,
+1995). Therefore, macroeconomic factors which influence supply and demand, such as money
+supply, inflation rates and economic output, are all believed to affect exchange rates and should
+consequently also be helpful in predicting them.
+
+Despite this, no theoretical model’s testable predictions on exchange rate determination have
+
+                                                                           5
+held up empirically, at least not out of sample (Engel and West, 2007). The approach taken in
+this study, encompassing a multitude of theories of exchange rate determination, is a present-
+value approach. It describes currencies as assets whose values depend on the discounted future
+values of their fundamentals. We find a generic expression for this theory grouping (eq. 1) in
+Chen et al. (2010), where 𝑠𝑡 is the nominal exchange rate, 𝐸𝑡 ( 𝑓𝑡+𝑗 | 𝐼𝑡 ) is the expected value
+at time 𝑡 of its fundamentals 𝑓 at time 𝑡 + 𝑗 given information 𝐼𝑡, and 𝜓, 𝛾 being parameters
+given by the specific model (discount factors).
+
+           ∞     𝑗
+𝑠𝑡 = 𝛾 ∑ 𝑗=0 𝜓  𝐸𝑡 ( 𝑓𝑡+𝑗 | 𝐼𝑡 ) (1)
+
+In this model, the nominal exchange rate therefore depends on the expected value of its
+fundamentals (i.e. demand and supply). It is this property that will, in theory, allow exchange
+rates to depend on the expected future commodity prices (and therefore predict the observed
+commodity prices).
+
+2.3 The Commodity Currency Hypothesis
+
+Assuming that the currencies are asset-like and therefore forward-looking, they should be
+useful in predicting movements in the prices of their fundamentals. Commodity currencies
+would then be able to predict commodity prices. In reality, most researchers acknowledge that
+
+5
+  Meese and Rogoff (1983) found that a random walk model would have been just as effective in predicting
+exchange rate movements as contemporary structural models. As shown in Engel and West (2007), this should
+not come as a surprise given that exchange rate fluctuations predicted by traditional models can in fact be
+modelled as random walks under certain circumstances.
+
+                                    5
+the existence of a relationship between commodity currencies and commodity prices is
+probable, but there is widespread disagreement on the direction of that relationship, its
+robustness, how it is to be measured (for example in real or nominal prices, in-sample vs. out-
+of-sample forecasting) and its practical importance.
+
+While Chen et al. (2010) argued that there are theoretical reasons to believe that the exchange
+rate moves first, others theorise the opposite case (For example Chen and Rogoff, 2003). The
+empirical evidence is, as mentioned, unclear. Clements and Fry (2008), Chen et al. (2010) and
+Frank and Garcia (2010) all found that the effect was stronger in the direction from exchange
+
+                             6
+rates to commodity prices,  while Amano and Van Norden (1998), Chen and Rogoff (2003)
+and Zhang et al. (2016) found evidence for the reverse relationship. Others yet, e.g. Chan, Tse
+and Williams (2011), Groen and Pesenti (2011) and Bork et al. (2014), find that the relationship
+is “essentially contemporaneous”, and that any predictive capability is temporary. Chen et al.
+(2010) noted that the predictive power of some commodity currencies might be related to the
+fact that commodity spot prices and futures markets have been less developed and more
+
+                                                                                                     7  8
+regulated historically (making them less efficient than foreign exchange markets ), . This
+difference in efficiency, allowing foreign exchange traders to more readily incorporate new
+information into their trading strategies, would thus give rise to the predictive capability of
+commodity currencies.
+
+The fact that the above-mentioned market characteristics (i.e. liquidity, regulatory level) are
+not static should afford the relationship a time-varying quality. It also tentatively suggests that,
+given no corresponding change in the currency market, an increased financialisation, i.e.
+market development, would increase market efficiency and subsequently reduce the predictive
+power of commodity currencies. Kato (2012), however, contrastingly finds the predictive
+power of exchange rates to have been mainly strengthened due to the commodity market
+financialisation, a result of decreasing market inefficiency (mainly in the shape of increasing
+market co-movement). The nature of the commodity-currency relationship thus remains a point
+of contention in the current literature.
+
+6
+  Ferraro et al. (2015) argue that the relationship exists in both directions, but is more short-lived in the case of
+commodities to exchange rates than vice versa.
+7
+  Foreign Exchange Markets (Forex or FX) are the markets where currencies are traded, and ergo where
+exchange rates are set.
+8
+  Especially non-precious metal and non-energy markets (Tang and Xiong, 2012).
+
+                                    6
+2.4 Commodity and Foreign Exchange Markets
+
+As indicated by previous literature, we expect the direction and strength of the relationship to
+be dependent on the relative efficiency of the two markets. This section addresses this
+
+                                                                                             9
+mechanism and briefly discusses some factors that could influence market efficiency.  Since
+relative is the key word, a discussion on changes assumed to improve both markets to a similar
+degree (e.g. the introduction of computerised trading reducing trading time-lag) will be
+omitted.
+
+Exchange rates are generally considered to be hard to predict (see Rossi, 2013, for an
+overview), strongly indicative of market efficiency. While there is some evidence that the
+exchange rates markets vary in efficiency (Yamani, 2018), previous literature on the CCH has
+implicitly assumed a stable efficiency-level and we will follow their example. This is
+important, as it lets us assume that variability in commodity market efficiency is responsible
+for the majority of variation in relative efficiency of the two markets.
+
+There is more to be said about efficiency in the commodity markets. The financialisation
+of commodity markets, as described by Tang and Xiong (2012), is a fairly recent occurrence.
+As financialisation is expected to increase market efficiency (Chordia et al, 2008), it is a
+reasonable proposition that commodity markets have become more efficient since most major
+studies on the topic was carried out, in turn leading to a reduction in predictability.
+
+On the other hand, as was noted by Chinn and Coibion (2014) and Büyükșahin and Robe
+(2014), commodity markets may have over time become less efficient due to their increased
+integration, and therefore co-movement, with the global markets. This, they hypothesise, has
+caused commodity prices to diverge from their fundamental value as inputs and consumable
+goods. These inefficiencies might also have been exacerbated by the introduction of stabilising
+legislation after the 2008 financial crisis, most notably the Dodd-Frank act and the Basel III-
+standards. Among other things, these types of legislation increased the so-called “shadow
+
+9
+  The fact that market efficiency is time-variant is well known, as proven by for example Ito and Sugiyama
+(2009).
+
+                                    7
+funding cost”, making it more costly to exploit arbitrage opportunities, allowing market
+
+                                                                              10
+inefficiencies to linger longer (Fleckenstein and Longstaff, 2018).
+
+In summary, efficiency at any one point in time may depend on the strength of the, among
+others, above mentioned factors: the level of market financialisation and burden of legislation.
+In combination with relatively static foreign exchange markets, we hypothesise that these
+factors might have some effect on the strength and direction of the commodity-currency-
+connection, giving rise to time-variance in the relationship and influencing whether exchange
+rates or commodity prices are found to move first by papers studying different time periods,
+and therefore their results.
+
+2.5 Our Contribution
+
+This study contributes to the literature in the following ways: firstly, we include several more
+years of data than studies in the field (few studies employ data after 2010 while we have data
+up until March 2021), enabling us to further investigate the Commodity Currency Hypothesis.
+Secondly, it further investigates time-variance of the relationship, a possible contributing factor
+to the conflicting results of earlier research. Thirdly and related, while previous papers have
+generally noted and been concerned with parameter instabilities, they have not typically
+considered how these relate to the relationship between exchange rates and commodities
+arising or breaking down. By answering our research question: “Is the Commodity Currency
+Hypothesis still relevant? And if so: How can we explain the contradictory results of earlier
+studies?”, this study will make an important contribution to the literature.
+
+10
+  This kind of legislation introduces market inefficiencies which are costly short term but might lead to a more
+stable financial system long term. For more information on specifically Basel III, we refer to Slovik and
+Cournède (2011).
+
+                                    8
+3. Data Description and Selection
+
+                                                                11
+In our tests we employ monthly data on exchange rates,   commodity price indices, and
+individual commodity prices to test the relationship between commodity currencies and
+commodity prices. The study focuses on six different commodity currencies: The Australian
+Dollar (AUD), the Canadian Dollar (CAD), the Chilean Peso (CLP), the New Zealand Dollar
+(NZD), the Norwegian Krone (NOK) and the South African Rand (ZAR). The six countries
+
+                                                               12
+were chosen due to their reliance on commodity exports,   their currencies’ relatively long
+
+                               13
+history of being free floating,  and based on the countries being price takers for their respective
+commodities. These are also all the countries studied either in Chen et al. (2010) or Zhang et
+al. (2016) or both, allowing us to compare our results to the findings of these seminal papers.
+
+3.1 Exchange Rates
+
+Data on monthly exchange rates were gathered from the International Financial Database
+provided by the IMF. All exchange rates used are nominal, in the format of local currency to
+
+       14
+USD.
+
+3.2 Commodity Price Indices
+
+Data on commodity price indices from Canada, Australia and New Zealand respectively are
+published on a monthly basis by the Bank of Canada (starting 1973M1), the Reserve Bank of
+Australia (starting 1983M1), and The Australia and New Zealand Banking Group Limited
+(ANZ) (starting 1986M1) and were collected from their respective websites (see Appendix A).
+These indices are constructed so as to provide a composite of the value of each country’s
+commodity exports, meaning that they are all different in terms of goods included and the
+
+11
+   Additionally, we use quarterly data for some tests, but in such cases, monthly data has been transformed into
+quarterly end of period and period average, for exchange rates and commodity prices, respectively.
+12
+  Appendix B contains a description of which commodities are used for each country.
+13
+   Not all floats are made equal. In the case of Chile, theirs was until 1999 a so-called “Crawling Float” where
+the currency was allowed to float within a certain band (Morandé and Tapia, 2002). We do not expect this to
+affect our conclusions to any significant extent.
+14
+   It has been a concern in the literature that the special status of the U.S. and the U.S. dollar might induce
+endogeneity, although this has been disproved in several studies using Yen or Pound Sterling.
+
+                                    9
+individual weighting of each good. As an example, wheat constitutes 2.4% of the Australian
+commodity index. In the case of South Africa, we have constructed the index ourselves,
+
+                                                                                                        15
+following the example of Chen et al. (2010) and using individual commodity price data.
+
+The indices are constructed in similar ways across the countries, with some important
+distinctions. The Canada index (“BCPI”) is a chain Fisher price index, currently consisting of
+a mix of 26 commodity spot and futures prices. The Australia index (“ICP”) is a Laspeyres
+index, consisting of 21 major commodities (to our knowledge, all spot rates). The New Zealand
+index comprises 17 commodities gathered from different sources and is a fixed-weights
+(Updated yearly, that is, in the index published in any one year, all years in the index will
+use the same weights?) Laspeyres index (Employee., ANZ). The indices gathered have been
+modified over time, and are therefore different from the ones used by, among others, Chen et
+
+   16
+al.   We anticipate that this will have a slight impact on the results of our tests, but it should
+not be prohibitively large.
+
+3.3 Individual Commodity Price Data
+
+Via the IMF we have collected and compiled for use, in a way analogous to the exchange rate
+
+                                                17
+data, data on individual commodity prices.   The data gathered has to the greatest extent
+possible consisted of spot prices, so as to provide easily interpretable results.
+
+3.4 Data Considerations
+
+The Commodity Currency Hypothesis literature is divided on issues of data selection and
+aggregation. This issue merits a brief discussion.
+
+15
+  The South African Index consists of spot prices for coal (22%), gold (48%) and platinum (30%). Information
+on the exact specification of the goods (e.g. type of coal) is available upon request.
+16
+  As an example, the index published by the Bank of Canada was revised in 2013, incorporating new oil
+benchmark prices so as to better reflect the prices faced by exporters. The change was then applied to all
+previous time periods of the index, changing the time series in its entirety.
+17
+  The individual commodities used are brent crude oil for Norway, copper for Chile, and gold, coal, and
+platinum for South Africa.
+
+                                    10
+3.4.1 Choice of Frequency
+
+The CCH literature is divided on optimal data frequency and aggregation type. Some studies
+suggest daily data are superior as a higher resolution might reveal otherwise undetectable
+effects (Zhang et al., 2016). Further, compiling indices of highly diverse commodities risks
+attenuating the relationship between the currency and any given good by e.g. making otherwise
+more discreet and observable movements into more smoothened-out average movements
+which we lack the statistical power to detect. This would, for example, be the case if the effects
+lasted on average less than a month. Others argue that the power of the commodity indices,
+only provided on a monthly basis, is high enough to merit the use of only monthly and quarterly
+data (Bork et al., 2014). Indices offer a more complete picture of a country's exports thus
+making a better proxy for the terms of trade of the country as a whole. However, the use of
+indices is a faux pas, argue Bork et al., as averaging may induce spurious correlation, increasing
+the likelihood of rejecting the null hypothesis. In essence, both end of period data and averaged
+
+                        18
+data have their merits.   Instead it is the data availability that, for most studies, is the deciding
+factor.
+
+3.4.2 Spot vs. Futures
+
+There is also a lack of consensus in the use of spot or futures data when performing tests of the
+CCH. As mentioned in the introduction, both real goods and derivative instruments are traded
+on commodity markets. As futures are explicitly forward-looking they are expected to track
+spot prices closely and thus they should be useful in testing the CCH. In many cases, the
+derivative markets are much larger and more liquid than spot markets, making them an
+attractive data source.
+
+However, Chan et al. (2011) and Schwarz and Szakmary (1994) argue that there are differences
+in the patterns of the two markets making them less optimal for a study of the CCH. The latter
+paper claims futures are more efficient in incorporating pricing-relevant information and
+
+18
+   There is, however, reason to believe that the choice of frequency makes the relative importance of the choice
+of commodity fundamental higher or lower, see discussion in Ferraro et al. (2015).
+
+                                    11
+                                     19
+therefore “lead” the spot markets.   Nonetheless, as shown by Chinn and Coibion (2014),
+“commodities” are in terms of behavior not a uniform group of goods, nor are their market
+derivatives (e.g. futures) - there is a substantial difference between how well futures prices
+track future spot price changes between commodities. E.g., they find a lack of predictive power
+
+                   20
+in metal futures,   and similar information content to spot and future prices for energy
+commodities. To conclude, not all future-spot relationships are the same, and they likely vary
+
+           21
+over time.  We see no reason to believe that the fact that our indices are partially made up of
+futures should introduce systematic errors in a way that would render incorrect a test of the
+CCH. In fact, most studies on the CCH employ a combination of futures and spot, so as to
+maximise data availability.
+
+19
+  Bopp and Lady (1991) argued that either one can lead the other depending on the market conditions. Neither
+time series could be shown to consistently contain more information about the other.
+20
+  Hypothesised as related to the use of these instruments as hedging devices. Not only can this make futures
+prices deviate from expected future prices on the underlying, but can also create patterns whereby specific time-
+horizons (e.g. 3-6 month futures) are disproportionately bad. The use of metals as hedging-vehicles par
+excellence can be attributed to ease of storage and durability (Chinn and Coibion, 2014).
+21
+   Chinn and Coibion (2014) note that the predictive power of commodity futures in general has deteriorated
+markedly since the early 2000s, although to a differing extent for different commodities.
+
+                                    12
+4. Method
+
+                                                                                    22
+In this section we describe the statistical methods used in our research.
+
+4.1 Preparatory Data Analysis
+
+If the mean and variance of a time series are constant, the process which generates it is defined
+as stationary. Many tests and models presuppose stationarity in the time series studied, and
+testing if a time series is in fact stationary is therefore necessary before running such tests.
+Firstly, we can conclude that our data is not trend stationary, as all our series exhibit some kind
+of trend. This fact requires no other explanation than that of inflation in the case of
+commodities. For exchange rates, possible explanations include having trends different from
+those of the US in terms of economic growth or monetary supply.
+
+For the above-mentioned reasons, we begin by making our time series trend stationary, i.e. we
+remove the trend (𝜇) by transforming the time series using the first difference (all tests beyond
+this are carried out using a dataset consisting of log first differences of the original dataset):
+
+𝑇𝑖𝑚𝑒 𝑠𝑒𝑟𝑖𝑒𝑠 𝑔𝑒𝑛𝑒𝑟𝑖𝑐 𝑒𝑞𝑢𝑎𝑡𝑖𝑜𝑛 (𝑎𝑠𝑠𝑢𝑚𝑖𝑛𝑔 𝐴𝑅(1) 𝑝𝑟𝑜𝑐𝑒𝑠𝑠): 𝑦𝑡 = 𝜇 + ɸ𝑦𝑡−1 + 𝜀𝑡 (2)
+𝐹𝑖𝑟𝑠𝑡 𝑑𝑖𝑓𝑓𝑒𝑟𝑒𝑛𝑐𝑒 (𝑡𝑟𝑒𝑛𝑑 𝑠𝑡𝑎𝑡𝑖𝑜𝑛𝑎𝑟𝑦): 𝛥𝑦 = 𝑦𝑡 − 𝑦𝑡−1 = ɸ𝑦𝑡−1 − ɸ𝑦𝑡−2 + 𝜀𝑡 − 𝜀𝑡−1 (3)
+
+We then employ an Augmented Dickey-Fuller (ADF) test. The ADF test determines whether
+a time series has a unit root, a specific characteristic which renders the time series nonstationary
+
+                                         23
+(even in the case of trend stationarity).  We conclude that we can reject the null hypothesis of
+a unit root in our differentiated data, allowing us to proceed with our tests. An ocular inspection
+reveals variations in volatility, leading us to anticipate remaining parameter instabilities (for
+example changes in regression coefficients over time) in the data and therefore the presence of
+
+22
+  We have primarily used STATA as a tool (code available upon request).
+23
+   The Augmented Dickey-Fuller test assumes as the null hypothesis that the time series has a unit root, and the
+alternative hypothesis that it does not.
+
+                                    13
+                  24
+structural breaks.   To identify the structural breaks, we perform a Supremum Wald test. As
+noted by Chen et al. (2010), the standard Granger-causality test is underpowered in the presence
+of structural breaks. We address this primarily by subdividing the time series and performing
+separate tests on each period to reduce the negative effects of structural breaks on the power of
+our tests.
+
+In this paper, we will only control for one structural break, namely the 2008 financial crisis.
+This is partly due to the fact that there is no exact definition of a structural break (there might
+be any number of structural breaks in a time series), and also because this allows us to better
+compare our study to that of Chen et al. (2010), which did not employ data after 2008.
+
+4.2 Granger-causality
+
+We employ tests for Granger-causality as a tool to investigate whether exchange rates can
+predict commodity price movements or not. In essence, a Granger-causality test determines
+whether or not a time series X contains any information useful in forecasting a time series Y
+beyond the information already present in past values of time series Y. Put simply, if a
+prediction of time series Y using its past values can be improved by adding lagged values of
+time series X, then time series X is said to “Granger-cause” time series Y, see Figure 1 below.
+The test statistic reported corresponds to the likelihood that the additional variable has a non-
+zero effect on the precision of the prediction given the observed data but says nothing about
+the magnitudes or sign of coefficients.
+
+24
+   A structural break is present if the sum of squared residuals is significantly improved by allowing for changes
+in the regression constant and slope of the coefficients at some known or unknown point in the data. One
+example of a structural break could be a change in e.g. volatility of a series at a specific point in time.
+
+                                    14
+                         Figure 1: A Visualisation of Granger-causality
+
+Notes: Time series X contains information about time series Y which is
+not present in Y itself, and can therefore be employed to better forecast movements in Y. Source:
+Wikimedia Commons.
+
+Rejecting the null of no Granger-causality is different from uncovering “real” causality, but
+can be an indication of an underlying causal mechanism.
+
+4.3 VAR and Granger-causality
+
+To be able to perform a Granger-causality analysis, we must first model our time series in the
+form of a Vector Auto-Regression-model (VAR). This is a way to describe a time series as a
+function of its own previous values and of the previous values of a one or more other time
+series. In this case, we modelled a commodity price time series (CPI) as a linear combination
+of its own previous values, 𝑎𝑡−𝑛, and the previous values of an exchange rate time series, 𝑏𝑡−𝑛
+(given 𝑛 > 0). 𝑎𝑡 and 𝑏𝑡 are then expressed as a vector 𝐹𝑡 which depends on the value of the
+coefficient matrix C, the past value of the vector itself and the error term.
+
+               𝐶𝑃𝐼 = 𝑎𝑡 = 𝑐11 ∗ 𝑎𝑡−1 + 𝑐12 ∗ 𝑏𝑡−1 + 𝜖𝑎1𝑡 (4)
+                𝐸𝑥𝑐ℎ𝑎𝑛𝑔𝑒 𝑟𝑎𝑡𝑒 = 𝑏𝑡 = 𝑐21 ∗ 𝑎𝑡−1 + 𝑐22 ∗ 𝑏𝑡−1 + 𝜖𝑏1𝑡 (5)
+               𝐹𝑡 = 𝐶 ∗ 𝐹𝑡−1 + 𝜖𝑡 (6)
+
+                                    15
+The number of significant lags (past values of the time series) was determined through a pre-
+estimation procedure using the Akaike and Bayesian information criteria (AIC/BIC-test). On
+monthly data, the largest number of lags recommended for any currency-commodity pair was
+six (6) lags, which was subsequently used for all pairs for consistency and comparability. To
+replicate Chen et al. (2010) as closely as possible, we also performed all tests using only one
+(1) lag.
+
+4.4 Rolling Window Regression and Volatility Analysis
+
+Having described our main tests, we also performed a Rolling Window Regression. We regress
+the commodity price change on a restricted and an unrestricted set of variables. Included in the
+restricted model is the first lag of the commodity index itself, to account for autocorrelation.
+The unrestricted model adds the last six lags (6) (as this was the number determined by the
+AIC/BIC-test described above) of the exchange rate series corresponding to the commodity
+series. These regressions are performed in a rolling window framework, allowing us to capture
+changes to the relationship over time. We then calculate an F-statistic to test the joint
+significance of these added lags, determining if the sum of squared residuals is significantly
+improved in the unrestricted regression compared to the restricted one for each window. This
+indicates whether past incorporating exchange rate information is useful in predicting the
+commodity price. The joint significance of the exchange rate lags is then plotted over time
+along with its 5% significance level critical value. This illustrates the, if any, parts of the sample
+where there is evidence for the hypothesis that the exchange rate moves ahead of the
+commodity price, allowing us to analyse whether or not the relationship might in fact be time
+variant. The test is also performed with the regression specification “reversed”, allowing us to
+determine whether there are periods in which exchange rate movements can be predicted by
+looking at past commodity price movements.
+
+The size of the window used is 96 months (8 years), which is an arbitrarily chosen number.
+However, we believe that it is sufficiently large to afford the test sufficient statistical power
+and reduce the effect of any outliers while still allowing for a reasonable number of regression
+windows. After the Rolling Window Regression, we employ a similar rolling methodology to
+plot 8-year average volatility over time in our commodity time series.
+
+                                    16
+5. Results
+
+In summary, our research confirms the existence of an asymmetric Granger-causal relationship
+running from exchange rates to commodity currencies.
+
+When examining the presence of Granger-causality running from exchange rates to commodity
+prices at quarterly data, all countries but Australia show significance at the five percent level
+over the entire time period, and when looking at monthly data, all but New Zealand do. The
+reverse relationship, when examined on monthly level, is significant only for Canada and New
+Zealand. The results for the two subperiods are equally variable, although exhibit a strong trend
+in favour of the CCH.
+
+Further, our results from the Rolling Window Regression (Graphs I-XII) show a currency-
+commodity-relationship that is not only clearly time-variant, but also one where exchange rates
+are generally better predictors of commodity prices than vice versa. Lastly, the results from our
+commodity market volatility analysis paint a picture of a market with increasing volatility,
+indicating a more efficient market. This result is not entirely conformant with our Rolling
+Window Regression, nor with the Granger-causality tests, which indicate a less efficient market
+and a higher degree of predictability.
+
+Below we present some of our results more in depth. We begin with our Granger-causality
+analysis, segmented by data frequency. We then present our results from our Rolling Window
+Regression. Lastly, we present some results on the volatility of the commodity prices and
+indices.
+
+5.1 Granger-causality
+
+Using a Granger-causality test and two different lag configurations, we show that lagged values
+of the exchange rates do indeed predict current values for commodity prices and export indices.
+The results for the Granger-causality tests (direction exchange rates to indices/commodity
+prices) are summarised for three different time periods and using quarterly and monthly data
+in Tables I and II.
+
+                                    17
+For ease of presentation, all results significant at the 10 percent-level or lower are in bold. The
+results for the opposite direction using quarterly data (indices/commodity prices to exchange
+rates) are not significant for any time period, and are available in Appendix C. The results are
+qualitatively similar using six (6) lags instead of one. These results are displayed in Appendix
+C.
+
+                   TABLE I - Granger-causality test using quarterly data (1 lag)
+                            Exchange Rate ￫ Index
+
+           AUS CAN CHI NZ NOR SAR
+
+ -2008Q1 0.03** 0.369 0.01*** 0.983 0.737 0.263
+
+ 2008Q1-     0.167 0.011** 0.000*** 0.002*** 0.000*** 0.003***
+ 20q4
+
+ Entire        0.547 0.008*** 0.000*** 0.009*** 0.000*** 0.003***
+ period
+
+Notes: The table reports the p-values for testing the null of no Granger-causality from exchange rates
+to commodity indices, using a standard Granger-causality test (STATA: varGranger) using one lag.
+*** = significant at the 1% level, ** = significant at the 5% level, and * = significant at the 10% level.
+Tests performed using data from IMF and other sources, see Data Description and Selection.
+
+                                    18
+                   TABLE II - Granger-causality test using monthly data (1 lag)
+                            Exchange Rate ￫ Index
+
+           AUS CAN CHI NZ NOR SAR
+
+ -2007M12 0.015** 0.071* 0.392 0.556 0.074* 0.005***
+
+ 2008M2-     0.000*** 0.000*** 0.003*** 0.272 0.000*** 0.000***
+ 21M2
+
+ Entire       0.000*** 0.000*** 0.000*** 0.199 0.000*** 0.004***
+ period
+
+Notes: The table reports the p-values for testing the null of no Granger-causality from exchange rates
+to commodity indices. Tests performed using data from IMF and other sources, see Data Description
+and Selection.
+
+Testing for the reverse relationship, we find some evidence for a transmission channel from
+commodity prices to exchange rates (Table III), supporting results obtained by, e.g., Zhang et
+al. (2014) and Chen and Rogoff (2003) who argue that this is the relationship to be expected.
+However, this effect is only present in a few commodity-currency pairs and time periods,
+indicating that this relationship, while possibly present, is less robust than the link from
+currencies to commodity prices, in line with the results of Chen et al. (2010).
+
+                                                                                             25
+Using six (6) lags, this effect is also observed before 2008 in the case of New Zealand.  This
+indicates that the New Zealand commodity index has a longer history of predictive capability
+on the New Zealand dollar.
+
+25
+   Results are available upon request.
+
+                                    19
+                  TABLE III - Granger-causality test using monthly data (1 lag)
+                            Index ￫ Exchange Rate
+
+           AUS CAN CHI NZ NOR SAR
+
+ -2007M12 0.836 0.227 0.527 0.264 0.553 0.657
+
+ 2008M2-     0.317 0.001*** 0.108 0.037** 0.168 0.327
+ 21M2
+
+ Entire        0.252 0.009*** 0.122 0.002*** 0.149 0.334
+ period
+
+Notes: The table reports the p-values for testing the null of no Granger-causality from commodity
+indices to exchange rates, using monthly data and one lag. Tests performed using data from IMF and
+other sources, see Data Description and Selection.
+
+5.2 Rolling Window Regression
+
+Below you find Graphs I through VI, showing the results from our Rolling Window
+Regressions. Every point on the blue line represents the joint significance of
+adding the six (6) most recent lags of the exchange rate (using monthly data) to a VAR-model
+for the past (8) years. Thus, a single high value of the F-statistic does not indicate significance
+at that point in the graph, but for the eight (8) years of which the point in the graph is the last
+period.
+
+The below graphs should be interpreted against the 5% significance level (red line), given
+which we would expect 5% of each line to rise above the significance threshold based on mere
+happenstance. In summary, they suggest that exchange rate information can be used to forecast
+commodity price movements during some periods of time. Highly interesting is to compare
+each graph to its counterpart (Graphs VII-XII). These counterparts test the joint significance of
+commodity index lags in predicting exchange rates.
+
+                                    20
+                                           Graphs I-VI
+
+Notes: The unrestricted models add the six (6) most recent lags of the exchange rate series
+corresponding to the commodity. The sums of squared residuals for these two sets of window
+regressions are stored and used to determine the F-statistic for joint significance of the exchange rate
+lags in each window. This is plotted against the 5% critical value. Window size is 96 periods, i.e., 8
+years. The value of F at time t is based on the 8-year window of which t is the last period. Test performed
+using data from IMF and other sources, see Data Description and Selection.
+
+                                           Graphs VII-XII
+
+Notes: The restricted model is an exchange rate AR(1) specification, whereas the unrestricted also adds
+the six (6) most recent lags of the index. Test performed using data from IMF and other sources, see
+Data Description and Selection.
+
+                                    21
+As compared to the Exchange Rate to Index connection explored in the previous graphs, there
+is a much lower degree of significance in the Index to Exchange Rate graphs, seemingly less
+than chance, in fact, for half the pairs. While there is clearly some ambiguity, the connection
+appears much less plausible in this direction.
+
+5.3 Volatility Analysis
+
+The below graphs represent the volatility of the monthly returns of a select group of commodity
+prices and indices using the same rolling window-methodology (every point on the blue line
+represents volatility during past 96 periods). As expected, the volatility varies over time,
+however it also exhibits strong patterns. This is interesting, given the strong link between
+volatility and efficient markets. While high volatility is not necessarily the result of a more
+efficient market, a more efficient market typically exhibits higher volatility (Ross, 1989). As
+such, Graphs XIV-XVIII are powerful indicators of markets whose efficiencies are varying
+over time. While the overall picture is ambiguous, the multi-commodity indices of Australia,
+Canada, and New Zealand are clearly increasing in volatility over time (although a linear
+regression indicates that the volatility is increasing across the board, see table IV).
+
+                                    22
+                                      Graphs XIV-XVIII
+
+Notes: The graphs display variations in volatility over time, using a Rolling Window Regression
+framework. Test performed using data from IMF and other sources, see Data Description and Selection.
+
+             TABLE IV - Slope of SLR-model Applied to Commodity Price Volatility
+
+           AUS CAN CHI NZ NOK SAR
+
+ Slope        0.0008148   0.0013092   0.00015     0.0006372     0.0000250   0.0007008
+ coefficient    ***        ***        **         ***           8          ***
+
+Notes: A star (*) indicates the significance at the 10% level, two stars indicate significance at 5% and
+three stars at 1% of rejection that the coefficient is 0. Model plots volatility against time as measured
+in years. Test performed using data from IMF and other sources, see Data Description and Selection.
+
+                                    23
+6. Discussion
+
+In the discussion section, we interpret the results from our Granger-causality tests and Rolling
+Window Regressions in the context of the literature on the CCH and our research question.
+
+6.1 The Commodity Currency Hypothesis and Granger-causality
+
+The results of our Granger-causality tests point towards the existence of an asymmetric
+relationship between commodity currencies and commodity prices for most time periods and
+commodities. The link is asymmetric in the sense that the Granger-causality running from
+exchange rates to commodity prices is clearly more prevalent in terms of which currency-
+commodity pair-, time period-, and frequency-specifications it holds for than the Granger-
+causality running from commodity prices to exchange rates. These results indicate that it would
+in fact be possible to predict the movements of commodity markets using commodity
+currencies; there is no evidence to indicate that this connection is somehow disappearing over
+time (quite the opposite, as our results are clearly more significant during later time periods).
+We have thus answered our main research question and provided additional evidence in favor
+of the Commodity Currency Hypothesis.
+
+However, we fail to fully confirm the results of Chen et al. (2010), as the tests performed on
+quarterly frequency only show Granger-causality running from exchange rates to commodity
+prices before 2008 for Australia and Chile. For Canada and New Zealand, a possible
+explanation for why we fail to replicate their results might be that these countries have, since
+Chen et al. published their study, revised their commodity export indices (retroactively
+applying the changes to past time periods). This would make the current index a worse fit for
+true terms of trade the further back from the present day we look. For South Africa, we
+hypothesise that the differences might in part stem from differences in the commodity data, as
+we have not been able to determine e.g. which exact kind of coal Chen et al. (2010) employed
+in their study.
+
+The very strong results post-2008 we believe stem from the relative inefficiency of the
+commodity markets compared to the FX markets. Our results indicate that the relationship is
+
+                                    24
+stable, telling us that the increased financialisation of commodity markets since the early 2000s
+has failed to make the commodity markets more efficient on an aggregate level. A plausible
+explanation for this can be the implementation of new legislation after the financial crisis. We
+suspect that another important factor was that of increasing co-movement of the commodity
+market with other markets. Through increased co-movement with other assets, commodity
+prices became more decoupled from their values as production inputs and consumable goods
+and price discovery became more inefficient, allowing exchange rates to precede commodity
+prices.
+
+The literature on the CCH has emphasised the importance of data frequency, and we do find
+discrepancies in our results based on choice of frequency. However, the effect is present for
+most countries regardless of whether monthly or quarterly data is employed. This aggregation-
+indifference is somewhat surprising, as effects observed in monthly data need not necessarily
+be visible on a quarterly level (whereas any effect observed in quarterly data would be in theory
+observable also in monthly data) but supports the case that the CCH is a phenomenon robust
+to choice of frequency and other parameters within the control of the researcher. Furthermore,
+we cannot in any meaningful way distinguish between those tests performed on index data and
+those performed on individual commodities, giving us no reason to believe that the choice of
+commodity aggregation should have a significant impact on results, so long as there is a strong
+enough link between the commodity and the economy.
+
+The rest of the discussion will be focused on discussing our secondary research question: Given
+that the CCH still bears relevance, how can we explain the earlier, contradictory, results in the
+literature?
+
+6.2 Time Variance in the Commodity Currency Connection
+
+The results from our Granger-causality tests are very strong across all countries and
+commodities but are lacking during certain time periods for certain countries.
+
+Graphs I-VI, plotting the results of our Rolling Window Regressions, show much more clearly
+than the Granger-causality tests the extent to which the relationship between exchange rates
+and commodity prices can be time-variant. While Kato (2012) argued that the financialisation
+
+                                    25
+of commodities made them more predictable by commodity currencies, no study has to our
+knowledge addressed the issue of time-variance from a more general perspective. Our results
+indicate that there are specific market conditions (i.e., that currency markets are/become
+relatively more efficient than commodity markets) which need to be met for exchange rates to
+be predictive of commodity prices. As no currencies or commodities are alike, it is probable
+that these conditions are more often met for certain commodity exporting countries than others.
+The Rolling Window Regressions provide evidence for this.
+
+We hypothesise, based on the comparison of Graphs I-VI to Graphs VII-XII from the results
+section, that periods of strong predictivity running from exchange rates to commodity prices
+weakly correspond to periods of weak predictivity running from commodity prices to exchange
+rates and vice versa for each country. We conjecture that the mechanism behind this is that the
+relative advantage in efficiency of one group over the other is constantly shifting. Based on
+changes affecting factors such as the importance of the commodity to the country’s economy,
+liquidity of the particular market for the commodity and market imperfections (i.e.
+introduction/removal of arbitrage-hindering regulation, entry/exit of specific types of traders
+and speculative bubbles), either currencies or commodities can become more efficient than the
+other. As an illustration of these phenomena, we provide a practical example below.
+
+                                    26
+6.2.1 Norway Case Study
+
+                                      Graph V
+
+Notes: Test performed using data from IMF and other sources, see Data Description and Selection.
+
+Here, we consider the case of Norway (for the reader’s convenience we have above graph V
+from the Results section). We see quite distinct movements in the 8-year windows ending
+between ca 2008 and 2017, allowing us to speculate on possible factors behind the rise and
+breakdown of joint significance of lagged exchange rates, and by association the relationship
+
+                                                                 26
+between exchange rates and commodity currencies in general.  The movements we attempt to
+explain clearly require substantive explanations as they represent significant variations in the
+joint significance of exchange rate lags in explaining commodity price movements. The role of
+macro events - general, such as the financial crisis of 2008, or commodity-specific, such as the
+invasion of Iraq - are not easily interpreted in this framework. While these events certainly
+influence the predictability of oil prices, it is, crucially, not trivial that they should differentially
+influence the ability of FX traders and oil traders to predict the oil price. As such, it is possible
+but by no means certain that they would be visible in Graphs I-XII, and thus the account below
+will focus on other factors. While this constitutes a highly speculative account of the
+
+26
+   This is, however, a perilous exercise, as the F-statistic at one point in the graph incorporates all events in the
+past eight years. Movements in the F-statistic are thus influenced when particularly meaningful events or trends
+enter the window, exit from it, or become a more prominent part of it.
+
+                                    27
+relationship, we believe the factors we highlight below are reasonable to consider as
+explanations for the time variance.
+
+Commodity markets generally underwent a financialisation in the mid 2000s. One of the major
+effects of financialisation is the increased correlation of the financialised market with other
+asset classes (Chinn and Coibion, 2014), assumed to impede effective price discovery thereby
+reducing efficiency. As hedge funds and other actors moved into commodities, primarily
+seeking diversification benefits, we hypothesise that they would not initially make the same
+demands for returns. Alternatively, it could simply be that they were not yet experienced
+enough in these markets to make accurate forecasts. Either way, it would, in aggregate,
+decrease efficiency in the commodity market. Given that no coinciding financialisation or mass
+hedge fund entry occurred in the FX market (the efficiency of which therefore remains the
+same), a relative difference in efficiency arises. As this period of financialisation comes to
+make up a greater part of the 8-year windows (ones ending around 2008-10), we observe a
+significant uptick in excess predictive power of exchange rates in these windows due to a
+
+                                                         27
+comparatively less efficient commodity market.
+
+The subsequent minor downtick (windows ending 2010-12) could have its origin in the new
+entrants’ gradual increased trading strategy and forecasting sophistication. As the novelty of
+the hedging opportunity provided by the financialised market fades and demand rises for
+returns, driving efficiency (alternatively it increases as hedge funds gain experience). The
+advantage of FX traders is somewhat tempered.
+
+The second period of increasing joint significance of exchange rate lags, (windows ending
+2012-15) matches very well with the 2008 financial crisis hitting the middle of the eight (8)
+year window. Presumably due to the economic downturn and the precipitous drop in the oil
+
+                                                                                           28
+price, activity in the oil market decreased (measured in terms of open interest  ). An exodus of
+money, and thus talent applied to analysis and forecasting, from the market could certainly
+have lowered the quality of analysis enough to temporarily decrease the relative efficiency of
+the oil market compared to the market for the Norwegian Krone, strengthening the joint
+significance of exchange rate lags. Further, regulation was also introduced shortly after the
+
+27
+  Indeed, we observe this phenomenon across several commodities.
+28
+   The number of contracts or commitments outstanding in futures and options trading on an official exchange at
+any one time.
+
+                                    28
+financial crisis, which hindered arbitrage by penalising larger balance sheets, thereby
+increasing transaction costs for e.g. financial actors exploiting mispricing (Fleckenstein and
+Longstaff, 2018). As arbitrageurs (e.g. hedge funds) generally provide market liquidity and
+thereby contribute to price discovery (Chordia et al, 2008), their disappearance is likely to
+reduce market efficiency, manifesting itself as increased predictivity of commodities.
+
+The exit of the tumultuous period of 2007-08 from the 8-year window in late 2016 coincides
+with the disappearance of joint significance and as noted the appearance of joint significance
+coincides with the 2007-08 period entering the window. This is tentatively consistent with the
+analysis of Nissanke (2012), who claims that financial investors returned to the markets closely
+after the financial crisis, again improving the market efficiency by improving for example price
+discovery and liquidity.
+
+A rise in the joint significance of exchange rate lags for windows ending around 2008 and
+fall in joint significance for windows ending around 2017 appears in the Rolling Window
+Regression graphs for all countries but South Africa. The Graphs I and III for Australia and
+Chile even display the same two-hump structure as the Graph V for Norway. This has two
+tentative implications. Firstly, that the factors described for the case of Norway hold some
+analogous explanative power for the other countries as well. Secondly, the entry and exit of the
+2007-08 crisis from the 8-year window seems to be privileged in terms of its importance for
+
+                                                                                               29
+joint significance of exchange rate lags compared to other events, periods of deviations,  or
+trends in the time series (especially for Norway which does not experience significance for any
+other time periods). However, there is significant variance between all the windows which
+contain the 2007-08 period. The 2007-08 crisis can therefore not on its own account for all
+significance in the time series.
+
+We believe that these kinds of accounts can be instructive, in that they provide the reader with
+plausible explanations as to why the relative efficiency of the two markets may vary over time.
+It is, however, also clear that there are many more factors which influence the relative
+efficiency which we have yet to describe, as we cannot explain all variation in the graphs.
+These factors may be country-specific or commodity-specific or both, for example the
+introduction of national restrictions on commodity trading, or the industrialisation over time of
+
+29
+  E.g., temporary regulations restricting on trading activity.
+
+                                    29
+the country in question. Better determining these factors is an interesting topic for further
+research.
+
+6.3 Comments on The Methodology
+
+In our study, we have employed a time series-analysis framework. Throughout the paper, we
+have had the work of Chen et al. (2010) in mind, while choosing to disregard some of their
+more advanced tests (for example, various robustness tests and a Granger-causality test
+allegedly robust to structural breaks) as we found them to be outside the scope of this study. In
+essence, we believe that the tests we have chosen to perform are robust enough to provide us
+with a reasonable assurance that our results are reliable. However, this is not to say that there
+is no room for improvement.
+
+We also performed several Rolling Window Regressions, which is a departure from the
+methodology of Chen et al. (2010) and a possible improvement upon their study. There is no
+standard way known to us of how to interpret a series of several hundred consecutive such
+regressions taken together. While each regression and its F-statistic individually are easily
+interpreted, the graphs as a whole lack a statistic to suggest what confidence one should assign
+the collective result and are in a sense merely indicative. This is a clear weakness of the
+methodology employed. However bluntly, they do allow us to observe the relationship in a
+more detailed way than tests employed in previous research and we conclude that they are an
+important addition to the toolkit - provided they are interpreted with due caution.
+
+The use of Rolling Window Regression also allows us to more clearly observe something
+analogous to Granger-causality arising and breaking down in greater detail. As the Granger-
+causality tests report the probability that the coefficients of a VAR-model are jointly zero (0),
+a strong significance in even a small portion of the data set might yield a significant result
+overall. This may then be interpreted as evidence in support of the prevalence of an economic
+phenomenon over the whole time period (that is, Granger-causality throughout), revealing a
+weakness in the Granger-causality tests; a methodology often employed in the literature. In
+essence, by employing both we are able to better understand our results from the Granger-
+causality tests.
+
+                                    30
+As we have mentioned, there is also some concern regarding the use of data. We have
+ventured to employ as wide of a range of data as we could so as to minimise the effect of any
+one concern, however every result by itself can of course be called into question. Our treatment
+of structural breaks in the data, while systematic, can also be criticised for being less-than-
+rigorous. Improving on our methodology would involve employing tests to control for
+
+                                         30
+heteroscedasticity and autocorrelation,   as well as using a test for Granger-causality robust to
+structural breaks.
+
+To further improve on our study, it would be beneficial to perform some further robustness
+tests. Examples of such tests are tests for exogeneity of exchange rate determination and
+robustness to exchange rates in other base currencies (Yen, Pound Sterling). As these tests
+when done in other studies have generally yielded results that confirm our results (i.e. the
+exogeneity assumption holds and results are robust to different currency bases), and our scope
+is limited, we have decided to omit them. Other ways to test the robustness of our study would
+be to include more countries. There are many countries whose currency heavily depends on
+export of primary commodities, such as Brazil and Burundi, and could be employed in further
+studies. Finally, performing tests for Granger-causality out-of-sample (that is, testing the
+hypothesis on data not used for modelling the VAR-model) would yield more conclusive
+evidence in favor of the CCH.
+
+6.4 Practical Relevance and Further Research
+
+By default, we expect that any enduring predictive capability in the marketplace will be
+
+                                         31
+exploited and subsequently fade away.  Given the extensive research done on the Commodity
+Currency Hypothesis (and a reasonably efficient market), pure arbitrage opportunities should
+already have been exhausted. However, even during perfect market conditions the Efficient
+Market Hypothesis does not rule out all financial forecasting (Timmerman and Granger, 2004),
+only the directly exploitable. While trading strategies based on exploiting the CCH may not
+confer abnormal returns, its real importance may instead lie in its use as a tool to help
+
+30
+   For example, the Newey-West procedure to provide more accurate standard errors for the regression in the
+presence of autocorrelation and heteroscedasticity is widely used in the literature (Chen et al., 2010). This is
+especially important when employing higher frequency data (Bork et al., 2014).
+31
+   Given that transaction costs and other trading restrictions are not prohibitively large (Timmerman and
+Granger, 2004).
+
+                                    31
+companies and central banks improve production planning and inflation control measures by
+improving their forecasts of the prices of certain commodities. The time-variant nature of
+currencies’ predicting advantage is likely to make this an unreliable approach, but its potential
+justifies further efforts and further research should pursue this.
+
+For the CCH to be applicable, one must first conclusively determine whether or not the
+relationship between commodity currencies and their respective commodities actually exists,
+which has yet to be done. In this sense, our study is valuable as it supports the notion of an
+asymmetric Granger-causal relationship running from commodity currencies to commodity
+prices.
+
+A final note is one on the results of our volatility analysis. We do not find any connection
+between the clear trends of increasing volatility over time displayed by the commodity indices
+of Australia, Canada, New Zealand, and Norway and the time-variant results of our Rolling
+Window Regressions based on the tests we have performed. However, these trends of
+increasing commodity volatility are significant enough to merit further investigation of the
+effect of volatility on the Commodity Currency Hypothesis. Methods beyond the scope of this
+study may yet find important and interesting results.
+
+                                    32
+7. Conclusion
+
+Commodity prices are rising anew. Given the importance of commodities, especially for
+developing economies, the Commodity Currency Hypothesis is one of continued relevance.
+Albeit theoretically attractive, the hypothesis has not to this day been conclusively proven to
+be true, with numerous studies arguing for, as well as against, its existence. Among those who
+find evidence for the connection, there is a discussion whether the link is stronger from
+exchange rates to commodities or vice versa. As the practical use of a proven link between
+currencies and commodities might be immense, not least as a way to improve inflation control,
+production planning and food safety, it is likely that the field will remain relevant despite the
+apparent difficulty of finding conclusive evidence.
+
+In our paper, we have conducted tests that strengthen the belief that the exchange rates of
+commodity currencies can be used to predict movements on commodity markets. We have also
+shown that the opposite relation can exist, albeit to a much lesser extent. These results are
+consistent with a large portion of the literature (e.g. Chen et al., 2010) on the subject.
+
+Further, our results indicate that the relationship between commodity currencies and
+commodity markets is to a large extent time-variant in ways which do not follow deterministic
+trends (based on the results of Graphs I-VI). This is a novel result, as the existing literature has
+almost exclusively focused on the binary question of whether the relationship exists or not. The
+nature of time-variance in the relationship between currencies and commodities is one of the
+main findings and contributions to the literature of our study, as it adds a layer of complexity
+to the question. Movements in our Rolling Window Regression graphs do not seem to be
+random, but rather dependent on trends, events, and periods of deviation. As such, there should
+be structural reasons explaining the behaviour of the two markets. We hypothesise, while not
+directly investigating, that such structural elements might be regulatory action, changes to
+liquidity, types of traders present etc. all affecting market efficiency. By studying this quality
+further researchers may gain more information about how price setting and price discovery in
+commodity markets works.
+
+To conclude, this study contributes to the existing literature by providing evidence in favour of
+the Commodity Currency Hypothesis, as presented by Chen et al. (2010), while presenting a
+
+                                    33
+more detailed picture of the phenomenon, and simultaneously suggesting areas for further
+research.
+
+                                    34
+8. References
+
+Papers published in periodicals:
+
+AMANO, R.A. and VAN NORDEN, S., 1998. Exchange rates and oil prices. Review of International
+Economics, 6(4), pp. 683-694.
+
+ANONYMOUS EMPLOYEE., ANZ, mail correspondence.
+
+BERNANKE, B. S., 2009. Outstanding Issues in the Analysis of Inflation. Speech at the Federal
+Reserve Bank of Boston’s 53rd Annual Economic Conference. Available at:
+https://www.federalreserve.gov/newsevents/speech/bernanke20080609a.htm
+
+BOPP, A.E. and LADY, G.M., 1991. A comparison of petroleum futures versus spot prices as
+predictors of prices in the future. Energy Economics, 13(4), pp. 274-282.
+
+BORK, L., KALTWASSER, P. R., and SERCU, P. (2014, April). Do Exchange Rates Really Help
+Forecasting Commodity Prices?. In 22nd Annual Symposium, Society for Nonlinear Dynamics and
+Econometrics, CUNY, New York.
+
+BÜYÜKŞAHIN, B. and ROBE, M.A., 2014a. Speculators, commodities and cross-market linkages.
+Journal of International Money and Finance, 42, pp. 38-70.
+
+CHAN, K., TSE, Y. and WILLIAMS, M., 2011. The relationship between commodity prices and
+currency exchange rates: Evidence from the futures markets. Commodity Prices and Markets.
+University of Chicago Press, pp. 47-71.
+
+CHEN, Y. and ROGOFF, K., 2003a. Commodity currencies. Journal of International Economics,
+60(1), pp. 133-160.
+
+CHEN, Y., ROGOFF, K and ROSSI, B., 2010. Can Exchange Rates Forecast Commodity Prices? The
+Quarterly Journal of Economics, MIT Press, vol. 125(3), pages 1145-1194.
+
+CHINN, M.D. and COIBION, O., 2014, The Predictive Content of Commodity Futures. Journal of
+Futures Markets, 34: 607-636.
+
+CHORDIA, T., ROLL, R. and SUBRAHMANYAM, A., 2008. Liquidity and market efficiency.
+Journal of Financial Economics, 87(2), pp. 249-268.
+
+CLEMENTS, K.W. and FRY, R., 2008. Commodity currencies and currency commodities. Resources
+Policy, 33(2), pp. 55-73.
+
+                                    35
+DUFFIE, D., 2010. Presidential address: Asset price dynamics with slow‐moving capital. The Journal
+of finance, 65(4), pp. 1237-1267.
+
+FERRARO, D., ROGOFF, K. and ROSSI, B., 2015a. Can oil prices forecast exchange rates? An
+empirical analysis of the relationship between commodity prices and exchange rates. Journal of
+International Money and Finance, 54, pp. 116-141.
+
+ENGEL, C., and WEST, K.D. Exchange rates and fundamentals. Journal of political Economy, 2005,
+113.3: 485-517.
+
+FAMA, E. (1970). Efficient Capital Markets: A Review of Theory and Empirical Work. The Journal
+of Finance, 25(2), 383-417.
+
+FRANK, J. and GARCIA, P., 2010. How strong are the linkages among agricultural, oil, and
+exchange rate markets? NCCC-134 Conference on Applied Commodity Price Analysis, Forecasting,
+and Market Risk Management St. Louis, Missouri, April 19-20, 2010.
+
+FRANKEL, J.A. and ROSE, A.K., 1995. Empirical research on nominal exchange rates. Handbook of
+international economics, 3, pp. 1689-1729.
+
+FRANKEL, J.A. and ROSE, A.K., 2010. Determinants of agricultural and mineral commodity prices.
+HKS Faculty Research Working Paper Series, .
+
+GROEN, J.J. and PESENTI, P.A., 2011. Commodity prices, commodity currencies, and global
+economic developments. Commodity Prices and Markets. University of Chicago Press, pp. 15-42.
+
+KATO, H., 2012. Changes in the Relationship between Currencies and Commodities. No 12-E-2,
+Bank of Japan Review Series, Bank of Japan.
+
+MARDONES, C. and DEL RIO, R., 2019. Correction of Chilean GDP for natural capital depreciation
+and environmental degradation caused by copper mining. Resources Policy, 60, pp. 143-152.
+
+MORANDÉ, F.G. and TAPIA, M., 2002. Política cambiaria en Chile: el abandono de la banda y la
+experiencia de flotación. Economía chilena, vol.5, no.3.
+
+MEESE, R.A. and ROGOFF, K., 1983. Empirical exchange rate models of the seventies: Do they fit
+out of sample? Journal of International Economics, 14(1-2), pp. 3-24.
+
+NISSANKE, M., 2012. Commodity market linkages in the global financial crisis: Excess volatility
+and development impacts. Journal of Development Studies, 48(6), pp. 732-750.
+
+ROSS, S.A., 1989. Information and Volatility: The No-Arbitrage Martingale Approach to Timing and
+Resolution Irrelevancy. The Journal of Finance, 44(1), pp. 1-17.
+
+                                    36
+ROSSI, B. Optimal tests for nested model selection with underlying parameter instability
+Econometric Theory, vol. 21, no. 5, Cambridge University Press, 2005, pp. 962–90.
+
+ROSSI, B., 2013. Exchange rate predictability. Journal of economic literature, 51(4), pp. 1063-1119.
+
+ROSSI, B. and WANG, Y., 2019. VAR-Based Granger-Causality Test in the Presence of Instabilities.
+Working Papers 1083, Barcelona Graduate School of Economics.
+
+SCHWARZ, T.V. and SZAKMARY, A.C., 1994. PRICE DISCOVERY IN PETROLEUM
+MARKETS: ARBITRAGE, COINTEGRATION, AND THE TIME INTERVAL OF ANALYSIS:
+INTRODUCTION. The Journal of Futures Markets (1986-1998), 14(2), pp. 147.
+
+SLOVIK, P. and COURNÈDE, B,, 2015. Macroeconomic Impact of Basel III. OECD Economics
+Department Working Papers, No. 844.
+
+STORCKENFELDT, M. and KRÖ NMARK, O., 2009. Commodity prices and nominal exchange
+rates: Are they related in commodity import abundant countries? Stockholm: Handelshö gskolan i
+Stockholm.
+
+TANG, K. and XIONG, W., 2012. Index investment and the financialization of commodities.
+Financial Analysts Journal, 68(6), pp. 54-74.
+
+TIMMERMANN, A. and GRANGER, C.W.J., 2004. Efficient market hypothesis and forecasting.
+International Journal of Forecasting, 20(1), pp. 15-27.
+
+UNCTAD TRADE AND DEVELOPMENT REPORT, 2008. Available at:
+https://unctad.org/system/files/official-document/tdr2008_en.pdf
+
+                                    37
+APPENDIX A: Commodity Index Providers
+
+ Country Website
+
+ Australia https://www.rba.gov.au/statistics/tabl
+                           es/xls/i02hist.xls?v=2021-05-16-21-
+                         45-22
+
+ Canada https://www.bankofcanada.ca/rates/pr
+                             ice-indexes/bcpi/
+
+ New Zealand https://www.anz.co.nz/about-
+                            us/economic-markets-
+                             research/commodity-price-index/
+
+APPENDIX B: Commodities Exported
+
+ Australia Canada New Zealand
+
+ Wool Coal Lamb
+
+ Beef and veal Oil Beef
+
+ Wheat Natural Gas Wool
+
+ Barley Gold Skins
+
+ Canola Silver Venison
+
+ Sugar Nickel Wholemilk Powder
+
+ Cotton Copper Skimmilk Powder
+
+ Milk powder Aluminium Butter
+
+ Lamb and mutton Zinc Cheese
+
+                                    38
+Aluminium Potash Casein
+
+Lead Lead Apples
+
+Copper Iron Kiwifruit
+
+Zinc Pulp Logs
+
+Nickel Lumber Sawn Timber
+
+Iron ore Newsprint Wood Pulp
+
+Metallurgical coal Potatoes Hoki (Fish)
+
+Thermal coal Cattle Orange Roughy (Fish)
+
+LNG Hogs Mussels
+
+Crude oil Wheat Aluminium
+
+Alumina Barley
+
+Gold Canola
+
+Copper ore Corn
+
+                                 Finfish
+
+                                  Shellfish
+
+Chile Norway South Africa
+
+Copper Oil Gold
+
+                                                         Coal
+
+                                                            Platinum
+
+                                   39
+APPENDIX C: Granger-causality Analysis, Results
+
+                  TABLE BI - Granger-causality test using quarterly data (1 lag)
+                            Index ￫ Exchange Rate
+
+           AUS CAN CHI NZ NOR SAR
+
+ -2007Q4 0.489 0.386 0.424 0.818 0.505 0.646
+
+ 2008Q2-     0.152 0.811 0.252 0.248 0.695 0.279
+ 20Q4
+
+ Entire        0.358 0.448 0.619 0.298 0.866 0.334
+ period
+
+  Notes: The table reports the p-values for testing the null of no Granger-causality from commodity
+ indices to exchange rates, using quarterly data and one lag. Note the lack of significance in any time
+                                               period.
+
+                  TABLE BI - Granger-causality test using monthly data (6 lags)
+                            Exchange Rate ￫ Index
+
+           AUS CAN CHI NZ NOR SAR
+
+ -2007Q4 0.09* 0.354 0.72 0.225 0.868 0.714
+
+ 2008Q2-     0.000*** 0.000*** 0.007*** 0.001*** 0.000*** 0.000***
+ 20Q4
+
+ Entire       0.000*** 0.000*** 0.036** 0.001*** 0.000*** 0.002***
+ period
+
+Notes: The table reports the p-values for testing the null of no Granger-causality from exchange rates
+                                      to commodity indices.
+
+                                    40

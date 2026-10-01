@@ -1,0 +1,1637 @@
+   Commodities To Solve For The Swedish
+            Pension Fund Decit
+
+                                                             ∗
+             Viktor Fredriksson and Ramil Hakim
+
+                       Bachelor Thesis
+               Stockholm School of Economics
+                   Department of Finance
+                      Tutor: Paolo Sodini
+
+                       May 11, 2012
+
+                             Abstract
+          Currently there is a decit in the unfunded Swedish pension system
+      that according to forecast will remain for a steady future. The Swedish
+      pension (AP) funds act as buer funds and thereby have the mission of
+      covering this decit. Therefore, it is crucial that the targets of the AP
+      funds are met. Currently that is not the case. Our conjecture states
+       that one of the limiting factors for achieving their targets is the current
+      AP fund regulation, which prohibits investments in commodities. By
+      analyzing the eects of adding commodities to the portfolio, our goal is
+      to conclude if this, in retrospect, would have been advantageous, and if
+      this will be benecial for the future. An AP portfolio was synthetically
+      replicated, followed by a exible model, which enabled the simulation
+      of new AP portfolios including commodity exposure. All commodity
+      indices added in this study proved to increase return and lower the
+      risk in the AP portfolio. Our conclusion is that, in order to make it
+      possible for the AP funds to fulll their goals, the regulation should
+      be changed to allow for commodity investing.
+     Keywords: Commodities, Swedish AP Funds, Regulation, Portfolio
+      Simulation
+
+   ∗
+    Correspondence to: Viktor Fredriksson (Stockholm School of Economics)
+22014@student.hhs.se. Ramil Hakim (Stockholm School of Economics) 22018@stu-
+dent.hhs.se
+
+                                 1
+1 Acknowledgements
+
+We are grateful to our tutor Paolo Sodini (Associate Professor, Department
+of Finance SSE), Kathryn M. Kaminski PhD (CIO, Alpha K Capital; Visiting
+Lecturer at SSE and MIT)), Gustaf Hagerud PhD (Vice President at AP3),
+Torbjörn Iwarson (Head of Commodities at SEB), Håkan Lyckeborg (Lec-
+turer from the Department of Economic Statistics at SSE), Kamil Hakim
+(M.sc. Computer Engineering) and Dylan Ceynowa for their valuable in-
+sights.
+
+                                 2
+Contents
+
+1 Acknowledgements 2
+
+2 Introduction 5
+   2.1 Literature Review . . . . . . . . . . . . . . . . . . . . . . . . . 6
+         2.1.1 Commodities as an Asset Class . . . . . . . . . . . . . 6
+         2.1.2 Commodities in Fund Portfolios . . . . . . . . . . . . . 7
+         2.1.3 Thesis Contribution . . . . . . . . . . . . . . . . . . . . 8
+
+3 Background 9
+   3.1 Investments in Commodities . . . . . . . . . . . . . . . . . . . 9
+         3.1.1 Commodities: Denition . . . . . . . . . . . . . . . . . 9
+         3.1.2 Investment Vehicles . . . . . . . . . . . . . . . . . . . . 9
+         3.1.3 Exchanges . . . . . . . . . . . . . . . . . . . . . . . . . 11
+   3.2 Background Study . . . . . . . . . . . . . . . . . . . . . . . . 12
+   3.3 Swedish Pension Funds . . . . . . . . . . . . . . . . . . . . . . 15
+         3.3.1 Denition and Purpose . . . . . . . . . . . . . . . . . . 15
+         3.3.2 Regulation of Investment Plan . . . . . . . . . . . . . . 15
+
+4 Methodology 18
+   4.1 Data Collecting . . . . . . . . . . . . . . . . . . . . . . . . . . 18
+   4.2 Data Analyzing . . . . . . . . . . . . . . . . . . . . . . . . . . 19
+         4.2.1 Currency Conversion . . . . . . . . . . . . . . . . . . . 19
+         4.2.2 Performance Calculations . . . . . . . . . . . . . . . . 20
+         4.2.3 Portfolio Replication and Simulation . . . . . . . . . . 20
+         4.2.4 Portfolio Weights . . . . . . . . . . . . . . . . . . . . . 22
+   4.3 Portfolio Optimization . . . . . . . . . . . . . . . . . . . . . . 24
+   4.4 Extreme Case Scenario . . . . . . . . . . . . . . . . . . . . . . 27
+
+5 Results 28
+   5.1 Monthly Performance 5% . . . . . . . . . . . . . . . . . . . . . 28
+   5.2 Monthly Performance 15% . . . . . . . . . . . . . . . . . . . . 30
+   5.3 Yearly Performance 5% . . . . . . . . . . . . . . . . . . . . . . 32
+   5.4 Yearly Performance 15% . . . . . . . . . . . . . . . . . . . . . 34
+   5.5 Portfolio Optimization . . . . . . . . . . . . . . . . . . . . . . 36
+   5.6 Extreme Case . . . . . . . . . . . . . . . . . . . . . . . . . . . 39
+   5.7 Results Summary . . . . . . . . . . . . . . . . . . . . . . . . . 40
+
+6 Conclusions 41
+
+7 Ethics and CSR 42
+
+                                 3
+8 Problematization & Future Research 44
+
+9 References 46
+
+                                 4
+2 Introduction
+
+The Swedish AP funds have been struggling to reach their targets (KPI +4 %
+                   1
+returns per year)  since inception, without success. The performance target
+is set to cover the decit in the pension system and it is therefore crucial to
+                                                                                          2
+accomplish. Over 850 billion SEK is currently managed by the AP funds ,
+which should be invested in the most ecient way in order to maximize the
+well fare for the Swedish population. inecient use of the hard worked labor
+capital eciently is not only irresponsible, but also equal to destroying the
+well fare for the retirees. The expectations of people that have worked hard
+and are looking forward to a certain amount of living standards in their
+well-deserved retirement should be met.
+   Portfolio theory aims to maximize returns and minimize risk, in other
+words, to hold the most eciently diversied portfolio. Not allowing the pen-
+                                                                       3
+sion funds to invest in all assets classes reduces diversication.  Currently
+                                                                        4
+Swedish pension funds are not allowed to invest in commodities.  This im-
+plies that their returns might not be optimized at their given volatility level.
+                                                                                          5
+Commodity trading markets today are highly liquid and highly developed ,
+and should therefore be a great candidate for diversication.
+
+    This thesis aims to investigate whether integrating commodities in Swedish
+                              6
+government owned pension  fund portfolios would have been benecial for
+their performance.
+
+    Integrating commodities into portfolios is a highly discussed topic within
+nancial markets worldwide. Leading international nancial magazines, such
+                              7                    8              9
+as The Wall Street Journal , Financial Times and Reuters have been cover-
+
+   1
+    Annual report AP2 fund
+   2
+    Annual report AP1-AP6
+   3
+    Schneeweis, T Karavas, V Georgiev, G. (2002). p2f.
+   4
+    Regulated in:The National Pension Insurance Funds (AP Funds) act (SFS 2000:192),
+Section 12
+   5
+    You, Leyuan Daigler, R.T (2010)
+   6
+    There are 6 dierent buer funds within the Swedish pension system. The rst to
+fourth AP funds are investing heavily in equities and bonds. AP5 was merged with the
+rst four during 2001. The AP6 fund is specialized in private equity. The thesis is only
+replicating the rst four AP funds since they manage the major part of the capital and
+are identical regarding their investment objectives.
+   7
+    The Wall Street Journal (2011)
+   8
+    Financial Times (2010)
+   9
+    Reuters (2010)
+
+                                 5
+ing the subject. Easing the restrictions of the investment regulations, thereby
+allowing commodities in pension fund portfolios, is an ongoing debate in Swe-
+     10
+den.   Mexico, for instance, recently allowed commodity investing in their
+pension funds, which was a result of the ongoing debate. Due to the recent
+discussions, the Swedish government has currently launched an investigation
+of the AP funds investment rules, amongst others, the inquiry of allowing
+commodity investments. This investigation is to be presented in September
+      11
+2012.
+
+2.1 Literature Review
+Previous research within the elds of commodity investing is wide spread.
+The benets of commodities in comparison to traditional asset classes have
+been covered and demonstrated in several nancial papers and essays.
+   Due to the nature of commodities the correlation to traditional asset
+classes is low, and therefore makes it a suitable candidate for diversication
+              12
+in portfolios.   For the individual investor, investing in commodities is con-
+                                            13
+sidered to be associated with high risk.   However, this is not the case for
+an investor holding an already well diversied portfolio, such as a pension
+      14
+fund.
+
+2.1.1 Commodities as an Asset Class
+Since commodities are real asset, they provide a better hedge against unan-
+ticipated ination, since real assets prices are strongly correlated with the
+ination rate. Traditional asset classes, such as equities and bonds are nom-
+inal assets since they generate xed income streams and are not xed in
+                                         15
+supply in opposite to real assets.
+
+  10
+    Dagens Industri (2012)
+  11
+    Investigation of AP-funds regulation (Original title in Swedish: Översyn av AP-
+fondernas regelverk), Dir 2011:84. Ministry of Finance, Sweden
+  12
+    The negative correlations contribute to the lowered standard deviation, i.e. increased
+diversication which can be observed in the portfolio variance formula:
+
+                          2     2  2           2  2
+                   σ = ω σ1 + (1 − ω) σ2 + 2ω(1 − ω)ρσ1σ2
+
+Low or negative correlation lowers the value of the variance and thereby increases diver-
+sication.
+  13
+    Risk is dened as the volatility in returns, measured by the standard deviation, which is
+commonly used within the nancial industry. A denition is provided in the methodology.
+The risk partly stems from the diculty to invest for individual investors.
+  14
+    Ankrim, E./Hensel, C. (1993): p. 22
+  15
+    Greer, R. J. (2005): p. 24
+
+                                 6
+   Negative correlation between commodities and traditional asset classes
+is according to Gorton and Rouwenhorst due to dierent behavior in the
+                 16
+business cycles.   When markets plummet, investors tend to see commodities
+as a safe haven. This leads to a negative correlation in bearish markets,
+providing a diversication benet. However, evidence show that this might
+                                           17
+not be true for short periods of time.    For example this was seen during
+the recent nancial crisis during 2008 when we were not only experiencing
+systematic risk but also systemic risk.
+   Also worth noting is that, as for all assets, the mentioned benets pro-
+vided above varies over time. Erb and Harvey showed this in a study in 2005,
+were they could see that commodities measured during the time period from
+1969 to May 2004 has higher return and lower volatility than S&P500 while
+                                                                    18
+the opposite is true for the time period from 1975-2005.
+
+2.1.2 Commodities in Fund Portfolios
+Satyanarayan and Varangis, two World Bank researchers, contributed to the
+debate in 1994 by showing that the ecient frontier of a portfolio including
+                                                                    19
+commodities always exceeds a portfolio without commodities.    The shift in
+the ecient frontier is likely to occur from the fact that commodities provide
+a hedge against ination and have a negative correlation to traditional asset
+classes, as discussed above. This further enhances the result showing the
+benets of having commodities in a portfolio.
+                                                                                   20
+   One of the largest pension funds in Europe, the Dutch PGGM  , con-
+ducted an internal study in 2005 about investing in commodities. They
+reached the conclusion that including commodities into their current portfo-
+lio could increase return and at the same time decrease the overall volatility
+                      21
+of their portfolio.
+
+  16
+    Gorton G./Rouwenhorst G. (2005): pp. 12.
+  17
+    Lummer, S.L./Siegel, L.B. (1993): pp. 75. Gorton G./Rouwenhorst G. (2005): pp.
+12.
+  18
+    Erb, C.B./Harvey, C.R. (2005): p. 2
+  19
+    Satyanarayan, S./Varangis, P. (1994): p. 19
+  20
+   http://www.watsonwyatt.com/europe/pubs/gim/render2.asp?id=15491
+  21
+    Beenen J (2005): pp 18.
+
+                                 7
+Figure 1: Ecient frontier improvement when including GSCI (Source:
+Satyanarayan, S./Varangis, P. (1994): p.19)
+
+2.1.3 Thesis Contribution
+As claried by earlier studies there is a strong case for integrating commodi-
+ties into diversied portfolios. This thesis contributes to the research eld by
+showing how a Swedish AP funds portfolio performance could have looked
+like, if they would have been allowed to invest in commodities. The the-
+sis rst investigates the general eect of integrating a couple of commodity
+indices. It will then go deeper into nding the optimal combination of the
+chosen commodity indices and the original AP portfolio. As well as look into
+an extreme case scenario. Even though this study is limited to Sweden and
+the time between 2000 and 2012, this thesis aims to act as a guideline for
+future investment decisions.
+
+                                 8
+3 Background
+
+3.1 Investments in Commodities
+3.1.1 Commodities: Denition
+In the narrow sense commodities are dened as non-nancial assets, such as
+biological resources and natural elements. These are generally divided into
+hard and soft commodities. Were biological resources are dened as soft
+commodities and include agriculture and livestock. The hard commodities
+include precious metals, industrial metals and energy.
+   Furthermore, there are also semi-nished goods that are classied as com-
+modities, for example electricity, orange juice and steel. Additionally, there
+are also so called negative commodities such as emissions which limits the
+usage and production of other commodities (e.g. emission credits). In recent
+years, modern commodities have emerged due to technical innovations, such
+                                                                    22 23
+as bandwidth which is usually referred to as a commodity.
+
+3.1.2 Investment Vehicles
+There are many ways to gain exposure to commodities. Below the most
+commonly used investment vehicles are dened.
+
+Investing in the Physical Commodity Taking a long position in the as-
+      set directly (e.g. buying gold). This is usually inecient since it gener-
+      ally requires high storage and maintenance cost. The nancial industry
+                                                      24
+      rarely trades the physical commodities.
+
+Commodity-Linked Equity is when the investor takes a position in a
+      company which has its core business in a certain commodity (e.g. oil
+                                        25
+      renery or a mining company).   However, this is generally not an e-
+      cient investment to gain exposure to commodities, since the companies
+      usually hedge a great ratio of their own commodity exposures. There-
+      fore, equity linked commodities might have a low or negative correlation
+     to commodity prices. Even if the commodity related company does not
+     hedge their commodity exposure the equity might not reect the per-
+                                                                                     26
+     formance of the underlying commodity due to management risk.
+
+  22
+    Demidova-Menzel, N./Heidron, T (2007): pp. 5f.
+  23
+    The reader should be aware that there is not really a clear denition of commodities.
+However, the denition provided above is generally accepted within the nancial industry.
+  24
+    Pulvermacher, K. (2005a): p. 6
+  25
+    Gorton, G./Rouwenhoorst, K.G. (2004): pp. 26f.; Pulvermacher, K. (2005a): p. 6
+  26
+    CISDM (2005): pp. 17f.
+
+                                 9
+Financial Derivatives with Commodities as the Underlying Asset
+      Forwards and futures are contracts that make it possible for the investor
+     to gain exposure to commodities by agreeing on certain amounts and
+      prices today. Futures are exchange traded derivatives, while forwards
+      are generally traded over-the-counter (i.e. not exchange traded).
+
+Commodity Linked Notes A commodity linked note is by denition a
+      strip (zero-coupon) bond together with an option in an underlying com-
+      modity. This type of investment vehicle is a safer way of investing in
+      a commodity since the strip bond acts as insurance, since the investor
+      still has the bonds value even if the commodity fails to reach the strike
+      price. In the event that the option becomes in-the-money the investor
+      also earns the premium between the strike price in the linked option
+      and the actual price of the commodity. Also worth noting is that the
+      maturity of the option and the strip bond has to be exactly the same.
+      This type of investment limits the downside risk, but still provides
+     exposure to commodities.
+
+Commodity Swap The most common commodity swaps are total return
+      swaps. Were the investor pays a xed fee that consists of the risk-free
+      rate plus a premium in return, for the return, of a single commodity or a
+     basket of commodities. The benets of using a swap to get commodity
+      exposure is mainly because of the zero tracking error that follows from
+      this instrument, since the counterparties pays the actual total returns.
+     This type of instrument is traded OTC.
+
+Futures Commission Merchant (FCM) An investor with an FCM ac-
+      count has the power to invest directly in options, futures contracts and
+      other derivatives through a commodity exchange. This type of invest-
+      ment vehicle is one of the most direct ways of investing in commodities.
+      However, this method is only suitable for sophisticated investors with
+      knowledge of the industry.
+
+Commodity Trading Advisors (CTA) Since it can be dicult to invest
+      in commodity contracts as an individual, a licensed manager can take
+      exposure in future contracts for a client's account. The CTA licensing is
+      a thorough process involving several government authorities approvals
+      in order to verify that the person is suitable for commodity investments
+      on behalf of clients. CTAs can take exposure in any type of future for
+      a client, but the original purpose was for investments in commodities
+     and therefore the name.
+
+                                10
+Commodity Pool Operator (CPO) Analogous to the CTA, the CPO is
+      responsible for investing on behalf of a client in the commodity futures
+     market. However, the CPO can pool the assets in one account and
+      invest the entire masse. By pooling the assets, the CPO has increased
+      purchasing power and increased ability to use leverage.
+
+Master Limited Partners (MLP) MLPs are private partnerships that
+      are traded on public exchanges, focusing on energy infrastructure. The
+      fact that it is a partnership implies that they only pay tax on an individ-
+      ual level, and therefore avoid any corporate tax. The other advantage
+      is that it delivers all of its cash ows directly to the shareholders, which
+      yields a higher return for the investor.
+
+Exchange Traded Funds (ETFs) This type of investment vehicle is easy
+      to use for investors since the funds are privately run and traded on pub-
+     lic exchanges. The ETF tracks individual commodities or commodity
+      indices.
+
+Commodity Mutual Funds Mutual funds aim at tracking the performance
+     of commodity indices or companies dealing with commodities. Com-
+      modity mutual funds are suitable for traditional investors who are used
+      to investing in for example equity mutual funds but want exposure to
+     commodities.
+
+Commodity Indices Commodity indices have the same goal as traditional
+      equity indices, i.e. to track commodities for benchmarking and in-
+      vesting purposes. Financial institutions construct and provide the in-
+      dices. The index construction methodology is dierent depending on
+      the nancial institution and index. An investor can access the indices
+                                                               27
+      through ETFs or through the futures market.
+
+3.1.3 Exchanges
+Commodity exchanges provide a liquid market for commodity trading. CME
+group is the leading operator of commodity derivative exchanges. It was
+formed during the 2007 merger when the Chicago Mercantile Exchange merged
+with Chicago Board of Trade and formed the largest futures and deriva-
+tives exchange in the world. They currently own and operate four of the
+leading commodity exchanges; NYMEX (New York Mercantile Exchange),
+CBOT (Chicago Board of Trade), CME (Chicago Mercantile Exchange) and
+
+  27
+    CME Group Educational Resources, Glossary
+
+                                11
+                                           28
+COMEX (Commodity Exchange, Inc).   The benet from the usage of ex-
+change traded contracts is amongst others increased liquidity and reduction
+in counterparty risk in comparison to over-the-counter contracts.
+
+3.2 Background Study
+To complement previous research ndings presented in the introduction part,
+we have conducted a background study. This aims to describe commodities
+as an asset class in relation to traditional asset classes over the time period
+that is going to be used in the portfolio replication.
+
+ Background Study
+  Index Monthly Yearly Monthly Yearly Monthly Yearly
+                                Return Return St.Dev St.Dev Sharpe Ratio Sharpe Ratio
+  Merrill Lynch Government Bonds 0,56% 6,8% 2,1% 7,0% 0,263 0,968
+  MSCI Sweden (SEK) 0,12% 2,9% 6,9% 29,9% 0,016 0,093
+  MSCI World -0,01% 0,8% 4,9% 21,6% -0,003 0,035
+  S&P500 0,04% 0,6% 4,7% 19,1% 0,007 0,025
+  Bloomberg Europe Real Estate 0,09% 7,4% 7,9% 39,7% 0,011 0,184
+  S&PGSCI Commodities 0,61% 8,8% 7,1% 28,1% 0,084 0,311
+  DJUBS Commodities 0,59% 8,1% 5,1% 20,8% 0,113 0,388
+  MLM Commodities LongNeutral 0,75% 9,6% 3,2% 12,4% 0,229 0,772
+Table 1: Performance measures for indices representing dierent asset classes
+(Data source: Bloomberg).
+
+Figure 2: Performance measures for indices representing dierent asset
+classes. (Data source: Bloomberg)
+
+   On a monthly basis, commodities as an asset class (represented by three
+commodity indices) have the highest return. The best performing commodity
+
+  28
+    CME (2005): p.10
+
+                                12
+index had an average return of 0,75% (MLM) per month in comparison to for
+example the equity indices ranging between -0,01% and 0,12%. Real estate
+had a performance similar to equities, while the bond market performed
+second to best with a return of 0,56% on average per month. On a yearly level,
+the trend in performance amongst the asset classes is the same. However,
+real estate had a return close to bonds and commodities on a yearly basis.
+   Regarding the standard deviation, commodities had a higher risk than
+bonds, but a similar risk as equities, with slight variations depending on the
+index. Comparing for example the best commodity index (MLM) with a low
+risk at 3,2%, to the least volatile equity index at 4,7 % (S&P500) it is clear
+that the commodity index has been a safer investment. The dierence is also
+noticeable regarding the returns at 0,75% (MLM) to 0,04% (S&P 500) on a
+monthly basis.
+   The risk adjusted return, measured by the Sharpe ratio, shows that bonds
+had by far the highest Sharpe ratio, both on a monthly and yearly basis.
+However the turbulent nancial markets during the end of the last decade
+have probably contributed to the high Sharpe ratio. This is probably related
+to the risky environment during this time period where investors were looking
+for safe havens. However, the three commodity indices outperformed real
+estate and equities on a Sharpe ratio basis.
+   The background study conrms that commodities indeed have higher
+risk-adjusted return in comparison to traditional asset classes during the
+time period. As earlier mentioned, this is of course heavily dependent on the
+time period. Therefore, the result does not have to be true for another time
+period. However, the purpose with this study is not to show that commodities
+are a superior asset class, but rather to show the diversication eect when
+included in a portfolio. However, it is important for the reader to know how
+the asset classes have performed over the time period. The positive eects
+of diversication eect is more consistent over time.
+
+  Correlation Matrix
+ Correlation Matrix Government Bonds MSCI Sweden MSCI World S&P500 Real Estate S&PGSCI DJUBS MLM LN
+ Merrill Lynch Government Bonds 1,00
+ MSCI Sweden (SEK) 0,18 1,00
+ MSCI World 0,22 0,87 1,00
+ SP&P500 -0,03 0,86 0,95 1,00
+ Bloomberg Europe Real Estate -0,17 0,42 0,66 0,65 1,00
+ S&PGSCI Commodities 0,40 0,23 0,59 0,43 0,52 1,00
+ DJUBS Commodities 0,71 0,33 0,62 0,39 0,42 0,90 1,00
+ MLM Commodities LongNeutral 0,96 0,28 0,36 0,11 -0,02 0,57 0,83 1,00
+Table 2: Correlation matrix for the indices in table 1, between 1999-12-31
+and 2011-12-31.
+
+   None of the commodity indices have a correlation higher than 62 % with
+the equity or real estate indices. The systemic risk was high during the
+nancial crisis which occurred in the chosen time period; The commodity
+
+                                13
+indices therefore have a bit higher correlation, than suggested in the previous
+literature.
+
+                                   Crisis Correlation
+                                 Indices MSCI World
+                                GSCI 0,981
+                               DJUBS 0,978
+                            MLM 0,759
+Table 3: Correlation matrix between commodities and equities for the time
+period: 2008-06-30 - 2009-04-30
+
+   The negative correlation that normally would have been expected during
+the crisis period could therefore not be observed. For example the correlation
+was close to 1 (0,98) between the GSCI index and the MSCI World index
+during the crisis period (2008-06-30 - 2009-04-30), this has contributed to
+the overall correlation during the full time period. Therefore, Rouwenhorst
+and Gortons motivation of the negative correlation due to dierent behavior
+during business cycles does not seem to apply to the full extent.
+   However, the MLM index had a low correlation (between 0,36 and 0,11)
+in relation to the equity market. This study cannot clearly support the
+previous literature, since negative correlation cannot be observed. However,
+the correlation is low, which is also suggested by previous studies. One of
+the explanatory factors could be due to the option of the MLM index to go
+neutral during time of crises. The only negative correlation eect that is
+visible, is between the MLM and the European Real Estate market (-0,02).
+Generally the GSCI and DJUBS are highly correlated, while the MLM has a
+low correlation to the two other commodity indices. An interesting nding is
+that the MLM index had a very high correlation (0,96) to the bond market.
+This is likely to have occurred from the fact that investors saw both asset
+classes as safe havens during the nancial crisis. The ndings have slight
+dierences in comparison to earlier studies. However, the time period is
+much shorter than those used in previous research, therefore not as many
+business events and cycles are covered, which might aect the results.
+   The graph (Figure2 ) visualizes the indexed performance for traditional
+asset classes and commodity indices. Over time, commodities (red color
+scale) have outperformed traditional asset classes. Equities have in general
+had a negative performance since inception. The only steady asset class, not
+object to cyclical changes are bonds. Furthermore, bonds have not only had
+steady performance, but also the next to highest total return at the end of
+the time period, only beaten by the MLM long-neutral index. An interesting
+nding is that real estate does not follow the same trend as equities, bonds or
+commodities. The higher volatility seen in commodity markets is visualized
+
+                                14
+by the high variations over time, especially during the 2008 nancial crisis.
+This relates to earlier studies which suggest that commodities as an asset
+class are riskier than equities, for an individual investor. As stressed in
+previous studies, commodities add a diversication eect to an already well
+diversied portfolio. This is why this type of investment should be perfect
+to, for example, a pension fund.
+
+3.3 Swedish Pension Funds
+3.3.1 Denition and Purpose
+The current labor force is funding the public pension system, which implies
+that no assets are set aside from the time the retirees constituted the labor
+force. In the event that the ratio of retirees to the labor force increases, a
+decit will occur. The discrepancy between the outgoing payments and the
+inow of capital is covered by the buer funds, which in Sweden are called the
+AP-funds (In Swedish: Allmänna Pensionfonderna). In order to guarantee
+that the gap is suciently covered; the AP funds should always strive to
+                      29
+maximize returns.
+   A large part of the population that is currently contributing to the sys-
+tem, have recently gone into retirement. Therefore, these individuals have
+stopped contributing, and started receiving money from the system. Accord-
+ing to forecasts produced by the Swedish Pension Authority (In Swedish:
+Pensionsmyndigheten), net outows will continue to be negative until the
+middle of the 2040s. The pension system debt is usually adjusted for with
+the increase in the income index. Therefore the assets in the pension system
+needs to grow at least as much as the income index in order to match the
+           3031
+liabilities.
+
+3.3.2 Regulation of Investment Plan
+According to the national pension insurance funds (AP funds) act (SFS
+2000:192) chapter 4 section 1, the objective of the funds is to manage the
+assets in such a manner that they will achieve the highest possible return.
+The investments should also have a low risk characteristic, invested with a
+long time perspective. As long as the regulations stated below are followed,
+the APs can be exible in their investment decisions. Section 3 to 18, chapter
+4, entails the detailed investment rules.
+
+  29
+    Annual report 2011, AP3 fund
+  30
+    Annual report 2011, AP4 fund
+  31
+    Annual report 2011, AP1 fund
+
+                                15
+                 Figure 3: The Swedish Pension System.
+
+   Section 12: The First to Fourth AP Funds may not invest fund assets in
+options, futures, or other similar nancial instruments for which commodities
+constitute the underlying asset.
+
+   Other investment rules are summarized in gure 3:
+
+   • Investments may occur in any instruments on the capital market as
+      long as it is liquid and noted on an exchange.
+
+   • At least 30 % of the fund's assets have to be placed in xed income
+      assets with low credit and liquidity risk.
+
+   • Not more than 40 % of the asset may be exposed o currency risk.
+
+   • Not more than 10 % of the fund's assets may be exposed to more than
+      one issuer or one group of issuers with a close relationship.
+
+   • The fund may not hold more than 2 % of the market capitalization of
+     one single Swedish exchange traded company.
+
+   • Not more than 5 % of the fund's assets may be placed in non-exchange
+      traded assets.
+
+                                16
+ • These assets have to be acquired through private equity companies or
+    such. Exceptions are stocks or other holdings in companies within the
+                  32
+    real estate.
+
+32
+  The National Pension Insurance Funds (AP Funds) act (SFS 2000:192)
+
+                               17
+4 Methodology
+
+4.1 Data Collecting
+The main source of data was provided from the Bloomberg database. This
+database is used by many professionals worldwide within the nancial in-
+dustry. The study was constructed in such a way that investment managers
+easily can replicate it and apply it in their endeavor to increase risk-adjusted
+returns.
+   In this study we will analyze the benet loss of the regulation that came
+into eect in the beginning of 2000, the data was collected for the time period
+1999-12-31 to 2011-12-31. After discussion with the Vice President in one of
+                           33
+the Swedish AP funds  , we together reached the conclusion that an average
+rebalancing period is approximately one month. This was why we decided
+to use monthly data. Closing prices for the last trading day in each month
+was used.
+   During the discussion with the AP fund, one of the major topics that
+came up was whether to use the exact holdings in the AP funds in opposite
+to replicating with indices. Using actual data would have included alpha from
+the portfolio manager, alpha that we would have decreased when including
+commodities. In each rebalancing period, the portfolio managers at the AP
+funds made active choices with respect to the future expectations at the time
+of the decision, which has added an alpha. In order to add commodities in an
+unbiased way, indices were used to synthetically replicate the AP portfolio
+which removes all alpha.
+    Due to the strict regulation of the AP funds, they all invest their assets
+in a similar way. A general AP fund can therefore be replicated using their
+benchmarks indices, which was discussed as an excellent solution to use in
+opposite to the actual AP portfolio.
+
+   The following indices were used:
+
+   • Merrill Lynch Swedish Governments (SEK) The index tracks Swedish
+     government bonds, hedged in Swedish Krona.
+
+   • Merrill Lynch Global Government Bond Index II (USD) The index
+     follows dierent government bonds worldwide, denoted in USD.
+
+   • MSCI Sweden (SEK) An index representing the Swedish stock market,
+      where their largest holdings are also the largest market capitalized stock
+     in Sweden (For example; H&M, Ericsson, Nordea and Volvo).
+
+  33
+    Gustaf Hagerud, Phd. Head of Asset Management at the AP3 fund
+
+                                18
+   • MSCI World A global stock index with over 1600 world stocks in-
+      cluded. The stocks are from 24 dierent developed markets (i.e. there
+      are no emerging markets included in the index). This is one of the
+     worlds most common proxies for the world stock markets also used by
+     the Swedish pension fund AP3.
+
+   • USDSEK Exchange rate The FX ratio between USD and SEK.
+
+   • Standard and Poors Goldmans Sachs Commodity Index (GSCI) Is one
+      of the most common commodity indices which currently comprises of 24
+      dierent commodities in precious metals, livestock, energy, agriculture
+      and industrial metals with a high exposure to energy (currently above
+      78% and more than 40% of crude oil). Prices are quoted in USD and it
+      is a passive index only that since they invest in future contracts they
+     have to roll them forward each month.
+
+   • DJUBS (Dow-Jones UBS commodity Index) It is a well diversied index
+      with the goal to minimize the concentration to one single commodity or
+      sector. It currently compromises of 19 commodities in seven dierent
+     sectors. None of the commodities have less than 2% or more than 15%
+                                                                        34
+      of the weight in the index. Prices are quoted in USD.
+
+   • Mount Lucas Management Long/neutral index (MLM) It is an equally
+      weighted index consisting of 11 dierent commodities. It only takes
+     long positions in markets that are determined by Mount Lucas to be
+                                              35
+      rising while it is neutral otherwise.   The collected data was veried
+      by comparison to data presented in the AP funds annual reports.
+
+4.2 Data Analyzing
+4.2.1 Currency Conversion
+Since the indices were exported in dierent currencies, United States Dollars
+(USD) and Swedish Krona (SEK), the USDSEK spot FX ratio was used to
+convert the index values to SEK only. The AP funds present their results
+in SEK, why it was important to convert all foreign indices to SEK to make
+the results comparable.
+   The commodity indices used were quoted in USD and were converted
+back to SEK. The fact that the indices are priced in USD, the FX exposure
+in the AP portfolio increases.
+
+  34
+    Bloomberg Corporation.(Data and descriptions exported from Bloomberg terminal)
+  35
+   https://www.mtlucas.com/Content.aspx?content=CommIndexCommodityLN
+
+                                19
+4.2.2 Performance Calculations
+Performance was calculated in two currencies. When calculating the per-
+formance for the background study, the original currencies were used. The
+reason for using the original currencies was to exclude any impact (i.e. FX-
+risk) on performance, which was not relevant for describing the asset class.
+   We also calculated performance in SEK, since the local currency per-
+formance is relevant for replicating the return of the AP and commodity
+portfolios.
+   The performance was calculated monthly and yearly. During the discus-
+sions with the AP funds a representative rebalancing period for the general
+AP fund indicated to be on a per month basis, therefore monthly data was
+used. Furthermore, monthly data for the 12 year period gives a more signi-
+cant amount of data (144 observations) than if yearly data would have been
+used.
+   Since the industry standard is to measure and present return and risk
+gures on a yearly basis, this was also included into the performance calcu-
+lations. Furthermore, a yearly rebalancing period, in opposite to a monthly,
+includes larger variations. This also implies that asset classes that perform
+well get a bigger weight in the portfolio for a longer period of time and vice
+versa.
+   Performance was calculated by dividing the spot index value with the
+index value in the observation prior to the spot (formula below).
+
+                                      It
+                Return =    − 1 (I = Index value)
+                               It−1
+
+4.2.3 Portfolio Replication and Simulation
+To replicate the AP portfolio the weights had to be divided into the major
+asset classes, which are; equities, xed income and alternative investments.
+First the weights were split up between equities and xed income, to make it
+possible to include commodity exposure as the alternative investment. Dur-
+ing discussions with the AP funds the actual portfolio weights for a general
+AP portfolio were determined; this was also compared and veried against
+the annual reports. 55 % of the capital was allocated to equities and 45 % into
+xed income. Within equities, 25 % was allocated to Swedish equity (syn-
+thetically replicated with the MSCI Sweden equity index) and the remaining
+75%was allocated to equity markets outside of Sweden (synthetically repli-
+cated using the MSCI world equity index). Since the AP funds manage over
+
+                                20
+                             36
+850 Billion Swedish Krona  and have the objective to produce as high return
+with as low risk as possible and the Swedish market is small, they have to
+diversify their equity exposure to dierent equity markets worldwide. Within
+xed income, half of the assets are invested in Swedish Government bonds
+(synthetically replicated with the Merrill Lynch Swedish Governments bond
+index); the second half is invested in foreign government bonds (synthetically
+replicated with the Merrill Lynch Global Government Bond Index II).
+   According to the Swedish regulation a maximum of 40 % of the portfolio
+can be exposed to FX risk. The model therefore adjusts the hedge ratio so
+that the FX exposure does not exceed 40 % of the total portfolio. Hence, the
+hedge ratio is adjusted and not xed in order to be compliant with the regu-
+lation. To replicate the portfolio return, the return of each index in each time
+period was multiplied by the portfolio weight given to that particular index.
+The sums of these multiplications were added in order to get the portfolio
+return in each time period (monthly and yearly). No transaction fees were
+included in the calculations. However, transaction fees should be considered
+when implementing this strategy in reality, since monthly rebalancing would
+add 12 times the transaction fee in comparison to yearly rebalancing.
+   The original AP portfolio had to be adjusted in order to include commod-
+ity exposure. In order to include a weight we had to multiply the original
+portfolio with one minus the wanted exposure, so that the total exposure
+would add up to 100%. The USD exposure was not included in the multipli-
+cation in order to keep the currency hedge at a constant level. Therefore, the
+hedge is always at a constant level, disregarding if it is a commodity port-
+folio or not. This means that the commodity portfolios have a higher USD
+exposure, since the commodity indices are quoted in USD. This assumption
+was made in order to only prove the commodity eect and not the FX ef-
+fect. When adding the commodity exposure, the SEK return of an index was
+multiplied by the desired weight, and then added to the reduced original AP
+portfolio. Return, risk and Sharpe ratio were calculated on a monthly and
+yearly basis.
+   The return and risk measures were calculated using the below formulas:
+Sample standard deviation was calculated by squaring the sum of each return
+value subtracted by the average return, on a monthly and yearly basis. The
+total sum is then divided by the number of observations minus one, in order
+to adjust for the fact that it is a sample. The sample standard deviation is a
+common industry measure for risk and is therefore applied in the study. The
+
+  36
+    Total assets under management for the rst to fourth AP fund, calculated from gures
+presented in the annual reports. Exact gure: AP1 (213b SEK), AP2 (217b SEK), AP3
+(214b SEK), AP4 (213b SEK), gures as of 2011-12-31. (Source: Annual report AP1-AP4)
+
+                                21
+calculations were repeated for the three commodity indices and for the two
+weights.
+              √
+                  √     N
+               √ 1  ∑
+                     s = √       (r − r)2
+                                                        i
+                           N − 1 i=1
+
+   Average return was calculated by dividing the sum of the return values by
+the number of observations. This measure is also recognized by the industry
+as valuable measure for return and is therefore applied in the essay.
+
+              ∑n
+                      1            1
+            rarithmetic =      rarith,i =  (rarith,1 + . . . + rarith,n)
+                       n i=1         n
+
+   Total return was used in order to compare, both graphically and numer-
+ically, the replicated commodity portfolios.
+
+                 ∑T
+                           rT =   (1 + ri) ∗ ri−1
+                                        i=1
+   Sharpe ratio is a risk-adjusted return measure used in order to compare
+the eciency in the portfolios. However, the portfolio evaluation has to
+include several perspectives, and not only the Sharpe ratio in order to get a
+diversied view and conclusion.
+                                       r − rf
+                      Sharpe ratio =
+                                          s
+
+4.2.4 Portfolio Weights
+After careful consideration and comparisons between dierent large pension
+funds which are allowed to invest in commodities, a reasonable amount to
+invest was determined to be about 5 %. The largest pension fund in Eu-
+                                      37
+rope, PGGM, invests almost 7 %   of its assets in commodities. In order
+to simulate the portfolios realistically, 5 % of commodity exposure was used
+as the rst weight. To show the eects more clearly the second weight was
+set to 15 %. The AP3 fund has 17 % in alternative investments why 15 %
+                                                 38
+in commodities was a reasonable amount.    In order to replicate the AP
+portfolio, benchmark indices used by the Swedish pension funds were used.
+To replicate the equity exposure the MSCI World and MSCI Sweden indices
+were applied. The MSCI World was chosen since it covers stock markets in
+
+  37
+    Investments and Pensions Europe(2007)
+  38
+    Beenen J (2005): pp 18.
+
+                                22
+24 countries, which means that it reects the world stock markets to a high
+extent. These indices are commonly used and recognized by the nancial in-
+dustry. Since they include a multiple of stocks they can be considered to be
+diversied and a good proxy for the stock market. Furthermore, the MSCI
+world does not invest in emerging markets which makes the index applicable
+in our case since pension funds aims at investing at a low risk, when emerging
+markets are generally characterized by higher risk.
+   To replicate the xed income exposure, the Merrill Lynch Swedish Gov-
+ernment Bonds and Merrill Lynch Global Government Bond Index II were
+used. These indices are also used as benchmark indices by the Swedish AP
+funds, which makes them a good proxy when replicating the general AP
+portfolio. Since the AP funds are aiming at investing at a low risk with a
+long investment horizon, they therefore mainly invest in government bonds.
+The two bond indices were therefore considered to be representable for the
+original portfolio.
+   The FX ratio between USD and SEK has been used to hedge and convert
+the currency exposure, since all indices except MSCI Sweden are denoted in
+USD. According to Swedish regulations, the AP funds may not have foreign
+currency exposure exceeding 40%.
+   In order to get a full and fair view of a commodity portfolio, three dif-
+ferent commodity indices were used. GSCI and DJUBS are two of the most
+commonly used commodity indices, with a wide exposure to dierent com-
+modities. Investing in GSCI and DJUBS index funds is straight forward
+since they are exchange traded. From a liquidity perspective the index funds
+are very ecient, why pension funds may realistically invest in commodi-
+ties. Since these indices provide such an easy access to commodities this is a
+reasonable way for a pension fund to gain exposure to commodities.
+   Some major dierences between DJUBS and GSCI are that GSCI in-
+vests more heavily in energy related commodities. In opposite to the GSCI,
+DJUBS has a more diversied view were the index tries to minimize the
+concentration in one single commodity or sector. Since our study aims to
+replicate a commodity portfolio it is necessary to include several indices to
+get a broader view. Furthermore, it is easier to see the general trends when
+commodities are included and not observing the investment strategy of the
+indices themselves.
+   The MLM index chosen was a Long/neutral index and diers from the
+two other indices by the fact that the management of the index might chose
+to not go long in a commodity and be neutral over time. When the market is
+determined to go up, the index takes a long position and a neutral position
+otherwise. It is therefore a good proxy for a fund that makes active decisions.
+
+                                23
+                                                        39
+Since real commodity prices tend to fall over time   a long neutral strategy
+might provide a better ination hedge than the always-long strategy itself.
+This index is therefore a good alternative to passive only indices. Since the
+index includes active management it might be a good alternative for pension
+funds that lack the experience or do not have the competence needed for
+investing in commodities. Furthermore, these indices were lso approved by
+the head of portfolio management at AP3 as good proxies for a general AP
+fund.
+    In order to perform the analysis, a exible excel model was created, which
+could take into account all the investment rules; the weights, hedge ratios,
+xed income exposure, risk free rate and also the possibility to calculate the
+portfolios based on either excess or total return. This made it easier to verify
+that all the dierent angles were covered, in this way we could easily handle
+massive amounts of data swiftly.
+
+4.3 Portfolio Optimization
+Markowitz developed the modern portfolio theory, we apply his denition of
+return and risk, as dened below:
+
+                   E(r) = ωE(rAP ) + (1 − ω)E(rC )
+
+                   2      2  2              2  2
+            σ = ω σAP + (1 − ω) σC + 2ω(1 − ω)ρσAP σC
+
+                         −1 ≤ ρ ≤ 1
+
+    In the thesis, the rst asset is dened as one of the commodity indices, and
+the second asset as the original AP portfolio. Markowitz second contribution
+was the theory of diversication. The diversication principle (dened below)
+states that: The standard deviation of the combination is less than the
+combination of the standard deviations.
+
+                                    2     2                           2
+           [ωσAP − (1 − ω)σC ] ≤ σ ≤ [ωσAP + (1 − ω)σC )]
+
+                ρ < 1 → σ ≤ [ωσAP + (1 − ω)σC ]
+
+    The diversication eect is interpreted as holding a portfolio that elimi-
+nates the individual risk and only holds the market risk, i.e. β. The literature
+
+  39
+    MLM Corporation (Index Description)
+
+                                24
+review suggests that integrating commodities into the AP portfolio gives a
+diversication eect. Hence the individual risk was minimized in the new
+portfolios in comparison to the original AP portfolio. Below the diversica-
+tion eect is dierentiated:
+
+                                              1
+                       Suppose: ωi = n , i = 1, . . . , N
+
+   ∑n ∑n       ∑n     ∑n ∑n      ∑n     ∑n ∑n
+ 2          1       1         1                 1      2   1
+σ  =        2 σij =  2    σii +  2          σij =  2    σi +  2          σij
+      i=1 j=1 n        n  i=1      n  i=1 j=1,j 6=i       n  i=1      n  i=1 j=1,j 6=i
+
+                         n → ∞
+
+            ∑n  ∑n         ∑n      2
+             1                 1           n − 1
+       σij = 2              σij ,  2       σij =    2 σij → σij
+              n  − n j=1 j=1,j 6=i         n  j=1,j 6=i         n
+
+   The dierentiation above proves that when the number of assets increases
+towards innity, the systematic risk remains. In order to not only analyze
+whether commodities can improve the AP portfolio, but also determine to
+what extent they would be included, Markowitz Mean-Variance Portfolio
+Analysis is applied.
+   First the Minimum Variance Frontier is obtained as the solution to:
+
+                       ∑N
+                      M inωV ar = (˜rp) = V ar(   ωi r˜i)
+                                                         i=1
+
+                 ∑N
+                  s.t E(˜rp) = E(   ωi r˜i) = ωiE(˜ri) = r
+                                           i=1
+
+                ∑N
+                                   ωi = 1
+                                         i=1
+
+           ωi ≥ 0 i = 1, . . . , N (N o Short selling Constraint)
+
+   Solving the above problem for dierent values of r gives dierent points
+in the chart, connecting the points give the minimum variance frontier. Im-
+portant to note is that in the case study, the two assets which were combined
+in this model were the original AP portfolio and commodity index. The
+
+                                25
+model was set up in Excel, which calculated for the dierent weights. When
+excluding the rst constraint (E(˜rp) = r) the Minimum Variance Portfolio
+(MVP) was obtained.
+   By using the minimum variance frontier, the Optimal Risky Portfolio
+(ORP) was obtained by solving the following:
+
+                                E(˜rp − rf )
+                       maxω
+                                     σ(˜rp)
+
+                s.t. E(˜rp) = ωE(˜rAP ) + (1 − ω)E(˜rC )
+
+       √
+     σ(˜r ) =  ω2σ2(˜r  ) + (1 − ω)2σ2(˜r ) + 2ω(1 − ω)Cov(˜r  , r˜ )
+         p            AP                C                    AP   C
+
+   Dierentiating with respect to ω and setting to zero, the solving for ω
+gives:
+
+                                              2
+                           [E(˜rAP )−rf ]σ (˜rC )−[E(˜rC )−rf ]Cov(˜rAP ,r˜C )
+    ω∗ = [E(˜r   )−r ]σ2(˜r )+[E(˜r )−r ]σ2(˜r   )−[E(˜r   )−r +E(˜r )−r ]Cov(˜r   ,r˜ )
+              AP    f     C      C    f     AP      AP    f     C    f      AP  C
+   The weight obtained from the equation gives the weight in the commodity
+index; the remaining weight will be in the original AP portfolio. This combi-
+nation maximizes the Sharpe ratio and is the portfolio which every investor
+should hold, regardless of their level of risk aversion.
+   According to the separation theory, the asset allocation problem can be
+divided into two problems. First the optimal risky portfolio is determined as
+above. Second the combination between the risk-free asset and optimal risky
+portfolio is determined, this is known as the investor problem:
+
+                                          1   2
+                       U (r) = E(r) −  Aσ (r)
+                                    2
+   However, determining the risk aversion (A) cannot be simulated since it
+is based on arbitrary beliefs. Therefore, the investor problem is never solved,
+to avoid any bias. We assume that the optimal risky portfolio is held to 100
+%. Hence, the optimal risky portfolio is the portfolio which is tangent to
+the ecient frontier and located on the capital allocation line and gives the
+highest Sharpe ratio, since it is the slope of the line. The CML is given by:
+
+                                  [E(rM ) − rf ]
+                    E(ri) = rf +             σiM
+                            σM
+
+                                26
+4.4 Extreme Case Scenario
+To be able to show what returns the AP funds could have had, an extreme
+scenario was created. In the simulation, the weight obtained for the optimal
+risky portfolio in the best performing portfolio was used. By borrowing
+or investing at the risk-free rate it was possible to create an extreme case
+portfolio with the same risk as the standard AP portfolio. This was obtained
+by dividing the standard deviation from the AP portfolio over the standard
+deviation for the optimal risky portfolio which yielded the leverage ratio.
+This ratio was then multiplied with the return of the optimal risky portfolio
+for each month to include interest on interest eects. The cost of borrowing
+was then deducted from the return on a month per month basis.
+
+                                27
+5 Results
+
+5.1 Monthly Performance 5%
+
+Figure 4: Portfolio performance for the replicated commodity portfolios with
+5% weight in commodities, benchmarked against the original AP portfolio.
+
+ 5% Weight, Monthly
+  Portfolio Simulation Return St.Dev Sharpe Ratio Total Return Draw-Down Draw-Up
+  AP Portfolio 0,174% 2,355% 0,071 23,36% -0,082 0,062
+  GSCI 0,190% 2,304% 0,079 26,34% -0,090 0,057
+  DJUBS 0,188% 2,289% 0,079 26,25% -0,086 0,058
+  MLM 0,199% 2,219% 0,086 28,55% -0,074 0,058
+
+Table 4: Performance measures for the commodity portfolios with a 5%
+weight in commodities, benchmarked against the original AP Portfolio.
+
+   If an investor would have invested in the portfolios including commod-
+ity indices from the beginning of the year of 2000, the investor would have
+outperformed the original AP portfolio. Table 4 shows the total return for
+the time period. It is clear that the commodity portfolios have higher total
+returns than the original AP portfolio. For example the MLM portfolio had
+a total return exceeding the AP portfolio with 519 basis points. Between the
+beginning of 2000 until the end of 2002 the commodity portfolios performed
+very similar to the AP portfolio. However, from the end of 2002 until the
+end of 2007 the commodity portfolios performed considerably better than the
+
+                                28
+original portfolio and from the end of 2007 until the end of 2008, the com-
+modity portfolios dropped more than the original portfolio. However, the
+portfolios still managed to maintain their already accrued higher return. In
+the recovery from the beginning of 2009, the commodity portfolios once again
+performed better than the AP portfolio. The ndings imply that integrating
+commodities, improves the AP portfolio over time, due to the diversication
+eect.
+    Looking at the table, the higher total return mentioned above, is reected
+in the monthly returns where all commodity portfolios have higher returns
+than the AP portfolio. For example the MLM portfolio has on an average
+25 basis points higher return each month. The risk measured by the stan-
+dard deviation shows that the commodity portfolios have lower risk than the
+original AP portfolio. The higher return and lower risk is reected in the
+Sharpe ratio which is higher for all the commodity portfolios in comparison
+to the AP portfolio. The performance gures further support the theory that
+the AP portfolio is improved when integrating commodities. Decreased stan-
+dard deviation and increased return concretizes the diversication eect and
+implies that there are more ecient portfolios. The AP portfolio has lower
+drawn-down and higher draw-up in opposite to the previous positive eects
+in the commodity portfolios (except for the MLM at -0,074 draw-down).
+
+                                29
+5.2 Monthly Performance 15%
+
+Figure 5: Portfolio performance for the replicated commodity portfolios with
+15% weight in commodities, benchmarked against the original AP portfolio.
+
+ 15% Weight, Monthly
+  Portfolio Simulation Return St.Dev Sharpe Ratio Total Return Draw-Down Draw-Up
+  AP Portfolio 0,174% 2,355% 0,071 23,36% -0,082 0,062
+  GSCI 0,222% 2,341% 0,091 31,91% -0,106 0,049
+  DJUBS 0,217% 2,220% 0,095 31,93% -0,094 0,051
+  MLM 0,250% 1,988% 0,122 39,30% -0,058 0,050
+
+Table 5: Performance measures for the commodity portfolios with a 15%
+weight in commodities, benchmarked against the original AP Portfolio.
+
+   Figure 5 has the same trend as the 5% weight graph, only with larger
+uctuations due to the larger weight in commodities. However, the positive
+eects of commodities are more clearly seen in the large gap between the
+commodity portfolios and the AP portfolio over time. Regarding the monthly
+return, the returns for the commodity portfolios are not only higher than
+the AP portfolio but also higher than the commodity portfolios with the
+5% weight. Interesting to note is that the standard deviation is not only
+lower for the commodity portfolios but also lower for the DJUBS and MLM
+portfolios in comparison to the 5% portfolios, indicating that the minimum
+variance portfolio is closer to 15% than 5% for the DJUBS and MLM. Since
+the Sharpe ratios are also higher for the 15% portfolios in comparison to the
+
+                                30
+5% portfolios, this also supports that these portfolios are closer to the optimal
+risky portfolio. The total return was considerably higher in comparison to the
+AP, not only for the MLM portfolio (15,94%) but also for the DJUBS (8,57%)
+and GSCI (8,55%). Regarding the draw-up and draw-down the trend is the
+same; however the draw-down for the DJUBS and GSCI portfolios are higher
+than the AP portfolio, while the MLM portfolio still has a lower draw-down.
+
+                                31
+5.3 Yearly Performance 5%
+
+Figure 6: Portfolio performance for the replicated commodity portfolios with
+5% weight in commodities, benchmarked against the original AP portfolio.
+
+  5% Weight, Yearly
+  Portfolio Simulation Return St.Dev Sharpe Ratio Total Return Draw-Down Draw-Up
+  AP Portfolio 2,634% 10,190% 0,250 29,14% -0,152 0,147
+  GSCI 2,852% 10,255% 0,269 32,34% -0,166 0,143
+  DJUBS 2,816% 10,170% 0,268 31,94% -0,160 0,144
+  MLM 2,941% 9,728% 0,293 34,58% -0,139 0,141
+
+Table 6: Performance measures for the commodity portfolios with a 5%
+weight in commodities, benchmarked against the original AP Portfolio.
+
+   The graph visualizes the indexed returns for the AP portfolio and the
+commodity portfolios. As for the monthly rebalanced portfolios, an investor
+who invested in the commodity portfolios would have outperformed the AP
+portfolio during the time period.
+   With yearly compared to monthly rebalancing the trend for the port-
+folio measures are the same (i.e. increased return and decreased standard
+deviation, implying a higher Sharpe ratio) when comparing the commodity
+portfolio to the AP portfolio.
+   With yearly rebalancing the total return for the 5% portfolios is higher
+in comparison to the monthly rebalanced portfolios with the same weight.
+For example, the GSCI portfolio with yearly rebalancing (5%) performed
+6,03% better than the monthly rebalanced portfolio. Therefore, the increase
+
+                                32
+in the total return with yearly rebalancing implies that the return per time
+period (year) is higher in relation to the monthly return. The dierence in the
+rebalancing period implies that it is not benecial to rebalance frequently, but
+instead keep the assets that perform well for a longer time period and earn
+the returns. Furthermore, the changed rebalancing supports the fact that
+commodities actually have a correlation eect and can act as a diversier
+and add to the AP portfolios return.
+
+                                33
+5.4 Yearly Performance 15%
+
+Figure 7: Portfolio performance for the replicated commodity portfolios with
+15% weight in commodities, benchmarked against the original AP portfolio.
+
+  15% Weight, Yearly
+  Portfolio Simulation Return St.Dev Sharpe Ratio Total Return Draw-Down Draw-Up
+  AP Portfolio 2,634% 10,19% 0,250 29,14% -0,152 0,147
+  GSCI 3,290% 10,92% 0,293 38,08% -0,195 0,163
+  DJUBS 3,181% 10,38% 0,298 37,33% -0,175 0,156
+  MLM 3,557% 9,010% 0,385 45,71% -0,113 0,147
+
+Table 7: Performance measures for the commodity portfolios with a 15%
+weight in commodities, benchmarked against the original AP Portfolio.
+
+   As seen with the 5% portfolio, the returns increase even more when the
+portfolios have exposure to commodities included. As for the standard de-
+viation, the MLM portfolio decreases while the DJUBS and GSCI increases
+slightly to 10,38% and 10,92%. This implies that the minimum variance
+portfolio has less than 15% in commodities, with yearly rebalancing. How-
+ever, the Sharpe ratios for all the commodity portfolios have increased. The
+increase in Sharpe ratio implies that even though the standard deviation in-
+creases above the AP portfolios standard deviation, the increase in return is
+able to compensate for it.
+   Furthermore, a concrete evidence of the eect of yearly rebalancing is
+seen in the total return which is heavily improved. This implies that it
+is more benecial to keep an asset which has performed well in the past.
+
+                                34
+Something that is also visible with 15% weight is that the MLM managed
+to avoid the 2008 crisis better than the other portfolios. The MLM portfolio
+has an even lower draw-down than with 5% weight. The biggest increase
+in Sharpe ratio can be seen with the MLM index which is 54% higher than
+for the AP portfolio and 31% higher than the 5% MLM portfolio. MLMs
+ability to minimize the downside during the nancial crisis is explained by
+the long-neutral strategy, which is not used by the other commodity indices.
+Therefore, the long-neutral strategy clearly proves its benets.
+   One important thing to notice is that the commodity portfolios have a
+higher exposure to the USD than the AP portfolio. The model was created
+to only add the commodity eect, and not take into account the currency
+eect. Since the USDSEK FX-rate has declined by around 20% over the
+time period, the actual performance could be even higher for the commodity
+portfolios. The most realistic case would be to hedge the currency exposure
+related to the commodity indices, which in this case would have increased
+the returns even more.
+
+                                35
+5.5 Portfolio Optimization
+
+                  Correlation
+                    Stand Alone Index AP Portfolio
+                   GSCI 0,052
+                  DJUBS 0,067
+                MLM -0,259
+
+Table 8: Correlation matrix between the dierent commodity indices and the
+original AP portfolio.
+
+   The correlation between GSCI and DJUBS compared to the AP portfolio
+is noticeably low. Between the DJUBS and the AP portfolio the correlation
+is 0,067 and GSCI to the AP portfolio at 0,052. The correlation between
+MLM and the AP portfolio is negative at -0,259. Low or negative correlation
+with the AP portfolio should add a correlation eect, i.e. to increase the
+diversication of the portfolio and increases its Sharpe ratio. These ndings
+are seen in gure 4-7 and table 4-7 and are in line with previous literature
+and our expectations.
+
+   Global Minimum Variance Portfolios
+   Index Weight Commodity Weight AP Portfolio St.Dev Return Sharpe Ratio
+   MLM 30,4% 69,6% 1,8% 0,33% 0,181
+   DJUBS 22,0% 78,0% 2,1% 0,24% 0,110
+   GSCI 10,8% 89,2% 2,2% 0,21% 0,092
+
+Table 9: Global minimum variance portfolios for the three dierent commod-
+ity indices.
+
+   The commodity weights in table 9 are obtained when minimizing the
+portfolios standard deviation, i.e. obtaining the global minimum variance
+portfolios located on the minimum variance frontier. The ecient frontier
+is based on the portfolios with monthly rebalancing periods. The standard
+deviations are lower than for the AP portfolio by 58,9 basis points in the MLM
+portfolio and 24 and 11,3 basis points for the DJUBS and GSCI portfolio.
+Comparing the portfolios above with the AP portfolio, it is clear that the
+returns are higher and standard deviations are lower. The global minimum
+variance portfolio strongly supports the theory that there are more ecient
+portfolios than the AP portfolio, regardless of which commodity index that
+is integrated.
+   The table 10 is obtained when maximizing the Sharpe ratio, i.e. obtaining
+the weights in the commodity index that yields the optimal risky portfolio.
+
+                                36
+   Optimal Risky Portfolios
+   Index Weight Commodity Weight AP Portfolio St.Dev Return Sharpe Ratio
+   MLM 47,7% 52,3% 2,0% 0,41% 0,203
+   DJUBS 43,2% 56,8% 2,3% 0,29% 0,122
+   GSCI 25,4% 74,6% 2,4% 0,25% 0,101
+
+   Table 10: Optimal risky portfolios for the dierent commodity indices.
+
+Comparing the Sharpe ratio to the minimum variance portfolio, and to the
+AP portfolio the optimal risky portfolios always have a higher Sharpe ratio.
+Figures 8-10 visualize that the optimal risky portfolios have a higher return
+with a slightly higher standard deviation. The Sharpe ratio for the MLM
+portfolio increases by 187% in comparison to the AP portfolio with monthly
+rebalancing. The Sharpe ratio of the DJUBS portfolio increased by 72% and
+the GSCI increased with 43%.
+   The evidence that integrating commodities creates more ecient portfo-
+lios is heavily supported by the optimal risky portfolio, with Sharpe ratios
+much higher than the original AP portfolio. In nancial theory, the optimal
+risky portfolio should always be held, regardless of risk aversion. The AP
+portfolio is clearly not the best diversied portfolio and therefore not invest-
+ing in the best interest of the shareholders, i.e. the Swedish population.
+
+Figure 8: Ecient frontier for an AP portfolio including the MLM index at
+dierent weights.
+
+   The ecient frontier for the dierent commodity portfolios are visualized
+in gures 8-10. The red square represents the AP portfolio today, the triangle
+represents the current risk-free rate and the circle represents the optimal risky
+
+                                37
+Figure 9: Ecient frontier for an AP portfolio including the GSCI index at
+dierent weights.
+
+Figure 10: Ecient frontier for an AP portfolio including the DJUBS index
+at dierent weights.
+
+portfolio. The slope of the capital allocation line, tangent to the optimal risky
+portfolio, is the same as the Sharpe ratio. We can see that for all indices
+the curve is shifted to the left showing the decrease in standard deviation
+and the increase in return that is possible. The GSCI is the only index that
+has an optimal risky portfolio that has higher standard deviation than the
+standard AP portfolio.
+
+                                38
+5.6 Extreme Case
+
+         Figure 11: Extreme case scenario against the AP portfolio
+
+   The graph visualizes the eect when comparing the AP portfolio, and a
+portfolio with the same volatility, located on the capital allocation line. The
+weight in the MLM has been derived from the optimal risky portfolio and
+then levered with 0,223%. From the graph it is clear to see that there is
+a huge dierence between the original AP portfolio, and the extreme case
+portfolio. The striped area visualizes where an AP funds returns could have
+been without increasing their risk. It is clear that this is indeed an extreme
+case; however it implies that the capital could have been managed in a much
+more ecient way.
+
+      Extreme Case
+        Measures Extreme Case AP Portfolio Dierence
+       Monthly Return 0,46% 0,17% 0,29%
+       Total Return 87,28% 23,36% 63,92%
+        St.Dev 2,36% 2,36% 0,00
+       Leverage Ratio 0,223% 0% 0,223%
+
+                                39
+5.7 Results Summary
+When including commodities into the AP portfolio, it can be observed that
+for 5% and 15% weights and all rebalancing periods, the portfolios including
+commodities always have higher performance, measured in Sharpe ratio. To-
+tal return is always higher, standard deviation is almost always lower with
+few exceptions. The correlation between the stand alone commodity indices
+and the synthetically replicated AP portfolio is low. The Markowitz port-
+folio optimization proves that there are more ecient portfolios than the
+current AP portfolio. In an extreme case scenario, with the same standrard
+deviation, the returns of the extreme case portfolio always exceeds the AP
+portfolio.
+
+                                40
+6 Conclusions
+
+The purpose of this study was to see if the Swedish pension fund regula-
+tion, prohibiting AP funds from investing in commodities have aected their
+performance. We have concluded that the performance have been greatly
+reduced due to the regulation and should be changed to allow for commodity
+investing going forward.
+   By replicating a scenario were commodity investments are allowed we
+have shown that the AP funds over the last 12 years have missed out on
+16,57% additional return which estimates around 92,8 billion SEK in extra
+                                                                              40
+revenue approximating around 46 000 SEK per pension taker  . This is
+crucial amount of additional return that could have contributed to their goal
+achievement.
+   Except for the additional return, the risk, measured in volatility, could
+have been lowered. The minimum variance frontier is shifted to left when
+including commodities implying that the AP funds do not have the most
+ecient portfolio at the moment. The AP portfolio should therefore be
+allowed to invest in commodities in order to hold the most ecient portfolio,
+consequently complying with their goal to deliver steady and reliable returns
+for the Swedish population.
+   Hence, the essay managed to prove the theory that including commodities
+provides a diversication eect due to low or even negative correlation in
+comparison to traditional asset classes. The above ndings are in line with
+the expectations stated in the introduction.
+   If the Swedish pension fund regulation continues to prohibit commodity
+investments, the reason for their existence is superuous, since they currently
+cannot fulll their own purpose. Their goal is set in order to guarantee the
+future welfare of the Swedish population. If the current system cannot reach
+the necessary goals, the capital should be allocated in a dierent way.
+   At present, the AP funds are destroying the Swedish pension capital by
+not being allowed to hold the most ecient portfolio, i.e. not investing in
+the best interest of the Swedish population. Investing in the most ecient
+portfolio should always be the goal of investment management and public
+authorities should not be an exception.
+
+  40
+    Based on initial value of 560 billion SEK and 15% weight in MLM with 2 mil-
+lion pension taker and no additional cash in or outows. (Source: http://www.
+forsakringskassan.se/omfk/statistik_och_analys/pension/alderspension)
+
+                                41
+7 Ethics and CSR
+
+Commodity investing is a highly debated topic within the nancial indus-
+try, as mentioned in the introduction. The debate is constantly criticizing
+commodity investing and the eects commodity trading derivatives might
+have, especially harming the population in developing countries. Since the
+Swedish AP funds invest the populations capital, the ethical issues are of
+great importance.
+   The AP funds are investing in order to provide future consumption for
+the Swedish population. Therefore investing in commodities consumed by,
+or which are benecial for, the Swedish population should be the optimal
+allocation of capital directed in commodities. For example Sweden has the
+                                                                          41
+8th highest electricity consumption per capita in the world (2009).   A rise
+in electricity prices would therefore greatly aect the consumption of not
+only electricity, since it is needed for heating, but also other goods that the
+population would have to give up to compensate for the higher price. If
+however a pension fund invested in commodities that the country is greatly
+dependent on, such as electricity in Sweden, a rise in that commodity price
+would be compensated for by a higher pension. This creates a more stable
+environment for the pension takers. Besides the obvious eect this has for
+the pension takers it will also stimulate, in this example, the energy sector
+which can ensure and lock in future revenues and thereby minimize their
+own risk. The investments are meanwhile compliant with the investment
+guideline, which is to have a long term investment horizon, which in turn
+provides long term benets.
+   The nancial market oers multiple investment vehicles for commodity in-
+vesting. Commodity futures are widely used with dierent purposes. Swedish
+commodity producers can benet from nancial derivatives using commodi-
+ties as an underlying asset in order to, for example, hedge their cash ows.
+This generates steady cash ows for commodity producers, beneting not
+only the producers, but also the population by making it attractive and safe
+from an economical perspective to produce commodities and at the same
+                                          42
+time provide resources for Sweden.
+   The causality between prices of commodity derivatives and the underlying
+commodity prices themselves are minimal. When trading with derivatives,
+no physical commodities are added to or drawn from the market. Hence,
+the supply and demand structure cannot be aected. This concludes that
+trading with speculatory purposes in commodity derivatives do not aect
+
+  41
+    http://data.worldbank.org/indicator/EG.USE.ELEC.KH.PC
+  42
+    Head of Commodities at SEB, Torbjörn Iwarson. Discussions with the CSR depart-
+ment at SEB.
+
+                                42
+the real commodity market and thereby do not aect the population in a
+                43
+negative way.
+    Regarding the eect of commodity investing on food prices, which is one of
+the main ethical issues discussed, the criticism seems to be groundless. Stud-
+ies conducted by the World Bank and the University of Wageningen have
+failed to prove that a connection between food prices and prices on commod-
+ity futures exists. This is one of the reasons why for example PGGM actively
+invests in commodities. Until there are sucient and uniform evidence that
+commodity investing can aect food prices in a harmful way, the criticism
+                                   44
+should be seen as groundless.
+   The criticism from an ethical point of view directed towards commodity
+investing is, as discussed above, unsupported by facts. Of course, the ethical
+perspective is always important to keep in mind going forward, always making
+sure to invest the populations capital in a responsible way. However, it is
+important to not only to be critical of the asset class itself, but also the
+criticism directed towards it.
+
+  43
+    Responsible Investment, Annual Report 2011, PGGM
+  44
+    University of Wageningen (2008)
+
+                                43
+8 Problematization & Future Research
+
+Since our results points towards that one observation depends on another.
+Yearly rebalancing improves our results compared to monthly rebalancing,
+implying that weak market hypothesis does not hold. Since our model de-
+pends on the previous observations return (interest on interest), the obser-
+vations can not be regarded as independent. Hypothesis testing is heavily
+dependent on the assumption that all observations are independent, the com-
+monly used t-test for hypothesis testing can therefore not be applied to our
+          45
+results.
+   The model used for replicating the portfolios is based on several assump-
+tions, which the reader should be aware of. The AP funds have active invest-
+ment management in each rebalancing period, which cannot be replicated in
+the study without being biased due to the fact that events during the time
+period could be exploited. The model therefore assumes passive investments
+to avoid the bias. Regarding the indices, the total return version is used in
+opposite to for example an excess return variant. Total return indices include
+all costs, making them representable as an investment vehicle. The reader
+should however be aware that there are dierences between the index types,
+which could aect the outcome of the study.
+   It is important to notice that the study aims at showing a dierence in
+portfolios and not the true replication of an AP portfolio. The AP portfo-
+lios have an active management which we could not replicate without being
+backward biased. Therefore our portfolio is likely to have performed slightly
+worse than a true AP portfolio. The AP funds also have alternative invest-
+ments that we could not replicate due to several reasons. For example they
+have private equity that is not listed and therefore hard to replicate. We have
+therefore assumed no alternative investments in the standard AP portfolio.
+    When Sharpe ratios are calculated, the current short term risk free inter-
+est rate is used. The goal is not to calculate true Sharpe ratios, but rather
+to display for any dierences in Sharpe ratios between the portfolios.
+   Traditional performance measures are used to compare the portfolios
+making the conclusions of the essay sensitive to the measures used. The
+outcome when applying a dierent analytic approach has not been tested
+and we can therefore not reject that another approach would give other re-
+sults.
+   As discussed in the introduction, and seen in the results section, the
+outcome is heavily dependent on the time period used. The results could
+therefore uctuate when applying it on another time period. These eects
+
+  45
+    Concluded in discussions with the Statistics Department at SSE
+
+                                44
+have not been tested and the extent of the impact is therefore unknown.
+   A hedge ratio of 40% is applied in order to keep the currency exposure
+within the 40% limit. Since the results must be calculated and presented
+in SEK, the conversion from USD indices into SEK is necessary. Using a
+currency hedge aects the results by gaining on any downside in the FX
+ratio.
+   Going forward this study could be developed by analyzing the eect of
+using dierent investment vehicles. As discussed in the background there are
+several way to invest in commodities, replicating the study with a dierent
+vehicle could change the results in a positive or negative direction.
+
+                                45
+9 References
+
+[1] Ankrim, E. M./Hensel, C. R. (1993): Commodities in Asset Allocation:
+    A Real-Asset Alternative to Real Estate? ; in: Financial Analysts Journal,
+   Vol. 49, Issue 3, May/June 1993,pp.20-29
+
+[2] Annual report 2011 AP1 ; Download: http://www.ap1.se/en/
+   Financial-information-and-press/Reports/
+
+[3] Annual report 2011 AP3 ; Download: http://www.ap3.se/sites/
+   english/financial_reports/Documents/Annual%20Report%202011.
+   pdf
+
+[4] Annual report 2011, AP4 ; Download: http://www.ap4.se/web/
+   templates/FileListing.aspx?id=283
+
+[5] Beenen, J. (2005): Commod investing: a pension fund perspective.
+   Futures industry, September/October 2005; Download: http://www.
+   futuresindustry.org/fi-magazine-home.asp?a=1059
+
+[6] Bloomberg Corporation. (Data and descriptions exported from Bloomberg
+   terminal) Visit at;www.bloomberg.com
+
+[7] CISDM (2005): The Benets of Commodity Investment, 2005 Update,
+   Center for International Securities and Derivatives Markets (CISDM),
+   June 2005; Download: cisdm.som.umass.edu/research/pdffiles/
+   benefitsofcommodities.pdf
+
+[8] CME Group (2005): An Introduction to CME Commodity Products;
+   Download: http://www.cme.com/edu/co/onres/cobrchrs15544.html
+
+[9] Dagens Industri : AP Fondernas Jättemiss No.45 Vol.37 (2012-02-24)
+
+[10] Demidova-Menzel, N./Heidron, T (2007): Commodities in Asset Man-
+   agement. Frankfurt School- Working Paper series, No.81, August 2007;
+   Download: www.frankfurt-school.de/dms/.../Arbeits81.pdf
+
+[11] Erb, C.B./Harvey, C.R. (2005): The Tactical and Strategic Value of
+   Commodity Futures; NBER Working Paper 11222; Downloaded (2012-04-
+   07, 14:52): faculty.fuqua.duke.edu/~charvey/Research/Working_
+   Papers/W77_The_tactical_and.pdf
+
+[12] Financial Times: US Pension fund eyes commodity invest-
+   ments; 2010 May 31. Downloaded (2012-03-13, 09:45): http:
+
+                                46
+   //www.ft.com/cms/s/e05113da-6cd3-11df-91c8-00144feab49a,
+   Authorised=false.html?_i_location=http%3A%2F%2Fwww.ft.com%
+   2Fcms%2Fs%2F0%2Fe05113da-6cd3-11df-91c8-00144feab49a.html&_
+   i_referer=#axzz1s0ZRSU6u
+
+[13] Greer, R.J. (2000): The Nature of Commodity Index Returns; In: The
+   Journal of Alternative Investments, Summer 2004, pp.45-53
+
+[14] Gorton, G./Rouwenhoorst , K.G. (2004): Facts and fantasies about com-
+   modity futures, Yale ICF Working Paper No.04-20, February 2005; Down-
+   loaded (2012-02-25, 11:12):http://ssrn.com/abstract=560042
+
+[15] Investigation of APfunds regulation (Original titel in Swedish: över-
+   synav AP-fondernasregelverk), Dir 2011:84. Ministry of Finance, Swe-
+   den.; Downloaded (2012-03-27, 12:54):http://www.regeringen.se/sb/
+   d/14255/a/176799 (Swedish Only)
+
+[16] Investments and Pensions Europe(2007) PGGM to focus on in-
+    ation linked investments; Download:http://www.ipe.com/news/
+   pggm-to-focus-on-inflation-linked-investments_27692.php
+
+[17] Lummer, S. L./Siegel, L.B. (1993): GSCI Collateralised Futures: A
+    Hedging and Diversication Tool for Institutional Investors; In: Journal
+   of Investing, Summer 1993, pp.75-82
+
+[18] Mount Lucas Corporation, Index description; Downloaded (2012-
+   04-15, 13:32): https://www.mtlucas.com/Content.aspx?content=
+   CommIndexCommodityLN
+
+[19] Pulvermacher, K. (2005a): What are Commodities? March 2005;
+   Downloaded (2012-03-02, 16:31):http://www.gold.org/value/stats/
+   research/index.html
+
+[20] Reuters, Pension fund Calstrs eyes 2,5$ billion in
+    commodities; 2010 23 Sept., Downloaded (2012-05-01,
+   15:31): http://www.reuters.com/article/2010/09/23/
+   us-commodities-calstrs-idUSTRE68M4JL20100923
+
+[21] Satyanarayan, S./Varangis, P. (1994): An Ecient Frontier for
+    International Portfolios with Commodity Assets, Policy Research
+   Working Paper 1266, The World Bank, March 1994; Downloaded
+   (2012-01-24, 19:52): www-wds.worldbank.org/WDSP/IB/1994/03/01/
+   000009265_3961006020009/Rendered/PDF/multi_page.pdf
+
+                                47
+[22] Schneeweis, T / Karavas, V /Georgiev, G. (2002): Alternative
+    Investments in the Institutional Portfolio, Alternative Investment
+   Management Association (AIMA); Downloaded (2012-04-12, 18:16):
+   http://didattica.unibocconi.it/mypage/upload/49203_20100215_
+   063949_ALTINVININSTITPORT_SCHNEEWEISKARAVASGEORGIEV.PDF
+
+[23] The National Pension Insurance Funds (AP Funds) act (SFS 2000:192);
+   Downloaded (2012-01-20): http://www.ap1.se/upload/reports/The%
+   20National%20Pension%20Insurance%20Funds%20Act.pdf
+
+[24] The Wall Street Journal: The Case Against Commodities; 2011 4
+   Oct.; Downloaded (2012-03-23): http://online.wsj.com/article/
+   SB10001424053111903703604576585091338444116.html
+
+[25] University of Wageningen, Impact on global food prices, 17 Jul
+   2008 (report 2008-040) http://www.wageningenuniversity.nl/UK/
+   newsagenda/archive/news/2008/Impact_on_global_food_prices.
+   htm
+
+[26] You, Leyuan / Daigler, R.T (2010): A Markowitz Optimization of Com-
+    modity Futures Portfolios, McCoy college of business administration;
+   Downloaded (2012-04-28, 10:34): http://www.southwesternfinance.
+   org/conf-2011/swfa2011_submission_28.pdf
+
+                                48

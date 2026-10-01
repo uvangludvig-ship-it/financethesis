@@ -1,0 +1,1001 @@
+     Geometric Brownian Motion
+ Option Pricing Model for Professional
+           Football Contracts
+
+                    Dennis Markovic & Emil Schough
+
+                            May 2023
+
+                         ABSTRACT
+
+In recent years, the valuation of football players has gained significant attention, especially in
+the context of their transfer value in the market. Our investigation explores the application of
+a Geometric Brownian Motion option pricing model to estimate the transfer value of football
+players, considering the option-like characteristics of player contracts. This study is an
+adaptation to existing models within the football player valuation context, utilizing variables
+such as player performance, age, contract length, and market conditions. The pricing model is
+tested on a comprehensive dataset of football players who either transferred between Premier
+League clubs between 2017-2021 or played 50+ games in the league within the same period.
+The proposed model is compared to standard valuation methods, such as those based on
+market comparables or performance metrics. Our preliminary findings indicate that the
+Geometric Brownian Motion pricing model provides a robust framework for estimating football
+player transfer values. While our results do not confirm the model's definitive superiority, they
+highlight its potential in capturing the complex dynamics of football player valuation and
+provide a foundation for further exploration in this area.
+
+       Keywords: Geometric Brownian motion; Football; Investment analysis; Real options
+                                   I. Introduction
+
+Football, often hailed as the world's game, spans a vast range of settings, from casual schoolyard
+matches to prestigious global competitions such as the World Cup and Champions League. As the
+sport has grown, so too has its economic significance, leading to the development of an
+increasingly formalized market system for player transactions. This market aims to foster
+transparency, fairness, and sustainable financial practices while accounting for the myriad of
+factors influencing player values and the wide financial disparities between clubs.
+
+Football clubs primarily derive their revenue from three sources: commercial revenue through
+sponsorships and advertisements, broadcasting revenue from matchday ticket sales, season
+tickets, memberships, and TV rights, and transfer revenue, which encompasses the sale and
+acquisition of player contracts. The distribution of these revenue streams varies among clubs but
+is generally skewed toward commercial and broadcasting revenues, with transfer revenues making
+up a smaller proportion (Statista, 2022). The financial landscape of European football has
+undergone significant changes since the establishment of the modern British Premier League in
+1992. Increased data reliance, institutional investment, and international transfers have inflated
+the global football market substantially with the average year-on-year inflation rate of transfer
+fees in the top five leagues reaching 26% from 2014-2020.
+
+Transfer fees serve to compensate clubs for training and developing players who then move on to
+other clubs and to provide the selling club with financial opportunities to replace the departing
+player with one of comparable ability. The process of determining a player's value during a
+transfer negotiation involves economic bargaining and consideration of factors such as similar
+players' market values, player age, potential for improvement, contract length, and the selling
+club's willingness to sell (Szymanski & Kuypers, 1999).
+
+The Bosman Ruling of 1995 had a significant impact on the transfer market. This ruling allowed
+players to move freely at the end of their contracts, which resulted in a decrease in transfer fees
+and an increase in the number of free transfers. The introduction of this ruling also created a new
+temporal dimension to the transfer market, which affected the valuation of players. The
+expiration of a player's contract rendered their worth to their club obsolete, and player contract
+rights became depreciating assets. As a result, renewing contracts and meeting financial and
+footballing demands among players became more important, as the bargaining power shifted
+towards the player in expressing their agency at the end of their contract.
+The accurate and precise valuation of football players' contract rights is crucial for clubs to
+maintain financial stability, improve league standings, and retain top talent in an increasingly
+globalized football market (Magee, 2016; Morrow, 2003). As Andreff and Staudohar (2000) argue,
+the evolving financial landscape of European football necessitates effective management of
+financial resources. In line with this, Dobson and Goddard (2011) suggest that understanding the
+economics of football is vital for the overall performance of clubs, as financial stability helps
+create a sustainable competitive advantage.
+
+Labor market theories, signaling theory, and game theory provide the foundation for
+understanding the importance of accurate player valuation (Spence, 1973; Rosen, 1981;
+Carmichael et al., 1999). Clubs must assess team performance and individual player skills when
+evaluating player acquisitions or contract renewals (Carmichael et al., 1999). Furthermore, clubs
+should recognize that small differences in talent can result in significant disparities in income and
+recognition (Rosen, 1981).
+
+Player signaling is essential in the valuation process, allowing players to communicate their
+viability for specific positions (Spence, 1973). Players signal their quality through various aspects,
+including physical, technical, and mental attributes, as well as age and relative experience (Franck
+& Nüesch, 2012). This signaling process helps clubs identify the right talent to fit their needs,
+ultimately impacting their overall success.
+
+The transfer process is a strategic negotiation involving the player, their current club, and the
+prospective club (Szymanski & Kuypers, 1999). Game theory illuminates the strategic
+decision-making process during these negotiations, emphasizing that transfers occur when the
+player's perceived value to the new club exceeds their value to the current club, and when the
+strategic positioning of the new club aligns with the player's aspirations and requirements. Various
+valuation models and methods have been employed in estimating player values, which are crucial
+for clubs to make informed decisions when buying, selling, or renewing player contracts. Among
+these are performance data-based models, which utilize statistical data from players' on-field
+performances, such as goals, assists, and tackles (Gerrard, 2001). While effective in identifying
+players excelling in specific areas, these models may not fully capture intangible attributes like
+leadership and adaptability.
+
+Previously, Tunaru's model, later followed by Coluccia, has been successfully applied to option
+pricing, providing a robust foundation for asset valuation. Their methodologies leveraged
+geometric Brownian motion (GBM), a mathematical model well-suited for capturing the
+stochastic nature of financial variables. GBM conceptualizes the logarithm of a financial variable
+as a continuous-time stochastic process, fluctuating randomly around a deterministic trend. This
+study replicates these methodologies, adapting them to the context of football player valuation.
+
+Since its introduction within the financial context (Merton, 1973), Brownian geometric motion
+has become an essential tool in option pricing models. It is a stochastic process whose concept is
+based on the idea that the logarithm of a financial variable, such as the price of an underlying
+asset, can be modeled as a continuous-time stochastic process with random fluctuations around a
+deterministic trend (Merton, 1973). This trend is typically modeled as a drift term, which
+represents the variable's average growth rate or declines over time. The random fluctuations are
+modeled as a Brownian motion process, which captures the inherent uncertainty and volatility of
+the variable. Combining these two processes leads to a geometric Brownian motion, which is
+frequently used to model the evolution of stock prices, interest rates, and other financial variables.
+
+The structure of the rest of the paper is as follows: Section II provides an introduction to the
+surrounding literature around football player valuation, Section III gives detailed deconstruction
+of the sourcing process, formatting, manipulation, and validation of the data for our investigation,
+as well as consideration of any biases and consideration. It also includes the testing of our data
+and summary statistics. Section IV displays our empirical methods of the underlying diagnostics.
+Section V contains the application of our asset pricing model in the context of a selected player.
+Section VI considers the limitations of our data and modeling approach, Section VII expands
+upon our analysis and concludes.
+
+This paper aims to expand the previous literature on option pricing models and apply a geometric
+Brownian motion option pricing framework for the valuation of professional football players
+based on performance and external characteristics on a cross-section of English premier league
+players across the 2017-2022 seasons. We propose a model based on financial considerations of the
+club and player as well as performance-related characteristics to value a player as the sum of a
+bundle of options to sell the player, extend their contract, etc. This concludes as an approximation
+of the player’s financial value to their club.
+                         II. Theory & Previous Literature
+
+The main contribution of our paper to the existing research is to propose and give a clear insight
+into the usage of the geometric Brownian motion option pricing framework in the valuation of
+football players, and to apply the previous literature to the context of the modern English
+Premier League. There is a scarce amount of studies that have conducted similar research and
+consequently, we aim to strengthen previous research given similar results and to broaden the
+knowledge within this framework. Furthermore, football player valuation is a field where the
+layer of previous findings is rather thin, causing varying opinions and beliefs on what is of the
+most important for determining player value accurately. The general knowledge and data on
+affecting aspects surrounding this topic would benefit from further research. For that reason, our
+paper also aims to clarify the importance of other relationships and variables that may have
+significance for player evaluation by providing analysis based on previously conducted tests on
+newer sets of data.
+
+Geometric Brownian motion, or GBM, has been extensively used in finance to model asset prices,
+including stocks, bonds, and commodities. Like stocks, bonds, and commodities, a football player's
+contract can also be viewed as an asset with inherent value that is subject to fluctuations based on
+market conditions. In the case of a player's valuation, 'drift' could be seen as the consistent
+contribution or performance of the player, while 'volatility' captures the variation in a player's
+performance. These variables provide a robust and systematic approach to modeling the evolution
+of a player's value. Consequently, its widespread application historically contributes to its
+robustness as a model, making it a reliable framework for valuing financial assets. Seeing as
+football players in many ways could be considered financial assets to their respective clubs, GBM
+is also as relevant and applicable in player valuation. Player value can through GBM be estimated
+using various factors such as the player's current market value, the remaining length of their
+contract, and their past performance. This is enabled as GBM offers a robust and systematic
+approach to modeling the fluctuations in player value.
+
+Moreover, the Black-Scholes model (Black & Scholes, 1973), a cornerstone of modern financial
+theory, provides an illustrative example of GBM's application. The model, commonly used for
+option pricing, can be adapted to the context of football player valuations. Here, the expiration
+date of an option could be likened to the remaining time on a player's contract, while the player's
+performance can be seen as the underlying asset. This analogy helps to bridge the gap between
+traditional finance and the burgeoning field of sports economics.
+
+Furthermore, another aspect of GBM that is useful in calculating player values is that it provides
+a valuable tool for estimating the risk and uncertainty associated with a player's value by allowing
+for the calculation of the probability distribution of possible future values. This distribution
+captures the randomness and volatility in a player's value, which can result from other external
+factors such as injuries, or changes in the transfer market. There are however also weaknesses in
+using GBM to estimate player value which is further discussed in section VII under Limitations.
+
+A great empirical challenge with modeling the individual value of players is due to the multitude
+of variables that influence performance and the complex nature of their interrelationships. The
+potential interdependence between variables as well as the sheer amount of influential variables
+make it difficult to accurately determine the exact significance of individual variables.
+
+Previous studies that aim to determine variables that influence the value of football players
+provide a grasp of what seem to be the most significant variables for player value. It has been
+found in various studies that certain variables seem to have a significant effect in determining
+football player value. In one regressional study it was found that assists, yellow cards, team
+status, and player status have a positive impact on the player’s market value and goals, red cards,
+minutes played, and starting 11 do not affect market value (Adiwiyana & Harymawan, 2021).
+Other studies have on the contrary found that player performance and team performance are
+positively correlated with market value which are two factors influenced by factors such as goals
+scored and red cards (Franck & Nüesch, 2012). Consequently, results of previous studies may in
+certain aspects give varying conclusions due to the examined variables of choice. What is also to
+be taken into account is that the studies that exist within this field are conducted in different
+geographical and cultural settings where the nature of football varies. This gives reason for biases
+in terms of variations in the significance placed on various factors in the valuation process due to
+divergent football cultures. An "English premium" was found in an earlier study when comparing
+determinants of football player transfer fees in the English and Scottish football leagues where
+players from English clubs received higher transfer fees than those from Scottish clubs, when
+controlling for player performance(Carmichael et al., 1999). This further motivates our study to
+examine variable significance within our dataset and not only rely on external findings from
+previous studies.
+Another commonly examined variable within this context is the relative performance and quality
+of the club a player plays for. A player may be valued and viewed differently depending on how
+well his team plays but also on how the player's relative performance within the team is. For
+example, an essential player in a lower-performing team may be overvalued when compared to an
+average player in a better team. For that reason, relative team performance and its effect on
+player valuation is a variable that has been of interest in previous research on the topic. A
+hedonic-pricing method was proposed and shown significantly in previous research in determining
+individual player and team performance (Gerrard, 2001). There are advantageous aspects to a
+similar model, seeing as creating a player quality index (PQI) from previous performances avoids
+much of existing subjectivity when evaluating players, which is something our study realizes and
+aims to replicate. However, Gerrard (2001) observed this model to exhibit certain constraints
+when confronted with transfer fees arising from alterations in the structural dynamics of the
+players' labor market and age-related factors unrelated to performance.
+
+Illustrating the vast amount of influential variables, media visibility and player’s team relative
+media share have been proven statistically significant in predicting players transfer fees
+(Garcia-del-Barrio & Pujol, 2020). After analyzing the evolution over time of the media exposure
+of 5,000 players of more than 200 clubs, the players’ media status was determined to affect their
+economic valuation, explaining why the clubs in search of greater economic returns fiercely
+compete for the most popular players. This is also of relevance when considering the future of
+player valuation given the growing environment football is experiencing related to exposure
+within social media.
+
+A prior study has suggested and implemented an option pricing model for the valuation of
+football players (Coluccia et al., 2018). Similarly to our study, they build much of their research on
+the grounds established in the Tunaru et al. (2005) option pricing model of football players. In the
+study of Coluccia et al. (2018) the model is applied to a single player in the premier Italian
+football division Serie A, not considered a star player, and playing in the goalkeeper position.
+Tunaru et al. (2005) on the other hand make their analysis on the Arsenal player Thierry Henry,
+who is considered one of the best players in the history of the Premier League, and a player who
+significantly outperformed their team in all of their seasons at the club, during the 2003/2004
+season when Arsenal won the league. The differences between these two player contexts could not
+have been much larger, which is a factor Coluccia et al. (2018) realized and accounted for while
+conducting their analysis. Not only is the positional difference of players naturally a highly
+influential aspect that affects the style and perceived performance of players but also their
+relative importance and responsibilities. As an illustration of this phenomenon, offensively
+positioned players are more likely to be perceived as the best players of a successful team, given
+that they are more likely to contribute to goals which is the most significant contributor to team
+performance and player performance. It becomes very clear to see when viewing the previous
+winners of the Ballon d’Or, an individual reward given out by France Football and often
+considered the official determinant of the best football player worldwide in a particular year. Of
+the total of 64 Ballon d’Ors that have been rewarded, goalkeepers, center-backs and fullbacks
+have only accounted for 4 of them whilst 44 have been awarded to forwards. There is also
+significant credence to the claim that football performance valuations are biased toward offensive
+players. Coluccia et al. (2018) therefore emphasized this positional disparity in their research and
+found that their binomial option pricing model is applicable to players regardless of their position.
+This finding is further enabling to our research as our player selection is conducted with respect to
+which players have had the most game appearances during the time period of interest regardless
+of their positional belonging.
+
+                                   III. Data
+
+      Player performance metric
+
+Our primary performance metric for our investigation was sofascore.com’s rating index. This is an
+index informed by a computational regression that uses “dozens” of explanatory variables to
+produce one rating on a scale from 3-10. The dataset for our investigation was every player's
+performance from every game in the premier league in the range of the 2017-2022 seasons. This
+data was used both for the methodology of our geometric Brownian motion pricing model and
+also to make informed decisions about which individuals to investigate.
+
+Our intent is to replicate the prior literature of Tunaru et al. They used Opta’s performance
+index, which provides an absolute performance metric for an individual player over the course of
+their last six performances, aggregates to indicate “form”. The sum of a team’s individual indexes
+produces a team metric with the same purpose. As such, the proportion of the team's rating
+attributed to an individual indicates how their relative performance has impacted the result of the
+team.
+
+Due to data limitations, we have decided to use Sofascore’s player rating as a proxy of the opta
+index. This rating is a relative performance index with a similar methodology to opta’s
+performance index. However, the significant difference is that Sofascore’s rating is formatted as a
+relative performance metric, scored on a distribution with a range of 1-10. The use of the opta
+index in the original investigation is twofold. On one hand, it is used to indicate the trends and
+volatility of player performances across their career or across a season. On the other hand, the
+individual’s index is used proportionately to their team's performance to indicate the contribution
+of a player's performance to their team and is used alongside the turnover of the club to calculate
+a proxy of the financial value of the player.
+
+Our dataset is sourced from Sofascore and is composed of player and team ratings for the starting
+eleven for every match for the 2017-2022 seasons in the Premier League. This dataset was then
+cleaned to find all seasons where a player played at least 10 performances for a club. This cutoff is
+inherently arbitrary, but the same analysis was applied to a set of different cutoff dates with
+marginally different results, and 10 serves as the greatest balance between maximizing the
+number of relevant entities and maximizing the number of performances per entity, where each
+entry consists of an individual who significantly contributed to their team. The result is a dataset
+of 1050 player-season combinations over the course of four years.
+
+      Transfermarkt
+
+For validation of our results and for preliminary calculations we use Transfermarkt’s transfer
+values and transfer fees. Transfermarkt's player value metric represents an estimation of a
+football player's worth in the transfer market. This metric does not aim to predict the actual
+transfer fee paid for a player but instead provides an expected value based on various factors,
+including individual and situational parameters. Transfermarkt gathers transfer values through
+four main practices. Primarily an employed team of market experts who analyze the current
+market trends and factors that may affect the value of a player in the transfer market. Secondly,
+they gather information from media outlets, including newspapers, television, and online
+publications, to identify rumors, confirmed deals, and other news that may impact player
+valuations. Thirdly they take official statements made by football clubs regarding transfers into
+account, such as the transfer fees paid or received. Lastly, Transfermarkt calibrates their
+valuations by allowing users to contribute by providing their own estimates of player values. As a
+consequence,
+
+Transfermarkt's methodology for determining transfer values is subject to potential systemic
+biases stemming from the subjective popular opinions of football enthusiasts and a lack of a
+definitive, empirically established approach for accurately valuing players. Despite the limitations
+with Transfermarkt's determination of football player values, previous regression analyses have
+demonstrated that the platform's estimated valuations remain a significant predictor of actual
+transfer fees in the football industry (Coates & Parshakov, 2022). However, the same analysis
+suggests that Transfermarkt underpredicts player valuation by a factor of roughly 0.85,
+indicating potential omitted variable bias to macro-involvement factors such as transfer
+momentum and relative financial power.
+
+The method used by Transfermarkt to calculate a player's market value takes into account several
+pricing models and factors, including the wisdom of the crowd. The community members discuss
+and evaluate player market values, intending to reflect the demand for the player and adjust for
+special factors or framework parameters in the medium term. The market values are compared
+and analyzed both individually and in relation to other players, clubs, and leagues.
+
+Transfermarkt's market values are influenced by a wide range of factors, such as future prospects,
+age, performance at the club and national team, the level and status of the league, reputation,
+development potential, marketing value, number and reputation of interested clubs, performance
+potential, experience level, injury susceptibility, general demand, and market trends, among
+others. The values are also affected by individual transfer modalities, such as options to buy, loan
+fees, exit clauses, and contract lengths, as well as situational conditions like competitive pressure,
+player interests, and club financial situations.
+
+The Transfermarkt database undergoes market value updates twice per season, with intermediary
+updates conducted for specific leagues and players, such as young talents with strong
+performances or newcomers to a league. This approach allows for more accurate and up-to-date
+player valuations.
+
+      Summary Statistics
+
+Table 1 presents the cross-correlation between the key variables within our dataset and
+descriptions of them. The variables examined are as follows: PM, signifying the plus/minus score
+for the players calculated by subtracting team rating from player rating every match
+performance. Age, signifying the age of the players in years. TV, signifying the transfer value of
+the players in £(GBP). PR, signifying the Sofascore player ratings in every game. TR, signifying
+the Sofascore team ratings in every game.
+      Cross-Correlation Matrix
+
+   Variables PM Age TV PR TR
+
+     PM NA -0.01 0.13 0.89 0.07
+
+      Age -0.01 NA -0.27 -0.02 -0.02
+
+      TV 0.13 -0.27 NA 0.22 0.24
+
+     PR 0.89 -0.02 0.22 NA 0.51
+
+     TR 0.07 -0.02 0.24 0.51 NA
+ Table 1 - cross-correlation matrix of relevant variables. More specifically, Plus-minus, age, transfer
+                                 value, player rating, and team rating
+
+From the results presented in Table 1, we can make the following observations. The correlation
+between PM and Age (-0.01) is close to zero. This indicates there is no meaningful linear
+relationship between a player's age and the difference between their rating and their team's rating.
+Furthermore, suggesting that age doesn't have a significant impact on how much a player's
+performance deviates from their team's average performance in our dataset. The correlation
+between PM and TV (0.13) is weakly positive. Indicating that as a player's valuation increases,
+the difference between their rating and their team's rating tends to slightly increase. However, the
+relationship is weak, suggesting that player valuation alone doesn't have a strong influence on the
+difference between their rating and their team's rating. The correlation between PM and PR is
+0.89, indicating almost a fully linear relationship between the difference between a player’s rating
+and their own rating. The team rating also slightly indicates a slight relationship with PM with a
+correlation coefficient of 0.07. This is expected seeing as PM is derived from both PR and TR
+through the subtraction of TR from PR.
+
+Naturally, PM is mostly determined by how an individual performs as differences in performance
+represent a 1:1 change in the value team performance will be subtracted from. The effect of team
+performance is less influential as it is calculated based on 11 players, making it more likely for a
+more average score metric. For Age and TV, the correlation coefficient is -0.27, indicating a
+moderately negative correlation between them. Consequently, as player age increases, their
+transfer value tends to decrease. This is likely due to the fact that younger players that play in the
+Premier League are perceived to have more potential and therefore command higher transfer fees.
+Age and PR have a correlation coefficient of -0.02, indicating a weak negative correlation. As
+player age increases, their individual rating tends to slightly decrease. However, the correlation is
+quite weak and may not be significant in practice. For Age and TR the correlation (-0.02) is the
+same as for Age and PR, weakly indicating a tendency that when player age increases, the team
+they play does show slightly weaker performance ratings.
+
+TV and PR have a correlation coefficient of 0.22, indicating a positive relationship between a
+player's individual rating and their transfer value. This is logical given that a player that performs
+well is more likely to be recognized and valued as higher than one with worse performances. In a
+similar sense, it is reasonable that the correlation between TV and TP is positive (0.24).
+Better-performing teams are going to consist of players that on average perform better, giving
+them higher transfer values. For PR and TR, the correlation coefficient is 0.51, indicating a
+positive correlation between these variables as well. This is also intuitive as players with higher
+individual ratings tend to play on better teams as better teams are likely to attract and retain
+more talented players.
+
+      Fixed Effect Regression
+
+In Table 1 are the results of our fixed effect regression of player performance and age on player
+transfer value. Here we find that the p-value for the performance variable was less than 0.01,
+suggesting that this variable is a statistically significant predictor of transfer market value with
+99% significance. The estimated coefficient was also positive. This finding provides support for
+the notion that a player's performance rating is an important factor that positively influences
+their transfer market value. The age variable did also show a significant p-value, lower than 0.001
+suggesting that it to 99.9% exerts a significant impact on player market values. The estimated
+coefficient value for age is negative indicating that the older a player is, the less valuable he is. It
+is important to consider that this is not a general relationship, and only applicable to our dataset.
+Just because a player is young does not guarantee that he is more valuable than an older player,
+however, our regression shows that young players that play in the Premier League are on average
+going to be more valuable than older players in the premier league. This is most probably due to
+the fact that they play at such a high level at a young age and the potential in younger Premier
+League players is a lot higher giving them greater transfer value. There could also be other
+aspects that are potentially linked to the age variable increasing player value for younger players,
+such as marketability and popularity. This finding is consistent with the complex nature of age's
+influence on player values. Age is a non-linear variable in terms of affecting player value, as a
+player's potential value may decline as they age, but their skill and experience may increase.
+Thus, the value of a player's age cannot be captured by a linear relationship, as it is shaped by
+both the potential they possess at a young age and the maturation and development that occurs
+as they age.
+
+ Table 1 - Significant indications for variables in Fixed Effect OLS regression of Plus/minus, Age effect on Transfer value.
+ Sample players are included.
+
+ (Intercept) < 2e-16 *** 14362203
+
+PM 0.005199 ** 310756
+
+Age 1.08e-08 *** -239034
+
+ factor(PN)aaron-lennon 0.060253 . -2934318
+
+factor(PN)aaron-mooy 0.008885 ** 3627716
+
+ factor(PN)aaron-ramsdale 4.21e-15 *** 9304900
+
+factor(PN)aaron-wan-bissaka < 2e-16 *** 20532084
+
+factor(PN)abdoulaye-doucoure < 2e-16 *** 13968478
+
+ factor(PN)adam-lallana 0.941331 -113284
+
+ factor(PN)kyle-walker < 2e-16 *** 31801673
+
+ factor(PN)josh-brownhill 0.212346 -1711215
+
+factor(PN)angelo-ogbonna 0.738826 -390201
+
+ factor(PN)david-button 0.146338 -196698
+
+factor(PN)danny-welbeck 0.889311 -5757847
+
+Regarding the fixed effects analysis of individual players, our findings indicate that variations
+exist between players. In Table 1, we find the fixed effect p-values for some of the players and
+their respective significance levels. Some players exhibited statistically significant p-values,
+suggesting that their individual player values were significantly influenced by player-specific
+effects not captured by the modeled variables. In contrast, other players had insignificant
+p-values, indicating the absence of such effects. The implications of these findings are not
+immediately apparent, however further analysis of the players exhibiting significant p-values
+reveals some common characteristics. Our initial reactions, based on our own experience and
+knowledge, suggest that the players with significant p-values are of great importance to their
+respective teams and played the majority of games. To gain further insights, we compared the
+relative performances of players with significant p-values in the fixed effect regression analysis
+with those of players whose p-values were not significant. In Table 1 we see, for the players with a
+significant p-value in the fixed effect regression, the total +/- score of the player performance
+relative to their team's performance over all the games they played within the given timeframe.
+
+ Table 2 - Plus/minus rating (relative performance compared to team) for players with insignificant fixed effect
+
+ factor(PN)josh-brownhill 7.9
+
+ factor(PN)angelo-ogbonna -2.9
+
+ factor(PN)david-button 0.7
+
+ factor(PN)danny-welbeck -1.9
+
+ factor(PN)adam-lallana -3.9
+
+ Average: -0.02
+
+ Table 3 - Plus/minus rating (relative performance compared to team) for players with significant fixed effect
+
+ factor(PN)kyle-walker -21.3
+
+ factor(PN)aaron-ramsdale 9.7
+
+ factor(PN)aaron-wan-bissaka 19.3
+
+ factor(PN)abdoulaye-doucoure 10.2
+
+ factor(PN)aaron-mooy 17.2
+
+ Average: 7.02
+
+Similarly we see in Table 2, for the players with an insignificant p-value in the fixed effect
+regression, the total +/- score of the player performance relative to their teams performance over
+all the games they played within the given timeframe. It is notable that the +/- scores are on
+average lower for players in Table 2 with insignificant p-values in the fixed effect regression than
+for the players in Table 3 with positive p-values. The findings suggest that a player's individual
+performance, relative to their team, may impact their transfer value. Specifically, players who
+outperform their team may experience a significant impact on their transfer value due to
+player-specific variables such as their perceived importance to the team. This may also indicate
+the impact of other moderating factors on player transfer value, such as popularity or national
+team inclusion. However, the observed relationship between individual performance and transfer
+value is not universally applicable. A notable exception is found in the case of Kyle Walker, whose
++/- statistic is relatively low, yet his transfer value remains significant. This discrepancy is further
+emphasized by the low p-value associated with his fixed effect. This anomaly underscores the
+complex interplay of various factors beyond a player's individual performance when assessing
+their valuation.
+
+In particular, the case of Kyle Walker offers an intriguing example. Despite his comparatively
+lower performance within his team, Walker's association with Manchester City - a team that has
+consistently proven itself as one of the most formidable in recent seasons - could exert a positive
+influence on his transfer value. His value, therefore, becomes a testament to the crucial role a
+player's team affiliation plays in determining their worth. Several intertwined factors contribute
+to this paradox. For instance, Walker's visibility in the media and his wage - both in relation to
+the league average and his individual performance - are likely to significantly affect his transfer
+valuation. Moreover, Manchester City's robust financial health provides a safety net, which could
+potentially allow for higher player valuations despite underperformance.
+
+Hence, while individual performance is an important determinant of a player's transfer value, it
+must be considered alongside other factors. The complex interplay of these variables reiterates the
+multifaceted nature of player valuation in football.
+                            IV. Empirical Approach
+
+In this section, we will express our adaptation of the Tunaru et al. (2005) pricing model to the
+English context, as necessary. We chose a player based on several criteria: their significant number
+of matches played during the allotted time period, their above-average performance relative to
+their team, their prime occurring throughout the investigation period, not being a national team
+player, being an English player playing in England, and belonging to a mid-tier league team with
+publicly available revenue information.
+
+ Figure 3 - Rolling average player rating for Aaron Cresswell through the seasons 2017-2023
+
+For the 2017-2023 seasons, we selected a player on a five-year contract with their club, starting on
+June 30th, 2017 and expiring on June 30th, 2022. The acquisition of the player, a fullback, took
+place in 2014 for 4,500,000 pounds from Ipswich Town. The player originally signed a five-year
+contract expiring in 2018 but renewed at the previously stated date in 2017. The net book value
+at June 30, 2017, is 3,600,000 pounds, without suffering write-downs. The player's annual wage is
+2.6 million pounds, and the football club's revenue in 2017 was 139 million pounds.
+Tunaru et al. (2005) use 'opta index points' as a proxy for player performance. In our analysis, we
+substitute this metric with the sofascore.com player rating index. We present the average player
+and team ratings for the player and team over the course of their contract in the subsequent plots.
+
+ Figure 4 - Rolling average Team rating for West Ham United through the seasons 2017-2023
+
+Sofascore is a statistical database that records various player statistics for each match and
+employs a relative distribution as a proxy for performance. We use this player metric to replicate
+the OPTA performance index used in Tunaru et al. (2005). However, in order to faithfully
+replicate the OPTA index in nature we must first transform the raw ratings.
+
+The variable S refers to the average of the Sofascore of all players in a match ofer the course of a
+season, representing the team rating. N denotes the average individual performance index over
+the course of the season. T is the team’s revenue. Our first step is to convert the Sofascore into a
+team-relative “plus-minus” rating (P), by subtracting the team's average score for any particular
+match from the player’s score in that match. This allows us to consider the relative effect of
+players' performance on their team’s resultant performance as a vector.
+𝑁 − 𝑆 = 𝑃                                                                          (1)
+Since the metric is designed to consider proportional contribution, we then need to normalize the
+scores to a positive index where a higher score means a higher relative rating.
+
+  𝑁−𝑁
+                𝑚𝑖𝑛
+ 𝑁   −𝑁    = 𝑁                                                                                             (2)
+    𝑚𝑎𝑥      𝑚𝑖𝑛             𝑛𝑜𝑟𝑚
+ For this, we approximate the relative higher and lower bounds of the distribution of the OPTA
+scores, which follow that the highest possible scores are six times that of the lowest possible
+scores. For readability, we use the range 200-1200. Finally, we calculate the proportion of the
+performance that is responsible to a particular player by dividing that player’s score total by their
+team sum. The model then proposes that the financial value of each unit of overperformance (X)
+is
+
+                       𝑁
+                                           𝑛𝑜𝑟𝑚
+        𝑋 = 11                                                                                    (3)
+                     ∑ 𝑆
+                                                𝑡𝑒𝑎𝑚
+                        𝑛=1
+and the financial value (Y) of the player is:
+𝑌 = 𝑋 * 𝑇
+Tunaru et al. (2005) then present that the revenue (T) and the team rating (S), follow a correlated
+geometric Brownian motions according the following differential equations:
+         𝑑𝑇 = α𝑇𝑑𝑡 + σ𝑇𝑑𝑧                                                                      (4)
+        𝑑𝑆 = γ𝑆𝑑𝑡 + δ𝑆𝑑𝑤                                                              (5)
+Where:
+
+       Table 4 - Factors of differential equation for Geometric Brownian Motion
+
+      α, γ Drift rates for the Revenue and Team rating, respectively
+
+      σTdz,     Uncertainty for the Revenue and Team rating, respectively
+     δSd
+
+      dz, dw Wiener Process
+
+ The correlation between the two processes is defined as:
+         𝐸(𝑑𝑧𝑑𝑤) = ρ𝑑𝑡                                                                           (6)
+The fundamental concept is that T (revenue) and S (adjusted team rating) are interdependent; an
+increase in S serves as a suitable proxy for performance improvement, which in turn affects
+revenue (T). Thus, Equation (3) encapsulates the anticipated development and uncertainties
+related to the football club's revenues, while Equation (4) addresses the expected development
+and uncertainties concerning the football club's performance. The resultant drift rates and
+volatilities for player and team are maximum probability estimates based on simulated paths of
+the Geometric Brownian motions, modelled on previous results.
+        Furthermore, the player performance index is also assumed to follow geometric Brownian
+motions. Consequently, the trend of a player's future performance is depicted by the differential
+equation:
+         𝑑𝑁 = 𝑎𝑁𝑑𝑡 = 𝑏𝑁𝑑ℎ                                                                        (7)
+
+Tunaru et al. (2005) view a football club as a portfolio in which the most valuable options
+correspond to the rights to football players' contracts. A player's relative value is indicated by
+their positive contribution to the team's average rating in a specific match. For all players in the
+portfolio, S represents the sum of each player's N. From a financial perspective, S is considered a
+stock index. The player performance index provides information about players' current
+performance, but it cannot predict their future performance. Equation (6) estimates the future
+development of N based on Brownian motion, where (a) represents the drift rate, (b) denotes
+volatility, and dh is the Wiener process.
+
+In the model, it is expected that the drift value for a player early in their career will be greater
+than zero and gradually approach zero during their peak performance period, typically between
+the ages of 26 and 31. After 31 years, this number tends to become negative. In Aaron Cresswell's
+specific case, his average performances appear to defy this trend as his highest relative
+performance in a season occurs between 2020-2022 (2.09, 4.42, 3.96) when he was 31-33 years old.
+
+The player evaluation model according to Tunaru et al. (2005) is as follows:
+
+                                                              2
+                 ⎡ ∂𝑉          ∂𝑉     1   2  2 ∂𝑉             ⎤     1
+        𝑉 = { ⎢ ∂𝑡 + 𝐷𝑌 ∂𝑌 + 2 𝐵 𝑌    2 + λ𝐺(𝑉)⎥𝑑𝑡} 𝑟                                      (8)
+                  ⎣                               ∂𝑌              ⎦
+Where:
+
+                 2     2 2
+       𝐵 = 𝑏 + δ σ − 2σδρ                                                   (9)
+And:
+
+                    2
+      𝐷 = 𝑎 + δ − γ − δρσ + 𝑎 + ψ σ + δ − 2σδρ                           (10)
+
+         Table 5 - Factors of Model for fair market value of Real option on player
+
+        ∂V / ∂t The partial derivative of value with respects to time
+
+        ∂V / ∂Y The partial derivative of value with respects to relative performance share
+         Table 5 - Factors of Model for fair market value of Real option on player
+
+        ∂V / ∂t The partial derivative of value with respects to time
+
+                 2
+           δ𝑉           The partial second derivative of value with respects to relative performance,
+                 2
+            δ𝑌            indicating if the effect of the latter is diminishing or accelerating
+
+       ψ The correlation between N and S
+
+         λ𝐺(𝑉) A proportionate model of injury frequency, equating to portion of matches
+                  missed
+
+        r The domestic interest rate
+
+In Tunaru et al. (2005), λ𝐺(𝑉) represents the number of weeks of a year missed. Here, we adapt
+this to the portion of games missed, partially because our time scale is by season, and also since
+the time of incidence of an injury is equally important to the duration of the injury. Our
+methodology for producing the partial derivatives for value are maximum probability calculations
+based on historical data as inputs to the V function.
+
+                               V. Model Application
+
+The following is the application of the prescribed model to the context of Aaron Cresswell, a
+mainstay in the West Ham United squad throughout the duration of the contract in question, he
+can be considered to have entered his prime at the beginning of the dataset, having turned 28.
+The preliminary values for the model are summarized in Table 2.
+
+ Table 6 - Model Values
+
+ West Ham United FC revenue (£) T 136,000,000
+
+ Aaron Cresswell Plus/minus N 0.1175
+
+ Aaron Cresswell normalized                   𝑁                                     614.5511
+                                                              𝑛𝑜𝑟𝑚
+ Plus/minus
+
+ West Ham United Normalized                 𝑆                                       7165.142
+                                                              𝑛𝑜𝑟𝑚
+ Team rating
+
+ Aaron Cresswell proportion X 0.085766
+
+ Aaron Cresswell proportion of               Y 11,664,140.232
+ value
+
+The correlation, drift, and volatility values, relevant to equations (4), (5), (6). (7), (8), (9), and (10)
+are summarized in Table 3 below.
+
+ Table 7 - Correlations, Drift and volatility values
+
+ Correlation T and S ρ -0.4310795
+
+ Correlation N and S ψ 0.4931603
+
+ Expected growth rate of                   α 0.08938656
+ revenues
+
+ Drift rate in team                           γ 0.001265055
+ performance
+
+ Individual drift rate a 0.00509891
+
+ Volatility of revenues σ 0.2283613
+
+ Volatility of team                          δ 0.04452384
+ performance
+
+ Individual volatility b 0.09444958
+
+The correlation ρ = -43% is unexpected, however this is likely caused by the non-granularity of
+the input data, as season-long team average ratings and revenues are being compared.
+Additionally, the team significantly overperformed during the years of the Covid-19 pandemic,
+when their revenues took a significant hit due to the lack of matchday revenues, which likely
+disturbs the correlation. The correlation ψ = 49% indicates that the individual’s performance
+explains about half of the performance of the team. This can be attributed to some combination
+of noise, and consistent underperformance by team members, which is relevant as the club is
+typically middle-of-the-pack in their competition. The individual volatility (b) is significantly
+larger than the team volatility (δ), which may contribute to the lack of correlation (ψ). The drift
+rates of both the team and player are barely positive, indicating the team is expected to remain
+among the same league positions throughout the dataset, and that the player’s performances
+contribute to this. This is realistic, as West Ham league positions (13th, 10th, 16th, 6th, 7th) have
+been relatively inconsistent.
+
+ Table 4 - Financial modeling of i injury risk
+
+ Maximum loss in monetary                –Y 11,664,140.232
+ terms (£)
+
+ Number of Matches missed K 0
+
+ Number of matches in one W 38
+ Table 4 - Financial modeling of i injury risk
+
+ Maximum loss in monetary                –Y 11,664,140.232
+ terms (£)
+
+ Number of Matches missed K 0
+
+ league season
+
+ Intensity parameter for                     λ 0
+ injuries = K / W
+
+ The expected maximum loss              λG(V) 0
+ (£) = λ*(–Y)
+
+ Table 8 - Values for valuation of Aaron Cresswell
+
+ Partial derivative representing the change in value (V) over        ∂V / ∂t 460,000
+ time (t)
+
+ Cresswell's performance value Y 11,664,140.23
+
+ D (coefficient) D 0.2770223
+
+ B (coefficient) B 0.1333796
+
+ Partial derivative representing how much the player's             ∂V / ∂Y 0.03931798
+ financial value (V) changes when the Rating value (Y)
+ changes
+
+ Partial second derivative representing if the effect of              ∂²V / Y² 9.563517e-08
+ increased Rating value (Y) on value (V) is accelerating or
+ diminishing
+
+ The expected maximum loss (Euro) λG(V) 0
+
+ Interest rate r 0.0516
+
+ Financial value of Aaron Cresswell (£) V 13,619,811(£)
+
+In this context since the contract duration was between 2017-2022, we deemed it reasonable to
+adopt, as the interest rate, the gross rate of return of five year UK government bonds. By this
+consideration, the value of Aaron Cresswell at the beginning of his contract is deemed to be
+13,619,811, whereas Transfermarkt valued him at 12,500,000 at the same point in time, 92% of
+our valuation.
+                                  VI. Limitations
+Sofascore
+
+One potential limitation of the Sofascore performance-metric data source is its non-transparency
+in the calculation. The final product is provided on the scale but the calculation to get to that
+point is not provided. This means there is less opportunity for verification of our correlative
+results. Additionally, its distribution of the data is positively skewed, with the providers stating
+that a score of 6.0 or below indicates “a major error like an own goal, a penalty conceded, red card
+or simply a sum of errors.” Furthermore, the mean of the rating is indicated by the stats provider,
+as well as the skew of the distribution (positively skewed with a mode of 6.6 with 62205 entries
+carrying this value, a mean of 6.85, with a minimum of 3, and a maximum of 10 (204
+observations)), however, more detailed information on the exact distribution of the rating is not
+made available. Additionally, our particular dataset is a sample from the most competitive league
+over the allotted time period by UEFA coefficients; Only starting players are considered and
+within that, only players who started 10 or more matches over the course of a season. These
+factors all indicate positive selection bias in our dataset, which is supported by the average
+plus/minus rating for our sample of +0.0695, and a mean player rating of 6.95, 0.1 higher than the
+global mean. There are also no readily available studies that either use the player performance
+metric to predict transfer value/increases in transfer value, nor are there any which compare the
+sofascore index to opta’s performance index. Our results do, however, seem to indicate that there
+is significant correlation between Sofascore’s player rating and that significantly positive
+consecutive performances correlate with an increase in transfer value.
+
+     Geometric Brownian Motion
+
+One drawback of utilizing geometric Brownian motion assumptions in the valuation of players is
+that the model assumes the volatility of a player's value is constant over time, which may not
+always be the case in practice. The volatility of a player’s performance can be impacted by their
+relative competition at their position, non-footballing reasons, as well as transformative instances
+such as confidence-setting performances, which reinstate a new paradigm of expectation for their
+performances. This can consequently result in significant variations in the value of a player, which
+may not be accurately captured by the constant volatility assumption of the GBM model. For
+that reason, it is important to realize that GBM is limited in this aspect which may be illustrated
+better using a model that captures the changing volatility of a player's value over time.
+Additionally, while GBM assumes that the distribution of a player's value follows a log-normal
+distribution, this may not always be the case in practice. In the same way that unexpected events
+may cause variations in volatility, similar events may also cause an altered distribution of a
+player's value. GBM assumes this distribution to be log-normal; however, in some situations, a
+fat-tailed distribution may be more appropriate to capture situational extreme values. As an
+example, the occurrence of a major injury or unexpected breakout performance may lead to a
+player's value deviating significantly from its expected path.
+
+      Transfermarkt
+
+Transfermarkt’s transfer values are partly crowd-based estimates of layer transfer values, which
+are established and amended based on discussions, contestments, and surveys of members. This
+follows the wisdom of the crowd approach, which is lent some credence by the niche audience of
+such a website. Nonetheless, these are not parametrically supported or statistically informed and
+as such there is little verifiability to their factuality or validity. However, there is substantial
+credence to the factuality of transfermakrt’s values, which have been analyzed quite extensively,
+both using audited transfer fees and through other valuation approaches. It is indicated that
+there is a significant correlation between Transfermarkt’s valuations and real transfer fees, but
+that Transfermarkt underpredicts these fees to about 85% of the real fee, the discrepancy of
+which can be attributed to external factors, information secrecy, or competition theory.
+
+Given that Transfermarkt bases a lot of their player evaluations on crowdsourced opinions, the
+transfer value data may have certain limitations, as the “wisdom of the crowd” assumption they
+abide by is often subject to systematic biases based on inaccuracies in guiding information.
+Although it has previously been proven that transfermarkt transfer values are significant
+predictors for transfer fees (Coates & Parshakov, 2022), we sought to conduct our own analysis of
+the data to ensure that our findings are not restricted by the potential limitations of
+Transfermarkt. In order to do so we primarily conducted an ADF (Augmented Dickey-Fuller) test
+on panel data for our gathered transfer values to examine whether our data is stationary. Figure 5
+displays the generated outputs for the ADF-Test. The results of the Dickey-Fuller test
+demonstrate a p-value of 0.01, indicating strong evidence for rejecting the null hypothesis of
+non-stationarity and supporting the alternative hypothesis of stationarity. Our p-value
+consequently implies a confidence level of 99% enabling us to confidently reject the null
+hypothesis and conclude that our data is stationary. The confirmation of stationarity in our
+transfer value data would suggest that there are no discernible trends in the statistical properties
+of the time series. Additionally, it would imply that the transfer values obtained from
+Transfermarkt are not subject to any trend-based influence. However, this characterization of
+reality is improbable, as there has been a notable trend of inflation in transfer values for football
+players in recent years. For context, in the same period, CIES estimates an average year-on-year
+inflation rate of 4.3%, with an overall average transfer fee being 11% higher compared to a 2017
+index. This could be interpreted as an inelasticity in transfermarkt’s valuations to the general
+market trend of actual transfer fees.
+
+ Augmented Dickey-Fuller Test
+
+ data: transfer_value_ts
+ Dickey-Fuller = -13.383, Lag order = 18, p-value = 0.01
+ alternative hypothesis: stationary
+
+ Figure 5 - ADF-test for stationarity in transfer values of players, based on transfermarkt valuations.
+
+Further analyzing the transfer value data collected from Transfermarkt, we present the
+development of the average transfer value throughout our time series in Figure 6. Plotting the
+mean monthly transfer value of all players within our dataset over set time series we obtain the
+graph in Figure 6.
+                      Figure 6 - Time series plot of mean transfer value over time
+The graph reveals several noteworthy patterns. Firstly, there is a notable and steep upward trend
+in player value from late 2017 until late 2020, followed by a significant drop that amounts to
+almost a 30% reduction in the mean value. Subsequently, the graph exhibits a persistent
+fluctuation around the lower level until the start of 2022, whereupon it once again experiences a
+rapid increase, reaching a value, similar to that observed at the end of 2019 prior to the initial
+decline, at the beginning of 2023. This observation would to a certain extent explain the rejection
+of the null hypothesis by the ADF test and the implication of stationarity within our dataset,
+given the substantial fluctuations in average transfer value over the study time period as well as
+the absence of a significant increase attributable to the pronounced drop in early 2020.
+Nevertheless, it is evident that there is a trend of rapidly increasing transfer values present if we
+disregard this drop and the subsequent two-year period associated with lower values. The
+explanation for the noticeable decline in late 2019 can be attributed to the outbreak of the
+COVID-19 pandemic. The global disease outbreak caused significant disruptions in various
+economic sectors, including football. Cancellations or postponements of numerous matches as well
+as public restrictions resulted in substantial reductions or elimination of certain revenue streams
+for football clubs, leading to a substantial decrease in transfer values. This phenomenon was
+evidently manifested in the transfer values recorded on Transfermarkt as a platform
+acknowledged in april 2020 that a majority of players had suffered a devaluation, which
+ultimately resulted in a global loss exceeding €9 billion in market value.
+
+     Revenue
+
+Our team revenues were sourced from the relevant clubs’ financial statements, which are made
+public through their websites, and gathered by statista.com. The result of this, however, is that
+our valuation of the football club’s financial results is only iterated once a year. As a result, the
+volatility and drift calculations are likely overfitted to a relatively small dataset, and as such their
+validity may be questionable. This also means that the correlation parameter used in the final
+model is calculated using yearly averages of team rating and revenue, meaning it likely does not
+fully represent the relationship. As such, for further replication, the use of a club whose stock is
+available on a public stock exchange may provide more granular data, which would subsequently
+provide a more representative analysis. Our view, however, is that since revenue is a proxy for the
+financial strength of the club, and since the financial security of clubs in the premier league is
+relatively stable, then yearly estimates provide a relatively succinct picture of the club's value.
+
+      VII. Conclusion
+
+As previously stated, the process of valuing football players presents a significant challenge due to
+the extensive amount of influential variables and their complex interdependent relationships.
+Consequently, formulating an unbiased model that comprehensively incorporates all the
+determinants of transfer values is challenging, especially considering that the nature of football is
+diversified across different regions and levels. In this study, we do not only aim to expand the
+previous literature of option pricing models by basing ourselves in the previous model established
+by Tunaru et al. (2005) and applying it ourselves to a newer dataset but also to contribute to the
+augmentation of the overall comprehension of the determinants of football player values and how
+specific influential factors interact with player value and with each other. Our study employs a
+dataset comprising players from the English Premier League as its foundation as it is the most
+economically significant and influential league globally.
+
+As mentioned, valuing football players is significantly challenging due to the complex interplay of
+various factors. Traditional market value methods may fail to capture the intricate dynamics of
+player value adequately. However, the option pricing model that we have applied in our study is
+not intended to replace traditional market value techniques but to supplement them. It considers
+a range of variables such as the player's physical condition, age, career stage, and injury
+probability, which are significant contributors to a player's future performance and value. Still, it
+is crucial to acknowledge that this model does not take into account external factors such as
+media visibility, transfer inflation, supply and demand, and intangibles such as mental attributes,
+languages spoken, and registration rules regarding nationality.
+
+Our study, which is based on a dataset from the English Premier League, lends credence to the
+claim that the option pricing model can be applied to all players, irrespective of their position.
+This is a significant finding as the model previously tested by Tunaru et al. (2005) was limited to
+forwards, while our application extended to different positions. We must clarify that since the
+player selected for our study did not have a history of injuries, our analysis does not establish a
+direct relationship between lower injury risk and higher player valuation. However, the option
+pricing model does consider injury probability as a key variable, suggesting that a player's health
+and fitness are integral to their value assessment.
+
+Despite the potential of the option pricing model as an effective tool for football player valuation,
+it is important to note that its application may be complex due to the numerous system factors to
+be considered in the algorithm. However, this complexity should not deter its use but rather be
+viewed as a reflection of the intricacy of the player valuation process. As the football industry
+continues to evolve and become more financially sophisticated, we expect to see more advanced
+valuation models like the option pricing model being used, complementing traditional market
+value technique
+      References
+
+Adiwiyana, H. I., & Harymawan, I. (2021). Factors that Determine the Market Value of Professional
+Football Players in Indonesia. Jurnal Dinamika Akuntansi, 13(1), 51-61.
+http://dx.doi.org/10.15294/jda.v13i1.26079.
+
+Andreff, W., & Staudohar, P. D. (2000). The Evolving European Model of Professional Sports Finance.
+Journal of Sports Economics, 1(3), 257–276. https://doi.org/10.1177/152700250000100304
+
+Gerrard B. (2001). A new approach to measuring player and team quality in professional team sports,
+European Sport Management Quarterly, 1:3, 219-234, DOI:10.1080/16184740108721898
+
+Black, F., & Scholes, M. (1973). The Pricing of Options and Corporate Liabilities. Journal of
+Political Economy, 81(3), 637–654. http://www.jstor.org/stable/1831029
+
+Carmichael, F., Forrest, D. and Simmons, R. (1999), The Labour Market in Association Football:
+Who Gets Transferred and for How Much?. Bulletin of Economic Research, 51: 125-150.
+https://doi.org/10.1111/1467-8586.00075
+
+Coates, Dennis & Parshakov, Petr, 2022. "The wisdom of crowds and transfer market values,"
+European Journal of Operational Research, Elsevier, vol. 301(2), pages 523-534.
+DOI:10.1016/j.ejor.2021.10.046
+
+Coluccia, D., Fontana, S. and Solimene, S. (2018) ‘An application of the option-pricing model to the
+valuation of a football player in the ‘Serie A League’’, Int. J. Sport Management and Marketing,
+Vol. 18, Nos. 1/2, pp.155–168.
+
+Dobson, Stephen & Goddard, J. (2001). The Economics of Football.
+DOI:10.1017/CBO9780511493225.
+
+Franck, E. and Nüesh, S. (2012). TALENT AND/OR POPULARITY: WHAT DOES IT TAKE TO BE A
+SUPERSTAR?. Economic Inquiry, 50: 202-216. https://doi.org/10.1111/j.1465-7295.2010.00360.x
+
+Magee, J., (2016) “When is a Contract More than a Contract? Professional Football Contracts and
+the Pendulum of Power”, Entertainment and Sports Law Journal 4(2), 4.
+Doi: https://doi.org/10.16997/eslj.89
+
+Merton, R. C. (1973). Theory of Rational Option Pricing. The Bell Journal of Economics and
+Management Science, 4(1), 141–183. https://doi.org/10.2307/3003143
+
+Morrow, S. (2003). The People's Game? Football, Finance and Society.
+DOI:10.1057/9780230288393.
+
+Tunaru R., Clark E., Viney H., An option pricing framework for valuation of football players, Review
+of Financial Economics, Volume 14, Issues 3–4, 2005, Pages 281-295,
+ISSN 1058-3300, https://doi.org/10.1016/j.rfe.2004.11.002.
+
+Rosen, S. (1981). The Economics of Superstars. The American Economic Review, 71(5), 845–858.
+http://www.jstor.org/stable/1803469
+
+Spence, M. (1973). Job Market Signaling. The Quarterly Journal of Economics, 87(3), 355–374.
+https://doi.org/10.2307/1882010
+
+Statista. (2022). Operating revenue of selected European soccer league champions in 2021/22, by
+segment. Retrieved from:
+https://www.statista.com/statistics/1008686/revenue-distribution-european-champions-by-segment/
+
+Stephen D. , Gerrard B. & Howe S. (2000) The determination
+of transfer fees in English nonleague football, Applied Economics, 32:9, 1145-1152,
+DOI:10.1080/000368400404281
+
+Szymanski, S., & Kuypers, T. (2020). Winners and Losers: The Business Strategy of Football. Nation
+Books. Chapter 3:(pp. 75-90). ISBN: 0670884863, 9780670884865

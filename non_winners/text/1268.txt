@@ -1,0 +1,1173 @@
+STOCKHOLM SCHOOL OF ECONOMICS
+
+BACHELOR THESIS IN FINANCE
+
+  Predictive Power of the Volatility Smile
+
+                                           
+                         Henry Li                 Johan Möller
+
+                                          Abstract
+The Black-Scholes option pricing formula yield lower volatility than volatility observed in the
+market when looking at option prices. Several theories have been presented to explain this
+phenomenon and how the world of finance can use this information. Parameterized volatility
+smile coefficients have been examined in several recent studies but the findings are inconclusive
+and the alleged predictive power of the smile has not yet been fully understood or proved. We
+contribute to the field of forecasting finance by proposing a model where coefficients from a
+parameterized volatility smile contain information that predict the probability and amplitude of
+geometric Brownian motion jump diffusion. Using S&P 500 options- and index data from 2006
+to 2011 we found a negative relationship between curvature on the volatility smile and jump risk
+indicating that the smaller curvature on the volatility smile, the higher the probability for positive
+asset price jumps and vice versa.
+
+Keywords: Volatility smile, Predicting power, jump risk, Brownian Motion with Jump diffusion,
+            Maximum Likelihood Estimation.
+
+Tutor: Jungsuk Han
+
+Date: June 1st 2011
+
+Discussants: Fredrik Hallgren and Rasmus Rehn
+
+Acknowledgements: We would like to thank Jungsuk Han for his enthusiastic support and mentorship.
+We thank Kathryn Kaminski and John Sjödin for providing with inspirational ideas. Finally we want to
+thank Fang Li, Jian Kang, Daniel Åhlfeldt and Julia Appelgren for helpful comments.
+
+
+  21294@student.hhs.se
+
+  21768@student.hhs.se
+                                      1. Introduction
+In the mid 1980s very few traders knew about the phenomenon called the volatility smile in the
+option prices. Trading with options was considered difficult as the price is set by the market and
+the underlying mechanics of the asset price development are not accounted for. Options were
+
+                                                                                                        1
+priced according to a Nobel prize winning formula, the Black-Scholes option pricing model (BS
+model). The model uses a perfectly hedged option to calculate the price of the option, which
+doesn’t include any volatility smile but rather a flat volatility curve. The volatility smile anomaly
+was discovered after the stock market crash of October 1987 and left many practitioners and
+academics wondering why this shape of the implied volatility over strike prices existed. Ever since
+the October 1987 market crash the volatility smile, that still haunts the minds of traders, has
+served as a reminding grin of the historical devastating crash.
+
+The BS model assumes constant volatility and would therefore apply historical volatility as the
+future volatility, but using this value one soon finds that far out- and far in-the-money options on
+the market are overpriced relative to the at-the-money option. This implies that if the BS model
+is the true model then arbitrageurs should want to sell these overpriced options and wait for the
+market to restore its flat volatility curve. The problem is that these “mispricings” persists and
+would therefore imply that options do not use the historical volatility but rather another measure
+(or other option pricing formula than BS) for volatility. When first calculated in the late 1980s,
+the implied volatility revealed that the constant volatility assumption in the BS model does not
+seem to hold. The prices indicated that the implied volatilities calculated by inverting the BS
+model increased as the option was out-of-the-money. The further out-of-the-money the option is,
+the higher the implied volatility. The phenomenon of the volatility smile that prevails as a result
+of higher implied volatilities in the out- and in-the-money options, or so called fat-tails in the
+return distribution, has since its discovery been a topic of many finance papers.
+
+The smile as a whole can be seen as a deviation from the Black-Scholes option pricing formula
+and there has been discussions about whether or not this somewhat unexplainable and mystical
+smile contains any valuable information or not. Theories have been developed to explain the
+existence of the volatility smile. Some argue that the smile exist due to market inefficiencies such
+as transaction costs, illiquidity etc. while other choose to explain the smile with behavior biases in
+traders’ risk appetite. Irrespective of which explanation is true they all seem to converge to the
+conclusion that the smile occurs from a violation of the simplistic assumption of log-normal
+
+1 Henceforth referred to as the BS model
+
+                                        1
+return distribution in the BS model. The purpose of this paper is to retrieve some of the
+information that is contained in the market by using the smile anomaly in option prices that
+should not exist if prices were set efficiently and follows the BS model. It might be argued that
+the option traders’ future looking view have some predictive power. When the market expects
+higher future volatility and larger jumps in prices the tails of the volatility smile would increase
+and thus create a steeper smile. The steeper the smile the larger is the probability of a high
+volatility regime in the future. Our hypothesis is that there are market inefficiencies and
+information in the volatility smile, for whatever reason, that could be used to understand future
+jumps in stock prices and volatility regime shifts.
+
+This paper examines the possibility of using the second derivative of a squared line fit to the
+volatility smile as a market mood proxy to foresee future price jump regimes in the market. Our
+hope is that this study might help practitioners and academics to foresee when markets switch
+between high- and low volatility regimes in order to understand the underlying factors of large
+market movements.
+
+The efficient market hypothesis proposed by Fama (1965) suggests that markets on average
+correctly price assets and that historical data cannot foresee future stock movements but this
+hypothesis has been questioned by the behavioral finance literature as stated by, among others,
+Kahneman & Tversky (1979). Previous research has been made in the field of predicting market
+behavior by using implied volatility derived from option prices. There have however not, to our
+knowledge, been studies using the whole range of options prices, i.e. the volatility smile, to
+predict future high/low market volatility periods. This study contributes to previous studies by
+offering a thorough examination of whether, or not, options prices in the form of a volatility
+smile can predict when the market will enter in to a certain volatility regime where traditional
+
+                                 2
+Geometric Brownian Motion (GBM) model cannot describe the fat-tails that occur in the return
+distribution. We argue that there are two types of volatility regimes. The first regime contains no
+jumps and moves according to the underlying mechanics of the GBM model while the second
+regime is defined as a GBM universe with abnormal jumps that cannot be explained by the GBM
+model. The abnormal price jumps are measured through Geometric Brownian Motion with jump
+
+          3
+diffusion (GBMJ) as a parameterization of the stock return dynamics.
+
+2 Henceforth referred to as GBM
+3 Henceforth referred to as GBMJ
+
+                                        2
+Our study uses the volatility smiles’ parameterized coefficients to try to predict future S&P 500
+irrational behavior through abnormal price jumps. Instead of launching new theories about asset
+price dynamics in our paper we attempt to find a proxy of the underlying explanatory factors in
+the GBMJ model (i.e. information) and test if an anomaly said to contain information could say
+anything about a model that moves according to information arrival. It is important to point out
+that this paper has not analyzed trading strategies based on the findings and thus the method of
+creating arbitrage on this information has not been tested.
+
+We test the volatility smile parameter correlation on the next period’s GBMJ model’s jump
+probabilities and amplitudes. In order to find whether or not the volatility smile can predict
+which of two models (GBM or GBMJ) better predict asset price development, several steps were
+required. Firstly a continuous dataset of second derivative coefficients from a squared fitted line
+to the volatility smile were calculated as described in section 4.1. The resulting coefficients were
+then regressed against several sets of jump coefficients derived from applying Maximum
+
+                         4
+Likelihood Estimation (MLE) for the GBMJ model on S&P 500 index returns.
+
+Statistically significant results were found for longer maturities implying that curvature for longer
+time-to-maturities could predict high/low regimes for our sample period. Although this is a
+positive result it remains unclear why similar results could not be found for other maturities
+which leave the question of the legitimacy of the test. This study concludes that there is weak
+evidence for the curvature of the volatility smile in helping to predict low and high volatility
+regimes in the sense of asset price jumps. Nevertheless more research has to be done within this
+topic to make more certain conclusions. This study contributes to the forecasting finance
+literature by making an extensive study in forecasting future jumps in stock prices with the
+volatility smile coefficient for the period May 2006 to April 2011.
+
+                                        1.1 Outline
+This paper begins with a brief study of relevant earlier research in the models used and papers
+explaining the intuition behind their respective uses in section 2. The paper then states the data
+sources used and the methods by which the data has been handled in section 3. We then explain
+how we extracted the option informational content by a parameterization of the volatility smile
+and deriving dynamics of the underlying asset movement by numerical methods in section 4. The
+volatility smile parameter was tested as an explaining factor of the dynamics parameters through a
+series of regressions in section 5. In section 6 we discuss the implications of the findings in
+
+4 Henceforth referred to as MLE
+
+                                        3
+section 5 and then the validity and potential problems of these results are discussed in section 7.
+The findings of the paper are finally concluded in section 8.
+
+                                   2. Previous literature
+Earlier studies have tried to explain the change in volatility for options with same expiry date
+over different strike prices. The resulting volatility smile from such data has been parameterized
+and analyzed but findings have been difficult to interpret. The increase in implied volatility in
+out- and in-the-money options that causes the volatility smile has been a strenuous subject of
+study for many academics in finance. Several papers have been trying to explain the smiles by
+extending the traditional BS model with models that incorporate stochastic volatility (Hull &
+White, 1987), implied binomial tree (Derman & Kani, 1994) or discontinuous jumps (Merton,
+1976) in the stock price. This field of study is in itself a very challenging and intriguing subject
+which requires further research to find a model that is coherent with the observed smile; however
+this paper will not make any attempt in explaining the smile but rather study if there is
+information in the smile that can forecast future volatility regime shifts in stock prices.
+
+Since option markets are forward looking it forces the traders in these markets to estimate the
+future volatilities to correctly price the options. If information about future events is priced in the
+option market before it is priced in the equity market it naturally follows that the implied
+volatility extracted by inverting the BS model can be a feasible predictor of future volatility. Many
+studies have been done within this subject to test this proposition and the results have been very
+varying, both positive, indicating that the implied volatility is a feasible predictor (Malz, 2001) and
+negative (Chakravarty et al., 2004). Overall the empirical studies on the forecasting power of the
+implied volatility have come to contradicting results but compared with other models it is the
+most accurate forecasts on future volatility for all forecast horizons and performance measures
+considered (Blair et al., 2000). The implied volatility has been used by practitioners as a predictor
+for future volatility since the early eighties (Beckers, 1981) and it is regarded so important that it
+
+                                                                       5
+has even been given its own index, the Market Volatility Index (VIX). The VIX has been found
+to be a good proxy for market mood as found by Sun & Yu (2010). Sun & Yu found that implied
+volatilities contain information about the future market behavior and the general mood of the
+market. They conclude that if the well informed traders’ mood is contained by the implied
+volatility, the implied volatilities should be able to predict future abnormal returns given that the
+fears of traders are rational. Rational traders are loss averse and will be cautious of e.g. short sales
+
+5 Henceforth referred to as VIX
+
+                                        4
+when the volatility is high. A pessimistic or cautious mood is shown through higher prices due to
+volatility and higher implied volatility reflects this cautiousness.
+
+The problem of pricing options such as calls and puts was presented with a solution in 1973
+when Fischer Black and Myron Scholes presented a paper with the idea to create a perfectly
+hedged risk-neutral portfolio that eliminated systematic risk (Black & Scholes, 1973). As with
+most financial models, the BS model requires some assumptions to make its derivation possible.
+According to the BS model, the stock prices move according to a GBM model as shown in
+equation 1.
+
+                                                                                                                     ( 1 )
+
+The GBM model states that stock prices develop according to a constant drift or return μ and a
+constant volatility σ. The dt term is time and dW is a Wiener random walk parameter.
+
+The issues with using GBM as the underlying model for pricing options was early recognized for
+its flaws. Option prices in the market did not follow the rationale of the theory and showed that
+the returns were leptokurtic or fat-tailed which was an intrusion to the log normal assumption in
+the model. Merton extended the GBM model by adding a theory to consider the possibility of
+asset price jumps (Merton, 1976) to explain the fat-tails. The resulting model was the GBMJ
+model which adds a new jump variable J to the classical GBM model:
+
+                                                                                                                     ( 2 )
+
+The dq term is a Poisson counter with intensity λ, i.e. the probability that dq=1 is λdt.
+
+This alternation of the standard GBM model implies that there are normal and non-normal
+market returns. The return when dq=1 is μ+J where J is the addition by the jump. J is assumed to
+be normally distributed with a mean of μJ and variance σJ.
+
+The GBMJ is not a closed form function and in order to obtain the GBMJ parameters it needs to
+be numerically solved for. A method historically used to obtain population parameters from
+samples is Maximum Likelihood Estimation (MLE) in which candidate parameters are tested for
+their likelihood to be the true population parameters by maximizing a log likelihood function.
+
+                                        5
+The log likelihood equation for estimating the parameters in the GBMJ model as defined by
+Craine et al. (2000) is:
+
+                                                                                                                     ( 3 )
+
+The log likelihood equation is a function of the unknown parameters θ. The parameters are:
+
+The variances of the parameters are inversely proportional to the observations as described in
+equation 8 in section 4.2. MLE is therefore a very efficient estimation method even for small
+samples. Derivation of the log likelihood function can be found in an article by Jorion (1988).
+
+In order to build a continuous database with GBMJ coefficients one needs to divide the data into
+periods. Moving windows have been used in financial research earlier as found in the research by
+Pesaran and Timmermann (1995). Pesaran and Timmermann try to predict future returns by
+using moving window periods. In this paper we have used moving windows as explained in
+section 4.2.
+
+Models that price options with GBMJ result in a visible volatility smile (Kou, 2002). A drawback
+of such models is that options are more difficult to price than with the traditional BS model and
+need to be numerically solved for. Another method for dealing with fat-tails in return
+distributions and the deviation from the log normal assumption is to use stochastic volatility. The
+stochastic volatility method requires extreme parameters that are implausible for options (Bates,
+1998). Bates found that the jump diffusion model is a better model to predict option prices. The
+jump diffusion model does have its drawbacks. The jump itself is assumed to be normally
+distributed and implicit distributions from the model is inconsistent with large stock index
+returns between 1988-93 (Bates, 1998). The GBMJ model parameters have to be numerically
+estimated and the best current method for estimation is the MLE method (Eraker, 2004; Pratt,
+1976).
+
+                                        6
+As discussed earlier the implied volatility has a forward looking power and might forecast future
+volatility. However implied volatility contains merely the information from a single option for
+each expiry without taking into account a wider range of strike prices. Using all option prices
+over the strike prices as summarized by the volatility smile, the volatility smile might be viewed as
+an extension of the implied volatility with more exhaustive information incorporated. The
+following paragraph will extend the discussion on the volatility smile.
+
+In accordance with its component parts, i.e. implied volatility, the volatility smile should be
+forward looking and contain information about the market expectations. There have been papers
+written on the predictive power of the smile with regards to market disturbances such as crashes.
+Gemmil (1996) discusses the predictive power in the skew of the volatility smile for anticipating
+the 1987 crash. By a parameterization process of the volatility smile, weighing the relative bias of
+the skew, Gemmil found that his model could not predict the crash by option pricing. However,
+later studies have found a predictive power of the slope of the smile by modeling with in and out-
+of-the money options to deduct a smile slope that could predict future stock returns (Deuskar et
+al., 2007; Shu yan, 2011). Using data between January 1996 to June 2005 Shu yan (2011) used the
+curvature of the volatility smile as a proxy of the jump risk from the GBMJ model and found that
+there is a negative relationship between the return of a portfolio and the curvature of the slope,
+i.e. low slope portfolios earn a high return and vice versa; high slope portfolios earn a low return.
+
+This paper is an extension to previous studies and contributes to the research on the predictive
+power of the volatility smile. The approach in this study is to parameterize the smile by extracting
+the second derivative coefficient of the curvature for options using a wide range of strike prices.
+It might be argued that the intensity of the curvature of the smile contains information about
+future GBMJ jumps in stock prices much like the assumption made by Shu yan (2011). Previous
+research by Merton (1976) suggests that there are two types of jumps. The first category includes
+jumps that might be expected from information arrival to the market. These jumps can result
+from new information to the market or due to periods without trade. The jumps can also occur
+when markets are experiencing abnormal shocks and returns are non-normal. The second
+category consists of jumps in markets which result from unexpected events such as terrorist
+attacks, earthquakes etc. Jumps from the first category are sometimes described as predictable
+and might be found by modeling in the historical data. These jumps will be the subject of study
+and also serve as the definition of jumps henceforward.
+
+                                        7
+                                      3. Data
+In order to construct the coefficients of the volatility smiles for different dates and time-to-
+maturities, data on plain vanilla options on the S&P500 Composite Index was used. With
+Thomson DataStream Advance 4.0, option-, VIX-, and S&P 500 index-data was extracted for the
+period between May 2006 and present day, April 2011. May 2006 represented the earliest day for
+which option data was available in DataStream and consequently May 2006 was chosen as the
+first date in the data set to maximize the amount of data used in the analysis and capture as much
+information as possible in the historical data.
+
+                                      3.1 Option data
+
+                                                                  6
+Data is given for the exchange traded stock index option comprising of daily closing prices of
+each option maturing on the third Friday in every month for the period May 2006 to April 2011.
+This means that the data contains 60 expiry dates and a series of strike prices for every expiry
+date. From initial data there were 10 505 options with daily prices ranging from at least 80 days to
+maturity to expiry date. Prices with longer time-to-maturity than 87 days were excluded from the
+analysis since data did not exist for some options earlier than this date and the further away the
+option got from its expiry date the more prices were missing in the data as can be seen in figures
+1 and 2 in the appendix wherein the data is visualized. After excluding longer time-to-maturities
+we obtained a time series data of 913 935 observations.
+
+In order to standardize the options data to address the fact that the underlying index itself moves,
+we defined moneyness as percentage in and out-of-the-money relative to its spot price,
+
+                                                                                                                     ( 4 )
+
+where M is the moneyness of an option, K the strike price and index spot price. Trading
+volumes for the options were not used to check for illiquid options that could be mispriced and
+be far away its market equilibrium value owing to low liquidity. Instead moneyness of ± 20%, i.e.
+
+                                                                                                                     ( 5 )
+
+were used to ensure that illiquid far out- and in-the-money options were not included in the
+dataset since near the money options are more traded than far out- and in-the-money options.
+
+6 Put options were chosen since there were more data points for puts than for calls. Because of the put-call-parity it
+does not matter which is used when calculating implied volatility so puts and calls can thus be used interchangeably.
+                                        8
+                                   3.2 S&P 500 & VIX
+The Standard & Poor 500 Composite Index was used to calculate the GBMJ parameters. The
+index measures American companies only and weight the returns with regards to market
+capitalization. The reason for using the S&P 500 was that historical option data is difficult to find
+for other indices and the S&P 500 has been the subject of many analyses, indicating that traders
+on the S&P 500 options might be better informed and convey this information through option
+prices. In order to use MLE as described in section 4.3, the log-returns of the S&P 500 were
+calculated.
+
+                                                        7
+We used the Chicago Board Options Exchange (CBOE) VIX with daily index values for the
+whole period to estimate the market expectation of the implied volatility of the S&P 500 Index
+option and the future stock market volatility.
+
+                                  4. Methodology
+
+                                  4.1 Implied Volatility Smile
+All option prices obtained from DataStream were converted into BSM implied volatility
+calculated using a Newton-Raphson iterative algorithm. Furthermore, a certain set of time-to-
+maturities were chosen to plot the implied volatilities around the index, thus creating a volatility
+smile for each set. As described in section 3.1 strike prices with moneyness ± 20% were used to
+control for illiquid far out- and in-the-money options. Therefore the window and data points for
+each plotted smile were moved according to its prevailing daily spot price. Since there is a change
+in the volatility smile owing to the time parameter, different time-to-maturities options were not
+compared with each other to avoid the mismatch problem in many prior studies (Lopes, 2000).
+There are some techniques used by financial engineers to neutralize the time effect by
+discounting the inverse of the square-root of the time parameter (Natenberg, 1994). These
+methods have shown to make the smiles less dependent of the time-to-maturity but will however
+not be employed in this study. The time-to-maturities chosen to be analyzed were 10 days, 21
+days, 30 days, 45 days and 87 days to maturity. It is arguable that shorter time-to-maturity options
+are more liquid than longer dated time-to-maturities and that is why more weight was put on the
+shorter dates. Longer dated options such as 87 days to maturity were included to extend the
+prediction window and in addition capture more information incorporated in the options.
+
+7 Henceforth referred to as CBOE
+
+                                        9
+Implied volatility data for each time-to-maturity was extracted within the moneyness boundary
+and modeled in STATA 11. The nature of the plotted implied volatility data for every time-to-
+maturity seems to follow a positive second degree curvature which creates the characteristic
+smile-effect. A fitted line regression was run in STATA to find the second degree coefficient of
+the smile; the τ in equation 6.
+
+                                                                                                                     ( 6 )
+
+Using the coefficient for each month and each time-to-maturity , a time-series of coefficients
+over time was created. The information in this coefficient should help in predicting the future
+market behavior as the volatility smile is forward looking. In order to estimate market jumps in
+stock prices we chose to model the market behavior according to the GBMJ model.
+
+  coefficients that were t-tested and found to be insignificant on the 5% level were removed from
+the data as a rule to eliminate potentially biased data points. The choice is debatable being the
+case that the insignificance in the smiles itself could contain important information. Further tests
+need to be done to exclude the insignificance owing to erroneous data rather than valuable
+information. This analysis is however out of the scope for this paper.
+
+                   4.2 Geometric Brownian Motion with Jump diffusion
+Using only GBM to describe stock price movements has been contradicted by several researchers
+(Merton, 1976; Eraker, 2004; Craine, 2000) and furthermore options prices deviate from the fair
+price according to a model that prices options according to an underlying asset that moves
+according to GBM, i.e. The BS-model. In order to capture the fat-tails that result from the
+informational jumps as mentioned in section 2 we used GBMJ as suggested by Merton (1976).
+The model estimation obtains the drift μ, volatility σ for the stock price and the jump
+components respectively. For the jump coefficient we also obtain the intensity of the Poisson
+counter, the λ value. The λ is the probability that the jump coefficient is active and there is a jump
+in the market as described in equation 2.
+
+It is unclear exactly what information the curvature of the volatility smile contains but a model to
+match information sending from the volatility smile and information received by the market is
+proposed in equation 7.
+
+                                                                                                                     ( 7 )
+
+                                       10
+The jump coefficient J depends on X that represent some unobserved factor that temporarily
+affect the market by asset price jumps due to new information arrival as stated by Merton (1976).
+A part of this factor might be mood as suggested by Sun & Wu (2010), it could also be due to
+some other factor that is not observed but partly observable through parameterization of the
+volatility smile shape.
+
+In order to divide the S&P 500 returns in jump regimes and no-jump regimes we estimated the
+jump probability λ, the jump magnitude μJ, and the jump volatility σJ for moving windows. Each
+window starts the day after the date we use to extract the volatility smile and extends to the
+exercise date the following month.
+
+                                                                                                           th
+Example: If the smile was extracted for the 2008-02 option (strike date was February 15  2008)
+
+                                                                      th
+with time-to-maturity 30 (i.e. January 16 ), the smile was assumed to contain information from
+the day after the date we calculated it until the exercise of the next option (i.e. the 2008-03 option
+
+                                       st                                                                           th                            st
+expiration date: March 21 ). The relevant moving window was from Jan 16  2008 to March 21
+2008 (65 days window with 47 trading days). The procedure is visualized in figure 3.
+
+Moving windows are necessary as the MLE of parameters become more dependable the more
+observations one use. The windows are overlapping as shown in figure 3 but using values several
+times did not seem to create biased coefficients (coefficients with no overlap were almost
+identical to the ones with overlap). Using moving windows has the positive effect of lowering the
+variance of the coefficients. There is little literature on how few values that could be used in MLE
+as the method often uses entire populations and not subsamples of it. A reassuring fact is that the
+MLE method is asymptotically effective as it yields a parameter with variance as depicted by Pratt
+(1976) in equation 8.
+
+                                                                                                                     ( 8 )
+
+Using the time span described above is intuitive as an option with expiry in 10 days should not
+say much about the period before but rather the expectations for the next period. This is due to
+the options being reflections of forward market conditions conditional on the present conditions.
+
+This method of using moving windows for jump diffusion modeling by MLE has not, to our
+knowledge, been used before but results in section 5.2 suggest that it can correctly model the
+jumps of the relevant periods. The moving windows let us create continuous data to match with
+the curvature of the smile.
+
+                                       11
+                          4.3 Maximum Likelihood Estimation
+MLE was used to find the GBMJ model parameters for each window. The method uses a
+
+                                    8
+numerical maximizing function and delivers the parameters that have the highest likelihood of
+being correct according to the predefined log-likelihood function. The method is sensitive to the
+length of the estimation windows and too short windows can lead to biased results as the
+variance of the parameters is inversely dependent on the number of observations as seen in
+equation 8.
+
+                                   4.3.1 MLE initial values
+Deciding on initial values in numerical methods can have a large impact in the efficiency of the
+algorithms. A problem with a random choice of initial parameters when using numerical methods
+is that one might find a local max or min and takes that value for the global maximum or
+minimum. Testing for different initial values can show if the true maximum for the log-likelihood
+function is found and not a local one. All initial values were changed to test for this and the result
+showed that there were only global maxima. The only significant difference when changing the
+initial values were the number of iterations needed and the convergence of the algorithm.
+
+Parameters
+The initial values have to be carefully chosen in order for the log-likelihood function to converge.
+Earlier researchers have had difficulties with non-convergence probably due to this. The standard
+initials of all zeros or all ones (or a permutation of these) generate non converging estimates and
+it is advisable to have non equal and positive initial values in order for the method to converge to
+one set of parameter values for each period.
+
+Maximum daily jumps
+The maximum number of daily jumps in equation 3 (see section 2), Q, is set to 5. The number of
+daily jumps can be altered and in principle set to an infinite amount but this alteration has a
+diminishing effect on the parameters as can be seen in the log-likelihood function in section 2.
+Brigo et al. (2009) used 5 while Crain et al. (2000) used 10.
+
+                                      4.4 Regression
+To analyze the predictive power of the volatility smile ordinary least squared (OLS) regressions
+were run between variables extracted in the volatility curvature in section 4.1 and the jump
+
+8 We used Matlab’s MAX function for maximization.
+
+                                       12
+diffusion parameters from the MLE algorithm mentioned in section 4.3. The regressions
+followed the set-up of our parsimonious model in equation 9.
+
+                                                                                                                     ( 9 )
+
+Where is the jump variable from MLE in the moving estimation window and is the smile
+coefficient variable taken from the first date of the estimation window. The sign and magnitude
+of will be the parameter in focus when making inference on the forecasting power of the smile.
+
+In the first regressions the curvature variables for TTM 10, TTM 21, TTM 30, TTM 45 and
+TTM 87 were regressed on some more primitive variables such as S&P500 return and VIX -
+representing in equation 9 - to check for correlation between curvature and index. This is
+mainly to explore if the indexes can be explained by the forward looking curvatures in the
+volatility smile.
+
+In the second regressions parameters from the MLE were incorporated as the dependent variable
+   in equation 9 and ran on the same curvature variables with different time-to-maturities. A new
+variable was created at this stage to capture the probability, size and direction of the jumps;
+      is the product of lambda and jump amplitude and gives a notion of an average
+expected jump. To make the inference of the predictive power of the curvature some lagging
+windows needed to be modeled to capture the correct explanatory rule. The curvatures were
+given for a certain date in every given month, e.g. for the parameter TTM 10, ten days before the
+expiry date (third Friday in each month, see section 3.1) a curvature was generated for the option.
+Furthermore, from section 4.3 jump diffusion parameters extracted from the S&P500 Composite
+Index using moving windows were used as the independent variables in the regressions on the
+dependent curvature variables. The way the windows were constructed is such that for each
+different time-to-maturity the time horizon for which the jump variables were estimated follows a
+logically constructed pattern. The pattern for the windows started from the day after the date for
+which the curvature was extracted and extended to the expiry date for the option with expiration
+one month later. Taking TTM 10 as example figure 3 shows how the moving windows were
+created for TTM10 and thus the time period for which the jump parameters were estimated from.
+To make the regressions consistent, the same pattern was followed for the other time-to-
+maturities hence prolonging the estimation windows for longer maturities relative its shorter
+counterparts.
+
+                                       13
+Our third analysis was conducted on the volatility smiles on a more aggregate level. New
+variables were created from the earlier extracted coefficient parameters as the independent
+variable in equation 9. The parameters average smile coefficient and standard deviation of
+the smile coefficient were generated by simply calculating the mean and standard deviation of the
+smiles for each option. This follows the intuition that the average smile coefficient and standard
+deviation for each option during its life time has information contained in a more aggregate level.
+To make the mean and standard deviation calculations more consistent and robust nine more
+time-series of smile coefficients were added between the TTM10 and TTM87 with more weight
+
+                          9
+on the shorter dates.   These results were subsequently regressed on the indexes and jump
+parameters with the same moving windows as the TTM 10 since the new parameters include
+information up until the date of TTM 10.
+
+                                         5. Results
+This section presents our results in a logical order following the set-up described in section 4.4.
+Section 5.1 reports the results from the volatility smile dynamics, the coefficients and how the
+smile changes over time with different maturities. Section 5.2 focuses on the jump diffusion
+parameter estimations from MLE with graphs to show when jumps occurred on the S&P500
+Composite index for the sample period. Finally section 5.3 puts the two results from 5.1 and 5.2
+together to examine if there were any relationships and consequently predictive power between
+the volatility smile coefficients and jump parameters.
+
+                                 5.1 Volatility smile dynamics
+Table 1 reports the descriptive curvature statistics for different maturities. The second degree
+coefficients become smaller and less volatile the further away the option gets from the expiry
+date. Figures 4 and 5 show the decreasing smile coefficient graphically. This follows the intuition
+that the longer (shorter) the maturity the more (less) flat the curvature of the smile. This implies
+that traders become more concerned about a jump in prices the nearer they come to the expiry
+date as more information becomes available about the future. Insignificant values with p-values
+over 5 percentages were removed from the sample when regressing the second degree curvatures
+which explains the difference in number of observations in table 1.
+
+9 The time-to-maturities used was TTM10, TTM 15, TTM 18, TTM 21, TTM 23, TTM 28, TTM 30, TTM 35, TTM
+42, TTM 45, TTM 50, TTM 60, TTM 74 and TTM 87.
+                                       14
+                               5.2 Jump diffusion dynamics
+Tables 2-6 summarize the descriptive statistics for the jump components obtained from the MLE
+method. The method used to obtain the jump diffusion parameters yielded noisy data as shown
+in figures 6-8. This paper focuses on jump diffusion components and of these we especially
+looked at the jump amplitude , and the Poisson intensity . varies over time seemingly at
+random as depicted in figure 6. does, however, contain information on upwards or
+downwards jumps and how big the jumps are and should thus not be completely omitted from
+the study. In section 5.3 we therefore created a variable that captures the effect and the
+probability of the jumps. Figures 9, 10, and 11 show the results from the MLE method for TTM
+45 against the S&P 500 market returns, and indeed seem rather independent from the daily
+returns as depicted in figure 9. Figure 10 indicate that the coefficient captures the market
+abnormal returns defined as returns more than two standard deviations from the mean return.
+Market abnormal returns from figure 10 are shown with its direction and size in figure 12. The
+high values seem to be well timed to the abnormal returns in figures 10 and 11 and the
+correlation between the two examined factors in figure 11 is -0.44. All these findings suggest that
+the method of using moving windows for MLE to estimate market jumps has some validity and
+that that the regression of the curvature as independent variable and as dependent have
+information about the predictive power of the volatility smile. This partly confirms the
+assumption made by Shu yan (2011), i.e. that volatility curvature proxy GBMJ jumps in the
+market.
+
+                                5.3 Combined dynamics
+Table 7 shows the correlation matrix between the parameters as described in section 4.4. It
+demonstrates a varying correlation between the smiles’ coefficients and MLE jump parameters
+both in size and direction.
+
+Since correlation in itself says little about the statistical significance when trying to make inference
+table 8 with p-values instead of correlations was created with OLS regression. The tables were
+created from regressing each of the dependent variables (horizontal) on the dependant variables
+(vertical). P-values with significance under the five percentage label are highlighted in bold.
+Although the significant values are numerous yet still ambiguous with no clear pattern over the
+series of different variables there seems to be a consistent significant relationship between the
+coefficients in TTM 30, TTM 45, and TTM 87 on the λ and .
+
+                                       15
+Given these results, we focused on the forecasting power for the smiles coefficients of TTM 30,
+TTM 45 and TTM 87 on parameters and . The following paragraphs present and discuss
+the results of the regressions with the main interest on the direction of the relationship i.e.
+significant positive or negative relationships. Table 9 reports extended results from the regression
+on the chosen variables including coefficients and t-values. In equation-form
+           the regression results are reported as following:
+
+                                                                                              ( 10 )
+
+                                                                                                          ( 11 )
+
+                                                                                                          ( 12 )
+
+                                                                                                          ( 13 )
+
+                                                                                                          ( 14 )
+
+                                                                                                          ( 15 )
+
+where is the Poisson probability of a jump in the estimation period, represents the
+second degree coefficient of the smile in the beginning of the estimation period and
+
+corresponds to the magnitude and direction of a jump. Equations 10-12 describe the relationship
+between the smiles coefficient and the Poisson jump probability. For shorter maturities there
+seem to be a negative relationship between and i.e. the flatter the coefficient is in the
+beginning of a period, the larger is the probability of a jump during the whole period. TTM 87 on
+the contrary shows a positive relationship between parameters and which implicates that
+the steeper the smile 87 days to maturity the larger is the possibility of a jump. The magnitude of
+the coefficient seems to follow a pattern of increasing absolute value the nearer to maturity. Since
+equations 10-12 only describe the relationship of the smile coefficient and the probability of a
+jump in any direction, equations 13-15 incorporate the direction, magnitude and probability in
+the jump by multiplying the parameters and as the dependent variable to describe a notion
+
+of expected average jump. As , the term will keep the sign of .
+
+Equations 13-15 describe the forecasting power of the smile coefficient on the average expected
+jump and this time showing a consistent negative relationship between the parameters meaning
+that the flatter the smile is the higher probability there will be for a positive jump in the
+estimation window following and vice versa, the more curvature on the volatility smiles the larger
+
+                                       16
+the probability for a negative jump in prices. The magnitude of the coefficients seems to follow
+the same as equation 9-12 i.e. the nearer maturity the larger the magnitude and importance the
+coefficient has on its predictive power.
+
+Although the coefficient of equation 15 is not significant on a 5 percentage level of significance
+(see table 9) the sign and magnitude of it is consistent with the pattern of earlier maturities.
+
+                                     6. Implications
+The results from section 5.3 show that there is a predictive power of the volatility smile on the
+jump variables in the following period. Even though it’s puzzling why the results are varying in
+significance over different TTM and variables there is a somewhat consistent pattern over the
+statistical significant values to proceed in making inference. Equations 10-15 all show the same
+pattern of a lower magnitude of the smile coefficient the further away from expiry date. These
+results might be explained by differences in the values of both the dependent and independent
+variable and as described in earlier sections (see section 4.1) different time-to-maturities will not
+be compared and elaborated but rather the sign of the coefficient is important for inference.
+
+Equations 10-12 portrait a negative relationship between the smile coefficient and the probability
+of a jump in the following period. This rather peculiar and intuition contradictory result implies
+that when the option market discounts a high variability in future prices (i.e. high smile
+coefficient hence a steeper smile) the smaller the probability of a jump will be in the underlying
+during the following period.
+
+When looking at equations 13-15 the results became more interesting. It followed that the beta
+coefficient to is negative as before, however in these equations the dependent variable
+incorporates the sign and magnitude of the jump as a new variable . is interpreted as
+an expected average jump and takes negative values for expected negative jumps and positive
+values for expected positive jumps. The same logic follows the implications made from equations
+10-12 however since positive and negative jumps were incorporated inference about the direction
+of the jump could be deduced. When the smile coefficient is high (i.e. a steep volatility smile) the
+larger is the probability of a negative jump and vice versa, the smaller the smile coefficient the
+larger the probability of a positive jump. It is remarkable that there was a threshold for the size of
+the smile coefficient for when a negative jump forecast becomes a positive jump forecast. This
+implies that trading strategies with long/short rules can be induced for a certain holding period
+by extracting the smile coefficient in the beginning of the same period. Why there would be a
+higher risk for a positive jump for a flat smile is questionable. Indirectly the results from
+
+                                       17
+equations 13-15 tell that the market is more predictive of a negative jump than a positive given
+that a steep smile means that the markets discounts larger moves on the market while flat smile is
+usually seen during less distressed periods during a lower volatility regime. Even though this
+might seem to be contradictory the results are in line with previous research made by Shu yan
+(2011). Shu Yan argued that the implied volatility smile curvature can be regarded as a proxy to
+the jump risk and found similar results to our study, i.e. low slope portfolios earn a high return
+and vice versa; high slope portfolios earn a low return (we obtain the same relationship but with
+jumps instead of returns in the same positive or negative direction). By showing the significant
+relationship between the volatility smile and future jump risk our results consequently confirm
+Shu Yan’s assumption that the curvature of the volatility smile is a feasible proxy for market
+mood and jump risks.
+
+                                  7. Problematization
+As pointed out earlier in this study there are several of problems with running the MLE
+algorithm that might create bias in the extracted jump parameters. Firstly it is a complex method
+that makes advanced estimations from a single input (i.e. log return values). It is questionable if
+there is enough information in such an input to create jump estimations for a certain window.
+The algorithm in the numerical method to maximize the log-likelihood requires input of a start
+value which itself can create bias depending on the unknown distribution of the likelihood
+function. Furthermore, large jumps are rare events so long time series and estimation windows
+are required to make estimations of when jumps occur. Misspecifications in the model can create
+computation errors that are difficult to control for. For example in the estimations made in this
+thesis the probability values took extreme values for some time windows which is questionable
+and will be heavily weighted when using OLS. Some of these concerns have been expressed in
+earlier research (Shu Yan, 2011) which is why the existence of academic papers about jump
+diffusion models using MLE is very limited.
+
+When modeling the curvatures of the second degree derivative of the volatility smile statistically
+insignificant curvatures over the 5 percentage level were removed from the time-series data. It is
+debatable whether or not insignificant curvature originates from data error, occurring from
+calculation- or input errors in the dataset, or if it in fact contains valuable information that should
+be taken into account. A systematic study of the cause of these curvatures is needed to draw
+further conclusions.
+
+The jump parameters in the final regressions used different length of the moving windows for
+different time-to-maturities as described in section 4.2. The difference in window range gave
+
+                                       18
+different jump values both in magnitude and probability and could be a source of problems in the
+OLS regressions and the following inferences.
+
+The smile coefficient in itself incorporates both a positive view and negative view of the
+underlying asset and no information of the direction (i.e. left or right skew) of the smile can be
+interpreted. This might be a problem for the inference. Another approach that is out of the scope
+of this paper would be to make a parameterization of the smile (Gemmil, 1996) by measuring the
+relative weight of the direction of out-of-the-money puts and calls skew to make such a
+conclusion.
+
+Even though more than 900 000 observations of option prices for the period May 2006 to April
+2011 were used in this study there are still limitations to which conclusions can be drawn from
+the data set. It would be preferable to have a longer time-series to get more robust results and
+more reliable jump estimations from the MLE.
+
+                                    8. Conclusions
+Mispricing in the option prices and deviation from the Nobel prize winning Black-Scholes option
+pricing model has long been taunting and intellectual challenging for academic scholars and
+practitioners. Previous studies have shown that option traders get information earlier than equity
+traders and other literature has concluded that the implied volatility might be a good predictor of
+realized volatility. In order to extend previous research this study conducted a research on the
+predictive power of the implied volatility smile extracted from S&P option prices to forecast
+certain movements and jumps on the underlying S&P 500 Composite Index.
+
+As a first step using daily option prices with a large range of strike prices the volatility smile was
+plotted and regressed to extract the second degree coefficient of the smile. To avoid the time
+decay factor same time-to-maturities has been used to construct continuous time series of
+coefficient smiles over the period May 2006 to April 2011.
+
+Next, jump parameters from the GBMJ model were estimated using MLE for different moving
+windows. These estimations showed a certain set of jumps in the market for the period May 2006
+to April 2011 however with extreme Poisson probabilities for certain periods which might have
+created bias in later regressions.
+
+Using the steepness of the smile (i.e. the second degree coefficient) as a proxy for the mood of
+the future looking option market regressions were made on the jump parameters from MLE.
+Although many significant relationships were found the results proved to be varying for different
+
+                                       19
+time-to-maturities and jump parameters which makes it hard to make clear inferences. This study
+concludes that there is some weak proof of a predictive power of the volatility smile on the
+future volatility regime for longer dated options with between 30 to 87 days to maturity.
+Nevertheless more research has to be done within this topic to make more certain conclusions.
+This study contributes to the forecasting finance literature by making an extensive study in
+forecasting future jumps in stock prices with the volatility smile coefficient for the period May
+2006 to April 2011.
+
+                           9. Suggestions for further research
+The findings of this study show that there are some, although unclear, relationships between the
+volatility smile and future market movements. It would be interesting to conduct further studies
+in this subject using longer time-series and modeling with other dependent variables than GBMJ
+parameters.
+
+Improvements on the techniques in the parameterization of the volatility smile could be another
+field of study. Weighting market views on the tails of the smile would improve the precision by
+taking into account how much more positive or negative the smile is (i.e. left or right skewed).
+This approach would be more intuitive and clearer about future up- or downside risks. Another
+way to proxy for the smile curvature could be to use the newly launched CBOE Skew Index
+which uses CBOE’s own definition and parameterization of the smile slope.
+
+Further research could be made using options on futures. Derivatives of a higher order have an
+ever more future looking horizon and studies (Szakmary et al., 2003) have shown that the implied
+volatility of options on futures outperform other predictors of the subsequently realized volatility
+on the underlying.
+
+                                       20
+                                Bibliography
+Afef, A., Olfa, B.O. (2009, August). How Option Markets Affect Price Discovery on the Spot
+Markets: A Survey of the Empirical Literature and Synthesis, International Journal of Business and
+Management, Vol. 4(8)
+
+Bates, D.S., (2000, January), Post-'87 crash fears in the S&P 500 futures option market. Journal of
+Econometrics, Vol. 94(1-2), 181-238.
+
+Beckers, S. (1981, September). Standard deviations implied in option prices as predictors of
+future stock price variability. Journal of Banking & Finance, vol. 5(3), 363-381.
+
+Black, F., & Scholes, M. (1973, June). The Pricing of Options and Corporate Liabilities. Journal of
+Political Economy , vol. 81(3), 637-659.
+
+ Blair B.J., Poon S.H., Taylor S.J. (2001, Spring). Forecasting S&P 100 volatility: the incremental
+information content of implied volatilities and high-frequency index returns. Journal of Econometrics,
+Vol. 105(1), 5-26.
+
+Brigo, D., Dalessandro, A., Neugebager, M., & Triki, F. (2009, January). A stochastic processes
+toolkit for risk management: Geometric Brownian motion, jumps, GARCH and variance gamma
+models. Journal of Risk Management in Financial Institutions, Vol. 2(4), 365-393.
+
+Chakravarty, S., Gulen, H., & Mayhew, S. (2004, June). Informed Trading in Stock and Option
+Markets. Journal of Finance, Vol. 59 (3), 1235-1257.
+
+Craine, R., Lochstoer, L., & Syrtveit, K. (2000, June). Estimation of a Stochastic-Volatility Jump-
+Diffusion Model. Economic Analysis Review, Vol. 15(1), 61-87.
+
+Derman, E. & Kani, I. (1994, January). The volatility smile and its implied tree. Goldman Sachs
+Quantitative Strategies Research Notes
+
+Deuskar, P., Gupta, A., Subrahmanyam, M.G. (2008, May). The Economic Determinants of
+Interest Rate Option Smiles. Journal of Banking & Finance, Vol. 32(5), 714-728.
+
+Duque, J. L. C. & Lopes, P. T. (2000, February). Maturity and volatility effects on smile or dying
+smiling?
+
+Ederington, L. & Guan, W. (2004, August). The information frown in option prices. Journal of
+Banking & Finance, Vol. 29 (2005), 1429–1457.
+
+                                       21
+Eraker, B. (2004, June), Do Stock Prices and Volatility Jump? Reconciling Evidence from Spot
+and Option Prices. The Journal of Finance, vol. 59(3), 1367-1404.
+
+Fama, E. (1965). The Behavior of Stock Market Prices. Journal of Business,Vol.38, 34–105.
+
+Gemmil, G. (1996, December). Did Option Traders Anticipate the Crash? Evidence from
+Volatility Smiles in the U.K. with U.S. Comparisons, The Journal of Futures Markets, Vol. 16(8),
+881-897.
+
+Jorion, P. (1988, Winter), On Jump Processes in the Foreign Exchange and Stock Markets, The
+Review of Financial Studies, Vol. 1(4), 427-445.
+
+Kahneman, D. & Tversky, A. (1979, March). Prospect Theory: An Analysis of Decision under
+Risk. Econometrica. Vol. 47 (2), 263–291.
+
+Kou, S. G., (2002, August), A Jump Diffusion Model for Option Pricing. Management Science, vol.
+48(8), 1086-1101.
+
+Malz, A.L. (2001, October), Financial crises, implied volatility and stress testing. Risk Metrics
+Group, Working Paper Number 01-01.
+
+Merton, R. (1976, January). Option Pricing when Underlying Stock Returns Are Discontinuous.
+Journal of Financial Economics, Vol. 3(1-2), 125-144.
+
+Natenberg, S. (1994). Option Pricing and Volatility: Advanced Trading Strategies and Techniques,
+2nd edn. McGraw-Hill, 1994.
+
+Pesaran, M. H., & Timmermann, A. (1995, September) Predictability of Stock Returns:
+Robustness and Economic Significance, The Journal of Finance, Vol. 50(4), 1201-1228.
+
+Pratt, J. W. (1976, May), F. Y. Edgeworth and R. A. Fisher on the Efficiency of Maximum
+Likelihood Estimation. The Annals of Statistics, Vol. 4(3), 501-514.
+
+Shu, Y. (2011, January), Jump risk, stock returns, and slope of implied volatility smile. Journal of
+Financial Economics 99 (2011) 216–233.
+
+Sun, Y. & Wu, X. M. (2010, April), A Nonparametric Study of Dependence Between S&P 500
+Index and Market Volatility Index (VIX). European Financial Management Symposium April 2010.
+
+                                       22
+         Appendix
+           Tables
+
+                                        41
+      TTM 870.112370.054120.21960-0.04910
+
+
+                                        48
+      TTM 740.134130.081910.50730-0.02180
+
+
+                                        51
+      TTM 600.153360.106030.46580-0.14100
+
+
+                                        53
+      TTM 500.168440.103260.31900-0.10200
+
+
+                                        56
+      TTM 450.181050.098010.35120-0.14470
+
+
+                                        53
+      TTM 420.192330.118550.39010-0.18970
+
+
+                                        52
+      TTM 350.195810.170790.42470-0.65120
+
+
+                                        54
+      TTM 300.255710.147560.49980-0.13540
+
+
+                                        54
+      TTM 280.293060.126190.59110-0.03670
+
+
+                                        55
+      TTM 230.319140.143050.61450-0.06360
+
+
+                                        52
+      TTM 210.354530.161040.63830-0.10590
+
+
+                                        49
+      TTM 180.415680.154370.790900.05030
+Table 1: Descripive Statistics of the second degree coefficient of the Volatility Smile for different maturities*
+
+
+                                        55
+      TTM 150.397270.231661.04060-0.25880
+
+
+                                        57
+      TTM 100.539640.285861.34900-0.21250
+
+
+
+          Mean      Max  Min
+                                                 Observations*All coefficients given in 1/1000
+                     Standard Deviation
+
+             23
+       Table 2: Descripive Statistics of the GBMJ coefficients from the MLE method for time to maturity 10
+                                                   days
+
+                                     μ σ μj σj λ log λ
+
+              Mean -0.00091 0.23829 0.27666 0.11988 0.35939 -5.84068
+
+         Standard Deviation 0.91710 0.17163 0.24880 0.10987 2.67914 1.68027
+
+              Max 2.46804 0.94100 0.93341 0.49945 20.75653 1.31715
+
+               Min -3.43840 0.06496 -0.35857 0.00000 0.00000 -8.49242
+
+           Observations 60 60 60 60 60 60
+      Average number of datapoints
+                                 40 40 40 40 40 40
+      used to calculate coefficients
+
+     Table 3: Descripive Statistics of the GBMJ coefficients from the MLE method for time to maturity 21
+                                                 days
+
+                                    μ σ μj σj λ log λ
+
+            Mean 0.00534 0.24148 0.19675 0.16175 0.18445 -5.72139
+
+       Standard Deviation 0.89777 0.16705 0.41561 0.27571 1.35242 1.70334
+
+             Max 1.75152 0.93290 0.77810 1.86627 10.47723 1.02025
+
+             Min -3.79940 0.08209 -1.98438 0.00000 0.00000 -8.92530
+
+         Observations 60 60 60 60 60 60
+   Average number of datapoints
+                                52 52 52 52 52 52
+    used to calculate coefficients
+
+Table 4: Descripive Statistics of the GBMJ coefficients from the MLE method for time to maturity 30
+                                             days
+
+                                  μ σ μj σj λ log λ
+
+          Mean 0.00853 0.23480 0.20747 0.12806 6.07180 -5.66664
+
+     Standard Deviation 0.71187 0.14266 0.24912 0.11506 42.59050 2.05957
+
+          Max 0.98275 0.77818 0.65379 0.54229 329.85688 2.51833
+
+           Min -2.86105 0.07820 -0.57382 0.00000 0.00000 -7.89477
+
+       Observations 60 60 60 60 60 60
+Average number of datapoints
+                              60 60 60 60 60 60
+ used to calculate coefficients
+
+                              24
+                     Table 5: Descripive Statistics of the GBMJ coefficients from the MLE method for time to maturity 45
+                                                               days
+
+                                                   μ σ μj σj λ log λ
+
+                          Mean -0.00153 0.23941 0.25601 0.11539 4.71549 -5.43325
+
+                     Standard Deviation 0.73605 0.15528 0.22824 0.08945 20.77926 2.31577
+
+                          Max 1.63473 0.75922 1.07379 0.37833 140.95267 2.14907
+
+                           Min -2.94564 0.07447 -0.16614 0.00000 0.00000 -9.42414
+
+                       Observations 60 60 60 60 60 60
+                    Average number of datapoints
+                                             75 75 75 75 75 75
+                   used to calculate coefficients
+
+                  Table 6: Descripive Statistics of the GBMJ coefficients from the MLE method for time to maturity 87
+                                                            days
+
+                                                 μ σ μj σj λ log λ
+
+                        Mean -0.00389 0.24355 0.19974 0.12895 3.09280 -5.01901
+
+                   Standard Deviation 0.58301 0.15739 0.30325 0.11927 11.70816 2.68180
+
+                        Max 0.85692 0.77481 1.53927 0.54422 56.52993 1.75228
+
+                         Min -1.93889 0.07591 -0.53349 0.00000 0.00000 -8.33238
+
+                     Observations 60 60 60 60 60 60
+                 Average number of datapoints
+                                           116 116 116 116 116 116
+                 used to calculate coefficients
+
+                                            Table 7: Correlations matrix for Smile Coeffients and MLE Jump parameters
+
+                        TTM 10 TTM 21 TTM 30 TTM 45 TTM 87 Mean smile Standard dev
+      SP500 Index* -0.260 -0.470 -0.288 -0.191 0.116 -0.317 -0.648
+      SP500 Return* 0.179 0.086 0.289 0.324 0.150 0.245 -0.103
+         VIX* -0.019 0.041 -0.205 -0.267 -0.305 -0.233 0.472
+      VIX Change* -0.142 0.005 -0.169 -0.121 0.061 -0.140 -0.084
+   Jump Coefficient, μ** 0.000 0.084 -0.062 -0.042 -0.041 -0.042 -0.063
+      Sd Jump, σ** -0.082 -0.131 0.180 0.200 -0.200 0.078 -0.044
+       Lambda, λ** -0.213 0.061 -0.371 -0.399 0.319 -0.314 -0.023
+    Log Lambda, log(λ)** -0.129 0.056 -0.237 -0.169 0.173 -0.221 -0.087
+        μ ∙ λ** 0.007 -0.077 -0.373 -0.450 -0.181 0.005 0.040
+* Using Monthly Data
+** Using Moving Windows (Smile Date plus one day - Expiry Date following month)
+
+                                       25
+                                                           Table 8: P-value for regressions on Smiles Variables
+
+                         TTM 10 TTM 21 TTM 30 TTM 45 TTM 87 Mean smile Standard dev
+      SP500 Index* 0.051 0.000 0.035 0.159 0.470 0.014 0.000
+      SP500 Return* 0.186 0.551 0.036 0.016 0.350 0.064 0.442
+         VIX* 0.887 0.771 0.136 0.047 0.053 0.076 0.000
+      VIX Change* 0.296 0.972 0.226 0.377 0.703 0.295 0.531
+   Jump Coefficient, μ** 0.998 0.556 0.653 0.761 0.798 0.753 0.636
+      Sd Jump, σ** 0.548 0.359 0.192 0.143 0.209 0.563 0.742
+       Lambda, λ** 0.115 0.672 0.006 0.003 0.042 0.016 0.865
+    Log Lambda, log(λ)** 0.343 0.697 0.084 0.218 0.281 0.096 0.518
+        μ ∙ λ** 0.108 0.593 0.005 0.001 0.257 0.015 0.837
+* Using Monthly Data
+** Using Moving Windows (Smile Date plus one day - Expiry Date following month)
+P values < 5% in bold font
+
+       Table 9: Smiles coefficient predicitve power on Lambda, λ and average expected jump, μ ∙ λ
+
+                          TTM 30 TTM 45 TTM 87
+
+                             -39.363** -22.311** 9.176*
+        Lambda, λ†
+                                (-2.88) (-3.17) (-2.10)
+
+          μ ∙ λ†              -1.588** -0.804** -0.065
+                                (-2.90) (-3.67) (-1.15)
+
+        Observations 54 55 41
+
+† Using Moving Windows (Smile Date plus one day - Expiry Date following month)
+t-statistics in parentheses. * p<0.05, ** p<0.01, *** p<0.001
+
+                                       26
+                                   Figures
+Figure 1. Option dataset illustration 1.
+
+Figure 2. Figure 1 magnified: Option dataset illustration 2.
+
+                                       27
+Figure 3. Moving windows.
+
+         Figure 4. Mean and Standard Deviation of the Smile Coefficients.
+
+                                       28
+Figure 5. Smile development when time-to-maturity decreases.
+
+                                 29
+Figure 6. Log λ development over time for different time-to-maturity.
+
+                                       30
+Figure 7. μJ development over time for different time-to-maturity.
+
+                                       31
+Figure 8. σJ development over time for different time-to-maturity.
+
+                                       32
+Figure 9. Average jump amplitude per month from MLE and the S&P daily returns for TTM 45.
+
+   0,8                                                                                  0,15
+   0,7
+                                                                                          0,1
+   0,6
+   0,5                                                                                  0,05
+   0,4                                                                                           μ_j
+                                                                          0
+   0,3                                                                                   S&P 500 return
+   0,2                                                                                        -0,05
+   0,1
+                                                                                                    -0,1
+    0
+  -20050,1 -05-28 2006-10-10 2008-02-22 2009-07-06 2010-11-18 2012-04--0,1501
+
+Figure 10. Probability of jumps (λ) for TTM 45 according to MLE versus the real market “jumps”
+calculated as returns deviating more than 2 standard deviation s from the mean.
+
+    4                                                      400
+    2                                                      350
+                                                               300        S&P returns more than 2
+    0
+      2006200620062007200720072008200820082009200920092010201020102011          std.dev from mean
+                                                           250
+    -2                                                                            Log lambda
+        -03  -07  -11 -03  -07  -11  -03  -07  -11 -03  -07  -11 -03  -07  -11 -03
+                                                           200
+     -4 -20  -20  -20 -20  -20  -20  -20  -20  -20 -20  -20  -20 -20  -20  -20 -20
+                                                           150
+                                                                 Lambda
+     -6
+                                                           100
+    -8                                                              50
+
+   -10                                                              0
+
+Figure 11. Probability of jumps (λ) for TTM 45 according to MLE and the average S&P returns for
+the corresponding periods.
+
+    4                                                        0,004
+    2                                                        0,002
+    0                                                     0
+     -2                                                                     -0,002
+     -4                                                                   -0,004         log lambda for TTM 45
+     -6                                                                     -0,006
+     -8                                                                     -0,008
+   -10                                                                    -0,01           Average S&P return for the
+                                                                                 period
+          01-   01-   01-   01-   01-   01-   01-   01-   01-   01-   01-   01-   01-   01-   01-   01-
+          02-   06-   10-   02-   06-   10-   02-   06-   10-   02-   06-   10-   02-   06-   10-   02-
+
+        2006200620062007200720072008200820082009200920092010201020102011
+
+                                 33
+Figure 12. Abnormal daily returns in the periods defined by TTM 45
+
+         Abnormal returns (Returns with abs. Value
+        greater than two standard deviations interval
+                   around the mean)
+
+        0,15
+
+          0,1
+
+        0,05
+
+          0
+     Return
+         -0,05
+
+           -0,1
+
+         -0,15
+            2008 2008 2008 2008 2008 2008 2008 2008 2008 2008 2009 2009 2009 2009 2009 2009
+
+               -08    -09    -09    -10    -10    -10    -11    -11    -12    -12    -01    -01    -02    -02    -03    -03
+               -22    -05    -19    -03    -17    -31    -14    -28    -12    -26    -09    -23    -06    -20    -06    -20
+
+                                 34

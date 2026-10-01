@@ -1,0 +1,1821 @@
+ The Predictive Power of Price Gaps
+
+                Robert Mois* Eric Teder**
+
+              Stockholm School of Economics Stockholm School of Economics
+
+                                      Bachelor Thesis
+                            Stockholm School of Economics
+                                 Department of Finance
+                                     Tutor: Paolo Sodini
+                                     May 30, 2012
+
+Abstract
+
+Price gaps are identified by studying trading ranges, which is the spread between a stock’s highest and lowest traded
+price over a trading day. If the trading ranges of two consecutive days do not overlap, a price gap has occurred. A
+positive gap is when the lowest traded price of the day is higher than the highest traded price of the precedent day.
+For negative gaps, the highest traded price of the day is lower than the lowest traded price the day before. Our
+hypothesis is that abnormal returns can be generated from buying stocks after a positive gap and from short-selling
+stocks after a negative gap. Using transaction data from the Swedish stock market from 2000 through 2010, we test
+our hypothesis. First we map returns and abnormal returns, generated from risk-adjusting models, for holding
+periods of one to five days. The abnormal returns are then the base for executed regressions, run in order to test the
+explanatory power of positive and negative price gaps. From our analysis, we find support for our hypothesis that
+trading on positive gaps generates abnormal returns. These abnormal returns persist even after taking transaction
+costs into account. The same support is not found for negative gaps. According to our findings, price gaps seem to
+constitute an anomaly.
+
+Keywords: Price gaps, Technical analysis, Momentum, Candlesticks
+
+First and foremost, we would like to thank our tutor Paolo Sodini, Associate Professor at the Department of Finance at the
+Stockholm School of Economics, for generous support and valuable input throughout the work with this thesis. We also
+especially want to thank Nikita Koptyug for his support and kind assistance. Finally, we are very grateful to Erik Eklund for
+providing the dataset.
+
+* 21599@student.hhs.se
+** 21736@student.hhs.se
+CONTENTS
+I Introduction ............................................................................................................................................................................ 3
+II Previous Literature ................................................................................................................................................................. 5
+         Efficient Markets ................................................................................................................................................................. 5
+         Anomalies ............................................................................................................................................................................. 6
+         Technical Analysis ............................................................................................................................................................... 7
+         Behavioral Finance .............................................................................................................................................................. 8
+III Data......................................................................................................................................................................................... 10
+         Description of Data .......................................................................................................................................................... 10
+         Modifications to the Dataset ........................................................................................................................................... 10
+IV Methodology ......................................................................................................................................................................... 12
+        Finding and Risk-Adjusting Post-Gap Returns ........................................................................................................... 12
+         Model Specification .......................................................................................................................................................... 13
+V Results .................................................................................................................................................................................... 15
+         Descriptive Statistics ......................................................................................................................................................... 15
+         Mapping of Abnormal Returns ...................................................................................................................................... 18
+         Regressions Results ........................................................................................................................................................... 19
+VI Conclusion ............................................................................................................................................................................. 20
+VII Future Research .................................................................................................................................................................... 21
+References........................................................................................................................................................................................ 22
+Appendices ...................................................................................................................................................................................... 27
+        Appendix A: Explanatory Illustrations .......................................................................................................................... 27
+         Appendix B: Descriptive Statistics ................................................................................................................................. 29
+         Appendix C: Mapping of Abnormal Returns............................................................................................................... 32
+         Appendix D: Regressions Results .................................................................................................................................. 39
+        Appendix E: List of Included Stocks ............................................................................................................................ 41
+
+                                                                                                2
+I INTRODUCTION
+
+Action is a disputed source of success in the world of trading. Advocates of the efficient market hypothesis would
+simply argue that action does not increase profits. The hypothesis of this thesis rests on the words of Pablo Picasso–
+
+                                              “Action is the foundational key to all success”.
+
+Our interest for price gaps was raised after having identified the price pattern repeatedly by observing the stock
+market. It struck us that the phenomenon constituted a certain signal, and that it would be possible to elaborate on
+trading strategies following this specific signal. Our hypothesis is that it is profitable to trade on price gaps through
+buying after positive gaps and short-selling after negative gaps, and in this thesis we aim to explore these
+
+hypotheses.1 As it could be argued that the strategy of trading on a price gap is an extension of the momentum
+
+strategy of buying winners and selling losers, particular emphasis has been put to distinguish this phenomena from
+the momentum strategy.
+
+The key to identify inter-day price gaps is the trading range, which is the spread between a stock’s highest and lowest
+price over a trading day. Throughout this study a gap is said to occur when the trading range of a stock does not
+overlap over two consecutive trading days. Consequently an inter-day gap can occur for two distinct reasons. First,
+the stock may experience a strong trend when a trading day’s lowest traded price is higher than the precedent trading
+day’s highest stock price. This occurrence is defined in the study as a positive gap. Second, a stock may have
+experienced a fall in its price from the precedent trading day which is not recovered anytime throughout the day.
+That is, the highest traded price on a certain day is lower than the lowest traded price on the prior trading day. This
+
+form of a gap is defined as a negative gap.2 , 3 Gaps may occur for a number of reasons, including company
+
+announcements, industry specific news or without any specific cause.
+
+It is important to differentiate between the gap size over two days and the stock return over the same two days. We
+define the gap size as the size of the trading spread between two days, on which a gap has occurred, in relation to
+the second day’s low price (for positive gaps) or high price (for negative gaps). This differs from the one-day return
+of a stock, which we define as the daily change of a stock’s closing price measured in percent. This study investigates
+the profitability on acting on different gap sizes and their respective explanatory power.
+
+The size of a gap between day n-1 and n is defined as:
+
+The term price gap used throughout this study is in line with that of traditional technical analysis, while the term
+used in candlestick analysis, a subgroup within technical analysis, is window.
+
+In line with early literature on technical analysis and candlesticks testing profitability of strategies, we take
+transaction costs into consideration (Griffioen 2003). This measure is also motivated since previously thought
+
+1 For an illustration of the hypothesis of price continuation after a positive price gap see Figure A1 in Appendix A.
+2 For an illustration of the price gaps pattern see Figure A2 in Appendix A.
+3 For a visual explanation of the components of candlesticks see Figure A3 in Appendix A.
+                                                                                                3
+profitable strategies were proven useless after accounting for transaction costs (Fama and Blume 1966).
+Furthermore, we want to test the price gap model as if we would use the strategy in a real world, thus presenting a
+more accurate level of profitability.
+
+We acknowledge how our proposed strategy may constitute an example of a short-term momentum strategy as our
+hypothesis is that profits can be made from buying stocks experiencing a strong one-day positive return and selling
+stocks experiencing a strong one-day downturn. To prove our strategy distinguishable from the momentum strategy,
+we have included a momentum factor in our analysis.
+
+By definition, a price gap can only be identified after its occurrence. If a gap occurs between day n-1 and day n the
+signal is visible at the end of trading at day n. In our study we follow the assumption of Brock et al. (1992) that it is
+possible to trade at the closing price of day n and still be able to capture the effect of the gap. This contradicts the
+requirement of having to identify a gap after its occurrence. Critique has been put forward by Marshall (2008)
+arguing that a technical analyst would first need to feed estimates of the close price into his/her trading system to
+
+see if a signal is generated and then submit a “market at close” order.4 It is thereafter not sure that the actual close
+
+price would be sufficiently similar to the estimated close price that generated the signal, hence acting on an invalid
+signal. We defend our assumption and contradict Marshall’s arguments partly with the use of today’s modern trading
+technology, widely used in the financial industry in high-frequency trading. This would allow us to buy at closing
+
+price, or sufficiently close to closing price.5 A proper algorithm used can also withdraw orders at the closing call if
+
+the price is such that the gap vanishes.
+
+Our findings are that abnormal returns following both positive and negative gaps are remarkably high, and also the
+corresponding risk as measured by the standard deviations. Our findings indicate that trading on positive gaps may
+be profitable, and from our regressions we find that positive gaps carry significance in explaining post-gap abnormal
+returns. These results may be explained by theories within behavioral finance. We fail to prove our hypothesis on
+negative gaps in the general case, but for the sub-section of small sized gaps we find that they do have explanatory
+power on abnormal returns.
+
+In Section II in this study we present previous literature relevant for the analysis. A description of our data sample is
+provided in Section III and Section IV presents our approach. In Section V our findings are presented and
+conclusions from these findings, together with suggestions for future research, are provided in Section VI and VII.
+
+4 A market-at-close order can be entered anytime during the day and will be executed as near the end of the trading day as possible.
+5 At the Nasdaq Stockholm Stock Exchange continuous trading is halted at 17:25 followed by a pre-close period with no auto matching that lasts
+until 17:30. In this period orders are collected until the final close where the price is determined by supply and demand (Nasdaq OMX Market
+Model 2011).
+                                                                                                4
+II PREVIOUS LITERATURE
+
+With the hypothesis that the analysis of historic prices may yield profitable trading strategies, this study challenges
+the theories of market efficiency. This section will provide an overview of previous research on efficient markets
+together with research conducted that challenges the same. Also theories on technical analysis, which this study
+constitutes an example of, will be brought up as well as theories within behavioral finance in trying to explain these
+fields.
+
+EFFICIENT MARKETS
+
+The idea that past prices cannot foresee future prices, the Random Walk Model, was pioneered by Regnault (1863)
+and Bachelier (1900). The model describes how asset prices follow a random and unpredictable path. Working
+(1934), Kendall (1953) and Roberts (1959) further stated that price changes, besides following a random walk, are
+linearly independent. The model gained renewed attention when Malkiel (1973) wrote the famous book “A Random
+Walk Down Wall Street”.
+
+Closely linked to the Random Walk Model is the Efficient Market Hypothesis, drafted by Working (1949) who
+stated that if it is possible to predict future price movements it has to be due to faulty market expectations. In an
+efficient market these expectations would have been taken into account. The famous research by Fama (1970)
+further developed the hypothesis and states that a market is efficient if all available information is impounded in
+current prices. Almost a decade later than Fama, Jensen (1978) redefined the Efficient Market Hypothesis:
+
+     “A market is efficient with respect to information set if it is impossible to make economic profits by trading on the basis of
+
+                                                                                            6
+                                              information set .”
+
+Jensen formed three testable levels of the Efficient Market Hypothesis:
+
+   (1) The Weak Form of the Efficient Market Hypothesis, in which the information set represents all
+         information contained in historical market transaction data, e.g. past prices and trading volume, as of time t.
+   (2) The Semi-Strong Form of the Efficient Market Hypothesis, in which represents historical market data
+         together with all information that is publicly available at time t.
+   (3) The Strong Form of the Efficient Market Hypothesis, in which represents all public and private
+         information at time t, including insider information.
+
+Another efficient market model explaining the behavior of prices is the Martingale model stating that an asset’s
+expected return is zero when conditioned on the asset’s price history (Samuelson 1965 and Mandelbrot 1966). Fama
+(1970) reviewed the empirical literature on efficient markets and found that there is extensive support for the
+Efficient Market Hypothesis. He created the Sub-Martingale model suggesting that no trading rules based on
+historic prices can have higher expected returns than a buy-and-hold strategy in a future period. Comparing the
+Random Walk Model with the Martingale Model, the former does not only provide a more detailed description of
+the economic environment but also relies on stronger assumptions. However, Fama and Blue (1966) concluded that
+the two models are very similar, and for practical purposes identical.
+
+6 With economic profits Jensen meant risk-adjusted profits net of all transaction costs.
+                                                                                                5
+ANOMALIES
+
+A distortion of the Efficient Markets Hypothesis is said to be an anomaly. For this study, the two most relevant
+anomalies found are the momentum effect and the contrarian effect. The momentum effect is the tendency for
+rising (falling) asset prices to rise (fall) further. Jegadeesh and Titman (1993) showed that buying past winners and
+selling past losers created substantial returns. This anomaly, inconsistent with market efficiency theories, has been
+debated since Jegadeesh and Titman first published their findings and is still extensively used in practice by
+
+professional investors.7 The momentum effect is said to be the only anomaly that is persistent and has survived
+
+since its publication (Schwert 2003). Since Jegadeesh and Titman’s findings many studies have examined the risk-
+adjusted returns, using different asset pricing models such as CAPM and Fama-French three-factor model, finding
+significantly positive alphas and thus concluding that the abnormal returns of the momentum strategy cannot be
+
+explained.8,9 Rouwenhorst (1998) showed how momentum returns were economically large in several European
+
+markets, and recent papers find that the momentum strategy yields positive returns in most large markets (Griffin et
+al. 2003 and Chui et al. 2010).
+
+The academic world still questions why the momentum anomaly has not been arbitraged away, even in the light of
+the Adaptive Market Hypothesis (Lo 2004), stating that markets have become gradually more efficient due to more
+technologically sophisticated markets and increased knowledge of how to exploit, and thereby wipe out, market
+anomalies (e.g. Li et al. 2008). Ali and Trombley (2006) and Agyei-Ampomah (2007) points out short-selling
+constraints as one explanation for the immortality of the momentum effect, since the profitability of the strategy
+originates from short selling the loser portfolio.
+
+Numerous explanations for the momentum premium have been presented during the last 30 years. Conrad and
+Kaul (1998) say the premium is a compensation for risk, Black (1993) and MacKinlay (1995) call it a result of data
+mining and Korajczyk and Sadka (2004) conclude that the returns are due to an underestimation of transaction
+costs. Some authors claim that the abnormal returns are illusionary and insignificant (Lesmond et al. 2004; Hanna
+and Ready 2005). Jegadeesh and Titman (2011) summarize the behavioral interpretation of momentum profits
+saying that a delayed reaction to firm-specific information is the source. They concluded that investors tend to
+underreact to firm-specific information. One alternative interpretation is that the delayed reaction is an overreaction
+by investors who react with delay or who like to chase winners (Daniel et al. 1998).
+
+An opposing theory to the momentum effect is the contrarian effect, brought forward by De Bondt and Thaler
+(1985; 1987) who were the pioneers in finding long-term overreaction in stock returns. They found that past losers
+over three to five year periods outperformed past winners over the next three to five years. Jegadeesh (1990) and
+Lehmann (1990) also found the contrarian strategy to be profitable for short term periods (one week to one month).
+Furthermore, Lakonishok et al. (1994) and Schiereck et al. (1999) showed that a long term contrarian strategy earned
+excess returns. Recent studies find that the contrarian strategy still generates abnormal returns (e.g. Wang et al.
+2009).
+
+7 See for example Grinblatt et al. (1995) who found that 77 percent of the mutual funds in their sample were momentum investors. Other articles
+showing the extensive use of the momentum strategy are Badrinath and Wahal (2002) and Mulvey and Kim (2008).
+8 CAPM was developed by Sharpe (1964) and Lintner (1965) and shows the relationship between the risk of an asset and its expected return.
+Even though the model is based on unrealistic assumptions it has been a popular way to answer the question if profits from anomalies are simply
+a reward of bearing risky assets.
+9 Jegadeesh and Titman (1993) use CAPM as the risk-adjusting model while Fama and French (1996), Jegadeesh and Titman (2001) and Grundy
+and Martin (2001) use the Fame-French three-factor model.
+                                                                                                6
+TECHNICAL ANALYSIS
+
+Technical analysis is the study of past price movements with the goal of predicting future price movements
+(Griffioen 2003). If technical analysis is found to be profitable it is a contradiction of the Efficient Market
+Hypothesis. One of the earliest pioneers within the field was Hamilton (1922) who laid the foundation of the Dow
+
+Theory, based on editorials by Charles H. Dow, which later was popularized by Rhea (1932).10 However, Cowles
+
+(1933) found that Hamilton could not beat a continuous investment strategy in the DJIA after looking at the
+forecasting records. Cowles concluded that a buy-and-hold strategy generated 15.5% annualized returns from 1902-
+1929 while the Dow Theory strategy produced annualized returns of 12%. Alexander (1964) and Fama and Blume
+(1966) showed that technical analysis profitability vanishes after taking transaction costs into consideration. With the
+popularization of the Efficient Markets Theory (Fama 1970), the interest in technical analysis dampened. Based on
+the fact that previous empirical studies are difficult to compare, because of differences in statistical tests, technical
+trading rules, markets, time periods and provision for transaction costs, researchers are still skeptical about the
+usefulness of technical analysis (Malkiel 2011). After articles published by Sweeney (1986) and Brock et al. (1992),
+
+showing significant technical trading profits, the empirical research increased substantially.11 Lo et al. (2000) found
+
+evidence in support of technical indicators using automatic pattern recognition with kernel regressions whereas
+Sullivan et al. (1999) found that the profitability of technical analysis had declined or even vanished in the stock
+market. Park and Irwin (2004) reviewed 95 empirical studies on technical analysis and summarized that 56 studies
+presented positive results, 20 studies presented negative results and 19 studies presented mixed results.
+
+One of the oldest technical analysis methods is the candlestick method, dating back to at least the eighteenth century
+
+in Japan where the technique was applied to the trading of forward contracts on rice (Lu et al. 2012).12 The
+
+technique was introduced in the West as late as in the 1970s (Nison 1991) and has since grown in popularity
+(Okamoto 2003). Whereas traditional technical analysis have focused on the daily closing price of an asset when
+analyzing transaction information, the candlestick method also includes high, low and opening prices. The difference
+
+between the opening and closing price is the candlestick’s “body”.13 A higher closing price than the opening price
+
+(positive return) is illustrated with a white body. A lower closing price than the opening price (negative return) is
+illustrated with a black body. The lines above and below the body, named “Shadows”, illustrate the highest and
+
+lowest traded price during the day, respectively.14
+
+The candlestick method can also be used for intraday analysis. Fock et al. (2005) evaluated the profitability of
+candlestick analysis on intraday data but did not find that returns were significantly better than the returns of a
+
+benchmark with randomized transactions.15,16 Horton (2009), Marshall et al. (2006; 2008) used daily data and found
+
+little value in the use of candlesticks. Caginalp and Laurent (1998), Goo et al. (2007) and Shiu and Lu (2011)
+however, found statistically significant evidence of profitability in candlestick patterns. Fiess and MacDonald (2002)
+
+10 Charles. H. Dow (1851-1902) was a journalist, founder and first editor of the Wall Street Journal and co-founder of Dow Jones and Company.
+The Dow Theory is a form of technical analysis stating that when the Dow Jones Industrial Average and the Dow Jones Transportation Average
+both hit a new high or a new low for a period of time, it can confirm a previous, bullish or bearish, signal.
+11 Brock et al. (1992) found support in using two of the simplest and most used trading rules, the moving average and the trading range break
+(support and resistance levels). A support (resistance) level is a price level where the price tends to find support (resistance) as it is falling (rising).
+Technical analysts claim that the price is more likely to “bounce” off a support level or resistance level rather than break through it.
+12 The derivatives exchange in Japan, the Yodoya rice market in Osaka, was one of the first derivatives exchanges in the world.
+13 For an illustration of the candlestick’s components see Figure A3 in Appendix A.
+14 The candlestick methodology and different candlestick patterns have been covered extensively by Nison (1991;1994), Wagner and Matheny
+(1993), Morris (1995), Bigalow (2002), Pring (2002) and Fischer and Fischer (2003).
+15 They also combined the candlestick patterns with traditional technical analysis patterns, such as the relative strength index, the momentum
+indicator and moving averages and concluded that the forecasting power of candlestick patterns increased when combining the methods.
+16 When using the candlestick method intraday every candlestick is representing e.g. one minute or one hour depending on the time frame
+chosen.
+                                                                                                7
+argued that a technical analysis of high, low and close prices can generate superior forecasts of volatility and future
+
+levels of exchange rates.17
+
+Technical analysts extensively use strategies based on the momentum anomaly, such as the Relative Strength Index
+
+and Momentum Indicator (Menkhoff and Taylor 2007).18
+
+BEHAVIORAL FINANCE
+
+Finding it difficult to explain the profits from momentum and technical analysis strategies with risk-based models,
+researchers have turned to behavioral models (Jegadeesh and Titman 2011). De Bondt and Thaler (1985; 1987)
+pioneered the research field of behavioral finance by discovering that people systematically overreact to unexpected
+news. In contrast to their finding, Zhang (2006) concluded that stock price continuation is due to underreaction to
+public information by investors and that the effect is strengthened as the information uncertainty, approximated by
+asset volatility, increases. Hong and Stein (1999) concluded that markets consist of two types of investors, “news
+watchers” and “momentum traders”, resulting in an underreaction for short horizons and an overreaction for longer
+horizons. Barberis and Shleifer (2003) confirmed this phenomenon. Hong and Stein also formed the Gradual
+Information Diffusion Model showing that investors obtain information gradually, hence contributing to an
+underreaction effect. Daniel et al. (1998) found that the behavior of informed traders can be described by a self-
+attribution bias, saying that investors attributes positive outcomes to their skills and negative outcomes to bad luck.
+This behavior leads to overconfidence about investors’ stock picking ability and consequently their tendency to push
+up stock prices above fundamental value, creating a delayed overreaction. Price continuation and trend-chasing can
+be explained by positive feedback rules (De Long et al. 1990) describing the behavior when investors buy when
+prices rise and sell when prices fall. Some researchers have attributed the price continuations to the theory of self-
+fulfillment of technical analysis strategies. One example is the finding that the use of trading systems, that tries to
+exploit price trends in asset market, strengthen and lengthen these trends (Schulmeister 2006; 2007). Also herding
+
+behavior19, of short-horizon traders can lead to informational inefficiency (Banerjee 1992). Froot et al. (1992) stated:
+
+“…the very fact that a large number of traders use chartist models may be enough to generate positive profits for those traders who already
+           know how to chart. Even stronger, when such methods are popular, it is optimal for speculators to choose to chart.”
+
+Kahneman and Tversky (1974) in the field of cognitive psychology, showed that individuals tend to rely too heavily
+on small samples (overestimating their representativeness of the underlying population) and rely too little on large
+
+samples (updating prior information too conservatively), a heuristic they named representativeness. 20 The
+
+implication of this is that individuals make judgments based on things that they perceive are representative of the
+problem. Investors would for example anticipate continued strong performance after a series of encouraging
+earnings announcements.
+
+The Conservatism Bias, also known as the Status-Quo Bias, suggests that individuals tend to undervalue new
+information when updating past information, thus slowly updating their beliefs when new information arrives
+(Edward 1968). Barberis et al. (1998) argues that if investors behave according to this bias, prices will slowly adjust
+
+17 In an attempt to strengthen the returns from using candlesticks, stop-loss strategies were implemented.
+18 The relative strength trading rule has been tested by Jensen (1970) concluding that the profits are not significantly bigger than that from using a
+buy-and-hold strategy.
+19 Herding behavior describes how individuals tend to imitate the actions of a larger group. However, individually they would not make the same
+decision. One reason of the existence of herding behavior is social pressure of conformity.
+20 A heuristic can be explained as a rule of thumb individuals follow in when facing different situations.
+                                                                                                8
+to new information and lead to underreaction. Essentially investors tend to overvalue new information relative to
+old (representativeness) and sometimes undervalue new information (conservativeness). Although the Conservatism
+Bias may in isolation lead to underreaction, this tendency together with the representativeness heuristic can lead to
+overreaction of prices (Barberis et al. 1998).
+
+Shefrin and Statman (1985), Odean (1998) and Grinblatt and Han (2005) finds that loss-averse investors tend to
+keep losing positions and sell winning positions, a phenomena called the disposition effect.
+
+Beja and Goldman (1980) developed a disequilibrium model explaining the behavior of prices in the short horizon.
+They concluded that:
+
+  “When price movements are forced by supply and demand imbalances, which may take time to clear, a nonstationary economy must
+                                      experience at least some transient moments of disequilibrium”.
+
+The theory thus provides a behavioral explanation why a technical analysis strategy, exploiting the imbalances, could
+be profitable.
+
+                                                                                                9
+III DATA
+
+The principal basis for our analysis rests on a dataset, adjusted for the aim of this study. The first part of this section
+is dedicated to explain our original dataset, and the second part will go into detail on what modifications have been
+made to this dataset.
+
+DESCRIPTION OF DATA
+
+This study contains panel data for stocks listed on Nasdaq OMX Stockholm (from now on called OMXS) over the
+time period of January 1, 2000 through December 31, 2010. In addition to data on currently listed stocks, formerly
+
+listed stocks on the exchange have been included in order to account for the survivorship bias.21,22 The dataset has
+
+been provided by the Department of Finance at the Stockholm School of Economics and includes daily stock data
+on intraday high price, low price and close price. The stock data is adjusted for corporate actions. In order to arrive
+at a dataset suitable for our analysis we have also included data on dividend dates, daily stock turnover measured as
+total number of shares traded and daily turnover measured in SEK.
+
+The use of a time period of 11 years is due to availability of data from the source used, together with the belief that
+this time-frame provides a satisfying number of observations in order to be able to make well-founded conclusions
+from our analysis. The period of 11 years incorporates boom years, consolidating (neutral market) years and
+recessions, thus providing a good basis to test the profitability of the strategy regardless of the market environment.
+The decision to only include stocks traded on OMXS was due to our aim of avoiding the illiquidity problem, and
+
+OMXS is considered the most liquid exchange in Sweden.23 The argument to solely look at Sweden and not all
+
+Nordic countries is the variation in characteristics among the exchanges, e.g. with regards to transaction costs,
+liquidity and exchange rules.
+
+Other required input variables in our models include the risk-free rate and the market portfolio, and these two
+variables have been estimated in accordance with industry standards. As a proxy for the risk-free rate we have used
+the 30-day Swedish Treasury bill provided by the Riksbank (the National Bank of Sweden). The market portfolio has
+been estimated with the OMX Stockholm All-Share Index (OMX Stockholm PI) which includes all the shares listed
+on the OMXS and is value weighted based on market capitalization. The rational to use this certain index is that it is
+supposed to show current status as well as changes in the market. Other variables included in the dataset are
+isincodes, number of shares outstanding and market capitalization.
+
+MODIFICATIONS TO THE DATASET
+
+From our original dataset modifications have been made with the intention of obtaining a dataset more suitable for
+
+the aim of this study.24 A set of criteria have to be met in order for an observation to be included in the analysis.
+
+First and foremost, as previously mentioned, the stock must have been listed on the OMXS at the time of the
+observation of the panel data. Our original dataset includes observations on all current (active) OMXS listed stocks
+
+21 A complete list of included stocks in the dataset can be found in Appendix E.
+22 The survivorship bias is the tendency that failed companies excluded from a sample results in skewed results, since only successful enough
+companies that manage to survive the full time period are included.
+23 There are numerous reasons to why it is appropriate to remove illiquid stocks from the sample when evaluating the trading strategy. First,
+trading in illiquid stocks is hard due to lack of share supply (inexistence of order book depth) and a consequence of this is the risk for price
+manipulation. Second, it can be hard to both enter and exit the position at the time indicated by a model. Third, short-selling in illiquid stocks can
+be difficult and costly due to shortage of lending supply.
+24 Several empirical studies testing the profitability of technical trading strategies and technical analysis practitioners argue that it is important that
+the data are from instruments of adequate liquidity to enable investors to earn meaningful amounts of money (Marshall et al. 2007).
+                                                                                               10
+as of December 31, 2010 back to each stock’s initial public offering or back to January 1, 2000. As a significant share
+of the companies in our original sample had their IPO on an exchange other than OMXS (e.g. OMX First North,
+NGM and Aktietorget), this has been corrected for by manually stripping the dataset of company data dating before
+
+a company’s transfer to OMXS. In the same manner, observations from dead companies25 included in the sample
+
+have been adjusted. The transfer dates used to drop observations have been obtained from the Swedish Tax Agency.
+
+In instances where there has been trading activity on the index (OMXSPI) but no data is available for a stock, a gap
+has been considered false and has consequently been omitted from the sample. E.g. if a stock has data for Monday
+and Wednesday but not for Tuesday, whereas OMXSPI does have data for all three days, a gap occurring between
+Monday and Wednesday has not been taken into account. Hence, for a gap to be included in the sample it must
+occur between two days on which trading has occurred on the OMXS.
+
+Besides the measure of only including stocks from OMXS, additional adjustments have been taken in order to strip
+our dataset from illiquid observations. Observations have been deemed illiquid and exempted from the analysis if
+they do not meet the following three criteria:
+
+     (i) A minimum total weekly turnover constraint of one million SEK.
+     (ii) A minimum daily turnover, in terms of volume, of one hundred shares.
+     (iii) A minimum stock price of 1 SEK.
+
+To obtain true results, outliers have also been exempt from the study. The worst performing 0.1% on a monthly
+basis has been excluded, as well as stocks having experienced returns of over 200% per month. Furthermore,
+companies presenting less than two years of data on the exchange have also been exempted. This modification has
+been made on the grounds that a minimum of two years of data is required in order to accurately make analysis and
+to compute stock co-movement with the market portfolio. Finally, we have identified inaccurate observations which
+have been treated as missing values. Whereas we believe to have found and corrected for the inaccurate
+observations likely to carry the highest level of impact on our analysis, we acknowledge the possibility of unnoticed
+inaccuracies still being present in the data. In the process of classifying observations as being inaccurate, recurrent
+discussions with data experts at Nasdaq OMX Stockholm have been held for further confirmation.
+
+25 Dead companies is a term for companies formerly listed on an exchange but that have been delisted. Reasons can be either voluntary or
+involuntary, including violating regulations or failure to meet a listing’s requirements.
+                                                                                               11
+IV METHODOLOGY
+
+This section will provide an understanding of how this study is conducted. The first step of this study will be to find
+stock returns following gaps for holding periods of one to five days. The next step will be to find the risk-adjusted
+and abnormal returns, and the final step of our study will be to run regressions to find the explanatory power of
+gaps. According to our hypothesis, the risk-adjusted returns will be positive after positive gaps and negative after
+negative gaps.
+
+FINDING AND RISK-ADJUSTING POST-GAP RETURNS
+
+Returns of our strategy will be calculated as the percentage change in stock i’s close price from trading day t, on
+which a gap has occurred, to trading day t+K, where K ranges from 1 to 5. After having found the returns following
+gaps, these returns will be adjusted for risk using two models. The reason for analyzing holding periods ranging
+from 1 to 5 days is because our hypothesis anticipates a short-term momentum effect, and because candlestick
+analysis has shown to be most valuable with maximum holding periods of under ten days (Morris 1995) which is
+also the holding periods evaluated in previous empirical research on candlestick patterns (Marshall et al. 2008; Lu et
+al. 2012). Through the measure of using two risk-adjusting models, we aim to find how much of the return that is
+not simply attributable to increased risk-taking. The approach will be to first calculate expected return at date t, and
+then observe how much the actual and expected return differs. This difference is the abnormal return at date t,
+called Jensen’s alpha, and is a common measure of the portion of a return of a security that is not explained by a
+risk-adjusting model. Jensen’s alpha is given as the residual, or error term, for each observation after a regression. If
+Jensen’s alpha is positive the company has performed better that period, e.g. a day, than predicted by the model and
+vice versa if the alpha is negative.
+
+The first risk-adjusting model that will be used is the CAPM, which estimates return for an asset through its
+exposure to the market. The second model will be an extended version of the CAPM, with a momentum factor
+included. The momentum factor will be a stock’s exposure to the momentum portfolio, which will be calculated
+according Jegadeesh and Titman (1993) who found the profitability of buying past winners and selling past losers,
+the momentum effect. First, all stocks are ranked at the beginning of each month based on their six-month return
+after which the portfolio is rebalanced. The portfolio is thus repositioned once a month. The momentum portfolio
+will then be composed of a long position in the best performing tenth of companies over the last six months,
+together with a short position in the worst performing tenth of companies over the same time-period. Also the
+portfolio is equally weighted, further in accordance to Jegadeesh and Titman (1993), as opposed to value weighted.
+They showed how the difference between the two alternative approaches was very small. In contrast to Jegadeesh
+and Titman we will evaluate the portfolio on a daily basis as opposed to study holding periods of several months, in
+order to better fit the aim of our study.
+
+The two models, the CAPM (Model 1) and an extension of the CAPM that includes a computed momentum factor
+(Model 2), are specified as follows:
+The CAPM model, Model 1 to calculate estimated returns of company i, :
+                                                                                                                       (1)
+The extended CAPM model with an included momentum factor, Model 2:
+                          ( ) (2)
+
+                                                                                               12
+Where:
+
+     (i) Beta measures company i’s exposure to the market, mrkt, i.e. .
+
+    (ii) The daily return of the market is termed , and is estimated with the OMXSPI.
+    (iii) The risk-free rate is denoted , and is estimated with the 30-day Swedish T-bill.
+    (iv) The momentum factor, , expresses exposure to the constructed momentum portfolio.
+     (v) The error term is .
+
+The sets of betas are computed daily with rolling regressions using an estimation window of two years, one year
+forward looking and one year backward looking, for each date.
+
+The abnormal returns from these two models will lay the foundation for the rest of the study, and will be analyzed
+both directly and in regressions, acting as the dependent variable when examining the explanatory power of price
+gaps. The abnormal returns are calculated by subtracting the expected return for stock i over time t to time t+K,
+where K takes on values of 1 to 5 and represent the different holding periods analyzed in the study, from the actual
+returns. Abnormal returns for company i are hence obtained as:
+
+Resulting in calculations for the two separate models as:
+
+                                                                                        (Model 1)
+
+               ( ) ( ) (Model 2)
+
+When studying the returns of a stock following a price gap, sub-groups of observations will be formed. Stocks will
+be grouped into sub-groups based on company size measured by company market capitalization. These are updated
+on a yearly basis, thus these groups will be rebalanced once a year. There will be five equally weighted sub-groups
+for company size. The second ground for group formation is the size of the gaps. The gaps are sorted as follows:
+
+       (i) Small-size gaps - gaps of sizes less than 0.5%.
+       (ii) Mid-size gaps - gaps of sizes as from 0.5% up to 2%.
+       (iii) Large-size gaps - gaps of sizes above 2%.
+
+MODEL SPECIFICATION
+
+An event study model on the panel data, including binary explanatory variables called “dummy variables” will be
+used to examine the explanatory power of the price gaps. Regressions will be run with the abnormal returns as the
+dependent variable, and with different sets of dummy variables as the independent variables. Three regression
+models will be run with the model specifications:
+
+                                                                                  (Regression model I)
+
+                                                                                   (Regression model II)
+
+                                                                                   (Regression model III)
+
+                                                                                               13
+Where:
+
+       (i) AR is the abnormal return generated from one of the two specified models for risk-adjusting
+                  returns mentioned above, the CAPM model or the Momentum-Extended model.
+       (ii) Event is the occurrence of either a positive or negative gap, taking on the value 1 if a positive
+                    gap has occurred in the regressions for positive gaps, or 1 for a negative gap in the regressions
+                    using negative gaps.
+        (iii) GapSize is a dummy variable taking on the value 1 if the gap belongs to gap size category j.
+                   Where j is either small-size gap, mid-size gap or large-size gap. Used in the regression is a set of
+                 interaction terms, designated in regression II and in regression III, for Event and
+                  GapSize.
+       (iv) CompanySize is a dummy variable taking on the value 1 if the stock belongs to company size
+                 quintile k, where k ranges from 1 to 5. In order to explain the impact of company size on gap
+                    abnormal returns, rather than on abnormal returns in general, gap sizes are included as a set of
+                  interaction terms, designated , together with Event which is either a positive or a negative
+                   gap depending on regression.
+       (v) The error term is .
+
+The results obtained from using this methodology will be presented and conclusions will be made.
+
+                                                                                               14
+V RESULTS
+
+Our findings for positive gaps are in line with our hypothesis that stock prices should continue to rise after a
+positive gap. For negative gaps, we fail to show that a similar effect exists but it rather seems that abnormal returns
+following a negative gap vary. We find the highest return for our strategy to appear from daily trading, i.e. to have a
+holding period of one day, and from trading at the largest gaps. However, as transactions costs are taken into
+consideration, the monthly calculated return is lowered. In general, the volatility of returns as measured by standard
+deviation is very high.
+
+DESCRIPTIVE STATISTICS
+
+An important review after having identified gaps is to screen where these gaps occur. This information will enable
+us to further understand the nature of gaps, which in turn is critical when drawing conclusions from the analysis.
+
+We find a total of 70,118 gaps in our sample26, resulting in a frequency of gaps per month and firm of around 2.15.27
+
+On average the gap size, according to our stated definition, is around 1.7%. There seems to be no major difference
+between the number of positive and negative gaps, as there are 35,600 positive gaps compared to 34,518 negative
+gaps making a total of 70,118 gaps, 10.8% of total observations (649,221). Only looking at liquid observations, the
+correspondent figure is 7.7%.
+
+Differences can be seen when comparing companies of different market capitalizations. As can be viewed in Table
+B1 in Appendix B small companies tend to have a considerably larger frequency of gaps, both positive and negative.
+This frequency seems to steadily decline with an increase in market capitalization. Furthermore, the gap sizes tend to
+be larger on average for smaller companies, and the variance of gap size seems to be larger as well. When comparing
+the smallest quintile of companies with the largest quintile it can be shown that the frequency of gaps in the smallest
+size group exceeds that in the largest group almost with a factor three. As smaller companies in general are
+associated with a higher level of volatility in prices, these results are in line with expectations.
+
+26 Details are described in Table B1 in Appendix B. Mentioned number refers to all gaps, both considered liquid and illiquid. Table B1 further
+describes prevalence of gaps in these two sub-groups.
+27 Meaning that on average for all stocks in the sample, a gap will occur twice every month. Throughout this study, a month is considered as
+having 20 days of trading, and calculations are based on this assumption.
+                                                                                               15
+When looking at the number of gaps per year, the year of 2000 and that of 2010 stands out as having fewer events
+and year 2002 and 2003 as having above average number of gaps, see illustration below.
+
+Figure 1: Distribution and Frequency of Gaps, For Years 2000-2010, Unadjusted for Illiquid Observations
+
+The columns represent observed gaps per year and the line displays average frequency of gaps per month per
+company for each year. A clear rise in number of negative price gaps is seen during 2008, when the financial turmoil
+reached its peak, the same rise was not seen for positive gaps. During times of financial instability market volatility
+tends to go up which could explain this as an increase in volatility is likely associated with an increase in the
+frequency of gaps, especially for illiquid stocks. During our sample period, two distinct peaks appear, most noticably
+when looking at negative gaps. Another peak is in the region of the years of 2001/2002, in the aftermath of the
+
+bursted dot-com bubble.28 What is remarkable is the sharp fall in the frequency of negative gaps from 2008 to 2009,
+
+both in absolute terms and in terms of frequency per month. Plausible explanations for this surprising finding
+include the positive trend and lower volatility environment during 2009.
+
+Figure 2: Gap Sizes in Relation to Company Sizes, Adjusted for Illiquid Observations
+
+The pie-charts above graphically show how gap size generally decreases as company size increases with the adjacent
+number to the pie-charts representing observed gaps per size-group. A detailed table is available in Appendix B
+
+28 Detailed data on the distribution of gaps from year 2000 through 2010 can be found in Table B2 in Appendix B.
+                                                                                               16
+(Table B3). This is in line with previous results showing how larger companies experience less number of gaps.
+However, as we define gap-size in relative terms subject to price, a stock with a higher stock price will require a
+larger gap in absolute terms in order to qualify for the mid-size and large-size groups. The charts also show how
+number of gaps decreases with company size.
+
+Table B4 in Appendix B compares the gap prevalence in the sub-portfolios of the momentum portfolio, the
+observations outside of the momentum portfolio and with all observations. The table shows a slightly higher
+monthly frequency of negative gaps in the loser portfolio compared to the winning portfolio, whereas the winner
+portfolio has had a higher frequency of positive gaps. This is in line with prevailing theories on how the loser
+portfolio is supposed to keep underperforming the winner portfolio, thus the annotation momentum. In summary,
+the momentum portfolio presents slightly fewer gap events occurring on a monthly basis as supposed to
+observations not included in either the loser or winner portfolio. However, the difference is not large enough in
+order to make any conclusions.
+
+Before calculating the returns and abnormal returns and running our regressions, previously described corrective
+actions for illiquidity have been taken. What we find is that a fair share (19.7%) of our observations is deemed
+illiquid and thus removed.
+
+ Figure 3: Review of Observations Deemed Illiquid
+
+                             Presence of Illiquidity across Company Sizes
+
+        Size Observations omitted due to illiquidity
+
+       Quintile 1 60 911
+       Quintile 2 38 414
+       Quintile 3 19 382
+       Quintile 4 7 804
+       Quintile 5 1 368
+       Total 127 879
+
+In Figure 3 it is evident how the problem of illiquidity is far likelier to occur for small companies. Of the total
+number of observations not considered liquid enough for our analysis, almost half occurs within the lowest size
+quintile. Together, the smallest 40% of companies account for more than 45% of all illiquid observations, whereas
+the largest quintile of companies account for just around 1% of the illiquid observations.
+
+Next, we study where the returns from price gaps seem to exist. This is done through comparing 1 to 5 days holding
+periods after a price gap signal whilst looking at different firm market capitalizations and gap sizes for both positive
+and negative gaps.
+
+                                                                                               17
+Table 1: Returns Following a Gap – Illiquidity Adjusted
+
+                                                  Overview of Returns Following a Gap
+
+                                                                                     Number of    Number of zero    Number of
+     Gap type Holding period Observations Mean return Std.dev.
+                                                                                                            positive returns        returns        negative returns
+
+    Positive gaps 1 Day 21 599 0.22% 3.73% 9 582 2 287 9 730
+                          2 Days 21 592 0.29% 5.02% 9 994 1 547 10 051
+                          3 Days 21 591 0.31% 5.98% 10 087 1 241 10 263
+                          4 Days 21 590 0.40% 6.74% 10 292 1 072 10 228
+                          5 Days 21 588 0.42% 7.48% 10 370 994 10 224
+    Negative gaps 1 Day 18 542 0.19% 3.82% 8 704 1 952 7 886
+                          2 Days 18 536 0.23% 5.30% 9 035 1 303 8 198
+                          3 Days 18 536 0.25% 6.36% 9 098 1 096 8 342
+                          4 Days 18 528 0.26% 7.09% 9 094 941 8 493
+                          5 Days 18 523 0.33% 7.76% 9 275 855 8 393
+
+Table 1 shows a brief description of returns following a gap, a detailed table can be found in Table B5, Appendix B.
+What can be seen is that, on average, returns seem to be positive following a gap disregarding whether the gap is of
+positive or negative nature. The returns also seem to be high on average, the one day return of a long position in a
+stock having experienced a positive gap is 0.22% and if the stock has experienced a negative gap the average return
+is 0.33%. We can also see that the winning rate for positive gaps (negative gaps), measured as the percentage of
+positive (negative) returns relative to number of zero and negative (positive) returns is below 50%. This means that
+the strategy generates relatively more losing and neutral trades than winning trades. Furthermore, the standard
+deviation of the returns seems to increase with increased holding period, which seems reasonable given that returns
+should vary more over longer holding periods.
+
+MAPPING OF ABNORMAL RETURNS
+
+The graphs under Appendix C maps the abnormal returns following a positive or negative gap for the two risk-
+adjusting models used throughout this study. Illiquid observations are not included in the charts. The most
+important findings are that abnormal returns following positive gaps are nearly exclusively positive, disregarding of
+both gap size and company size, whereas abnormal returns following negative gaps are negative in general following
+small-sized gaps but varies following mid-sized or large-sized gaps. For small sized negative gaps, abnormal returns
+seems to be negative for all holding periods for company size quintiles 1-4, where 5 stands out showing positive
+abnormal returns. Other important findings include the magnitude of the abnormal returns and the magnitude of
+the standard deviations, repetitively reaching over 50% on a monthly basis. These notable magnitudes may be
+explained from the fact that price gaps may occur as stocks experience a period of high volatility, and the high
+abnormal returns would reflect this fact. The abnormal returns on a monthly basis seem to be highest for a holding
+period of one day. Holding periods of five days seem to generate the least abnormal returns recalculated to monthly
+values. Looking closer at abnormal returns and company size, no backed conclusions can be made as the
+distribution of abnormal returns across company sizes seems inconsistent.
+
+In Table C1 and Table C2 we provide detailed descriptions of the abnormal returns from our strategy of buying
+after positive gaps and short-selling after negative gaps, also including transaction costs and standard deviations.
+
+Transaction costs are assumed of being 0.03% per transaction.29 From the table we find that taking a long position
+
+after a positive gap seems profitable on average, even after taking transaction costs into account. However, short-
+
+29 Transaction costs are estimated with reference to stockbroker Avanza. When computing transaction cost adjusted returns, transactions costs
+are taken into account both in the buy phase and in the sell phase.
+                                                                                               18
+selling on negative gaps generally yields a negative return when taking transaction costs into account. Looking at
+gap-size, the far largest returns are found in the largest gap-size group, where also the highest standard deviations
+are found. Abnormal returns, recalculated to monthly values, reaches above 13% for a holding period of one day
+and for large positive gaps, adjusted for transaction costs. In general, abnormal returns of 2-4% per month are
+obtained from trading at positive gaps. The highest abnormal returns obtained from our strategy for negative gaps is
+less than 3%, seen for small size gaps and a holding period of two days. The inclusion of transaction costs is shown
+to carry the highest level of impact for strategies of one day holding period, explained by the fact that these
+strategies demand daily trading and hence daily transaction costs.
+
+REGRESSIONS RESULTS
+
+The regression results are presented in Appendix D. Three regression models have been run, each model for
+combinations of positive and negative gaps with the CAPM model and the Momentum-Extended model. The
+significance level is shown by t-statistics. Heteroskedasticity-robust regressions have been run in order to correct for
+varying variance of the error term given the explanatory variables.
+
+The results from the regression I in Table D1 show that the event of a positive gap can explain subsequent
+abnormal returns on a significance level of 1%, showed by t-statistics with absolute values of above 2.54, for holding
+periods of one to five days. The significance persists when taking the momentum factors into account, though the
+significance, measured by t-values, decreases. When sorting gaps into gap sizes in regression II, Table D2 shows how
+positive gaps in the large gap group are all significant on the 10% level, with absolute values of the t-statistics of
+above 1.64, where significance levels for one day holding period is still on the 1% level for all gap sizes, and for two
+days on the 5% level. Significance levels generally seem to decline with company size and holding period. The
+rational for why the significance levels for large gaps are so much smaller could be the high standard deviation in
+that sub-population. Declining significance for increased holding periods should be expected, as the impact of other
+explanatory factors increase. After having taken the momentum effect into consideration, positive gaps are only
+significant for 1 day holding period for large gaps, and not significant for holding period of 2-5 days. For small- and
+mid-sized gaps, the event is still significant on the 1% level for all holding period, though with lower t-statistics as
+compared to the model not taking the momentum effect into account.
+
+In Regression III, controls for company size is also included. While controlling for company size, negative small
+gaps are now significant on a 5% level for a holding period of one day, and on a 1% significance level for holding
+periods of 2-5 days, using both the CAPM and the Momentum-Extended model. This is in line with the graphs
+showed under Appendix C, where we found that small-sized gaps seemed to be associated with subsequent negative
+abnormal returns. For negative gaps, controlling for company size hence seems to enhance the explanatory power.
+The inclusion of company size does not seem to enhance the explanatory power for positive gaps in the same
+manner.
+
+From the regressions, universally very low values for R-squared are found. This indicates that gaps only explain a
+small fraction of the variance in abnormal returns. Considering all factors not included in the models that may
+explain stock movements, and their explanatory power in relation to price gaps’, this seems reasonable.
+
+                                                                                               19
+VI CONCLUSION
+
+This study has examined the hypotheses that there is a price continuation effect after inter-day positive and negative
+price gaps. Using Swedish stock data from January 1, 2000 through December 31, 2010 we have examined whether
+profitable trading could arise from buying stocks after a positive price gap and short-selling stocks having
+experienced a negative price gap. In line with our hypothesis, we have found support of a continued rise in stock
+price following a positive inter-day price gap. More specifically, buying stocks after these events seems to generate
+positive abnormal returns in the short term, even after taking transaction costs into account. The same support was
+not found for negative gaps. Overall, negative gaps showed ambiguous results and did not prove significant in
+explaining abnormal returns. However, the sub-section of small size gaps for negative gaps proved significant on the
+5% level in explaining abnormal returns, for all holding periods and when using both risk-adjusting models. This
+section aims to discuss these results and their implications.
+
+The main characteristics of price gaps have been mapped. We have found that the profitability of acting on price
+gaps seems to be highest in positive large gaps (>2.0%) and a holding period of 1 day. In compliance with the high
+returns we have also found correspondingly high standard deviations, which is a measure of risk. The general idea
+within finance is that the potential of high returns should be accompanied with high risk, a criteria seemingly
+fulfilled for price gaps.
+
+Even when correcting for risk there seems to be positive abnormal returns left for positive gaps, whereas the
+abnormal returns following negative gaps vary depending on company size and gap size. These ambiguous results
+indicate that negative gaps does not explain abnormal returns in the same way. From using two models in order to
+risk-adjust our returns, we believe to have found a substantial portion of the returns that is explained by increased
+risk taking. Still, a potential caveat with this study is the insufficient use of risk-explanatory variables. More
+comprehensive models would likely lower magnitudes on abnormal returns following price gaps. The use of the
+momentum portfolio on a daily basis is furthermore something that is not commonly practiced to our knowledge,
+but as the inclusion of the momentum factor decreases observed abnormal returns this indicates that the
+momentum strategy does explain part of abnormal returns for the phenomena of price gaps.
+
+In order to obtain a better understanding of why this price continuation for positive gaps occurs, theories within
+behavioral finance could be applied. Assuming that one potential origin of price gaps is due to new information, the
+disequilibrium model would argue that this new information would cause supply and demand imbalances for the
+stock, leading to a delay in the process of finding the fundamental equilibrium price and subsequently to increased
+volatility. According to the conservatism bias this new information is likely undervalued and slowly updated in the
+mindset of investors. Together with the information diffusion model, stating that investors obtain information
+gradually, this would result in an underreaction from investors and consequently the price continuation we have
+observed following positive gaps. From the nature of gaps, it is reasonable to expect that gaps occur in especially
+volatile stocks or in especially volatile periods for companies, a belief confirmed by the high standard deviations
+seen in the analysis. An increase in volatility would, according to Zhang (2006), strengthen a price continuation
+effect. This theory could help to explain the exceptionally high abnormal returns found and why they persist even as
+we control for the momentum effect. Another applicable theory when explaining the price continuation after
+positive gaps is the theory on positive feedback rules, the trend-chasing behavior of investors to buy as prices rise,
+which would further push prices upward. Also, the representativeness heuristic may help to explain why prices tend
+
+                                                                                               20
+to continue rising after a price gap. Investors overestimate the representativeness of a gap and thereby anticipate a
+continued strong performance after the event. The herding behavior of investors is often described with the
+metaphor “Don’t miss the train when it leaves the train station”, explaining the tendency of investors to buy rising
+stocks and thus contributing to the price-continuation effect observed in connection with price gaps. Though many
+theories may explain the found price continuation, we do not find the theory of self-fulfillment of technical analysis
+strategies to be plausible in this case because of probable unfamiliarity of the price gap pattern among investors.
+
+Our finding on how negative gaps does not seem to explain the abnormal returns that follows in the same manner
+as positive gaps, could be explained by the disposition effect. That is, investors’ tendency to keep losing positions
+when stocks are falling. Had they, in theory, sold after a negative price gap the stock price would likely fall further
+and thus create a price continuation effect.
+
+According to our findings, a previously not explored nor discussed anomaly seems to exist. The implications of this
+is that we find evidence against the weak-form of the efficient market hypothesis, and that information in past prices
+can help predicting stock movements. Our findings gives support to the words of Pablo Picasso-
+
+                                              “Action is the foundational key to all success”.
+
+VII FUTURE RESEARCH
+Though extensive research have been conducted in the field of technical analysis, research on the phenomena of
+price gaps, discussed in this thesis, is very limited. With this study we sought to arouse interest in a virtually
+unexplored pattern, and we believe that further research is needed to better understand the nature of price gaps. The
+choices made in terms of data adjustments and model specification may have carried large impact on our analysis.
+Thus with different assumptions and approaches different results may arise. Suggestions to future research set-ups is
+to incorporate e.g. stop-loss strategies, study other regional areas, take volume into account and include extended
+models for risk-adjusting returns.
+
+                                                                                               21
+REFERENCES
+
+Agyei-Ampomah, S. (2007), "The Post-Cost Profitability of Momentum Trading Strategies: Further Evidence from
+the UK", European Financial Management, 13(4), 776-802.
+
+Alexander, S.S. (1964), “Price Movements in Speculative Markets: Trends or Random Walks, No. 2”, Industrial
+Management Review, 5(1), 7-26.
+
+Ali, A., Trombley, M.A. (2006), “Short Sales Constraints and Momentum in Stock Return”, Journal of Business Finance
+and Accounting, 33(3-4), 587-615.
+
+Bachelier, L. (1900), “Théorie de la Spéculation”, Annales Scientifiques de l’École Normale Supérieure, série 3. 17:21-86,
+Translated in Paul. H. Cootner, 1964. The Random Character of Stock Market Prices. Cambridge, MA: MIT Press.
+
+Badrinath, S.G., Wahal, S. (2002), “Momentum Trading by Institutions”, Journal of Finance, 57(6), 2449-2478.
+
+Banerjee, A.V. (1992), “A Simple Model of Herd Behavior”, The Quarterly Journal of Economics, 107(3), 797-817.
+
+Barberis, N., Shleifer, A., Vishny, R. (1998), “A Model of Investor Sentiment”, Journal of Financial Economics, 49(3),
+307-343.
+
+Barberis, N., Shleifer, A. (2003), “Style Investing”, Journal of Financial Economics, 68(2), 161-199.
+
+Beja, A., Goldman, M.B. (1980), “On the Dynamics of Behavior of Prices in Disequilibrium”, Journal of Finance,
+35(2), 235-248.
+
+Bigalow, S. (2002), “Profitable Candlestick Trading: Pinpointing Market Opportunities to Maximize Profits”, New
+York: John Wiley and Sons.
+
+Black, F. (1993), “Beta and Return”, Journal of Portfolio Management, 20(1), 8-18.
+
+Brock, W., Lakanishok, J., LeBaron, B. (1992), “Simple Technical Trading Rules and the Stochastic Properties of
+Stock Returns”, Journal of Finance, 48(5), 1731-1764.
+
+Caginalp, G., Laurent, H. (1998), “The Predictive Power of Price Patterns”, Applied Mathematical Finance, 5(3-4), 181-
+205.
+
+Chui, A., Titman, S., Wei, K.C.J. (2010), “Individualism and Momentum Around the World”, Journal of Finance,
+65(1), 361-392.
+
+Conrad, J., Kaul, G. (1998), “An Anatomy of Trading Strategies”, Review of Financial Studies, 11(3), 489-519.
+
+Cowles, A. (1933), “Can Stock Market Forecasters Forecast?”, Econometrica, 1(3), 309-324.
+
+Daniel, K., Hirshleifer, D., Subrahmanyam, A. (1998), “Investor Psychology and Security Market under- and
+overreactions”, Journal of Finance, 53(6), 1839-1885.
+
+De Bondt, W.F.M., Thaler, R. (1985), ”Does the Stock Market Overreact?”, Journal of Finance, 40(3), 793-805.
+
+De Bondt, W.F.M., Thaler, R. (1987), ”Further Evidence on Investor Overreaction and Stock Market Seasonality”,
+Journal of Finance, 42(3), 557-581.
+
+                                                                                               22
+De Long, B.J., Shleifer, A., Summers, L.H., Waldmann, R.J. (1990), “Noise Trader Risk in Financial Markets”,
+Journal of Political Economy, 98(4), 703-738.
+
+Edwards, W. (1968), “Conservatism in Human Information Processing”, Formal Representation of Human Judgment,
+Edited by Kleinmuntz, B., New York: Wiley. 17-52.
+
+Fama, E.F., Blume, M. (1966), “Filter Rules and Stock Market Trading”, Journal of Business, 39(1), 226-241.
+
+Fama, E.F. (1970), “Efficient Capital Markets: A Review of Theory and Empirical Work” Journal of Finance, 25(2),
+383-417.
+
+Fama, E., French, K. (1996), “Multifactor Explanations of Asset Pricing Anomalies”, Journal of Financial Economics,
+51(1), 55-84.
+
+Fiess, N., MacDonald, R. (2002), “Towards the Fundamentals of Technical Analysis: Analysing the Information
+Content of High, Low and Close Prices”, Economic Modeling, 19(3), 353-374.
+
+Fischer, R., Fisher, J. (2003), “Candlesticks, Fibonacci and Chart Pattern Trading Tools: A Synergistic Strategy to
+Enhance Profits and Reduce Risk”, New York: John Wiley and Sons.
+
+Fock, J.H., Klein, C., Zwergel, B. (2005), ”Performance of Candlestick Analysis on Intraday Futures Data. Journal of
+Futures Markets, 13(1), 28-40.
+
+Froot, K.A., Scharfstein, D.S., Stein, J.C. (1992), “Herd on the Street: Informational Inefficiencies in a Market with
+Short-Term Speculation”, Journal of Finance, 47(4), 1461-1484.
+
+Goo, Y-J., Chen, D-H., Chang, Y-W. (2007), “The Application of Japanese Candlestick Trading Strategies in
+Taiwan”, Investment Management and Financial Innovations, 4(4), 49-71.
+
+Griffin, J.M., Ji, X., Martin, J.S. (2003), “Momentum Investing and Business Cycle Risk: Evidence from Pole to
+Pole”, Journal of Finance, 58(6), 2515-2547.
+
+Griffioen, G.A.W. (2003), “Technical Analysis in Financial Markets”, PhD Thesis, University of Amsterdam.
+
+Grinblatt, M., Titman, S., Wermers, R. (1995), “Momentum Investment Strategies, Portfolio Performance, and
+Herding: a Study of Mutual Fund Behavior”, American Economic Review, 85(5), 1088-1105.
+
+Grinblatt, M., Han, B. (2005), “Prospect Theory, Mental Accounting, and Momentum, Journal of Financial Economics,
+78(2), 311-339.
+
+Grundy, B.D., Martin, S.J. (2001), “Understanding the Nature of Risks and the Sources of Rewards to Momentum
+Investing”, Review of Financial Studies, 14(1), 29-78.
+
+Hamilton, W.P. (1922), “The Stock Market Barometer”, New York: Harper & Brothers, Reprint in 1998, New York:
+John Wiley & Sons.
+
+Hanna, J.D., Ready, M. (2005), “Profitable Predictability in the Cross Section of Stock Returns”, Journal of Financial
+Economics, 78(3), 463-505.
+
+                                                                                               23
+Hong, H.G., Stein, J.C. (1999), “A Unified Theory of Underreaction, Momentum Trading, and Overreaction in
+Asset Markets”, Journal of Finance, 54(6), 2143-2184.
+
+Horton, M.J. (2009), “Stars, Crows and Doji: The Use of Candlesticks in Stock Selection”, Quarterly Review of
+Economics and Finance, 49(2), 283-294.
+
+Jegadeesh, N. (1990), “Evidence of Predictable Behavior of Security Returns”, Journal of Finance, 45(3), 881-898.
+
+Jegadeesh, N., Titman, S. (1993), “Returns to Buying Winners and Selling Losers: Implications for Stock Market
+Efficiency”, Journal of Finance, 48(1), 65-91.
+
+Jegadeesh, N., Titman, S. (2001), “Profitability of Momentum Strategies: An Evaluation of Alternative
+Explanations”, Journal of Finance, 56(2), 699-720.
+
+Jeegadeesh, N., Titman, S. (2011), “Momentum”, Annual Review of Financial Economics, 3(1), 493-509.
+
+Jensen, M.C. (1978), “Some Anomalous Evidence Regarding Market Efficiency”, Journal of Financial Economics, 6(2-3),
+95-101.
+
+Kendall, D.G. (1953), “Stochastic Processes Occurring in the Theory of Queues and their Analysis by the Method
+of the Imbedded Markov Chain”, Annals of Mathematical Statistics, 24(3), 338-354.
+
+Korajczyk, R.A., Sadka, R. (2004), ”Are Momentum Profits Robust to Trading Costs?”, Journal of Finance, 59(3),
+1039-1082.
+
+Laknishok, J., Shleifer, A., Vishny, R. (1994), “Contrarian Investment, Extrapolation, and Risk”, Journal of Finance,
+49(5), 1541-1578.
+
+Lehmann, B. (1990), “Fads, Martingales, and Market Efficiency”, Quarterly Journal of Economics, 105(1), 1-28.
+
+Lesmond, D.A., Schill, M.J., Zhou, C. (2004), “The Illusory Nature of Momentum Profits”, Journal of Financial
+Economics, 71(2), 349-380.
+
+Li, X., Miffre, J., Brooks, C., O’Sullivan, N. (2008), ”Momentum Profits and Time-Varying Unsystematic Risk”,
+Journal of Banking and Finance, 32(4), 541-558.
+
+Lintner, J. (1965), “The Valuation of Risk Assets and the Selection of Risky Investments in Stock Portfolios and
+Capital Budgets”, Review of Economics and Statistics, 47(1), 13-37.
+
+Lo, A., Mamaysky, H., Wang, J. (2000), “Foundations of Technical Analysis: Computational Algorithms, Statistical
+Inference, and Empirical Implementation”, Journal of Finance, 55(4), 1705-1770.
+
+Lo, A. (2004), “The Adaptive Market Hypothesis: Market Efficiency from an Evolutionary Perspective”, Journal of
+Portfolio Management, 30(1), 15-29.
+
+Lu, T-H., Shiu, Y-M., Liu, T-C. (2012), “Profitable Candlestick Trading Strategies – The Evidence from a New
+Perspective”, Review of Financial Economics, 21(2), 63-68.
+
+MacKinlay, A.C. (1995), “Multifactor Models do not Explain Deviations from the CAPM”, Journal of Financial
+Economics, 38(1), 3-28.
+                                                                                               24
+Malkiel, B.G. (1973), “A Random Walk Down Wall Street”, New York: W.W. Norton & Company.
+
+Malkiel, B.G. (2011), “A Random Walk Down Wall Street”, (Revised Edition), New York: W.W. Norton &
+Company.
+
+Mandelbrot, B. (1966), “Forecasts of Future Prices, Unbiased Markets, and ‘Martingale’ Models”, Journal of Business,
+39(1, Special Supplement), 242-255.
+
+Marshall, B.R., Young, M.R., Rose, L.C. (2006), “Are Candlestick Technical Trading Strategies Profitable in the
+Japanese Equity Market?”, Review of Quantitative Finance & Accounting, 31(2), 191-207.
+
+Marshall, B.R., Young, M.R., Rose, L.C. (2007), “Market Timing with Candlestick Technical Analysis”, Journal of
+Financial Transformation, 20(1), 18-25.
+
+Marshall, B.R., Young, M.R., Rose, L.C. (2008), “Candlestick Technical Trading Strategies: Can They Create Value
+for Investors?”, Journal of Banking & Finance, 30(8), 2303-2323.
+
+Menkhoff, L., Taylor, M.P. (2007), “The Obstinate Passion of Foreign Exchange Professionals: Technical Analysis”,
+Journal of Economic Literature, 45(4), 936-972.
+
+Morris, G. (1995), “Candlestick Charting Explained: Timeless Techniques for Trading Stocks and Futures, 2nd
+
+Edition”, New York: McGraw-Hill Trade.
+
+Mulvey, J.M., Kim, W.C. (2008), “Active Equity Managers in the US: Do the Best Follow Momentum Strategies?”,
+Journal of Portfolio Management, 34(2), 126-134.
+
+Nison, S. (1991), “Japanese Candlestick Charting Techniques: A Contemporary Guide to the Ancient Investment
+Techniques of the Far East”, New York: New York Institute of Finance.
+
+Nison, S. (1994), “Beyond Candlesticks: New Japanese Charting Techniques Revealed”, New York: Wiley and Sons.
+
+Odean, T. (1998), “Are Investors Reluctant to Realize their Losses?”, Journal of Finance, 53(5), 1775-1798.
+
+Okamoto, H. (2003), “Practical Utilization of Japanese Technical Charts”, Presented at the TA Forum, Paris, March
+22.
+
+Park, C-H., Irwin, S.H. (2004), “The Profitability of Technical Analysis: A Review”, AgMAS Project Research
+Report. University of Illinois at Urbana-Champaign.
+
+Pring, M. (2002), “Candlesticks Explained”, New York: McGraw-Hill.
+
+Regnault, J. (1863), “Calcul des Chances et Philosophie de la Bourse”, Paris: Mallet Bachelier & Castel (Bibliothèque
+Nationale, Paris, Inventaire V.51.066).
+
+Rhea, R. (1932), “The Dow Theory”, New York: Barron’s, Reprint in 1993, Burlington: Fraser Publishing Company.
+
+Roberts, H.V. (1959), “Stock-Market “Patterns” and Financial Analysis: Methodological Suggestions”, Journal of
+Finance, 14(1), 1-10.
+
+Rouwenhorst, K. G. (1998), “International Momentum Strategies”, Journal of Finance, 53(1), 267-284.
+
+                                                                                               25
+Samuelson, P.A. (1965), “Proof That Properly Anticipated Prices Fluctuate Randomly”, Industrial Management Review,
+6(2), 41-49.
+
+Schiereck, D., De Bondt, W., Weber, M. (1999), “Contrarian and Momentum Strategies in Germany”, Financial
+Analysts Journal, 55(6), 104-116.
+
+Schulmeister, S. (2006), “The Interaction Between Technical Currency Trading and Exchange Rate Fluctuations”,
+Finance Research Letters, 3(3), 212-233.
+
+Schulmeister, S. (2007), “The Interaction Between the Aggregate Behavior of Technical Trading Systems and Stock
+Price Dynamics”, WIFO Working Paper.
+
+Schwert, G.W. (2003), “Anomalies and Market Efficiency”, In Constantinides, G., Harris, M., Stultz, M. (Eds.),
+Handbook of the Economics of Finance, Amsterdam: Elsevier, 937-972.
+
+Sharpe, W. (1964), “Capital Asset Prices: A Theory of Market Equilibrium”, Journal of Finance, 19(3), 425-442.
+
+Shefrin, H., Statman, M. (1985), “The Disposition to Sell Winners too Early and Ride Losers too Long: Theory and
+Evidence”, Journal of Finance, 40(3), 777-791.
+
+Shiu, Y-M., Lu, T-H. (2011), “Pinpoint and Synergistic Trading Strategies of Candlesticks”, International Journal of
+Econonomics and Finance, 3(1), 234-244.
+
+Sullivan, R., Timmermann, A., White, H. (1999), “Data Snooping, Technical Trading Rules Performance, and the
+Bootstrap”, Journal of Finance, 54(5), 1647-1691.
+
+Sweeney, R. (1986), “Beating the Foreign Exchange Market”, Journal of Finance, 41(1), 163-182.
+
+Tversky, A., Kahneman, D. (1974), “Judgment Under Uncertainty: Heuristics and Biases”, Science, 185(4157), 1124-
+1131.
+
+Wagner, G.S., Matheny, B.L. (1993), “Trading applications of Japanese Candlestick Charting”, New York: John
+Wiley and Sons.
+
+Wang, K-Y., Peng, S-C., Huang, Y-S. (2009), “The Intraday Performance of Contrarian Strategies: Evidence from
+the Taiwan Stock Exchange”, Review of Pacific Basin Financial Markets and Policies, 12(4), 655-674.
+
+Working, H. (1934), “A Random-Difference Series for Use in the Analysis of Time Series”, Journal of the American
+Statistical Association, 29(185), 11-24.
+
+Working, H. (1949), “The Investigation of Economic Expectations”, American Economic Review, 39(3), 150-166.
+
+Zhang, X.F. (2006), “Information Uncertainty and Stock Returns”, Journal of Finance, 61(1), 105-136.
+
+                                                                                               26
+APPENDICES
+
+APPENDIX A: EXPLANATORY ILLUSTRATIONS
+Figure A1: Price Continuation Hypothesis
+
+            Figure A1 illustrates the hypothesis of price continuation in the direction of the gap, in this case a positive gap occurring
+          from day t-1 to t. The lowest traded price during day t is higher than day t-1’s highest trading price. The gap is confirmed
+         at day t’s close. According to our hypothesis we expect prices to continue to rise at day t+1 until t+n. The proposed
+          trading strategy is to buy at the close of trading day t and selling at trading day t+n.
+
+Figure A2. Illustration of Positive and Negative Price Gap Signals
+
+           Figure A2 illustrates different sizes of price gaps and the difference between positive and negative gaps. Every candle
+            represents one trading day. A black candle indicates a negative close on the day and a white candle indicates a positive
+             close.
+
+                                                                                               27
+Figure A3. Candlestick Components
+
+                                     High                              High
+                                     Close                             Open
+
+                      Body                             Body
+
+                                     Open                             Close
+                               Low                         Low
+
+         Illustrations of the components of a candlestick. If the close price of a trading day t+1 is higher (lower) than the previous
+           trading day t’s close price the body will be white (black).
+
+                                                                                               28
+APPENDIX B: DESCRIPTIVE STATISTICS
+Table B1: Overview of Gap Characteristics across Company Sizes
+
+                                                Summary over Gap Characteristics
+
+                                                                                         Company Size
+
+All observations                                    All Quintile 1 Quintile 2 Quintile 3 Quintile 4 Quintile 5
+
+        All gaps Events 70 118 21 750 17 938 13 793 9 545 7 092
+                        Frequency 2.15 3.61 2.91 2.16 1.49 1.11
+                       Mean size 1.70% 2.33% 1.89% 1.60% 1.50% 1.19%
+                       Std. Dev. 2.21% 2.95% 2.37% 2.02% 2.23% 1.96%
+        Positive gaps Events 35 600 10 376 9 003 7 142 5 105 3 974
+                        Frequency 1.09 1.72 1.46 1.12 0.80 0.62
+                       Mean size 1.71% 2.15% 1.81% 1.54% 1.38% 1.06%
+                       Std. Dev. 2.35% 2.67% 2.39% 2.10% 2.17% 1.70%
+        Negative gaps Events 34 518 11 374 8 935 6 651 4 440 3 118
+                        Frequency 1.06 1.89 1.45 1.04 0.69 0.49
+                       Mean size 1.70% 2.06% 1.71% 1.56% 1.35% 1.14%
+                       Std. Dev. 2.06% 2.56% 1.79% 1.72% 1.58% 1.71%
+Liquid observations
+         All gaps Events 40 156 7 243 9 199 9 296 7 691 6 727
+                        Frequency 1.53 2.04 2.00 1.67 1.25 1.05
+                      Mean 1.33% 1.54% 1.48% 1.33% 1.21% 1.02%
+                       Std. Dev. 1.90% 2.23% 2.09% 1.61% 1.81% 1.62%
+        Positive gaps Events 21 609 3801 4875 4983 4160 3790
+                        Frequency 0.82 1.07 1.06 0.89 0.68 0.59
+                       Mean size 1.36% 1.62% 1.57% 1.34% 1.21% 1.00%
+                       Std. Dev. 2.05% 2.20% 2.46% 1.73% 2.05% 1.61%
+        Negative gaps Events 18 547 3 442 4 324 4 313 3 531 2 937
+                        Frequency 0.71 0.97 0.94 0.77 0.58 0.46
+                       Mean size 1.29% 1.45% 1.38% 1.32% 1.20% 1.06%
+                       Std. Dev. 1.69% 2.25%2937  1.57% 1.45% 1.48% 1.62%
+Illiquid observations
+        All gaps Events 29 962 14 507 8 739 4 497 1 854 365
+                        Frequency 4.75 4.84 4.64 4.65 4.76 5.34
+                       Mean size 2.21% 2.38% 2.05% 2.01% 2.04% 2.49%
+                       Std. Dev. 2.49% 2.75% 2.09% 2.39% 2.20% 2.50%
+        Positive gaps Events 13 991 6 575 4 128 2 159 945 184
+                        Frequency 2.22 2.19 2.19 2.23 2.42 2.69
+                       Mean size 2.26% 2.46% 2.08% 2.00% 2.16% 2.49%
+                       Std. Dev. 2.05% 2.87% 2.26% 2.72% 2.51% 2.57%
+        Negative gaps Events 15 971 7 932 4 611 2 338 909 181
+                        Frequency 2.53 2.64 2.45 2.42 2.33 2.65
+                       Mean size 2.17% 2.32% 2.02% 2.01% 1.91% 2.48%
+                       Std. Dev. 1.69% 2.64% 1.93% 2.05% 1.82% 2.43%
+
+            In table B1 , an overview is provided on where gaps occur. First, gaps across the entire dataset is displayed followed by
+           separate tables for liquid and illiquid observations. Events is the number of gaps. Frequency is measured in average
+           number of events per month per stock, calculated with the assumption that each month has 20 trading days. Companies
+           are divided into quintiles based on company size, measured with company market capitalization and updated on a yearly
+           basis. Mean size displays the average size of the gap, as defined under Section I. Std.Dev is the standard deviation of
+             these sizes.
+
+                                                                                               29
+Table B2: Yearly Incidence of Gaps Over the Time-Period
+
+                                             Gap Distribution per Year
+                    Positive Gaps Negative Gaps All Gaps
+             Events Percent of  Mean size Events Percent of  Mean size Events Percent of  Mean size
+   Year                       total                                     total                                     total
+  2000 2456 6.90% 1.96% 2586 7.49% 1.89% 5042 7.19% 1.93%
+  2001 3166 8.89% 2.40% 3395 9.84% 2.44% 6561 9.36% 2.42%
+  2002 3809 10.70% 2.75% 4304 12.47% 2.68% 8113 11.57% 2.71%
+  2003 4340 12.19% 2.12% 3662 10.61% 2.09% 8002 11.41% 2.11%
+  2004 3801 10.68% 1.31% 3437 9.96% 1.30% 7238 10.32% 1.31%
+  2005 3280 9.21% 1.05% 2512 7.28% 1.01% 5792 8.26% 1.03%
+  2006 3280 9.21% 1.11% 3044 8.82% 1.09% 6324 9.02% 1.10%
+  2007 3047 8.56% 1.18% 3455 10.01% 1.07% 6502 9.27% 1.12%
+  2008 3205 9.00% 1.79% 4320 12.52% 1.62% 7525 10.73% 1.69%
+  2009 2973 8.35% 1.58% 2085 6.04% 1.48% 5058 7.21% 1.54%
+  2010 2243 6.30% 1.22% 1718 4.98% 1.22% 3961 5.65% 1.22%
+
+           Table B2 shows how the number of gaps differ across the time-period, where Events is the number of gaps for each
+            respective year. Percent of total displays the percent of all gaps that occurred during a specific year. Mean size displays
+            the average size of a gap for that year. Illiquid observations are not excluded in the data in the table.
+
+Table B3: Summary of Gap Sizes
+
+                                            Summary Statistics over Gap Sizes
+                                                                              Company Size
+                                          All Quintile 1 Quintile 2 Quintile 3 Quintile 4 Quintile 5
+All gaps Events 70 118 21 750 17 938 13 793 9 545 7 092
+              Mean size 1.7% 2.1% 1.8% 1.6% 1.4% 1.1%
+              Std. dev. 2.2% 2.6% 2.1% 1.9% 1.9% 1.7%
+Positive gaps Events 35 600 10 376 9 003 7 142 5 105 3 974
+              Mean size 1.7% 2.2% 1.8% 1.5% 1.4% 1.1%
+              Std. dev. 2.4% 2.7% 2.4% 2.1% 2.2% 1.7%
+Negative gaps Events 34 518 11 374 8 935 6 651 4 440 3 118
+              Mean size 1.7% 2.1% 1.7% 1.6% 1.3% 1.1%
+              Std. dev. 2.1% 2.6% 1.8% 1.7% 1.6% 1.7%
+
+            Table B3 provides an overview of how gap-sizes differ across the different size-quintiles, based on market capitalization.
+            Events is number of observed gaps. Mean size displays the average size of the gap, as defined under Section I. Std.dev. is
+            the standard deviation of the gap sizes in each subgroup. Illiquid observations are not excluded in the data in the table.
+
+                                                                                               30
+Table B4: Gaps in the Momentum Portfolio
+
+                                            Gap Incidence in the Momentum Portfolio
+
+                                                                                                Type of Gap
+
+                                                                        Positive gaps Negative gaps Total gaps
+Momentum portfolio Observations 6 165 6 065 12 230
+                                          Frequency/ month 1.07 1.05 2.12
+
+    - Loser portfolio Observations 2 970 3 142 6 112
+                                          Frequency/ month 1.03 1.09 2.13
+
+    - Winner portfolio Observations 3 195 2 923 6 118
+                                          Frequency/ month 1.10 1.01 2.11
+
+Gaps outside of the momentum portfolio Observations 29 435 28 453 57 888
+                                          Frequency/ month 1.15 1.11 2.26
+Total Observations 35 600 34 518 70 118
+                                          Frequency/ month 1.13 1.10 2.23
+
+           The table displays the observations, in terms of gaps, and frequency, in terms of observations per month per company,
+           of the loser and winner portfolio constituting the momentum portfolio. The complete momentum portfolio is also
+           shown as well as observations not included outside of the momentum portfolio. Finally, the total dataset is displayed
+            with number of observations and frequency. Illiquid observations are not excluded in the data in the table.
+
+Table B5: Description of Returns Following a Gap
+
+                             Summary of Trading Returns across Company Sizes for Holding Period 1-5 Days
+
+                                               Negative gaps Positive gaps
+  Company size Holding period Obs. Mean  Std. dev. Min. Max. Obs. Mean  Std. dev. Min. Max.
+                                                             return                                                   return
+
+      All 1 Day 18542 0.19% 3.82% -52.76% 69.40% 21599 0.22% 3.73% -36.69% 91.49%
+                   2 Days 18536 0.23% 5.30% -58.45% 80.33% 21592 0.29% 5.02% -43.51% 107.03%
+                   3 Days 18536 0.25% 6.36% -58.06% 124.18% 21591 0.31% 5.98% -52.85% 84.33%
+                   4 Days 18528 0.26% 7.09% -57.22% 135.29% 21592 0.40% 6.74% -71.46% 116.33%
+                   5 Days 18523 0.33% 7.76% -77.98% 126.47% 21588 0.42% 7.48% -74.90% 145.92%
+  Size quintile 1 1 Day 3444 0.25% 4.25% -48.62% 69.40% 3799 0.35% 4.59% -31.03% 70.45%
+                   2 Days 3440 0.24% 5.69% -44.83% 80.33% 3801 0.53% 6.27% -27.10% 107.03%
+                   3 Days 3437 0.25% 7.29% -45.67% 114.29% 3803 0.56% 7.35% -52.85% 76.67%
+                   4 Days 3432 0.20% 8.04% -51.44% 135.29% 3804 0.61% 8.36% -49.37% 116.33%
+                   5 Days 3432 0.07% 8.57% -77.98% 126.47% 3799 0.50% 9.09% -49.37% 145.92%
+  Size quintile 2 1 Day 4321 0.22% 3.74% -35.46% 28.68% 4879 0.22% 3.83% -24.70% 47.76%
+                   2 Days 4317 0.28% 5.16% -45.04% 47.83% 4880 0.28% 5.29% -31.25% 79.07%
+                   3 Days 4322 0.24% 6.15% -55.32% 56.98% 4879 0.31% 6.27% -35.94% 84.33%
+                   4 Days 4325 0.26% 7.10% -51.77% 92.86% 4879 0.44% 6.95% -38.28% 71.07%
+                   5 Days 4323 0.31% 7.65% -57.09% 71.43% 4881 0.54% 7.99% -36.20% 101.41%
+  Size quintile 3 1 Day 4312 0.14% 3.73% -52.76% 38.17% 4979 0.18% 3.45% -30.77% 91.49%
+                   2 Days 4313 0.14% 5.04% -58.45% 44.93% 4972 0.22% 4.50% -31.41% 96.81%
+                   3 Days 4311 0.22% 5.78% -39.31% 47.37% 4971 0.24% 5.31% -39.58% 78.72%
+                   4 Days 4307 0.18% 6.29% -42.86% 44.93% 4976 0.35% 6.04% -71.46% 76.60%
+                   5 Days 4312 0.25% 6.90% -42.86% 51.58% 4974 0.35% 6.55% -74.90% 59.57%
+  Size quintile 4 1 Day 3532 0.10% 3.63% -20.59% 27.74% 4151 0.25% 3.47% -36.69% 70.61%
+                   2 Days 3534 0.13% 5.23% -29.64% 61.00% 4148 0.32% 4.54% -43.51% 56.55%
+                   3 Days 3536 0.16% 6.11% -32.91% 66.00% 4148 0.38% 5.65% -44.81% 59.64%
+                   4 Days 3536 0.20% 6.94% -33.54% 66.07% 4145 0.46% 6.32% -61.36% 57.97%
+                   5 Days 3531 0.34% 7.85% -38.03% 98.00% 4147 0.52% 7.01% -57.29% 87.50%
+  Size quintile 5 1 Day 2933 0.28% 3.76% -30.41% 31.87% 3791 0.12% 3.19% -24.51% 32.59%
+                   2 Days 2932 0.39% 5.45% -54.44% 65.93% 3791 0.12% 4.35% -30.68% 36.44%
+                   3 Days 2930 0.40% 6.58% -58.06% 124.18% 3790 0.06% 5.22% -39.83% 42.14%
+                   4 Days 2928 0.49% 7.18% -57.22% 71.11% 3788 0.17% 5.90% -45.66% 49.59%
+                   5 Days 2925 0.76% 7.98% -65.00% 93.33% 3787 0.18% 6.60% -46.03% 66.06%
+
+           Obs. shows number of observations of returns for each holding period. Note that there are slightly fewer observations
+            for longer holding periods as longer holding periods require that there is data for the following days, e.g. the following
+            four days for a five-day holding period. Std.dev. is the standard deviation of the returns for a given company quintile and
+           holding period. Min. and Max. displays the minimum and maximum return respectively for each sub-group.
+            Observations deemed illiquid are excluded in the table.
+                                                                                               31
+APPENDIX C: MAPPING OF ABNORMAL RETURNS
+                                               Figure C1. Abnormal Returns for Gaps with 1 Day Holding Period
+                                         Risk-Adjusted with CAPM Risk-Adjusted with CAPM and the Momentum Factor
+
+Positive Gaps
+
+Negative Gaps
+
+            Figure C1 illustrates the abnormal returns for positive and negative gaps with 1 day holding period. The abnormal 1 month return is shown on the vertical y-axis. The company size, labeled from 1-
+           5 (where group 1 is companies with lowest market capitalization and group 5 is companies with highest market capitalization), is shown on the horizontal x-axis. The gap size, separated in three
+           groups, is shown on the depth axis (z-axis). Abnormal returns taking only the market factor (CAPM) into account in the risk-adjusting process, is shown to the left hand side of the figure.
+           Abnormal returns taking both the market factor (CAPM) and the momentum factor into account in the risk-adjusting process, is shown to the right hand side of the figure. The abnormal returns
+            are adjusted for illiquid stocks. Different shades of blue indicates positive abnormal returns while different shades of red indicates negative abnormal returns.
+
+                                                                                                                                                   32
+                                              Figure C2. Abnormal Returns for Gaps with 2 Days Holding Period
+                                         Risk-Adjusted with CAPM Risk-Adjusted with CAPM and the Momentum Factor
+
+Positive Gaps
+
+Negative Gaps
+
+            Figure C2 illustrates the abnormal returns for positive and negative gaps with 2 days holding period. The abnormal 1 month return is shown on the vertical y-axis. The company size, labeled from 1-5
+            (where group 1 is companies with lowest market capitalization and group 5 is companies with highest market capitalization), is shown on the horizontal x-axis. The gap size, separated in three groups,
+            is shown on the depth axis (z-axis). Abnormal returns taking only the market factor (CAPM) into account in the risk-adjusting process, is shown to the left hand side of the figure. Abnormal returns
+            taking both the market factor (CAPM) and the momentum factor into account in the risk-adjusting process, is shown to the right hand side of the figure. The abnormal returns are adjusted for illiquid
+            stocks. Different shades of blue indicates positive abnormal returns while different shades of red indicates negative abnormal returns.
+
+                                                                                                                                                   33
+                                              Figure C3. Abnormal Returns for Gaps with 3 Days Holding Period
+                                         Risk-Adjusted with CAPM Risk-Adjusted with CAPM and the Momentum Factor
+
+Positive Gaps
+
+Negative Gaps
+
+            Figure C3 illustrates the abnormal returns for positive and negative gaps with 3 days holding period. The abnormal 1 month return is shown on the vertical y-axis. The company size, labeled from 1-5
+            (where group 1 is companies with lowest market capitalization and group 5 is companies with highest market capitalization), is shown on the horizontal x-axis. The gap size, separated in three groups,
+            is shown on the depth axis (z-axis). Abnormal returns taking only the market factor (CAPM) into account in the risk-adjusting process, is shown to the left hand side of the figure. Abnormal returns
+            taking both the market factor (CAPM) and the momentum factor into account in the risk-adjusting process, is shown to the right hand side of the figure. The abnormal returns are adjusted for illiquid
+            stocks. Different shades of blue indicates positive abnormal returns while different shades of red indicates negative abnormal returns.
+
+                                                                                                                                                   34
+                                              Figure C4. Abnormal Returns for Gaps with 4 Days Holding Period
+                                         Risk-Adjusted with CAPM Risk-Adjusted with CAPM and the Momentum Factor
+
+Positive Gaps
+
+Negative Gaps
+
+            Figure C4 illustrates the abnormal returns for positive and negative gaps with 4 days holding period. The abnormal 1 month return is shown on the vertical y-axis. The company size, labeled from 1-5
+            (where group 1 is companies with lowest market capitalization and group 5 is companies with highest market capitalization), is shown on the horizontal x-axis. The gap size, separated in three groups,
+            is shown on the depth axis (z-axis). Abnormal returns taking only the market factor (CAPM) into account in the risk-adjusting process, is shown to the left hand side of the figure. Abnormal returns
+            taking both the market factor (CAPM) and the momentum factor into account in the risk-adjusting process, is shown to the right hand side of the figure. The abnormal returns are adjusted for illiquid
+            stocks. Different shades of blue indicates positive abnormal returns while different shades of red indicates negative abnormal returns.
+
+                                                                                                                                                   35
+                                              Figure C5. Abnormal Returns for Gaps with 5 Days Holding Period
+                                         Risk-Adjusted with CAPM Risk-Adjusted with CAPM and the Momentum Factor
+
+Positive Gaps
+
+Negative Gaps
+
+            Figure C5 illustrates the abnormal returns for positive and negative gaps with 5 days holding period. The abnormal 1 month return is shown on the vertical y-axis. The company size, labeled from 1-5
+            (where group 1 is companies with lowest market capitalization and group 5 is companies with highest market capitalization), is shown on the horizontal x-axis. The gap size, separated in three groups,
+            is shown on the depth axis (z-axis). Abnormal returns taking only the market factor (CAPM) into account in the risk-adjusting process, is shown to the left hand side of the figure. Abnormal returns
+            taking both the market factor (CAPM) and the momentum factor into account in the risk-adjusting process, is shown to the right hand side of the figure. The abnormal returns are adjusted for illiquid
+            stocks. Different shades of blue indicates positive abnormal returns while different shades of red indicates negative abnormal returns.
+
+                                                                                                                                                   36
+Table C1. Abnormal Returns Using CAPM
+
+                                            Detailed Description of Abnormal Returns Using CAPM Model
+
+                                                                           Positive Gaps                                         Negative Gaps
+Holding Period Gap Size Company Size Events Mean     Adjusted    Std.dev Events Mean     Adjusted    Std.dev
+                                                                   monthly     returns for                              monthly     returns for
+                                                                         return       Trx costs                                  return       Trx costs
+1 Day Small-size Quintile 1 797 5.00% 3.75% 13.80% 790 1.15% -0.05% 11.80%
+                          Quintile 2 1188 4.66% 3.42% 11.82% 1035 0.44% -0.76% 10.95%
+                         Quintile 3 1398 6.48% 5.21% 10.02% 1101 3.09% 1.96% 10.56%
+                          Quintile 4 1425 3.92% 2.68% 9.34% 1075 1.08% -0.12% 10.26%
+                          Quintile 5 1714 2.01% 0.79% 8.42% 1213 -0.30% -1.49% 9.92%
+             Mid-size Quintile 1 2145 4.27% 3.02% 15.36% 2005 -3.47% -4.52% 15.14%
+                          Quintile 2 2654 4.78% 3.54% 14.27% 2468 -2.05% -3.18% 13.26%
+                          Quintile 3 2693 2.01% 0.80% 12.39% 2466 0.29% -0.90% 12.44%
+                         Quintile 4 2175 6.11% 4.85% 12.24% 1942 2.23% 1.06% 13.22%
+                          Quintile 5 1673 1.61% 0.39% 12.66% 1397 -3.35% -4.40% 13.59%
+             Large-size Quintile 1 859 11.79% 10.47% 29.19% 647 -2.59% -3.69% 26.67%
+                          Quintile 2 1033 2.41% 1.19% 20.16% 821 -6.08% -6.88% 21.20%
+                          Quintile 3 892 6.22% 4.96% 23.82% 746 -6.88% -7.58% 23.80%
+                          Quintile 4 560 14.64% 13.28% 22.55% 514 1.16% -0.03% 20.93%
+                          Quintile 5 403 1.43% 0.22% 17.76% 327 -1.28% -2.44% 18.41%
+2 Days Small-size Quintile 1 797 4.20% 3.58% 18.41% 790 1.36% 0.77% 17.72%
+                          Quintile 2 1188 2.46% 1.85% 16.36% 1035 0.05% -0.54% 16.24%
+                         Quintile 3 1398 4.50% 3.88% 13.97% 1101 3.11% 2.58% 14.10%
+                         Quintile 4 1425 2.42% 1.81% 13.04% 1075 0.86% 0.26% 13.97%
+                          Quintile 5 1714 0.93% 0.33% 11.34% 1213 -0.43% -1.02% 14.45%
+             Mid-size Quintile 1 2145 5.50% 4.87% 23.45% 2005 -2.45% -2.99% 21.45%
+                          Quintile 2 2654 3.82% 3.20% 20.27% 2468 -1.86% -2.42% 18.14%
+                          Quintile 3 2693 1.94% 1.33% 16.92% 2466 0.20% -0.39% 17.43%
+                         Quintile 4 2175 4.42% 3.80% 18.43% 1942 0.62% 0.03% 18.69%
+                          Quintile 5 1673 2.04% 1.43% 16.97% 1397 -2.31% -2.85% 18.90%
+             Large-size Quintile 1 859 5.41% 4.78% 37.45% 647 3.06% 2.53% 33.05%
+                          Quintile 2 1033 2.12% 1.51% 27.83% 821 -5.71% -6.00% 28.94%
+                          Quintile 3 892 1.41% 0.81% 29.01% 746 -4.52% -4.91% 30.26%
+                          Quintile 4 560 8.63% 7.99% 26.04% 514 -0.21% -0.80% 28.56%
+                          Quintile 5 403 1.43% 0.82% 24.16% 327 -0.58% -1.18% 27.08%
+3 Days Small-size Quintile 1 797 3.08% 2.67% 20.90% 790 1.64% 1.25% 22.43%
+                         Quintile 2 1188 2.41% 2.01% 19.34% 1035 0.82% 0.42% 19.85%
+                         Quintile 3 1398 3.54% 3.13% 19.04% 1101 2.19% 1.83% 17.09%
+                         Quintile 4 1425 2.19% 1.78% 15.71% 1075 1.27% 0.88% 17.35%
+                          Quintile 5 1714 0.66% 0.25% 13.36% 1213 -0.63% -1.02% 17.13%
+             Mid-size Quintile 1 2145 4.30% 3.89% 28.65% 2005 -1.83% -2.19% 29.30%
+                          Quintile 2 2654 2.37% 1.97% 24.73% 2468 -1.38% -1.76% 21.98%
+                          Quintile 3 2693 1.95% 1.55% 20.62% 2466 -0.26% -0.66% 21.19%
+                         Quintile 4 2175 3.05% 2.64% 22.98% 1942 0.58% 0.18% 22.38%
+                          Quintile 5 1673 0.19% -0.21% 19.89% 1397 -1.34% -1.72% 23.10%
+             Large-size Quintile 1 859 3.19% 2.78% 44.37% 647 1.67% 1.29% 39.14%
+                          Quintile 2 1033 1.19% 0.79% 31.68% 821 -3.71% -3.98% 34.84%
+                          Quintile 3 892 1.06% 0.66% 31.29% 746 -3.04% -3.35% 34.49%
+                         Quintile 4 560 5.70% 5.29% 29.92% 514 2.01% 1.64% 32.75%
+                          Quintile 5 403 1.88% 1.48% 28.31% 327 -0.77% -1.16% 30.79%
+4 Days Small-size Quintile 1 797 2.55% 2.25% 24.33% 790 1.93% 1.65% 24.18%
+                         Quintile 2 1188 2.27% 1.97% 22.39% 1035 0.80% 0.51% 24.15%
+                         Quintile 3 1398 2.78% 2.47% 20.98% 1101 1.95% 1.67% 20.72%
+                         Quintile 4 1425 1.55% 1.25% 16.97% 1075 0.71% 0.41% 18.73%
+                          Quintile 5 1714 0.42% 0.12% 15.01% 1213 -1.27% -1.56% 19.39%
+             Mid-size Quintile 1 2145 3.41% 3.10% 32.30% 2005 -0.98% -1.27% 31.77%
+                          Quintile 2 2654 2.10% 1.80% 27.24% 2468 -1.09% -1.38% 24.89%
+                          Quintile 3 2693 2.07% 1.77% 23.64% 2466 -0.25% -0.55% 23.51%
+                         Quintile 4 2175 2.37% 2.07% 26.64% 1942 0.31% 0.01% 24.65%
+                          Quintile 5 1673 0.25% -0.05% 22.42% 1397 -0.54% -0.84% 24.65%
+             Large-size Quintile 1 859 2.25% 1.95% 50.00% 647 -0.37% -0.67% 48.22%
+                          Quintile 2 1033 2.18% 1.88% 35.90% 821 -4.01% -4.18% 39.68%
+                          Quintile 3 892 2.06% 1.76% 34.28% 746 -0.34% -0.64% 35.67%
+                         Quintile 4 560 3.81% 3.50% 34.95% 514 1.47% 1.18% 42.21%
+                         Quintile 5 403 1.68% 1.38% 32.60% 327 0.39% 0.09% 35.13%
+5 Days Small-size Quintile 1 797 1.92% 1.68% 26.63% 790 2.20% 2.00% 28.17%
+                         Quintile 2 1188 2.10% 1.85% 25.89% 1035 0.35% 0.11% 25.14%
+                         Quintile 3 1398 1.91% 1.67% 22.36% 1101 1.50% 1.27% 23.13%
+                         Quintile 4 1425 1.47% 1.22% 19.34% 1075 0.69% 0.45% 20.57%
+                          Quintile 5 1714 0.48% 0.24% 16.74% 1213 -0.90% -1.14% 21.61%
+             Mid-size Quintile 1 2145 2.62% 2.37% 35.07% 2005 -0.28% -0.52% 34.02%
+                          Quintile 2 2654 1.90% 1.65% 30.35% 2468 -0.62% -0.86% 28.96%
+                          Quintile 3 2693 2.16% 1.92% 26.19% 2466 0.05% -0.19% 26.18%
+                          Quintile 4 2175 2.88% 2.64% 29.00% 1942 -0.03% -0.27% 27.24%
+                          Quintile 5 1673 0.16% -0.08% 24.21% 1397 -0.92% -1.15% 26.95%
+             Large-size Quintile 1 859 0.93% 0.68% 54.22% 647 -0.66% -0.89% 51.41%
+                          Quintile 2 1033 2.45% 2.21% 39.36% 821 -4.06% -4.17% 42.14%
+                          Quintile 3 892 1.80% 1.56% 37.37% 746 -0.78% -1.01% 38.05%
+                         Quintile 4 560 2.92% 2.67% 36.07% 514 0.82% 0.59% 49.02%
+                          Quintile 5 403 2.59% 2.34% 35.50% 327 -1.67% -1.89% 40.95%
+
+           Events is the number of observations of abnormal returns following gaps per category. Mean monthly return is the daily
+           abnormal return recalculated into the monthly equivalent, assuming 20 days of trading per month. Adjusted return for
+           Trx costs takes transactions costs into account, assuming 0.03% in transaction costs per transaction (both when buying
+           and selling) with reference to Avanza. Std.dev shows monthly standard deviation of the abnormal returns, calculated
+          from daily as Std.dev.monthly=Std.dev.daily * √ , assuming 20 days of trading per month. Returns on negative gaps are
+           computed assuming short-selling after these events.
+
+                                                                                               37
+Table C2. Abnormal Returns Using CAPM and Momentum
+
+                                                    Detailed Description of Abnormal Returns Usinng Momentum-Extended Model
+
+                                                                       Positive Gaps Negative Gaps
+Holding Period Gap Size Company Size Events Mean monthly    Adjusted      Std.dev Events Mean     Adjusted     Std.dev
+                                                                                             return       returns for Trx                                   monthly     returns for
+                                                                                                                    costs                                           return        Trx costs
+1 Day Small-size Quintile 1 797 4.45% 3.21% 13.62% 790 0.67% -0.52% 11.75%
+                             Quintile 2 1188 4.61% 3.36% 11.80% 1035 -0.04% -1.23% 10.78%
+                             Quintile 3 1398 6.09% 4.83% 10.12% 1101 3.19% 2.06% 10.45%
+                             Quintile 4 1425 3.64% 2.41% 9.32% 1075 0.83% -0.37% 10.22%
+                             Quintile 5 1714 1.78% 0.57% 8.36% 1213 -0.46% -1.65% 9.65%
+              Mid-size Quintile 1 2145 3.85% 2.61% 15.23% 2005 -4.04% -5.04% 14.71%
+                             Quintile 2 2654 4.40% 3.16% 14.07% 2468 -2.61% -3.71% 13.24%
+                             Quintile 3 2693 1.95% 0.74% 12.27% 2466 -0.29% -1.48% 12.30%
+                             Quintile 4 2175 5.15% 3.90% 12.13% 1942 1.93% 0.75% 12.97%
+                             Quintile 5 1673 1.44% 0.23% 12.56% 1397 -3.48% -4.52% 13.46%
+              Large-size Quintile 1 859 10.51% 9.20% 28.72% 647 -4.84% -5.76% 26.62%
+                             Quintile 2 1033 1.65% 0.43% 20.04% 821 -7.65% -8.25% 20.86%
+                             Quintile 3 892 5.12% 3.87% 23.40% 746 -8.02% -8.56% 23.07%
+                             Quintile 4 560 14.16% 12.81% 22.59% 514 0.76% -0.44% 19.96%
+                             Quintile 5 403 0.60% -0.60% 17.34% 327 -2.97% -4.05% 18.47%
+2 Days Small-size Quintile 1 797 3.67% 3.05% 18.14% 790 0.70% 0.10% 17.56%
+                             Quintile 2 1188 2.33% 1.72% 16.23% 1035 -0.17% -0.77% 16.01%
+                             Quintile 3 1398 4.18% 3.55% 13.97% 1101 3.11% 2.59% 13.98%
+                             Quintile 4 1425 2.14% 1.53% 12.77% 1075 0.62% 0.02% 13.78%
+                             Quintile 5 1714 0.75% 0.14% 11.32% 1213 -0.72% -1.31% 13.59%
+              Mid-size Quintile 1 2145 5.15% 4.53% 23.11% 2005 -3.06% -3.56% 21.00%
+                             Quintile 2 2654 3.46% 2.84% 19.82% 2468 -2.13% -2.68% 17.95%
+                             Quintile 3 2693 1.68% 1.07% 16.70% 2466 -0.25% -0.85% 17.05%
+                             Quintile 4 2175 3.59% 2.97% 18.14% 1942 0.30% -0.30% 18.35%
+                             Quintile 5 1673 1.65% 1.05% 16.96% 1397 -2.69% -3.21% 18.57%
+              Large-size Quintile 1 859 4.36% 3.73% 37.04% 647 1.66% 1.08% 32.72%
+                             Quintile 2 1033 1.62% 1.02% 27.39% 821 -6.83% -7.00% 28.48%
+                             Quintile 3 892 -0.30% -0.89% 28.09% 746 -5.92% -6.19% 29.43%
+                             Quintile 4 560 8.12% 7.48% 25.65% 514 -0.13% -0.73% 26.12%
+                             Quintile 5 403 0.33% -0.27% 23.50% 327 -0.73% -1.32% 28.21%
+3 Days Small-size Quintile 1 797 2.63% 2.22% 20.66% 790 1.00% 0.61% 22.12%
+                             Quintile 2 1188 2.26% 1.85% 18.95% 1035 0.61% 0.21% 19.16%
+                             Quintile 3 1398 3.28% 2.87% 18.96% 1101 2.14% 1.77% 16.87%
+                             Quintile 4 1425 1.92% 1.52% 15.42% 1075 1.00% 0.60% 17.13%
+                             Quintile 5 1714 0.46% 0.06% 13.38% 1213 -0.94% -1.33% 16.11%
+              Mid-size Quintile 1 2145 4.00% 3.59% 28.09% 2005 -2.25% -2.60% 28.22%
+                             Quintile 2 2654 2.03% 1.63% 24.34% 2468 -1.61% -1.98% 21.71%
+                             Quintile 3 2693 1.63% 1.23% 20.21% 2466 -0.72% -1.12% 20.88%
+                             Quintile 4 2175 2.35% 1.94% 22.30% 1942 0.13% -0.27% 22.23%
+                             Quintile 5 1673 -0.12% -0.52% 20.08% 1397 -1.77% -2.13% 22.42%
+              Large-size Quintile 1 859 2.55% 2.14% 43.71% 647 0.65% 0.25% 38.19%
+                             Quintile 2 1033 0.66% 0.26% 31.22% 821 -4.58% -4.80% 34.18%
+                             Quintile 3 892 -0.36% -0.76% 30.47% 746 -3.91% -4.17% 33.62%
+                             Quintile 4 560 5.17% 4.76% 29.34% 514 1.94% 1.57% 31.39%
+                             Quintile 5 403 0.44% 0.04% 27.66% 327 -1.06% -1.45% 32.04%
+4 Days Small-size Quintile 1 797 2.09% 1.78% 24.01% 790 1.43% 1.15% 23.88%
+                             Quintile 2 1188 2.08% 1.77% 21.96% 1035 0.60% 0.30% 23.57%
+                             Quintile 3 1398 2.60% 2.30% 21.01% 1101 1.87% 1.60% 20.51%
+                             Quintile 4 1425 1.39% 1.08% 16.61% 1075 0.53% 0.23% 18.44%
+                             Quintile 5 1714 0.26% -0.04% 15.02% 1213 -1.62% -1.90% 17.85%
+              Mid-size Quintile 1 2145 3.17% 2.86% 31.42% 2005 -1.49% -1.77% 30.51%
+                             Quintile 2 2654 1.80% 1.49% 26.66% 2468 -1.39% -1.67% 24.47%
+                             Quintile 3 2693 1.75% 1.44% 23.09% 2466 -0.66% -0.96% 23.10%
+                             Quintile 4 2175 1.79% 1.48% 25.86% 1942 -0.06% -0.36% 24.41%
+                             Quintile 5 1673 0.08% -0.22% 22.30% 1397 -0.94% -1.23% 23.85%
+              Large-size Quintile 1 859 1.69% 1.39% 49.20% 647 -1.20% -1.48% 46.12%
+                             Quintile 2 1033 1.50% 1.20% 35.45% 821 -4.62% -4.74% 38.90%
+                             Quintile 3 892 0.60% 0.30% 33.46% 746 -0.95% -1.24% 34.73%
+                             Quintile 4 560 3.01% 2.70% 33.72% 514 1.13% 0.83% 41.17%
+                             Quintile 5 403 0.39% 0.09% 32.40% 327 0.11% -0.19% 34.52%
+5 Days Small-size Quintile 1 797 1.49% 1.25% 26.32% 790 1.76% 1.54% 27.92%
+                             Quintile 2 1188 1.93% 1.69% 25.39% 1035 0.22% -0.02% 24.62%
+                             Quintile 3 1398 1.79% 1.55% 22.44% 1101 1.43% 1.20% 22.70%
+                             Quintile 4 1425 1.34% 1.10% 18.94% 1075 0.56% 0.32% 20.07%
+                             Quintile 5 1714 0.33% 0.09% 16.80% 1213 -1.24% -1.47% 19.79%
+              Mid-size Quintile 1 2145 2.53% 2.29% 34.23% 2005 -0.77% -1.00% 32.78%
+                             Quintile 2 2654 1.65% 1.41% 29.71% 2468 -0.85% -1.08% 28.28%
+                             Quintile 3 2693 1.89% 1.65% 25.62% 2466 -0.21% -0.44% 25.77%
+                             Quintile 4 2175 2.39% 2.15% 28.21% 1942 -0.32% -0.56% 26.90%
+                             Quintile 5 1673 0.11% -0.13% 24.18% 1397 -1.35% -1.58% 25.75%
+              Large-size Quintile 1 859 0.27% 0.03% 53.37% 647 -1.12% -1.35% 49.54%
+                             Quintile 2 1033 1.96% 1.71% 38.98% 821 -4.68% -4.75% 41.32%
+                             Quintile 3 892 0.50% 0.26% 36.56% 746 -1.39% -1.62% 36.97%
+                             Quintile 4 560 2.19% 1.95% 34.65% 514 0.59% 0.35% 46.43%
+                             Quintile 5 403 1.43% 1.19% 34.90% 327 -1.38% -1.60% 35.43%
+
+           Events is the number of observations of abnormal returns following gaps per category. Mean monthly return is the daily
+           abnormal return recalculated into the monthly equivalent, assuming 20 days of trading per month. Adjusted return for
+           Trx costs takes transactions costs into account, assuming 0.03% in transaction costs per transaction (both when buying
+           and selling) with reference to Avanza. Std.dev shows monthly standard deviation of the abnormal returns, calculated
+          from daily as Std.dev.monthly=Std.dev.daily * √ , assuming 20 days of trading per month. Returns on negative gaps are
+           computed assuming short-selling after these events.
+
+                                                                                               38
+APPENDIX D: REGRESSIONS RESULTS
+Four sets of regressions have been executed for the three specified regression models in order to obtain the results
+below, for combinations of positive and negative gaps on the two models used. The coefficients display the impact a
+factor has on the abnormal returns and in which direction, either positively or negatively. Significance levels are
+measured by the t- statistic, showed below each coefficient in the different regressions. All regressions are excluding
+illiquid observations.
+
+Table D1: Regression Results I
+
+                                                      Regression I - Explanatory Power of Positive and Negative Gaps
+
+                                               CAPM Model Momentum Extended Model
+                                                       Holding Period Holding Period
+                                  1 Day 2 Days 3 Days 4 Days 5 Days 1 Day 2 Days 3 Days 4 Days 5 Days
+Positive Gaps Positive gap dummy 0.00192 0.00267 0.00264 0.00293 0.00319 0.00168 0.00216 0.00193 0.00206 0.00229
+                t- statistic 7.76 7.87 6.46 6.29 6.22 6.86 6.45 4.80 4.51 4.54
+               Constant 0.00027 0.00055 0.00085 0.00110 0.00135 0.00030 0.00061 0.00093 0.00121 0.00148
+                t- statistic 6.49 9.56 11.99 13.43 14.74 7.29 10.82 13.53 15.17 16.64
+               Number of observations 540 602 523 661 510 180 498 841 489 004 540 602 523 661 510 180 498 841 489 004
+              R-squared 0.0133% 0.0140% 0.0095% 0.0090% 0.0086% 0.0105% 0.0095% 0.0053% 0.0047% 0.0047%
+Negative Gaps Negative gap dummy 0.00011 -0.00003 -0.00045 -0.00078 -0.00099 0.00036 0.00038 0.00011 -0.00009 -0.00030
+                t- statistic 0.42 -0.08 -1.01 -1.53 -1.75 1.39 1.07 0.25 -0.18 -0.55
+               Constant 0.00033 0.00065 0.00095 0.00122 0.00150 0.00035 0.00068 0.00100 0.00128 0.00157
+                t- statistic 8.01 11.20 13.52 15.01 16.34 8.45 11.96 14.49 16.15 17.69
+               Number of observations 540 602 523 661 510 180 498 841 489 004 540 602 523 661 510 180 498 841 489 004
+              R-squared 0.0000% 0.0000% 0.0002% 0.0005% 0.0007% 0.0004% 0.0003% 0.0000% 0.0000% 0.0001%
+
+         Table D1 displays regression results from the specified model , run on the abnormal
+          returns obtained from either the CAPM Model or the Momentum-Extended Model. Regressions have been run
+          separately for holding periods of 1-5 days. is an error term. R-squared reports proportion of total sample variation of
+           the dependent variable that is explained by the independent variables included in the model. Robust regressions have
+           been run to correct for heteroskedasticity. Significance levels are measured by t-statistics, where an absolute value of the
+              t-statistic above 1.64 indicates significance on the 10% level, above 1.96 on the 5% level, and above 2.54 on the 1% level.
+               is an error term.
+
+Table D2: Regression Results II
+
+                                                                      Regression II - Controlling for Gap Sizes
+
+                                                       CAPM Model                                  Momentum-Extended Model
+                                                       Holding Period Holding Period
+                                  1 Day 2 Days 3 Days 4 Days 5 Days 1 Day 2 Days 3 Days 4 Days 5 Days
+Positive Gaps Small-size gap 0.0018 0.0021 0.0024 0.0024 0.0023 0.0016 0.0018 0.0020 0.0019 0.0017
+                t- statistic 5.84 4.95 4.70 4.06 3.46 5.33 4.23 3.87 3.21 2.62
+               Mid-size gap 0.0016 0.0029 0.0028 0.0031 0.0036 0.0014 0.0024 0.0021 0.0023 0.0029
+                t- statistic 5.17 6.51 4.98 4.86 5.18 4.52 5.54 3.85 3.74 4.25
+               Large-size gap 0.0032 0.0030 0.0027 0.0036 0.0036 0.0027 0.0020 0.0013 0.0016 0.0014
+                t- statistic 3.31 2.39 1.85 2.17 2.03 2.86 1.60 0.91 1.01 0.82
+               Constant 0.0003 0.0006 0.0008 0.0011 0.0014 0.0003 0.0006 0.0009 0.0012 0.0015
+                t- statistic 6.49 9.56 11.99 13.43 14.74 7.29 10.82 13.53 15.17 16.64
+              Number of observations 540602 523661 510180 498841 489004 540602 523661 510180 498841 489004
+              R-squared 0.015% 0.014% 0.010% 0.009% 0.009% 0.011% 0.010% 0.005% 0.005% 0.005%
+Negative Gaps Small-size gap -0.0009 -0.0016 -0.0024 -0.0026 -0.0031 -0.0008 -0.0014 -0.0020 -0.0021 -0.0026
+                t- statistic -2.44 -3.14 -3.84 -3.57 -3.80 -2.17 -2.74 -3.33 -3.04 -3.32
+               Mid-size gap 0.0002 0.0004 0.0003 -0.0002 -0.0007 0.0004 0.0008 0.0008 0.0005 0.0001
+                t- statistic 0.70 0.92 0.48 -0.29 -0.95 1.38 1.76 1.45 0.86 0.08
+               Large-size gap 0.0015 0.0013 0.0007 0.0006 0.0020 0.0022 0.0022 0.0017 0.0016 0.0030
+                t- statistic 1.46 0.97 0.41 0.29 0.95 2.15 1.65 1.03 0.87 1.44
+               Constant 0.0003 0.0006 0.0010 0.0012 0.0015 0.0003 0.0007 0.0010 0.0013 0.0016
+                t- statistic 8.01 11.20 13.52 15.01 16.34 8.45 11.96 14.49 16.15 17.69
+
+              Number of observations 540602 523661 510180 498841 489004 540602 523661 510180 498841 489004
+              R-squared 0.002% 0.002% 0.002% 0.002% 0.003% 0.003% 0.003% 0.003% 0.002% 0.003%
+
+         Table D2 shows the results from the specified model , where regressions have
+          been run on the abnormal returns, for holding periods of 1-5 days, obtained either from the CAPM Model or the
+         Momentum-Extended Model. is a set of interaction terms for Small-size gap, Mid-size gap and Large-size gap together
+          with either Positive gap or Negative gap, for respective regression. is an error term. R-squared reports proportion of
+           total sample variation of the dependent variable that is explained by the independent variables included in the model.
+           Robust regressions have been run to correct for heteroskedasticity. Significance levels are measured by t-statistics, where
+           an absolute value of the t-statistic above 1.64 indicates significance on the 10% level, above 1.96 on the 5% level, and
+           above 2.54 on the 1% level.
+
+                                                                                               39
+Table D3: Regression Results III
+
+                                                 Regression III - Controlling for Gap Sizes and Company Sizes
+                                               CAPM Model Momentum-Extended Model
+                                                       Holding Period Holding Period
+                                    1 Day 2 Days 3 Days 4 Days 5 Days 1 Day 2 Days 3 Days 4 Days 5 Days
+
+Positive Gaps Small-size gap 0.0026 0.0041 0.0049 0.0045 0.0031 0.0024 0.0038 0.0045 0.0042 0.0027
+                   t- statistic 3.42 3.88 3.82 3.11 1.93 3.15 3.61 3.60 2.91 1.71
+                 Mid-size gap 0.0022 0.0046 0.0048 0.0047 0.0041 0.0020 0.0042 0.0042 0.0041 0.0035
+                   t- statistic 3.12 4.52 3.81 3.31 2.58 2.76 4.10 3.41 2.95 2.28
+                 Large-size gap 0.0038 0.0046 0.0045 0.0050 0.0040 0.0033 0.0035 0.0032 0.0032 0.0019
+                   t- statistic 3.13 2.87 2.38 2.32 1.67 2.72 2.25 1.72 1.51 0.83
+                  Size quintile 1 -0.0008 -0.0020 -0.0024 -0.0016 0.0000 -0.0007 -0.0018 -0.0023 -0.0016 0.0000
+                   t- statistic -0.90 -1.55 -1.57 -0.89 -0.02 -0.78 -1.43 -1.54 -0.92 -0.03
+                  Size quintile 2 -0.0009 -0.0025 -0.0022 -0.0013 -0.0001 -0.0008 -0.0025 -0.0024 -0.0016 -0.0005
+                   t- statistic -1.04 -2.05 -1.53 -0.79 -0.05 -0.91 -2.10 -1.68 -0.99 -0.25
+                  Size quintile 3 0.0003 -0.0009 -0.0011 -0.0013 0.0008 0.0002 -0.0010 -0.0013 -0.0017 0.0004
+                   t- statistic 0.29 -0.70 -0.72 -0.78 0.44 0.24 -0.82 -0.92 -1.00 0.23
+                  Size quintile 4 -0.0019 -0.0035 -0.0048 -0.0048 -0.0036 -0.0018 -0.0034 -0.0049 -0.0049 -0.0036
+                   t- statistic -2.28 -2.94 -3.35 -2.97 -2.02 -2.16 -2.93 -3.47 -3.04 -2.06
+                 Constant 0.0003 0.0006 0.0008 0.0011 0.0014 0.0003 0.0006 0.0009 0.0012 0.0015
+                   t- statistic 6.49 9.56 11.99 13.43 14.74 7.29 10.82 13.53 15.17 16.64
+                 Number of observations 540 602 523 661 510 180 498 841 489 004 540 602 523 661 510 180 498 841 489 004
+                 R-squared 0.0166% 0.0171% 0.0127% 0.0117% 0.0110% 0.0132% 0.0124% 0.0088% 0.0074% 0.0070%
+
+Negative Gaps Small-size gap -0.0008 -0.0015 -0.0023 -0.0025 -0.0030 -0.0007 -0.0013 -0.0020 -0.0021 -0.0025
+                   t- statistic -2.30 -3.01 -3.74 -3.47 -3.68 -2.05 -2.63 -3.26 -2.97 -3.24
+                 Mid-size gap 0.0003 0.0005 0.0003 -0.0001 -0.0006 0.0005 0.0008 0.0009 0.0006 0.0001
+                   t- statistic 0.86 1.06 0.59 -0.17 -0.82 1.52 1.88 1.52 0.94 0.17
+                 Large-size gap 0.0016 0.0014 0.0007 0.0006 0.0021 0.0022 0.0023 0.0017 0.0017 0.0030
+                   t- statistic 1.51 1.02 0.45 0.33 0.99 2.19 1.69 1.06 0.89 1.48
+                 Size quintile 1 0.0018 0.0025 0.0023 0.0031 0.0037 0.0016 0.0021 0.0018 0.0024 0.0029
+                   t- statistic 3.47 3.35 2.57 3.08 3.21 3.12 2.91 1.99 2.37 2.58
+                 Size quintile 2 0.0017 0.0020 0.0025 0.0034 0.0036 0.0015 0.0014 0.0017 0.0024 0.0025
+                   t- statistic 3.39 3.04 3.16 3.79 3.70 3.07 2.23 2.20 2.70 2.63
+                 Size quintile 3 0.0028 0.0036 0.0037 0.0033 0.0045 0.0025 0.0029 0.0028 0.0023 0.0034
+                   t- statistic 5.63 5.19 4.35 3.42 4.26 4.98 4.35 3.44 2.48 3.34
+                 Size quintile 4 0.0006 0.0009 0.0000 -0.0002 0.0000 0.0005 0.0005 -0.0007 -0.0008 -0.0007
+                   t- statistic 1.32 1.43 -0.05 -0.26 -0.05 1.01 0.78 -0.91 -1.04 -0.74
+                 Constant 0.0003 0.0006 0.0009 0.0012 0.0014 0.0003 0.0006 0.0010 0.0012 0.0015
+                   t- statistic 6.70 9.92 12.43 13.89 15.11 7.26 10.90 13.67 15.30 16.71
+
+                 Number of observations 540 602 523 661 510 180 498 841 489 004 540 602 523 661 510 180 498 841 489 004
+                 R-squared 0.0127% 0.0115% 0.0092% 0.0091% 0.0111% 0.0120% 0.0095% 0.0068% 0.0060% 0.0078%
+
+          Table D3 shows the regression results from the CAPM Model and the Momentum-Extended Model for the specified
+         model . Regressions have been run
+          separately for holding periods of 1-5 days. is a set of interaction terms for Small-size gap, Mid-size gap and Large-
+          size gap together with either Positive gap or Negative gap, for respective regression. is similarly a set of interaction
+         terms for Company size together with Positive or Negative gap. is an error term. In order to avoid the dummy
+           variable trap of perfect collinearity, size quintile 5 is chosen as the benchmark group against which comparisons are
+           made. R-squared reports proportion of total sample variation of the dependent variable that is explained by the
+           independent variables included in the model. Robust regressions have been run to correct for heteroskedasticity.
+           Significance levels are measured by t-statistics, where an absolute value of the t-statistic above 1.64 indicates significance
+           on the 10% level, above 1.96 on the 5% level, and above 2.54 on the 1% level.
+
+                                                                                               40
+APPENDIX E: LIST OF INCLUDED STOCKS
+Table E1: Companies Included in the Dataset
+
+                                  Included Companies in the Dataset, A-Li
+
+AarhusKarlshamn AB Carl Lamm AB Hakon Invest AB
+AB Sagax Carnegie & Co AB, D. Haldex AB
+ABB Ltd Cash Guard AB ser. B Havsfrun Investment, AB ser. B
+AcadeMedia AB ser. B Castellum AB Heba Fastighets AB ser. B
+Acando AB, ser. B Catella AB ser. A Hemtex AB
+ACAP Invest AB ser. B Catella AB ser. B Hennes & Mauritz AB, H & M ser. B
+A-Com AB Catena AB Hexagon AB ser. B
+Active Biotech AB CellaVision AB HEXPOL AB, ser. B
+AddNode AB ser. B Cision AB HiQ International AB
+Addtech AB ser. B Clas Ohlson AB ser. B HL Display AB ser. B
+Aerocrine AB, ser. B Cloetta AB ser. B HMS Networks AB
+Affärsstrategerna AB ser. B Coastal Contacts Inc. Holmen AB ser. B
+Alfa Laval AB Concordia Maritime AB ser. B Home Properties AB
+All Cards Service Center - ACSC AB Connecta AB HQ AB
+Allenex AB Consilium AB ser. B HQ Fonder AB
+Alliance Oil Company Ltd Corem Property Group Hufvudstaden AB ser. A
+AllTele Allmänna Svenska Telefon AB CTT Systems AB HUMAN CARE H C AB
+Anoto Group AB Cybercom Group AB Husqvarna AB, ser. B
+Artimplant AB ser. B Dagon AB Höganäs AB ser. B
+Aspiro AB DGC One AB I.A.R Systems AB (Gamla)
+ASSA ABLOY AB ser. B Diamyd Medical AB ser. B I.A.R Systems Group AB ser. B
+AstraZeneca PLC Diös AB Image Systema AB
+Atlas Copco AB ser. A DORO AB Industrial and Financial Syst. AB ser. B
+Atrium Ljungberg AB ser. B Duni AB Industrivärden, AB ser. A
+AudioDev AB ser B Duroc AB ser. B Indutrade AB
+Autoliv Inc. SDB East Capital Explorer AB Intellecta AB ser. B
+Avanza AB Elanders AB ser. B Intentia International AB ser. B
+Avega Group AB Electra Gruppen AB Intrum Justitia AB
+Axfood AB Electrolux, AB ser. B Investment AB Kinnevik, ser. A
+Axis AB Elekta AB ser. B Investment AB Kinnevik, ser. B
+B&B TOOLS AB ser. B ElektronikGruppen BK AB ser. B Investor AB ser. A
+Ballingslöv International AB Elos AB ser. B Investor AB ser. B
+BE Group AB Enea AB Invik & Co AB ser. B
+Beijer AB, G & L ser. B Eniro AB ITAB Shop Concept ser. B
+Beijer Alma AB ser. B EpiCept Corporation JC AB
+Beijer Electronics AB Ericsson, ser. B Jeeves Information Systems AB
+Bergs Timber AB, ser. B eWork Scandinavia AB JM AB
+Betsson AB ser. B Fabege AB KABE AB ser. B
+Bilia AB ser. A Fabege AB ser. B KappAhl AB
+Billerud AB Fagerhult, AB Karlshamns AB
+BioGaia AB ser. B Fast Partner AB Karo Bio AB
+BioInvent International AB Fastighets AB Balder, ser. B Kaupþing Bank hf.
+Biolin Scientific AB Fazer Konfektyr Service AB ser. B Kinnevik, Industriförvaltnings AB ser. B
+BioPhausia AB Feelgood Svenska AB KLIPPAN AB
+Biotage AB Fenix Outdoor AB ser. B Klövern AB
+Björn Borg AB Fingerprint Cards AB ser. B Klövern AB ser. A
+Black Earth Farming Ltd SDB Finnveden TIAB Know IT AB
+Boliden AB Formpipe Software AB Kungsleden AB
+Bong Ljungdahl AB Gambro AB ser. A Lagercrantz Group AB ser B
+Borås Wäfveri AB ser. B Gant Company AB Lammhults Design Group AB ser. B
+Boss Media AB Getinge AB ser. B Latour, Investmentab. ser. B
+Brinova Fastigheter AB ser.B Geveko, AB ser. B Lawson Software Inc
+Broström AB ser.B Global Health Partner AB LB Icon AB
+BTS Group AB ser. B Glocalnet AB LBI International AB
+Bure Equity AB Gorthon Lines AB ser. B Ledstiernan AB ser. B
+Capio TIA Gunnebo AB Lindab International AB
+Cardo AB Gunnebo Industrier AB Lindex TIA
+
+                                                                                               41
+                                  Included Companies in the Dataset, Lo-Ö
+
+Loomis AB ser. B Orc Group AB SkiStar AB ser. B
+Lundbergföretagen AB, L E ser. B Orexo AB Softronic AB ser. B
+Lundin Mining Corporation Oriflame Cosmetics S.A, SDB Song Networks Holding AB
+Lundin Petroleum AB Ortivus AB ser. B SSAB AB ser. A
+Luxonen S.A. SDB Oxigene, Inc. StjärnaFyrkant AB
+Malmbergs Elektriska AB ser. B PA Resources AB Stora Enso Oyj ser. R
+Mandator AB PartnerTech AB Strålfors B
+Maxim Pharmaceuticals, Inc. Peab AB ser. B Studsvik AB
+Meda AB ser. A Peab Industri AB, ser. B SWECO AB ser. B
+MEDICOVER Holding S.A SDB Pfizer Inc. Swedbank AB ser. A
+Medivir AB ser. B Pharmacia Corporation SDB Svedbergs i Dalstorp AB ser. B
+Mekonomen AB Phonera AB Swedish Match AB
+Melker Schörling AB Poolia AB ser. B Swedish Oprhan Biovitrum AB
+Metro International S.A SDB ser. A Powerwave Technologies Inc Swedol AB, ser. B
+Metro International S.A SDB ser. B Precise Biometrics AB Svenska Cellulosa AB SCA ser. B
+Micronic Mydata AB Prevas AB ser. B Svenska Handelsbanken ser. A
+Midsona AB ser. B Pricer AB ser. B Svithoid Tankers AB, ser. B
+Midway Holding AB ser. B Proact IT Group AB Svolder AB ser. B
+Millicom International Cellular S.A. SDB Probi AB Systemair AB
+Modern Times Group MTG AB ser. B Proffice AB ser. B SäkI AB
+Modul 1 Data AB ProfilGruppen AB ser. B Tanganyika Oil Company Ltd. SDB
+Morphic Technologies B Protect Data AB Tele2 AB ser. B
+MSC Konsult AB ser. B PSI Group ASA Teleca AB ser. B
+MultiQ International AB Q-Med AB Telelogic AB
+Munters AB Ratos AB ser. A TeliaSonera AB
+NAXS Nordic Access Buyout Fund Ratos AB ser. B Teligent AB
+NCC AB ser. A RaySearch Laboratories AB ser. B Ticket Travel Group AB
+NCC AB ser. B ReadSoft AB ser. B Tieto Abp
+Nederman Holding AB Rederi AB Transatlantic, ser. B Tivox AB ser. B
+Nefab AB ser. B Rejlerkoncernen AB, ser. B Traction AB ser. B
+Neonet AB Resco AB ser. B TradeDoubler AB
+Net Entertainment NE AB ser. B Rezidor Hotel Group AB Transcom WorldWide S.A SDB ser. A
+Net Insight AB ser. B Riddarhyttan Resources AB Transcom WorldWide S.A SDB ser. B
+Netonnet AB rnb Retail and Brands AB Trelleborg AB ser. B
+New Wave Group AB ser. B Rottneros AB Tricorona AB
+NIBE Industrier AB ser. B Rörvik Timber AB ser. B Trigon Agri A/S
+Nilörngruppen AB ser. B SAAB AB ser. B Trio AB
+Niscayah Group AB, ser. B SalusAnsvar AB TIA ser. B TurnIT AB ser. B
+Nobel Biocare Holding AG Sandvik AB Unibet Group Plc, SDB
+Nobia AB Sapa AB Uniflex AB, ser. B
+Nokia Oyj, SEK Sardus, AB Wallenstam AB, ser. B
+Nolato AB ser. B SAS AB VBG Group AB ser. B
+Nordea Bank AB SCANIA AB ser. B Venue Retail Group AB ser. B
+Nordic Mines AB ScanMining AB Wihlborgs Fatigheter AB
+Nordic Serv Part Hldg AB, ser. B Seco Tools AB ser. B Vitrolife AB
+Nordnet AB ser. B SECTRA AB ser B Volvo, AB ser. B
+Norsk Hydro ASA SDB Securitas AB ser. B Vostok Gas Ltd SDB
+NOTE AB Securitas Direct AB, ser. B Vostok Nafta Investment Ltd, SDB
+NovaCast Technologies AB, ser. B Semcon AB XANO Industri AB ser. B
+Novestra, AB Sensys Traffic AB XponCard Group AB
+NOVOTEK AB ser. B Sigma AB ser. B Zodiak Television AB ser. B
+Oasmia Pharmaceutical AB SinterCast AB ÅF AB ser. B
+Odd Molly International AB Skandia Öresund, Investmentab
+OEM International AB ser. B Skandinaviska Enskilda Banken ser. A
+Old Mutual Plc Skanditek Industriförvaltning AB.
+Opcon AB Skanska AB ser. B
+Optimail AB ser. A SKF, AB ser. B
+
+                                                                                              42

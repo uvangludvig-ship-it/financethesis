@@ -1,0 +1,2658 @@
+STOCKHOLM SCHOOL OF ECONOMICS
+Department of Finance
+Bachelor Thesis in Finance
+Spring 2018
+
+Can the corporate bond issuances of Swedish real estate firms be estimated
+                 and predicted by publicly available data?
+
+Lovisa Bernhardsson, 23638 Ellinor Lindstén, 23530
+
+                     ABSTRACT
+The Swedish corporate bond market has in recent years experienced increased activity. The real
+estate sector has been particularly active, and in 2017 it accounted for 40 percent of the total
+outstanding volume of corporate bonds denominated in Swedish kronor. This study sets out to
+investigate whether publicly available market factors and company specific factors can on a
+significant level be incorporated in a model that estimates corporate bond issuances in the
+Swedish real estate sector, and accurately predicts them one quarter before they happen. Using
+a logistic regression model applied on a sample of 31 firms in the Swedish real estate sector
+and including indicator variables for each specific firm, we find that the interest rate STIBOR,
+a residual between a regression of GDP and STIBOR, an indicator variable for the
+implementation of bank regulations in 2011, the size of the firm, the leverage ratio, and EBIT
+can on an 80 percent confidence level be incorporated in such a model. For the fourth quarter
+of 2017, the model correctly predicts 24 out of 31 issuances for the companies in the sample.
+However, the model produces a substantial amount of falsely positive outcomes; it predicts
+issuances in the upcoming quarter despite these never being realised. Caution needs to be taken
+when using the model for predicting future corporate bond activity of Swedish real estate firms,
+both because the model overestimates the number of future bond issuance and because the
+model is only applicable on the 31 firms in the sample. Furthermore, the model should ideally
+be updated quarterly before being used. The results of the independent variables being
+significant are interesting in themselves, but for making predictions with the model, users
+should be aware of its limitations.
+
+KEYWORDS: Corporate Bonds, Swedish Bond Market, Real Estate Sector, Prediction Model
+SUPERVISOR: Håkan Thorsell
+
+ACKNOWLEDGEMENTS: We thank our supervisor Håkan Thorsell for providing valuable
+reflections and guidance throughout the course of this project. Furthermore, we would like to
+express the warmest gratitude to Associate Professor Per-Olov Edlund for his insightful input
+on statistical methods and econometric issues.
+                                                                     Bernhardsson & Lindstén
+
+Contents
+   1. Introduction ........................................................................................................................ 4
+   2. Background ........................................................................................................................ 5
+     2.1. The Swedish real estate market ................................................................................... 5
+     2.2. Corporate bond features and pricing ........................................................................... 6
+     2.3. The Swedish corporate bond market ........................................................................... 7
+     2.4. Regulations .................................................................................................................. 9
+  3. Theoretical framework and earlier research ..................................................................... 10
+     3.1. Financing options ...................................................................................................... 10
+     3.2. Debt structure choices over the business cycle ......................................................... 11
+     3.3. Information asymmetry ............................................................................................. 11
+   4. Hypothesis ........................................................................................................................ 12
+   5. Method ............................................................................................................................. 13
+     5.1. Demarcation of study................................................................................................. 13
+     5.2. Data ............................................................................................................................ 13
+        5.2.1. Dependent variable ............................................................................................. 15
+        5.2.2. Explanatory market factors ................................................................................. 15
+       5.2.3. Explanatory company specific factors ................................................................ 16
+     5.3. Logistic regression model .......................................................................................... 17
+     5.4. Tests ........................................................................................................................... 18
+     5.5. Prediction ................................................................................................................... 19
+     5.6. Selection bias ............................................................................................................. 19
+     5.7. Estimation bias .......................................................................................................... 20
+   6. Findings and analysis ....................................................................................................... 20
+     6.1. Descriptive statistics .................................................................................................. 21
+     6.2. Correlations ............................................................................................................... 22
+     6.3. Initial regression ........................................................................................................ 24
+     6.4. Stepwise regression ................................................................................................... 25
+     6.5. Final estimation model .............................................................................................. 26
+     6.6. Discussion of variables included in the final estimation model ................................ 29
+     6.7. Hosmer-Lemeshow Goodness of Fit test................................................................... 33
+     6.8. Predictive model ........................................................................................................ 33
+        6.8.1 Cut-off .................................................................................................................. 34
+        6.8.2 Predictions for the fourth quarter of 2017............................................................ 36
+   7. Discussion and critical reflections.................................................................................... 37
+
+                                    2
+                                                                   Bernhardsson & Lindstén
+
+  7.1. Constructing and using the logistic regression model ............................................... 37
+  7.2. Factors that was not captured by specific variables in the final model ..................... 41
+   7.3. Suggestions for future research ................................................................................. 45
+8. Conclusions ...................................................................................................................... 46
+References ............................................................................................................................ 47
+   Published papers ............................................................................................................... 47
+   Working papers................................................................................................................. 47
+  Papers that represent contributions to collections ............................................................ 47
+   Government and authority documents .............................................................................. 47
+   Other reports and documents ............................................................................................ 48
+   Online newspapers ............................................................................................................ 48
+   Interviews ......................................................................................................................... 48
+Appendix .............................................................................................................................. 49
+   Figure I ............................................................................................................................. 49
+   Table I ............................................................................................................................... 50
+   Table II ............................................................................................................................. 51
+   Figure II ............................................................................................................................ 52
+   Table III ............................................................................................................................ 52
+   Table IV ............................................................................................................................ 53
+   Table V ............................................................................................................................. 59
+   Table VI ............................................................................................................................ 60
+   Figure III ........................................................................................................................... 61
+   Table VII........................................................................................................................... 62
+   Table VIII ......................................................................................................................... 63
+   Table IX ............................................................................................................................ 64
+   Table X ............................................................................................................................. 66
+   Table XI ............................................................................................................................ 68
+
+                                  3
+                                                                     Bernhardsson & Lindstén
+
+1. Introduction
+The Swedish corporate debt market has long exhibited an extensive use of bank loans, but
+recently an upswing in the use of corporate bonds and notes has been noted, especially for firms
+within real estate rental, development, and operations (hereafter real estate firms). According
+to an SEB market review (2017), their share of the total outstanding corporate bonds
+denominated in Swedish kronor (SEK) has increased from around 10 percent in 2008 to
+approximately 40 percent in 2017. The aim of this paper is to investigate whether it is possible
+to develop a model which can estimate and predict future real estate bond and note issuances
+in Sweden. By analysing data of Swedish real estate firms from 2008 to 2017, this paper
+contributes by showing that the prevailing interest rate (Stockholm Interbank Offered Rate -
+STIBOR), the gross domestic product (GDP) from the real estate sector, an indicator variable
+for the bank regulations implemented in 2011, the size of the firm, the leverage ratio, and
+earnings before interest and taxes (EBIT) can be used to predict the likelihood of a corporate
+bond or note issuance in the next quarter. We furthermore find that the model can be used as a
+tool to predict corporate bond and note issuances in an out of sample period in the short term
+future. In the fourth quarter 2017, the model could correctly predict 90 percent of the real estate
+corporate bond issuances on the Swedish market. The high activity of real estate firms on the
+bond market during recent years suggests that these firms have often found it advantageous to
+issue corporate bonds compared to other types of financing. This could be due to market factors,
+company specific factors, or a combination of them.
+        The prevailing interest rates may prove beneficial for a particular form of financing, as
+noted by Sveriges Riksbank (2016). When interest rates are low, it is generally more favourable
+to issue corporate bonds, than when they are high. STIBOR is a common benchmark interest
+rate for corporate bonds, and at the same time the average lending interest rates of banks seem
+to follow STIBOR (see Figure I and Table I in Appendix). It is argued that the bond market
+demand may increase in uncertain times, since corporate bond values are less volatile than stock
+values.
+       Using data from the period 1989 - 2013, Grjebine, Szczerbowicz and Tripier (2017)
+show that substituting bank loans for bonds varies with the business cycle. Firms tend to
+increase the usage of corporate bonds as a substitute for bank loans as the economy recovers
+from a recession. Furthermore, when banks are faced by stricter requirements, as after the
+implementation of Basel III, they in turn require more from their clients. Some firms are denied
+loans while other firms are asked a higher price, making the bond market a better alternative.
+
+                                    4
+                                                                     Bernhardsson & Lindstén
+
+For example, Becker and Ivashina (2014) find strong evidence that bond-loan substitution is a
+consequence of the contraction of bank supply. According to Sveriges Riksbank (2016), the
+emitters on the Swedish corporate bond market have generally been large firms. These firms
+can make issuances of several hundred million SEK, implying that the bond-loan substitution
+possibilities differs between firms depending on their size. For real estate firms particularly,
+Brown and Riddiough (2003) find evidence supporting that firms with a lower leverage ratio
+when the financing need arises are more likely to issue bonds, than firms with a higher leverage
+ratio are. Our findings are in line with these theories, as we find STIBOR, the Gross Domestic
+Product (GDP) from the sector, and leverage ratio to all have a negative correlation with
+corporate bond issuances in the following quarter. We also find that the bank regulations
+implemented in conjunction with Basel III as well as categories of firm sizes, (small, medium-
+sized and large) increase the likelihood of corporate bond issuances. Additionally, despite less
+earlier theoretical support, we find that earnings before interest and taxes (EBIT) has a negative
+and significant effect on the likelihood of future bond issuance.
+       By using the model developed in this paper, investors could make probable forecasts of
+upcoming bond issuances of real estate firms before the announcement has been made. In time
+periods in the near future, the model is likely to predict valid estimates of issuances, but the
+input variables might need to be further adjusted as time passes by. The forecasts of this model
+could possibly be used as an indication of future bond issuances, which would give investors
+more time to consider investing in the issued bonds. Furthermore, although caution needs to be
+taken for falsely positive outcomes (predicted issuances that are not actual issuances), the model
+can be used as a tool, signalling a higher future activity of real estate firms in the corporate
+bond market. This would be useful as the real estate sector already represents a large part of the
+Swedish corporate bond market, and as investors typically seek industry diversification their
+willingness to invest in these bonds might consequently be reduced. In addition, real estate
+firms can make predictions of competitors’ upcoming bond issuances, and thereby evaluate
+whether the timing is right for them to issue bonds.
+
+2. Background
+
+2.1. The Swedish real estate market
+The following was clarified in Interview 2 (2018) with an employee at the high yield bond
+department of one of the largest Swedish banks. Real estate firms are often considered rather
+safe investments as they typically have contracts running for several years forward. Thus, they
+
+                                    5
+                                                                     Bernhardsson & Lindstén
+
+have proof of secured revenue streams, which easily can be communicated to capital markets.
+For this reason, real estate bonds are considered to be rather safe no matter if they are secured
+or unsecured. In the unlikely case of default, there will be assets in the form of property and
+rental agreements or contracts, and investors are likely to get compensation from the
+liquidation. However, different types of real estate firms are not equally safe investments. Firms
+with a main focus on real estate development are usually riskier than firms heavy in rental or
+operational activities.
+       Landeman (2017) has made a thorough review of the corporate bond activity of the real
+estate sector. The ten largest listed real estate firms increased the average value of their property
+bases, from 27 billion SEK in 2011 to 57 billion SEK in 2016, at the same time as the total
+liabilities increased correspondingly. When the real estate firms experienced this growth, the
+search for external financing increased. This resulted in an upswing of real estate bond
+issuances from 10 billion SEK in 2011 to 50 billion SEK in 2016. Out of the newly issued
+bonds, many are unsecured. This is to compare with the traditional financing, when real estate
+firms often have pledged collateral assets as security to the banks. In 2016, an estimated 40
+percent of the real estate firms’ debt was placed on the capital markets, which can be compared
+to 20 percent five years earlier.
+       In Interview 2 (2018) it was clarified that external financing needs arise when the market
+demand on property increases or when debt in the firm’s current capital structure matures.
+External financing may also be sought in order to diversify or change the composition of the
+capital structure. The expansion that many Swedish real estate firms have experienced in recent
+years might in turn have been enabled by the increase in corporate bond issuances.
+
+2.2. Corporate bond features and pricing
+The corporate debt market includes both bonds and notes. In the words of Johansen (2017), the
+primary difference between these instruments is that all bonds are regulated by securities laws,
+while notes may be exempt from these laws. Notes in many cases have a maturity of less than
+a year, even though notes with a longer time to maturity do exist. Bonds and notes are
+considered to have relatively similar features and usage, and are in this paper referred to as
+‘bonds’.
+       Bond features are described for example by Swedbank and Sparbankerna (2013). Both
+bonds and notes can have fixed interest payments or floating interest payments. Coupon bonds
+have attached payments due monthly, quarterly or yearly, and a final payment at maturity. Zero-
+coupon bonds on the other hand are issued at a price below its actual value, and at the maturity
+
+                                    6
+                                                                     Bernhardsson & Lindstén
+
+of the bond there is a payment that fully compensates for the term and the default risk that the
+investors take on when investing in the bond. The interest payments are priced based on a
+benchmark rate adjusted for the term to maturity, a premium for the default risk, and liquidity
+barriers on the second hand market.
+       The relationship between the benchmark interest rate and its corporate bond issuance
+implications was discussed during Interview 1 (2018), with an employee at the investment
+grade bond department of one of the largest Swedish banks. In Sweden, 3-month STIBOR, and
+less commonly 6-month STIBOR, is used as the benchmark rate to price SEK-bonds. Many
+bank loan interest rates are also heavily affected by STIBOR, as the average lending rate of
+banks highly correlate with STIBOR (see Figure I and Table I in Appendix). When STIBOR is
+low, it is overall more advantageous to issue a corporate bond relative to other financing
+options, than it is when STIBOR is high. This is partly driven by the increased market demand
+for corporate bonds in times when the interest rate is low, since institutional investors then look
+for opportunities to achieve higher yields than they do by placing funds in risk-free assets such
+as treasury bonds and T-bills (which have very low risk premiums and hence small yields when
+the underlying interest rate is low). An investment grade corporate bond is, compared to a stock
+which has varying and undetermined earnings, considered to be a safer investment, as stated by
+Sveriges Riksbank (2016). In uncertain times such as in recessions, the demand for these bonds
+is typically high due to their relatively low risk compared to stocks.
+       Bonds typically have a longer time frame than bank loans, and if market conditions are
+favourable, a firm has the opportunity to lock in the low interest rate for a longer time by issuing
+bonds, as noted in Interview 1 (2018). Although no difference has been made in this paper
+between corporate bonds and notes with fixed or floating rates, or with different terms of
+maturity, it is reasonable to assume that this is one of the advantages when a firm issues bonds
+or notes. This is a feature that makes it favourable to issue bonds particularly when the interest
+rate STIBOR is low. Additionally, as noted in Interview 2 (2018), an important feature of
+corporate bonds is that they rarely exhibit any amortizations, instead there is a large payment
+when the bond expires. Bank loans on the other hand often have at least yearly amortisations,
+leaving less room for the firm to manage their liquidity over a longer time period.
+
+2.3. The Swedish corporate bond market
+The reliance on bank loans as the main type of debt is strong in the Nordic region and in
+Sweden, where the banking sector is strong. Sveriges Riksbank (2016), in their report about the
+Swedish financial market, states that at the end of 2015, the lending of the Swedish banks to
+
+                                    7
+                                                                     Bernhardsson & Lindstén
+
+the general public (firms, the public sector, households, and foreign interests) amounted to
+3,031 billion SEK. Out of this, Swedish non-financial firms, which here includes real estate
+firms, represented 41 percent; 1,243 billion SEK. Furthermore it is noted that since 2009, the
+yearly increase in the bank loans of Swedish non-financial firms has been small.
+       Sveriges Riksbank (2016) further notes that during the past years the bond market has
+grown successively, and the non-financial corporate issuers have increased their share in the
+total volume emitted. From 2006 to 2015, the total outstanding amount of SEK-denominated
+corporate bonds, issued by Swedish non-financial firms, increased from approximately 120
+billion SEK to 380 billion SEK. Corporate bonds composed around a fifth of the debt financing
+in these firms in 2015, but the majority was still in the form of loans from credit institutions.
+Landeman (2017) states that in 2017, the total outstanding volume of corporate bonds of
+Swedish non-financial firms had increased to 420 billion SEK. Out of this, 160 billion SEK was
+represented by the real estate sector.
+       The Swedish corporate bond market is mostly used by large firms with an investment
+grade credit rating, although Sveriges Riksbank (2016) notes that the usage by smaller firms,
+and firms with lower credit rating, recently has increased. The corporate bonds of low credit
+rated firms are called high yield bonds (or junk bonds) and are separated from investment grade
+bonds in many funds. In the beginning of 2017, 40 billion SEK were high yield bonds out of
+the total accumulated value of 160 billion SEK represented by real estate firms, according to
+Landeman (2017). However, SEB market review (2017) show that in 2016 and 2017, all real
+estate SEK-bond issuers were either investment grade or non-rated firms.
+       Swedish real estate firms operate mostly, or only, nationally. Consequently, they are
+heavy in SEK-denominated bonds. In addition to SEK-denominated bonds, real estate firms
+occasionally issue Eurobonds or bonds denominated in Norwegian kroner. Landeman (2017)
+acknowledge that the amounts outstanding of these bonds are fairly small in comparison to
+SEK-bonds, but Eurobonds in particular have become more common. In 2016, four of the
+largest Swedish real estate firms had a total accumulated value of 24 billion SEK outstanding
+in Eurobonds.
+       Finansinspektionen (2017) states that the Swedish bond market is characterized by a
+limited number of market makers and generally large transaction values. A bond issuance
+usually amounts to numerous hundred million SEK. The lack of possibility to issue small
+amounts of bonds may limit firms with a small capital base or with a small need for financing
+in their choice, which reduces their access to the corporate bond market.
+
+                                    8
+                                                                     Bernhardsson & Lindstén
+
+       Sveriges Riksbank (2016) describe the investors’ trading of bonds. Bonds are often
+traded over the counter, and the buyer is usually institutional investor trading large volumes at
+a time. Small customers such as private investors are rare. There are also Swedish listed bonds
+traded by private investors. These are listed on Nasdaq Stockholm or on the Nordic Derivatives
+Exchange. The outstanding volume and the turnover are both relatively small. There is a
+second-hand market for corporate bonds, but most commonly investors hold them in their
+portfolio until maturity, meaning that the turnover on the second market is small.
+        There are several bond indices of SEK-denominated bonds, but most provide exposure
+to a portfolio consisting of bonds issued by governmental agencies, municipalities and other
+low-risk parties. The construction and maintenance of the index series NASDAQ OMX Credit
+SEK is described by Nasdaq OMX (2014). The price index is computed daily and provides
+exposure to a portfolio of investment grade bonds denominated in SEK, both issued by
+corporates and municipalities. Eligible bonds are listed on the stock exchange of either
+Stockholm, London or Luxemburg, and have a remaining time to maturity of at least one year.
+The issuing firm is rated BBB or higher or is unrated but considered by Nasdaq OMX and SEB
+
+                                                                                                    1
+to correspond to a rating of BBB or higher. Issuers with a zero-risk weight , such as
+governmental agencies or Kommuninvest, are ineligible for inclusion in the NASDAQ OMX
+Credit SEK index. The included bonds are nominal fixed coupon bonds, zero coupon bonds or
+floating rate notes.
+
+2.4. Regulations
+The following was discussed during Interview 2 (2018). The component of the pricing of bank
+loans that is not connected to STIBOR may change in conjunction with a change in regulations
+impacting the capital requirements of banks. Banks have to cover their costs for holding capital
+for their outstanding loans and have to price the loans that they give to clients accordingly. The
+capital holding component in the pricing does not exist on the corporate bond market. The bond
+investors want an expected return, but this return can be positive and still lower than the return
+plus capital holding component in bank loans.
+       Basel III is an internationally agreed set of mandatory measures, which is developed by
+The Basel Committee on Banking Supervision as a response to the financial crisis 2008, refer
+to The Basel Committee on Banking Supervision (2010). It includes a set of minimum
+requirements for banks with an international reach. Foremost, Basel III sets demands on the
+
+1
+  Classified as zero-risk weight in the Basel accord
+
+                                    9
+                                                                     Bernhardsson & Lindstén
+
+capital and liquidity which the banks have to fulfil. Finansinpektionen (2011) states in a press
+release that even stricter demands than the ones implied by Basel III will be held on Swedish
+banks. These new rules were initially implemented in Sweden in November 2011, as reported
+by Sveriges Riksbank (2015).
+
+3. Theoretical framework and earlier research
+
+3.1. Financing options
+When firms need to raise external financing, they can do this by issuing equity in the form of
+stocks, or by raising debt for example through a bank loan, or through an issuance of bonds.
+The trade-off theory of capital structure, developed by Kraus and Litzenberger (1973), explains
+how the company chooses the amount of debt versus equity financing to be used by comparing
+costs and benefits. After the determination of debt and equity, management has to decide which
+type of debt or equity that should be used.
+      By examining the financing choice and liability structure of Real Estate Investment
+Trusts (REITs), Brown and Riddiough (2003) find evidence that the average size of debt or
+equity issuances is higher when there is an underlying investment purpose. This since it is easier
+to gain access to the capital markets when there are investment opportunities than when the
+funds are to be used to simply change the firm’s debt structure. They also find leverage ratios
+to be determining in the choice of debt or equity financing. According to their paper, bond
+issuers target a certain debt ratio in the longer run, which optimally is a minimum investment
+grade credit rating. The most significant factor determining the financing choice was found to
+be the debt structure at the issuance. The debt structure was a more predictive factor than the
+total debt level, even though some evidence was found that firms with a higher total debt level
+were less likely to issue more debt. Firms with a debt structure consisting of a high ratio of
+senior secured debt before the issuance were more likely to issue equity, while firms with a
+higher ratio of junior unsecured debt generally issued corporate bonds. While some firms used
+a more complex capital structure consisting of a mix of several types of both unsecured and
+secured debt, some firms solely used bank loans. The authors find evidence that REITs that
+have not issued bonds in the past are unlikely to do so in the near future.
+
+                                    10
+                                                                     Bernhardsson & Lindstén
+
+3.2. Debt structure choices over the business cycle
+Using data from the period 1989 - 2013, Grjebine, Szczerbowicz and Tripier (2017) show that
+substituting bank loans for bonds is a regular feature of the business cycle. Firms tend to
+increase the usage corporate bonds, as a substitute for bank loans, when the economy recovers
+from a recession. They further provide evidence that economies with a well-developed
+corporate bond market, where bonds account for a large share of total debt securities, generally
+recover faster from recessions than other economies do.
+       On the note of bond-loan substitution varying with the business cycle, Becker and
+Ivashina (2014) state that credit is highly pro-cyclical. They acknowledge the difficulties in
+determining whether this depends on the supply side, since banks’ lending willingness is
+reduced in uncertain times, or on the demand side, because firms do not desire to borrow. By
+using data from the United States and arguing that some firms have a positive demand for debt
+but are forced to issue bonds when the banks contract the credit supply, their theory predicts
+that the business cycle variation in the issuances of corporate bonds as opposed to bank loans
+may be affected by the prevailing credit supply. Kaya and Wang (2016) find similar evidence
+for the Eurozone, showing that tightening on loans significantly increases bond issuances,
+particularly in the core Eurozone countries with well-developed debt markets.
+       Fama and French (1993) state that there is a term premium and a default premium on
+bonds, which should capture most of the variation in the return on both government and
+corporate bond portfolios. Regarding corporate bonds, the shift in economic conditions change
+the likelihood of default and thereby the premiums that has to be obtained. The term premium,
+on the other hand, arises from unexpected changes in interest rates. The premium above
+STIBOR for both bank loans and corporate bonds depends largely on the riskiness of the firm
+and on the time compensation.
+
+3.3. Information asymmetry
+Diamond (1984) pointed out the comparative advantage in compiling information and
+monitoring that banks have over public investors. Banks spend resources on acquiring
+information about the firms which they provide credit to, and monitor them throughout the term
+of the debt. This information acquisition component is significantly larger for banks than for
+public investors, which according to Boot and Thakor (2009) in general makes bank loans more
+expensive than issuing debt on the capital market. Other investors do not have the possibility
+to acquire the large amount of information that banks do, and hence bond financing is said to
+be cheaper. According to Boot and Thakor (2009) banks have better incentives to invest in
+
+                                    11
+                                                                     Bernhardsson & Lindstén
+
+acquiring information, since they typically have a larger stake in the funding. Fama (1985)
+argued that banks have access to inside information about their counterparties, whereas other
+investors typically only have publicly available information. Hence, banks are more efficient at
+solving the information asymmetry issue related to financing than public investors are, meaning
+that these two groups may price debt differently. The exact price difference due to the
+information asymmetry between banks and bond investors may nonetheless depend on the
+quality and transparency of the firm, and the experience and size of the bond investor. In
+Interview 1 (2018), we note that the market’s pricing is affected by the perceived default risk,
+and that the most widely used indication of firm default risk among smaller private investors,
+is the credit rating of the firm.
+       De Fiore and Uhlig (2011) suggest that the market debt, from the firm owners’
+perspective, is riskier than bank loans, since the agency costs related to the information
+asymmetry are higher. The market has no way of collecting the same amount of information
+about a bond issuing firm as a bank. If this is correct, mainly firms with low credit risk should
+use market debt, especially in uncertain times such as recession and the beginning of recovery.
+Riskier firms should according to this theory not substitute bank loans for bonds.
+
+4. Hypothesis
+The purpose of this thesis is to determine whether it is, at a significant level, possible to estimate
+real estate bond issuances in a following quarter. As a basis for the research, market factors and
+company specific factors are analysed from the first quarter of 2008 to the third quarter of 2017.
+The time frame is chosen in order to include both a boom and a recession. The chosen publicly
+available market factors and company specific factors are based on theory, background and our
+perception of the factors that supposedly benefit or disfavour corporate bond issuances. The
+market factors that will be tested are the interest rate STIBOR, GDP contribution from the real
+estate sector, the regulations implemented in Sweden following Basel III, and the corporate
+bond index NASDAQ OMX Credit SEK. These factors are to be combined in a model with the
+publicly available company specific factors EBIT, EBIT over interest, total assets, total debt
+over capital, cash and equivalents, current portion of long term debt and capital leases, and cash
+from investing. All independent variables will be measured in a quarter previous to the issuance
+quarter for which predictive estimations are made. Additionally, it will be tested whether a bond
+issuance in one quarter affects the probability of a bond issuance in the following quarter.
+
+                                    12
+                                                                     Bernhardsson & Lindstén
+
+Hypothesis: A model based on selected publicly available market factors and company specific
+factors can estimate real estate bond issuances in the following quarter.
+
+Given that the hypothesis is not rejected, the estimation model will also be used as a prediction
+tool of the probability of issuances in the out of sample fourth quarter of 2017. This can be seen
+as a test of whether the model can be applied outside of the analysed time frame.
+
+5. Method
+
+5.1. Demarcation of study
+The chosen time frame is the years 2008 to 2017, measured on a quarterly basis. The estimation
+model is based on the first quarter of 2008 to the third quarter of 2017, and data from this period
+will be referred to as in sample. The model will be tested on the out of sample period of the
+fourth quarter of 2017. Data from this time period is available on both Thomson Reuters Eikon
+and S&P Capital IQ.
+        The geographical market is limited to Sweden, since bond markets differ among nations.
+Real estate firms with Sweden as their primary geographical market were therefore selected.
+Only SEK-denominated bonds are included in the analysis.
+       The real estate sector was chosen to be analysed in this paper. Many firms within the
+real estate industry have for some time used corporate bonds as a type of financing, which
+supposedly makes the available issuance data sufficiently numerous to build an estimation
+model upon. The Swedish real estate sector is relatively homogenous, and the real estate firms’
+main activities are development, rental and operations of residential and commercial property.
+Firms are unequally heavy in development, rental and operations, implying slightly different
+characteristics, but have all been included in the sample.
+
+5.2. Data
+61 real estate development, rental, and operations firms with Sweden as their primary market
+were in March 2018 available in Thomson Reuters Eikon. Since a limited access to the bond
+market may be a factor that makes it impossible for some firms to issue bonds, only firms that
+had, at some time in the period from the first quarter of 2008 to the third quarter of 2017, made
+an issuance were chosen and included in the in sample data. This sample includes data on
+outstanding and historical corporate bonds issued from 2008 to 2017, and was retrieved from
+Thomson Reuters Eikon. There were both coupon and zero-coupon bonds and notes, with either
+
+                                    13
+                                                                     Bernhardsson & Lindstén
+
+fixed or floating rates. The exclusion of firms that have not issued bonds in a single time period,
+according to Thomson Reuters Eikon database, ensures that all firms in the sample had access
+to the market at some point in time, and hence bond issuance was a feasible choice in at least
+one quarter. Thus, formal access to the market in the next quarter can be assumed.
+       In addition to the bond issuance data from Thomson Reuters Eikon, company specific
+data was retrieved from S&P Capital IQ. The data retrieved from S&P Capital IQ is available
+in the financial statements of the firms, and is thus considered to be publicly available. The in
+sample data was retrieved for the period first quarter of 2008 to third quarter of 2017. Out of
+sample data for the same firms and their company specific factors was retrieved for the fourth
+quarter of 2017. The out of sample data was not used to build the model, but to make the final
+predictions. Company specific data on the firms in the sample included EBIT, EBIT over
+interest expense, total assets, total debt over capital, current portion of long term debt and capital
+leases, cash & equivalents, and cash from investing. An attempt was made to retrieve data about
+the credit rating of the firms, but this data was missing in most time periods for a majority of
+the firms. If a figure or a full quarter has not been reported by S&P Capital IQ for a specific
+firm, this has been interpreted as a missing value. The analysis is thus dependent on the accuracy
+of the database.
+       The data sample, when combining the data retrieved from Thomson Reuters Eikon and
+S&P Capital IQ, consisted of 32 firms (see Table II in Appendix). As the model requires a
+preformed issuance and company specific data for the previous quarter, Delarka Holding AB is
+excluded, as the only issuance made was done during the first quarter of financial statements
+reported in S&P Capital IQ. After dropping Delarka Holding AB from the sample, 31
+companies remain in the dataset.
+       Quarterly data on STIBOR (Stockholm Interbank Offered Rate) from the first quarter
+of 2008 to the fourth quarter of 2017 was retrieved from the Central Bank of Sweden’s archive.
+3-month STIBOR was chosen, as this is in most cases the benchmark rate for the pricing of
+corporate bonds. Additionally, the average pricing of bank loans has in the time period to a
+large extent followed 3-month STIBOR, as seen in Figure I in Appendix. GDP figures from the
+quarterly contribution of the production side of the real estate sector, was retrieved from
+Statistics Sweden. The NASDAQ OMX Credit SEK daily price index was retrieved from
+Nasdaq’s historical archive, for the period 2011 to 2017. The daily index was converted to
+quarterly measurements by taking the quarterly mean of the price index.
+
+                                    14
+                                                                     Bernhardsson & Lindstén
+
+5.2.1. Dependent variable
+Corporate bond issuance: The dependent variable is whether or not a company issues SEK-
+denominated bonds or notes in a specific quarter. The independent variables are measured in a
+quarter prior to the corresponding dependent variable. The dependent variable is binary as it
+assumes the value 0 if a bond or note has not been issued, and a value 1 if a bond or note has
+been issued. The amount of the bonds and notes issued do not matter for the dependent variable.
+Henceforth, the issuances of bonds and notes will be referred to as bond issuances since bonds
+and notes, as mentioned in the background, have similar features.
+
+5.2.2. Explanatory market factors
+STIBOR: 3-month STIBOR will be incorporated in the model, since the model should capture
+the prevailing rate on the market. The correlation between 3-month STIBOR and the Central
+Bank of Sweden’s repo rate is close to perfect (see Figure II and Table III in Appendix).
+STIBOR is measured in percentage units and is lagged one quarter since the variation is
+expected to explain a part of bond issuances in the following quarter.
+       Gross Domestic Product (GDP): GDP from the production side of the Swedish real
+estate sector has been chosen as a measurement of the business cycle. GDP from this sector
+correlates highly with GDP from the production side of the entire economy. The seasonally
+adjusted GDP from the sector has been chosen, as the aim is to investigate the probability of
+bond issuances depending on the overall business cycle rather than the season. GDP from the
+sector is measured in millions of SEK. In the model, GDP is lagged one quarter so that the GDP
+of one quarter is expected to explain some variation in bond issuances in the next quarter.
+      NASDAQ OMX Credit SEK Index: The NASDAQ OMX Credit SEK price index is
+measured in SEK, and is incorporated in the model through a one quarter lag. The price index
+in one quarter is thus expected to explain part of the variation of bond issuances in the upcoming
+quarter.
+       Regulations: Basel III was introduced after the financial crisis of 2008-2009, but in
+Sweden further requirement were implemented in November 2011, see Finansinspektionen
+(2011). In the model, it has therefore been assumed that there is a shift after the fourth quarter
+of 2011, after which issuing a bond becomes more favourable relative to taking up a bank loan.
+An indicator variable has been created which assumes the value 0 in the years 2008 to 2011,
+and the value 1 in the years 2012 to 2017. The variable is thus not time lagged.
+
+                                    15
+                                                                     Bernhardsson & Lindstén
+
+5.2.3. Explanatory company specific factors
+Leverage ratio: The total debt over capital, referred to as the leverage ratio, is expressed in
+percentage units, and lagged one quarter so that the leverage ratio in one quarter is expected to
+explain part of the variation of bond issuances in the upcoming quarter.
+       Cash from investing: An attempt to include a variable representing the cash outflow
+from investment activities will be made. It will be tested to time lagged the cash from investing
+variable one quarter. The rationale behind this is that since it is easier to obtain financing for a
+project (and projects typically include several parts that result in large expenses) we suspect
+that the bond issuance sometimes might come in the middle of the project, when cash outflows
+from investments have already started to increase. Cash from investing is measured in millions
+of SEK. The values are negative if the firm is making net investments.
+       Current debt: The current portion of long term debt and capital leases, referred to as
+current debt, is the percentage of senior bank loans, bonds, or other types of debt, that has an
+expiration date within one year from the quarter in question. The current debt is expressed in
+percentage units, and lagged one through four quarters in an attempt to find a refinancing pattern
+that fits the firms in the sample.
+       Cash: Cash and equivalents, referred to as cash, classified as an interest bearing current
+asset on the balance sheet, is measured in millions of SEK, and lagged one quarter so that
+issuances in the upcoming period are supposedly partly explained by the current cash. The
+rationale behind including the cash variable is that we believe that firms issuing bonds
+oftentimes hold less cash than had they taken up corresponding bank loans. This is due to that
+corporate bonds often have no amortisation requirements.
+       EBIT: EBIT was analysed in order to capture the possible effects of the companies’
+health and profitability. The variable is measured in millions of SEK and lagged one quarter,
+since we believe that the signalling value of the profit in the current period might explain part
+of the variation in bond issuances in the upcoming period.
+       EBIT over interest: In order to capture companies’ liquidity, EBIT over interest expense
+was chosen to be included in the model. This ratio shows how many times over the company
+can pay its current interest payments with its earnings for the period. EBIT over interest is a
+factor assuming positive values. The variable was lagged one quarter.
+        Size of the firm: It was expected to be of importance which size category the individual
+companies belonged to in every separate time period, rather than their exact balance sheet value
+in SEK. This led to the generation of a class variable with three groups for company size. The
+
+                                    16
+                                                                     Bernhardsson & Lindstén
+
+three groups were small, medium sized and large firms, assuming the values 1 to 3. The small
+firms were the companies with total assets less than or equal to 2 billion SEK, medium-sized
+firms had total assets larger than 2 billion SEK and smaller than or equal to 50 billion SEK, and
+large firms had total assets larger than 50 billion SEK. The expectation is that larger companies
+will have better access to the bond market, as there is a minimum issuance amount on corporate
+bonds in Sweden. Small firms are expected to be least likely to issue bonds. By this size
+division, we expect that most firms in the sample will be medium-sized. We thus assume that
+most firms, the medium-sized, have the similar accessibility to the bond market and judging
+solely by the categorical size variable are equally likely to issue bonds. The variable was lagged
+one quarter.
+       Recent bond: A variable that explains whether the company has made a bond issuance
+in the previous period was introduced. The rationale behind this is that a recent bond issuance
+intuitively should decrease the need of a new bond issuance in the present period. In the
+constructed model, this factor was implemented as an indicator variable that assumes the value
+1 when an issuance was made the previous period, and 0 when an issuance was not made. Thus
+it was not time lagged in the regression.
+
+5.3. Logistic regression model
+To start with, a model including the above mentioned factors is constructed. Most probably, it
+is not reasonable to include all these factors in the final model, but through stepwise regression,
+insignificant variables could be removed. A logistic regression is performed. Important to note
+is that this model does not assume dependency over time within firms, which would be assumed
+if a model for panel data had been used. The reason for not choosing a panel data logistic
+regression model is that while some of the independent variables, such as STIBOR, GDP,
+leverage ratio and size of the firm may be dependent over time, our dependent variable for bond
+issuances is most likely not. Whether a company has issued a bond in a previous quarter or not,
+is in our view not fully determining whether they will do so in the future. We have accounted
+for some dependency by including a variable for a recent bond issuance in the immediately
+previous quarter. Market conditions change, which may lead firms to be willing to issue bonds
+for the first time. Therefore, by using the standard logistic regression we see each observation
+as dependent on what happened in the previous quarter (through the usage of time-lagged
+variables), but not dependent on what happened even earlier. In order to acknowledge that there
+are firms measured at several point in time, at 39 different quarters, we cluster the standard
+errors of the model based on the firm.
+
+                                    17
+                                                                     Bernhardsson & Lindstén
+
+Individual companies are interpreted as indicator variables in the regression. This in order to
+incorporate the differences between firms, and trace every observation to a specific company,
+as the logistic model itself has not used the data as panel data. The companies have to be
+separated since they are not equally likely to issue bonds. Not including this would be a very
+general model, calculated on the means of all firms in the sample. The firms in the sample have
+different issuance patterns, as some firms make an issuance in almost every quarter, and some
+firms have only made one, and so treating all companies similar would not be appropriate.
+Implications of this is however that it is not possible to make predictions for any firm not
+included in this particular sample, as a coefficient is calculated for each firm in the sample. A
+new base model can easily be re-estimated based on a slightly different sample.
+       When the final model has been constructed, a logistic regression with fixed effects,
+specifically for panel data, is performed in order to control that the assumption of independence
+over time is reasonable. If it is, the coefficients will not change significantly, and the P-values
+will not become too high. If the coefficients would have significantly higher P-values in the
+model made for panel data, the sample would suffer from high serial correlation. If this is the
+case, using a standard logistic regression would overestimate the accuracy of the model.
+       A maximum P-value of 0.20, meaning a confidence interval of 80 percent, was required
+to keep the variables in the model. This confidence interval was chosen since this was found as
+a reasonable requirement on a new model.
+
+5.4. Tests
+Pair-wise correlations between all variables will be investigated prior to creating an initial
+estimation model in order to control for possible multi-collinearities. Through this procedure,
+it will be investigated if two or more independent variables have an alarmingly high, positive
+or negative, correlation. If the pair-wise correlation between two independent variables in
+absolute terms is equal to or higher than 0.75, the two variables will not be included at the same
+time.
+        Since the model is built with a logistic regression, it is appropriate to test whether it
+follows the chi-squared distribution. The Hosmer-Lemeshow goodness of fit test using ten
+groups and ten minus two (eight) degrees of freedom is performed. This test shows how well
+the model estimates values that follow the chi-squared distribution, with a certain number of
+groups according to the predicted probabilities of issuances. It has been considered valid to test
+for ten groups, since this is a standard number in the Hosmer-Lemeshow test. Thus, the first
+group consists of the observations with the ten percent lowest probabilities, and so forth. The
+
+                                    18
+                                                                     Bernhardsson & Lindstén
+
+Hosmer-Lemeshow statistic is calculated as the Person chi-square statistic from observed and
+expected frequencies, and then compared to the chi-squared distribution of the number of
+groups minus two degrees of freedom. A large Hosmer-Lemeshow statistic or a low P-value
+signifies a poor fit of the model, and if the Hosmer-Lemeshow goodness of fit test is not
+satisfactory, the logistic model assumptions may not be fulfilled.
+
+5.5. Prediction
+Based on the results of the logistic regression model, a prediction of the probability of corporate
+bond issuances will be made on the in sample data, ranging from the first quarter of 2008 to the
+third quarter of 2017. The estimation model should return values in between 0 and 1, meaning
+a probability of a bond issuance between 0 and 100 percent. Thereafter the predicted
+probabilities will be compared to the actual outcomes. An optimisation of the classification of
+predicted probabilities will be made, so that as many actual issuances as possible are classified
+as predicted issuances by the model. The same optimised cut-off will then be used on the out
+of sample data from the fourth quarter of 2017 in order to see how well the model functions for
+near-term future predictions.
+
+5.6. Selection bias
+Selection bias may be present in the analyses, which limits the generalizability of the model.
+We note that the model is only applicable on firms that are included in the selected sample. The
+model is therefore very specific, and conclusions cannot be drawn on firms outside of the
+sample. This is a consequence of the fact that the model incorporates everything that is firm
+specific in indicator variables. A flaw is that we cannot be sure that the firms in the sample
+represent firms in the Swedish real estate sector in general. As noted, 61 firms classified as real
+estate development, rental, and operations were available in Thomson Reuters Eikon, and only
+31 have been included in the sample used to build the model upon. Therefore, the conclusions
+drawn are not applicable for the real estate sector in general, but rather for the 31 firms in the
+sample.
+        In order to limit the selection bias, we aimed at including all firms in the Swedish real
+estate sector that had in one or more quarters during the time period from the first quarter of
+2008 to the third quarter of 2011 issued a SEK-denominated corporate bond. However, we were
+further limited by the coverage of the database S&P Capital IQ which does not cover all of
+these firms, and the total sample therefore includes only 31 firms. This is approximately half of
+the firms that according to Thomson Reuters Eikon are classified as Swedish real estate
+
+                                    19
+                                                                     Bernhardsson & Lindstén
+
+development, rental, and operations, which we initially aimed at including. Since only half of
+the firms in the sector are included, we will not be able to draw conclusions for the sector, but
+rather for the firms in the sample.
+
+5.7. Estimation bias
+Estimation bias may be present in the analyses, which further limits the generalizability of the
+model. Due to missing values in one or more of the factors in the model, a substantial amount
+of observations is lost while running the logistic regression analysis, which may cause biased
+estimates. An observation where one independent variable or the dependent variable is missing,
+is classified as a missing observation and is thus not included when running the regression for
+the estimation model.
+       The available data for company specific variables in the earliest time periods in the
+sample are rather few. The result of this is that the time period and the firms included in the
+sample are rather limited. Furthermore, only one recession and one boom is included. The
+model is therefore built on actual corporate bond issuances that might be specific for the time
+period. A risk is that the estimated effects of the independent variables are capturing a prevailing
+trend, which is not due to market factors or company specific factors, but rather a temporary
+popularity, or lack of popularity, of bond issuances.
+       The sample may include firms that are deviating from a general pattern of bond
+issuances. This will be captured in the firm specific variables. If firms in the sample differ a lot
+in both directions from the general pattern, the indicator variables will capture a larger part of
+the variation in bond issuances, than they would have with a more general issuance pattern. The
+other independent variables which are proven to be significant will in this case capture a smaller
+share of the total variation in bond issuances, giving these specific variables a lower explanatory
+power. Thus, it will be hard to prove that independent variables, aside from the company
+indicator variables, are useful when building a model similar to this without accounting for
+unidentified company specific effects.
+
+6. Findings and analysis
+Our results show that STIBOR, a residual between GDP and STIBOR, the size of the firm, the
+leverage ratio, EBIT and regulation on a significant level contribute to the variation in bond
+issuances. The contributions of the size category and the regulation variable are positive,
+whereas the contributions of STIBOR, the GDP residual, leverage ratio and EBIT are negative.
+We confirm our hypothesis that a model based on selected publicly available market factors
+
+                                    20
+                                                                     Bernhardsson & Lindstén
+
+and company specific factors can estimate real estate bond issuances in the following quarter
+for the real estate firms in the sample.
+
+6.1. Descriptive statistics
+Table IV in Appendix displays the descriptive statistics of the companies in the sample. Panel
+I shows descriptive statistics organised per size group. As seen in Panel I below, there are
+significantly more observations of medium-sized firms than there are of large or small firms,
+as expected.
+
+Panel 1
+Descriptive statistics by company size
+
+                         mean sd max min count
+ Small firms
+ Bond issuance .056338 .2322144 1 0 71
+ Leverage ratio 56.45493 7.376426 80.2 43.2 71
+ Total assets 1097.246 567.4435 1984.9 200.1 71
+ Current debt 37.05694 35.40792 93 .031 71
+ EBIT 18.26499 19.02101 96.5 .469 71
+ EBIT over interest 4.005732 3.922977 20.7 .082 71
+ Cash 79.01869 65.33786 274.938 1.225 71
+ Cash from investing -43.35003 119.0768 136.088 -880.9 71
+ Recent bond .0422535 .2025988 1 0 71
+ Medium-sized firms
+ Bond issuance .1826401 .386721 1 0 553
+ Leverage ratio 61.87071 12.91616 92.8 20.8 553
+ Total assets 20812.25 11889.87 48772 2030.401 553
+ Current debt 21.23182 20.51087 96.1 0 553
+ EBIT 244.6708 144.3975 1368 .319 553
+ EBIT over interest 3.301926 4.465273 68 .02 553
+ Cash 304.8908 381.4933 3361 .1 553
+ Cash from investing -335.2312 681.2117 2946.6 -6498 553
+ Recent bond .1790235 .3837191 1 0 553
+ Large firms
+ Bond issuance .6666667 .4750169 1 0 66
+ Leverage ratio 57.76667 4.522706 71.3 47.9 66
+ Total assets 86610.7 17535.36 130195 52007 66
+ Current debt 18.71212 12.53062 63.3 0 66
+ EBIT 836.4394 245.5155 1145 261 66
+ EBIT over interest 2.926818 .9688537 6.08 1.23 66
+ Cash 1646.212 1437.202 5748 6 66
+ Cash from investing -1239 3958.905 6617 -26566 66
+ Recent bond .6969697 .4630899 1 0 66
+ Total
+ Bond issuance .215942 .4117728 1 0 690
+
+                                    21
+                                                                     Bernhardsson & Lindstén
+
+ Leverage ratio 60.92087 12.03518 92.8 20.8 690
+ Total assets 25077.37 24059.44 130195 200.1 690
+ Current debt 22.61919 22.44369 96.1 0 690
+ EBIT 277.978 245.2434 1368 .319 690
+ EBIT over interest 3.338467 4.205872 68 .02 690
+ Cash 409.9491 691.6945 5748 .1 690
+ Cash from investing -391.6445 1391.27 6617 -26566 690
+ Recent bond .2144928 .4107678 1 0 690
+Displays the discriptive statstics per size group
+
+Panel I displays the descriptive statistics per size group. Means, standard deviations, maximum and
+minimum observed values, and counts are presented for the dependent variable Bond issuance and the
+independent variables Leverage ratio, Total assets, Current debt, EBIT, EBIT over interest, Cash, Cash
+from investing, and Recent bond. In the Count column it is shown that the majority of the observations
+are classified as medium-sized firms.
+
+6.2. Correlations
+There is pair-wise correlation between a few of our variables, exceeding 0.75 in absolute terms
+(see Table V in Appendix). The index variable had a correlation of 0.90 with STIBOR, and
+0.87 with GDP. The index cannot, according to the decision rule of an upper correlation limit
+of 0.75 in absolute terms, be included in a model with STIBOR and GDP.
+      The pairwise correlation between STIBOR and the seasonally adjusted GDP measured
+over the full time period is -0.59 (see Table V in Appendix). This relationship differs from the
+one described in the background; that for example in a recession when GDP is low, the interest
+rate is typically low to stimulate consumption rather than savings. However it is not very
+surprising, as the Central Bank of Sweden, for several years has practiced an easy money policy
+with low interest rates, while the economy has been booming. The correlation between STIBOR
+and GDP in 2008 to 2011 is positive; 0.77. In 2011 to 2017, the corresponding correlation is -
+0.95, close to perfectly negative. Based on the background, the years 2011 to 2017 are
+somewhat problematic, as the booming economy disfavours bonds compared to stocks, while
+the low interest rate is beneficial for bond issuing firms. There is a trend of increased number
+of issuances over time, particularly from 2011 and onwards. This could imply that the booming
+economy has not had a large negative impact on the issuances in this sector; the low interest
+rates, and possibly other favourable factors, have overrun the business climate development.
+Since the correlation between STIBOR and GDP in this later period is close to perfectly
+negative, it is likely that including both factors in the model would lead to a high degree of
+multi-collinearity, despite the fact that the correlation over the full period does not exceed 0.75.
+However, GDP might still capture some of the variation that STIBOR does not, and theories
+supporting both of these variables have been presented. A method for including the additional
+
+                                    22
+                                                                     Bernhardsson & Lindstén
+
+explanatory power of GDP compared to STIBOR is to regress GDP and STIBOR and to
+thereafter use the residual in the model. Thus, we assume that GDP can be denoted as STIBOR
+plus a residual, as expressed in equation I.
+
+Equation I
+                       𝐺𝐷𝑃𝑡 = 𝛼𝑡 + 𝛽 × 𝑆𝑇𝐼𝐵𝑂𝑅𝑡 + 𝜀𝑡
+
+The variable for the GDP residual will following this be expressed as 𝜀𝐺𝐷𝑃𝑡.
+       The index and STIBOR have a negative pairwise correlation of -0.82, exceeding 0.75
+in absolute terms (see Table V in Appendix). Differences in prices between bonds and bank
+loans should be captured by including both STIBOR, which logically affects the prices of bank
+loans and corporate bonds, and the NASDAQ OMX Credit SEK index which should capture
+the price of only corporate bonds. If there is a big difference between the movement of STIBOR
+and the movements of the index, we want to include both variables to capture those instances
+when the market conditions are favourable or unfavourable for corporate bonds, but not for
+bank loans. This can be done by creating a residual out of the part of the index that cannot be
+explained by STIBOR, in the same manner as was done with GDP. This residual could then be
+included alongside STIBOR in the model. However, we note that the index residual has little
+variation over time. Therefore, it is not included in the model that is built. We conclude that
+judging from the data in our sample STIBOR relative to the index does not capture any changed
+market conditions significantly in favour of bank loans over corporate bonds, or the opposite,
+but rather for both of them at the same time. Instead, the regulation variable captures the only
+identifiable shift in market conditions favouring bonds compared to bank loans.
+       The index can be used as an explanatory factor for the issuances of bonds, if STIBOR
+is not included. If the user of the model has access to the index rather than STIBOR, an
+alternative model can be used (see Table VI in Appendix). It is important to note that the index
+was created in 2011, and STIBOR has since then solely been reduced (see Figure III in
+Appendix). In a different time period we could not be sure that the correlation between STIBOR
+and the index would be as high, and then including them both, or a residual of the index, could
+be reasonable.
+       Before the regression was run, a partial correlation was made with all independent
+variables to get a sense of which ones that likely have an impact on the issuance of bonds, after
+controlling for all other independent variables in the model. Table VII in Appendix shows that
+
+                                    23
+                                                                     Bernhardsson & Lindstén
+
+the partial correlations including all continuous independent variables and the dependent
+variable for corporate bond issuances are relatively low. Table VII shows the partial correlation
+of all continuous variables included in the initial model. Note that the indicator variables are
+discrete, and therefore cannot be incorporated in a partial correlation. Thus, the indicator
+variables are not accounted for when the partial correlations above are calculated, meaning that
+the partial correlations most likely are higher than they would have been had the indicator
+variables been included. When all continuous independent variables are accounted for, the
+EBIT variable and the variable for recent bond issuances have the highest partial correlation
+with issuances, representing 24.20 percent and 14.70 percent of the variation in issuances
+respectively. Table VII in Appendix shows that all continuous variables do have some
+contribution to the variance in Issuance, and can therefore be included. The cash from investing
+variable has a contribution of only 0.54 percent, and we are therefore doubtful whether it will
+prove significant in the model. Despite its low partial correlation, we chose to include it in the
+initial model, especially since the partial correlations which do not account for any indicator
+variables are inaccurate. We expect that the indicator variables capture a large part of the
+variation in the dependent variable for bond issuances.
+
+6.3. Initial regression
+The initial regression model is shown in Table VIII in Appendix. This first model expresses the
+probability of a corporate bond issuance as shown in Equation 2.
+
+              2
+Equation II
+  𝐼𝑠𝑠𝑢𝑎𝑛𝑐𝑒 𝑝𝑟𝑜𝑏𝑎𝑏𝑖𝑙𝑖𝑡𝑦𝑡
+                = 𝛼 + 𝛽𝑖 × 𝑖. 𝐶𝑜𝑚𝑝𝑎𝑛𝑦𝑖 + 𝛽1 × 𝑆𝑇𝐼𝐵𝑂𝑅𝑡−1 + 𝛽2 × 𝜀𝐺𝐷𝑃𝑡−1 + 𝛽3
+
+                  × 𝑖. 𝑅𝑒𝑔𝑢𝑙𝑎𝑡𝑖𝑜𝑛𝑡 + 𝛽𝑗 × 𝑖. 𝑆𝑖𝑧𝑒𝑗,𝑡−1 + 𝛽4 × 𝐶𝑢𝑟𝑟𝑒𝑛𝑡 𝑑𝑒𝑏𝑡𝑡−1 + 𝛽5
+                × 𝐶𝑎𝑠ℎ 𝑓𝑟𝑜𝑚 𝑖𝑛𝑣𝑒𝑠𝑡𝑖𝑛𝑔𝑡−1 + 𝛽6 × 𝐸𝐵𝐼𝑇𝑡−1 + 𝛽7
+                                       𝐸𝐵𝐼𝑇
+                × (            )𝑡−1 + 𝛽8 × 𝑅𝑒𝑐𝑒𝑛𝑡 𝐵𝑜𝑛𝑑𝑡−1 + 𝛽9
+                          𝐼𝑛𝑡𝑒𝑟𝑒𝑠𝑡 𝑒𝑥𝑝𝑒𝑛𝑠𝑒
+                × 𝐿𝑒𝑣𝑒𝑟𝑎𝑔𝑒 𝑟𝑎𝑡𝑖𝑜𝑡−1 + 𝛽10 × 𝐶𝑎𝑠ℎ 𝑡−1 + 𝜀
+
+The coefficients of the indicator variables assume different values depending on the group. For
+example, the groups of small firms, medium-sized firms, and large firms all have different
+coefficients for the size variable.
+
+2
+ An i. before the variable name in Equation III denotes an indicator variable.
+
+                                    24
+                                                                     Bernhardsson & Lindstén
+
+6.4. Stepwise regression
+A summary of the independent variables rejected at the 80 percent confidence level in the
+stepwise regression, is shown in Panel II below.
+       Step 1: As seen in Table VIII in Appendix, the model has to be adjusted as there are
+factors which are not significant in the initial step. To begin with, EBIT over interest was
+excluded due to its high P-value and lack of theoretical evidence supporting the impact on
+corporate bond issuances.
+       Step 2: Secondly, the current debt was found to be insignificant, lagged one to four
+quarters (see Table IX in Appendix). We tried to lag the variable one to four quarters since the
+refinancing need could occur before the company could gain external financing. An attempt to
+use the variable lagged only one quarter was made. After this had been performed, it was
+however found to still be insignificant, and the variable was therefore rejected.
+       Step 3: Thenceforth, cash from investing was rejected since it was found to be
+insignificant with the highest remaining P-value (see Table IX in Appendix).
+        Step 4: As a fourth variable to be rejected from the regression was the variable for recent
+bond issuances (see Table IX in Appendix). This variable was imagined to capture the
+possibility that a firm is unlikely to issue bonds in two adjacent quarters, since a bond issuance
+is time consuming and it might be harder to convince the market that two bond issuances close
+to each other in time is a reasonable financing strategy. Since the variable has to be rejected, it
+seems as though the time between two issuances is highly dependent on the specific company.
+Hence, a variable which is meant to capture the time between two issuances is not well
+incorporated in the general model.
+       Step 5: The variable for cash was the next variable to be rejected from the model (see
+Table IX in Appendix). A variable with such a high P-value could not explain the issuances on
+the chosen confidence level of 80 percent.
+
+                                    25
+                                                                     Bernhardsson & Lindstén
+
+Panel II
+Summary of the variables rejected in the stepwise rejection
+
+  Step Rejected         Rejected P-value Coefficient when    Standard error
+          variable                              rejected
+
+  1 EBIT over        0.596 0 .011052 0.0208722
+            interest
+
+  2 Current debt 0.857 -0.0015826 0.0087729
+
+  3 Cash from        0.614 0.0000445 0.0000883
+           investing
+
+  4 Recent bond 0.554 -0.1969529 0.3324544
+
+  5 Cash 0.492 -0.0002736 0.000398
+
+Panel II summarizes the steps in the step-wise regression. Column 2 (Rejected variable) displays the
+independent variables in order of rejection. In column 3 (Rejected P-value) the P-value at which the
+variable was rejected from the model is shown. These P-values are exceeding 0.2 and are thus according
+to the decision rule of keeping variables with a maximum P-value of 0.2 rejected from the model. The
+coefficient of the rejected variable, as per the last model of its inclusion, is shown in column 4
+(Coefficient when rejected).The standard errors are displayed in column 5 (Standard error). As can be
+seen, the standard errors are for all larger, in absolute terms, than the corresponding variable coefficients.
+After these 5 steps, all remaining variables are significant at an 80 percent confidence level.
+
+6.5. Final estimation model
+All variables were tested, but after the stepwise regression, STIBOR, the GDP residual, the size
+of the firm, the regulation indicator, the leverage ratio, and EBIT remained in the final model.
+Panel III displays an easy overview of the coefficients and standard errors in the final regression
+for each included variable, apart from the indicator variable for individual companies. All
+variables that are included in Panel III are significant on an 80 percent confidence level, and all
+but EBIT have a P-value of less than 0.10.
+
+                                    26
+                                                                     Bernhardsson & Lindstén
+
+Panel III
+Final regression model
+                                       Coefficient
+ Bond issuance
+                                                  *
+ STIBOR t-1 -0.50                 (0.11)
+
+                                                     *
+ GDP residual t-1 -0.000088            (0.000045)
+
+ Small firms t-1 0 (.)
+
+                                                  *
+ Medium-sized firms t-1 2.26                  (1.00)
+
+                                                  *
+ Large firms t-1 3.48                  (1.32)
+
+                                                  *
+ Regulation 2.76                 (0.70)
+
+                                                   ***
+ EBIT t-1 -0.0024               (0.0017)
+
+                                                   *
+ Leverage ratio t-1 -0.040                (0.020)
+
+                                                  *
+ Constant -4.07                 (1.28)
+ Observations 797
+Standard errors in parentheses
+***          **          *
+   p < 0.20,   p < 0.15,  p < 0.10
+
+Panel III shows the final regression model in short-form, with the first column
+displaying the coefficients of the included variables, and the second the corresponding
+standard errors. The indicator variables for individual firm are used in the model, but
+have been absorbed in Panel III to better visualise the effect of the independent
+variables STIBOR, the GDP-residual, the three size groups (where small firms are the
+base group and therefore receives a coefficient equal to 0), the regulation indicator
+variable (where the years 2008-2011 prior to the implementation of the regulation are
+the base group and not presented here), EBIT and the leverage ratio. All variables that
+are included in Panel III are significant on an 80 percent confidence level, and all but
+EBIT have a P-value of less than 0.10. For a representation of the final model including
+the indicator variables for individual firms, refer to Table X in Appendix.
+
+Since a logistic model where the variation within firms was captured in indicator variables for
+individual companies was performed, Table X in Appendix visualises the final estimation
+model including the company specific indicator variables. The final estimation model is
+described in Equation III below.
+
+                                    27
+                                                                     Bernhardsson & Lindstén
+
+               3
+Equation III
+    𝐼𝑠𝑠𝑢𝑎𝑛𝑐𝑒̂  𝑝𝑟𝑜𝑏𝑎𝑏𝑖𝑙𝑖𝑡𝑦𝑡 =
+
+                  = −4.07 + 𝛽𝑖𝑖. 𝐶𝑜𝑚𝑝𝑎𝑛𝑦𝑖 − 0.50 × 𝑆𝑇𝐼𝐵𝑂𝑅𝑡−1
+                  − 0.000088 × 𝜀𝐺𝐷𝑃𝑡−1 + 2.76 × 𝑖. 𝑅𝑒𝑔𝑢𝑙𝑎𝑡𝑖𝑜𝑛𝑡
+
+                 + 2.26 × 𝑀𝑒𝑑𝑖𝑢𝑚 − 𝑠𝑖𝑧𝑒𝑑 𝑓𝑖𝑟𝑚𝑡−1 + 3.48 × 𝐿𝑎𝑟𝑔𝑒 𝑓𝑖𝑟𝑚𝑡−1
+                 − 0.0024 × 𝐸𝐵𝐼𝑇𝑡−1 − 0.040 × 𝐿𝑒𝑣𝑒𝑟𝑎𝑔𝑒 𝑟𝑎𝑡𝑖𝑜𝑡−1
+
+In Panel IV below, an odds ratio analysis which displays the impact on bond issuances of a one-
+unit change in the included independent variables, is presented. As shown in Panel IV, the
+possibility of corporate bond issuance is highly affected by the size group the firm belongs to.
+A bond issuance in a medium-sized firm is 9.55 times more likely than in a small firm, and
+32.30 times more likely in a large firm than in a small firm. The probability of a bond issuance
+is 15.80 times larger after the implementation of the bank regulations in conjunction with Basel
+III, than before the implementation.
+
+Panel IV
+Odds ratio analysis
+                                      Bond issuance
+                                        Odds Ratio P-value
+ Bond issuance
+ Small firms t-1 1 .
+ Medium-sized firms t-1 9.55 0.025
+ Large firms t-1 32.3 0.0083
+ STIBOR t-1 0.60 0.0000088
+ GDP residual t-1 1.00 0.049
+ Regulation 15.8 0.000080
+ EBIT t-1 1.00 0.18
+ Leverage ratio t-1 0.96 0.048
+ Constant 0.017 0.0014
+ Observations 797
+Exponentiated coefficients
+Panel IV displays the odds ratios of the variables included in the final regression model, apart
+for the indicator variables for individual firms. An odds ratio for a particular independent
+variable is here the increased likelihood of a corporate bond issuance resulting from a one unit
+change in that variable, holding everything else constant. The odds ratios of the indicator
+variables are of particular interest. A bond issuance in a medium-sized firm is 9.55 times more
+likely than in a small firm, and 32.30 times more likely in a large firm than in a small firm.
+The probability of a bond issuance is 15.80 times larger after the implementation of the bank
+regulations in conjunction with Basel III, than before the implementation. Important to note is
+that odds ratios are always positive, as they are exponential.
+
+3
+ An i. before the variable name in Equation III denotes an indicator variable.
+
+                                    28
+                                                                     Bernhardsson & Lindstén
+
+The final estimation model was also made in a panel data logistic regression setting, see Table
+XI in Appendix. This to control that the final logistic model does not suffer from high serial
+correlation. The assumption about independency over time seems to hold, as all variables are
+significant in the model specifically made for panel data as well.
+
+6.6. Discussion of variables included in the final estimation model
+STIBOR: Interest rates can be used as tools to stimulate or impede the economic cycle. In a
+recession, interest rates are typically low to stimulate consumption. Also, as mentioned in the
+background, when interest rates are low and economic conditions are uncertain, investors are
+keen to invest in bonds, making issuances more frequent, refer to Sveriges Riksbank (2016).
+The correlation between issuances and STIBOR is thus supposedly negative, and we thereby
+find it reasonable that the model coefficient of STIBOR is negative. The standard error is
+notably smaller than the coefficient, implying that we can be fairly sure that STIBOR does have
+an observable negative correlation with corporate bond issuances.
+       GDP residual: Grjebine, Szczerbowicz and Tripier (2017) show that bank loan to bond
+issuance substitution is a feature of the business cycle. According to their research, bond usage
+should increase as the economy recovers from recession. By this reasoning, the coefficient of
+the GDP variable is supposed to be negative. Due to the high correlation with STIBOR,
+especially from 2011 and onwards, we have not included GDP in the model. We however find
+that the residual from the regression between GDP and STIBOR is significant and has a
+negative coefficient. The variation of the GDP residual over time can be seen in Panel V below.
+Since the variation of the GDP residual depends on the variation in GDP and in STIBOR, it is
+from this variable hard to determine what sign the coefficient would be expected to have over
+time. However, lately STIBOR has been low while the economy has been booming, which
+would according to theories imply one positive impact on the probability of issuances through
+STIBOR, and one negative impact through GDP. The GDP residual should capture the part that
+STIBOR does not. In this time period the high GDP, not correlating with STIBOR, should have
+a negative impact on the probability of bond issuances, which should be captured by the GDP
+residual. In Panel V below, we note that the GDP residual is highest in the years 2008-2009,
+and in 2015-2017. The negative coefficient means that this variable reduces the model’s
+estimated probability of corporate bond issuances, especially in the earliest and the latest years
+in the sample. The large negative impact in 2015-2017 is most likely due to the high GDP,
+which implies that Grjebine, Szczerbowicz and Tripier’s (2017) theory of bond issuances
+varying over the business cycle seems to apply to Swedish real estate firms as well. The large
+
+                                    29
+                                                                     Bernhardsson & Lindstén
+
+negative impact in 2008-2009 might on the other hand be due to the high prevailing interest
+rates, in line with the reasoning of Sveriges Riksbank (2016). We judge it reasonable that the
+GDP residual has a negative coefficient in the final model.
+
+Panel V
+GDP residual over time
+
+Panel V shows the movement over time of the so-called GDP residual, a variable
+that was created as the residual after a regression between GDP and STIBOR.
+The GDP residual is large in the early years of 2008-2009 when GDP was low,
+and STIBOR was high. In the years of 2015-2017, when GDP was high and
+STIBOR was low, the GDP residual is also large. This is due to it being a residual,
+it represents the part of GDP that does not correlate with STIBOR.
+
+Regulation: Basel III was introduced after the financial crisis of 2008-2009, but in Sweden
+further requirements were implemented in November 2011, as stated by Finansinspektionen
+(2011). This supposedly made bank loans more expensive, which would make the corporate
+bond market more attractive and more frequently used. Becker and Ivashina (2014) as well as
+Kaya and Wang (2016) show that the credit supply of banks does have an impact on the trade-
+off between bank loans and corporate bond issuances. Regulation has a positive coefficient in
+the estimation model, and the odds ratio amounts to 15.80 (seen in Panel IV below), implying
+that after the implementation of Basel III in Sweden in the fourth quarter of 2011, a bond
+issuance is significantly more likely. This is in line with the previous theories by Becker and
+Ivashina (2014) and Kaya and Wang (2016).
+
+                                    30
+                                                                     Bernhardsson & Lindstén
+
+Size of the firm: Usage of corporate bonds on the Swedish market has been small and, in many
+sectors, limited to large firms. It was therefore expected that the size of the firms should have
+an impact on if and how often a bond issuance can be executed. The coefficient of the
+categorical variable size is positive, and larger for large firms than for medium-sized firms. The
+odds-ratio analysis shows that compared to small firms as a base group, the likelihood of a bond
+issuance is 9.55 times higher for medium-sized firms, and 32.30 times higher for large firms.
+The larger the firm is, the greater is the likelihood of an issuance. This is in line with what
+beforehand was expected to be true. If the size variable would not have been generated, and
+total assets would instead had been included in the model, the coefficient of the continuous
+variable would have shown the increased likelihood of a corporate bond issuance from an
+increase of 1 million SEK on the balance sheet. It is therefore reasoned to be of more valuable
+to analyse the size instead of total assets.
+       Leverage ratio: Based on research by Kraus and Litzenberger (1973), all firms
+continuously make choices of debt or equity. For REITs specifically, Brown and Riddiough
+(2003) suggest that the leverage ratio should be a factor to take into consideration in the model.
+There was evidence that firms with a higher debt to equity ratio were less likely to issue new
+debt, and that bond issuers target a minimum leverage ratio corresponding to investment-grade
+credit rating. Firms in the sample that have a leverage ratio below their target should thus be
+more likely to issue bonds than firms with a leverage ratio at or above the target ratio. We find
+it reasonable that the leverage ratio has a negative correlation with our dependent variable, bond
+issuance. Leverage ratio in the model was found to have negative coefficient, and the standard
+error is somewhat smaller than the coefficient. For each percentage unit increase in the leverage
+ratio, the estimated probability to issue a bond in the next quarter is reduced by roughly four
+percent, holding everything else constant.
+       EBIT: Our own presumption prior to the regression was that profitable companies have
+better access to the bond market due to the signal value of the profitability. We thus expected
+the coefficient to be positive. However, EBIT was found to have a negative coefficient in the
+results. This was surprising, since we believed there would be a signalling value in the
+profitability that could impact the issuances of bonds. We did not have theoretical support for
+the positive coefficient, which is why we have chosen to include it in the final model despite
+the fact that the coefficient to us first seemed illogical. The negative coefficient might be
+explained by the fact that when new projects are under development, costs are typically high,
+reducing EBIT. We believe that bond issuances might occur in the middle of a development
+process, when cash outflows have already started to increase. It is likely that expenses have
+
+                                    31
+                                                                     Bernhardsson & Lindstén
+
+already started to be recorded as well, but revenues from the project have not come in. This
+would reduce the EBIT level. Since the standard error is relatively large in comparison to the
+coefficient, it is by using this sample not possible to be sure what impact, if any, EBIT will
+have. While this means that the impact of EBIT is questionable, we do not consider it a flaw
+that it is included in the final estimation model, since it has a relatively small contribution.
+       A partial correlation of the continuous variables included in the final model is shown in
+Panel VI below. The contribution of the different continuous variables is fairly evenly
+distributed, meaning that all variables do contribute to the variance in bond issuances. The
+exception is EBIT, which here seems to contribute a lot to the variation in issuances. Although
+this is one of our arguments for incorporating it in the final model despite it lacking theoretical
+support, we do note that indicator variables, which are non-continuous, cannot be incorporated
+in a partial correlation. Therefore, the partial correlations with bond issuances of the variables
+displayed in Panel VI are most likely higher than they would have been accounting for the
+indicator variables, and we suspect that EBIT exhibits the highest overestimation.
+
+Panel VI
+Partial correlation table for final model
+                                       Bond issuance
+                                          Partial corr. /P-value
+ STIBOR t-1 -0.126
+                                       0.000279
+ GDP residual t-1 0.0665
+                                         0.0555
+ EBIT t-1 0.402
+                                           1.40e-33
+ Leverage ratio t-1 0.0232
+                                          0.503
+ Constant
+                                          0.619
+ Observations 834
+Indicator variables not included in partial correlation due to discrete values
+Panel VI shows the partial correlation of all continuous independent variables
+included in the final model. All these variables seem to contribute to the variation
+in bond issuances. Indicator variables, which are discrete, cannot be incorporated
+in a partial correlation. Therefore, the partial correlations with bond issuances of
+the variables displayed in Panel VI are most likely higher than they would have
+been accounting for the indicator variables. We suspect that the high partial
+correlation of EBIT, of 0.402, is highly affected by the lack of indicator variables
+in this output, and thus overestimated.
+
+                                    32
+                                                                     Bernhardsson & Lindstén
+
+6.7. Hosmer-Lemeshow Goodness of Fit test
+In the Hosmer-Lemeshow goodness of fit test, the probability of Chi-squared should be as close
+to one as possible. Our model produces a probability of Chi-squared of 0.4808, which is
+considered good enough. This means that 48.08 percent of the estimated issuances lie on the
+chi-squared curve with eight degrees of freedom. The Hosmer-Lemeshow statistic for eight
+degrees of freedom should be as low as possible, 7.53 is considered good enough. The test was
+performed on models including the variables that were rejected before the final model, and it
+was concluded that the final model has the best fit to the chi-squared distribution. As this test
+shows that the final model follows the chi-squared distribution, we draw the conclusion that it
+is a good enough model describing corporate bond issuances in the tested time period, and that
+the data does not violate any model assumptions. Our hypothesis, that a model based on selected
+publicly available market factors and company specific factors can estimate real estate bond
+issuances in the following quarter, is thereby confirmed for the firms in the sample. The
+estimation model is completed, and we proceed forward to execute a prediction model.
+
+6.8. Predictive model
+The aim of the model for corporate bond issuances is, in addition producing estimated for the
+in sample period, to make predictions of future corporate bond issuances within the Swedish
+real estate sector. The variables in the final estimation model are used to make predictions of
+the probability of a firm issuing a corporate bond in the following quarter. STIBOR, the GDP
+residual, the size of the firm, EBIT, and the leverage ratio for the previous quarter, as well as
+the indicator variables for the specific firm and regulation, are used to estimate the probabilities.
+We note that the estimated probabilities are generally increasing over time, as seen in Panel VII
+displaying the estimated probabilities per firm over time.
+
+                                    33
+                                                                     Bernhardsson & Lindstén
+
+Panel VII
+Estimated probabilities of bond issuances per firm over time
+
+Panel VII illustrates the model’s estimated probabilities of bond issuances for each
+firm in the sample over time.The estimated proabbilities assumes continuous
+values between 0 and 1.
+
+6.8.1 Cut-off
+As the model predicts a continuous value in the interval between 0 and 1, a cut-off value is
+chosen where all the values above this point are interpreted as issuances, and all below or equal
+to are assumed to be non-issuances. The default cut-off is at 0.5, but since there are fairly few
+issuances in comparison to non-issuances in the dataset, the cut-off needs to be lower than 0.5
+in order not to underestimate the number of issuances.
+        If the cut-off value is set too low, almost all predictions are classified as issuances.
+While only a few actual issuances are then missed by the model, there are many non-issuances
+that are classified as issuances and the total correct predictions are therefore relatively few (see
+Panel VIII below). If the cut-off value is high, the total correct predictions of the model are
+many, but this is due to the fact that non-issuances are more common than issuances. The model
+then misclassifies many of the issuances that are actually made. By just guessing that a company
+will not issue a bond in the coming quarter, without using the model, one would have more than
+a 50 percent chance of being correct, so setting the cut-off high is not producing a model that
+is much better than guessing.
+
+                                    34
+                                                                     Bernhardsson & Lindstén
+
+Panel VIII
+Summary of model’s correct predictions per cut-off value
+
+  Cut-off 0.5 0.45 0.4 0.35 0.3 0.25 0.2 0.15
+
+ Correct      85.70% 85.45% 84.94% 84.19% 82.31% 78.42% 74.53% 67.50%
+ predictions
+
+ Correctly    38.41% 42.07% 46.95% 50.00% 60.37% 71.95% 81.10% 86.59%
+ predicted
+ issuances
+
+Panel VIII displays the model’s share of correct predictions and correctly predicted bond issuances for
+different cut-off values, in the time period from the first quarter of 2008 to the third quarter of 2017.
+The cut-off values in the columns are the values above which predicted probabilities are classified as a
+predicted bond issuances. Predicted probabilities lower than or equal to the cut-off in the columns are
+classified as non-issuances. As can be seen, there is a trade-off between maximizing the total correct
+predictions and the correctly predicted issuances. It has been considered more valuable to correctly
+predict actual issuances, and so a fairly low cut-off value of 0.2 has been chosen, despite this creating
+some false positive outcomes (predicted issuances that never happen).
+
+Since the aim is to create a model that can predict issuances rather than non-issuances, because
+we consider this more valuable for investors and firms in the industry, it is more appropriate to
+set a low cut-off value. This despite the falsely positive outcomes that are generated, which
+makes the total share of correct predictions fewer. As Panel VIII shows, the share of correctly
+predicted issuances increases significantly by reducing the cut-off from 0.25 to 0.2, while the
+total correct predictions do not change as much. We therefore proceed with the cut-off value
+0.2. Hence. The predicted corporate bond issuance probabilities are distributed as seen in Panel
+IX. All predictions with a value less than or equal to 0.2 are classified as non-issuances (0), and
+all values above 0.2 are classified as issuances (1).
+
+                                    35
+                                                                     Bernhardsson & Lindstén
+
+Panel IX
+Predicted probabilities of corporate bond issuances for in sample with cut-off 0.2
+
+Panel IX shows the distribution of the estimation model’s predicted probabilities, for
+all observations in the period from the first quarter of 2008 to the third quarter of 2017.
+The red line illustrates the cut-off value 0.2, above which predicted probabilities are
+classified as predicted issuances. Predicted probabilities lower than or equal to 0.2
+columns are classified as non-issuances.
+
+6.8.2 Predictions for the fourth quarter of 2017
+Panel X shows the actual corporate bond issuances in the fourth quarter of 2017 and the model’s
+predicted corporate bond issuances for the fourth quarter of 2017. In the True-column the value
+1 is returned if the model’s prediction was correct. The model correctly predicted the outcome
+in 24 out of 31 cases in the out of sample period of the fourth quarter of 2017. There were 10
+actual issuances, and out of them 9 were correctly predicted. There were also 6 firms for which
+the model predicted an issuance when there was none, due to the low cut-off value producing
+some falsely positive outcomes. Regarding the non-issuances, the actual ones were predicted
+right 15 times out of 21. These results show that the model increases the possibility to predict
+corporate bond issuances for Swedish real estate firms, compared to simply guessing. We have
+thus tested that the hypothesis for the ability of the model to predict near-term future corporate
+bond issuances holds in the last quarter of 2017.
+
+                                    36
+                                                                     Bernhardsson & Lindstén
+
+Panel X
+True estimations
+
+                          Issuance Q4 Predicted True
+ AGORA 0 0 1
+ Sagax 1 1 1
+ ALM Equity 0 0 1
+ Akelius 0 0 1
+ Amasten 0 0 1
+ Atrium Ljungberg 1 1 1
+ Castellum 1 1 1
+ Corem 0 1 0
+ Fabege 0 1 0
+ FastPartner 0 1 0
+ Balder 1 1 1
+ Genova 0 0 1
+ Heimstaden 0 0 1
+ Hemfosa 0 1 0
+ Hemso 0 1 0
+ Hufvudstaden 1 1 1
+ Klovern 1 1 1
+ Kungsleden 1 1 1
+ Magnolia 0 0 1
+ MaxFast 0 0 1
+ Oscar Properties 0 0 1
+ Prime Living 0 1 0
+ Rikshem 1 1 1
+ SSM 0 0 1
+ Stendorren 0 0 1
+ Tobin 0 0 1
+ Vacse 0 0 1
+ Vasakronan 1 1 1
+ Victoria Park 0 0 1
+ Wallenstam 1 0 0
+ Whilborgs 0 0 1
+ Total 10 15 24
+Displays actual and predicted issuance outcome in Q4 2017
+Panel X shows the actual corporate bond issuances of the fourth quarter of 2017 in the
+column Issuance Q4, and the model’s predicted corporate bond issuances in the column
+Predicted. In the True-column, the value 1 is returned if the model’s prediction of either
+an issuance or a non-issuance was correct.
+
+7. Discussion and critical reflections
+
+7.1. Constructing and using the logistic regression model
+While our results show that using the model for predicting corporate bond issuances is superior
+to guessing, it exhibits some important flaws. Firstly, the falsely positive outcomes that are
+generated, meaning that the model classifies quite a few non-issuances as issuances, might lead
+
+                                    37
+                                                                     Bernhardsson & Lindstén
+
+users of the model to believe that the real estate sector in total will issue significantly more
+corporate bonds than it actually will. Therefore, if the user of the model is interested in
+predicting future activity in the real estate bond market, caution needs to be taken, and the user
+should be aware that the model predicts an overestimated number of bond issuances. In this
+case a cut-off value higher than 0.2 could possibly be used, the classification step re-created.
+Secondly, the model has only been tested for future predictions on one quarter. There is a risk
+this was a particularly ‘lucky’ prediction, that does not represent the near-term future
+predictions of the model. Ideally, the future predictions should have been verified using a
+number of quarterly periods. This was not done since we wanted a sufficient amount of data
+point to build the estimation model upon.
+       The main danger of using the standard logistic regression model for a sample of panel
+data is that the sample might exhibit high serial correlation, leading to an overestimation of the
+variable significances in the model. We handled this by producing indicator variables for, and
+clustering standard errors according to, individual companies. We furthermore re-created the
+final estimation model in a panel data logistic regression setting, to control for significantly
+changed coefficients and high P-values. As the coefficients in the panel data setting were similar
+to the ones in the standard logistic regression, and all P-values remained significant, we drew
+the conclusion that the model did not exhibit high serial correlation, and that the assumption
+about independency over time held.
+        As can be seen, only 799 observations remain in the final regression. This is one of the
+problems with the logistic regression model. There is a lot of information that is omitted because
+one of the independent variables is missing for that particular observation. The model is built
+based on just over half of the observations and might thus not reflect the entire sample. It can
+be discussed if the approximately 200 observations from 2008 to 2010 are enough to fit a good
+model to those three years, which roughly represent a recession. The good part is that 31
+companies remain. There is no company that is fully omitted, and we should be able to use the
+model to describe all firms in the sample, although perhaps less precisely those that have few
+data point included because they entered the market or were covered by S&P Capital IQ in a
+late time period.
+        There could possibly be disadvantages with using the 80 percent confidence interval for
+keeping a variable in the regression. We chose 80 percent because when building a new model,
+we cannot be too strict with the variables that we include. However, the coefficients of the
+variables with high P-values are less certain than the ones with low P-values. This problem is
+particularly obvious for the EBIT variable with a P-value of 0.17, where the standard error is
+
+                                    38
+                                                                     Bernhardsson & Lindstén
+
+relatively large compared to the coefficient. As already discussed, we cannot be sure what
+impact, if any, EBIT has in the model. If a confidence level above 80 percent had been chosen,
+EBIT would not have been included, and we suspect that the model would have been able to
+make around the same predictions for future bond issuances. While it is interesting that EBIT
+is significant for the probability of bond issuances, we note that the final model probably could
+have been built without it.
+        There is a chance that the model exhibits two-way causality. For some of the variables,
+such as the size of the firm and the leverage ratio, there should logically be causality in two
+ways. A bond issuance should increase the size of the firm, which could lead to the firm moving
+from a smaller size category to a larger one. The leverage ratio often increases after a bond
+issuance, if the same amount of debt did not mature at the same point in time as the issuance.
+If the size is larger and leverage ratio higher post-issuance, there is an indication of the
+probability of a bond issuance increasing due to the larger size, and decreasing due to the higher
+leverage ratio. We do not believe that the other independent variables in the final model are as
+affected by the event of a bond issuance. Since there is an effect in both directions, and we
+tested a variable for recent bond issuances and found it insignificant, we do not consider the
+problems arising from possible two-way causality to be particularly large.
+       Furthermore, it can be discussed if the model exhibits real causality, or if simply
+correlation is found. As we have theoretical support for most of the independent variables
+included in the final model, we do believe that this is an indication of causality. For the EBIT
+variable in particular, as it lacks support in theory, we however suspect that it might be a
+question of correlation. However, as the coefficient of EBIT is small and the standard error
+relatively large, we do not see any problems with incorporating it in the final model.
+       The time period ranging from 2008 to 2017 has been chosen to include a close to full
+business cycle. By controlling for GDP production, the aim has been to get the model to handle
+the fact that recessions and booms have very different implications. An alternative could have
+been to construct two different models for recession and boom, but since it could be ambiguous
+exactly where the economy is at present time, this has been avoided. In the in sample time
+period, the Central Bank of Sweden has used an easy money policy meaning that the
+relationship between STIBOR and GDP has been reverted from its traditional form. The
+traditional relationship is the one described by theories; low interest rates are used in a
+recession, when GDP is low, in order to stimulate consumption, and high interest rates are used
+in a boom to stimulate savings and stop the pace of inflation. In the traditional circumstances,
+the correlation between GDP and STIBOR should be even higher, which ought to mean that
+
+                                    39
+                                                                     Bernhardsson & Lindstén
+
+only one of them would be necessary to build into the model, as their residual then approaches
+zero. In the longer run, it is not reasonable to assume the same coefficients of STIBOR and the
+GDP residual. Perhaps the GDP residual might not be needed, but STIBOR could alone capture
+the entire effect of the business cycle so that GDP could be overlooked, or the opposite.
+       The regulation variable is an indicator variable that was created to represent the
+implementation of Basel III in Sweden in the fourth quarter of 2011, which reduced the banks’
+willingness to lend out funds. Since we cannot be sure that this is the only thing that happened
+in late 2011 where we see an increase in the issuances of corporate bonds, we cannot be
+completely sure what the regulation variable actually captures. We strongly believe that a part
+of the increases in bond issuances is due to the implementation of Basel III, but a risk with
+introducing indicator variables is that they may actually capture something more than what was
+believed. Consequently, the model might not work outside of the selected time frame, when
+those unknown factors captured by the indicator change. Since we have support for believing
+that the Basel III implementation is a large part of the indicator, we feel comfortable including
+it in the model.
+       By including the firm specific indicator variables, we capture the variation in bond
+issuances that cannot be captured by those independent variables included in the final model.
+The coefficients of indicator capture the differences between firms, while the other variables
+capture the differences over time, independent of the firm. This implies that everything that is
+particular for a firm, such as strategies, views on the bond market, future outlook, geographic
+location within Sweden, risk appetite, or anything else that impacts the firm’s willingness to
+issue bonds, is included in the model through the firm indicator variables and is constant over
+time. Thus, if these firm specific strategies do not change notably over time, the model can be
+used in time periods outside of the sample period. However, it is noted that the firm indicators
+typically have rather large coefficients compared to base company 1, and are ranging from a
+negative 0.46 to a positive 9.28, meaning that they capture a rather large part of the variation in
+issuances. This is a natural consequence of the fact that we have not been able to include
+variables such as the financing and refinancing need, and so their effect is captured in the
+indicators. If we would have been able to include more variables in the final model, the
+coefficients of the firm indicators would have been closer to zero. The model would in that case
+have been more generally applicable, because we could have determined the source of more
+variation. Below follows a critical discussion of our chosen variables that in some cases can
+have led to an estimation bias and rejection.
+
+                                    40
+                                                                     Bernhardsson & Lindstén
+
+7.2. Factors that was not captured by specific variables in the final model
+Investment opportunities: Brown and Riddiough’s (2003) research suggests that we should
+investigate when investment opportunities arise for the firms, since they show evidence that the
+financing is usually larger when there is an investment opportunity. Including a variable that
+captures future investment opportunities would separate this financing that is driven by demand
+on property from the financing that arises because the capital structure is changed, or debt
+matures and is renewed. Using only publicly available financial data from the previous quarter
+in order to make predictions, future investment opportunities cannot be detected or used. If the
+user of the model has access to (consensus) estimates of future cash from investing or revenues,
+they could attempt to time lead these variables and include them in the model in order to detect
+the investment opportunities’ impact on bond issuances. Since it is easier to obtain financing
+when the funds are to be used for investment opportunities, we believe that cash from
+investment activities should tend to assume larger negative values following a bond issuance.
+Cash from investing is in comparison to bond issuances therefore the dependent variable, hence
+the time leading. Considering the scope of this paper, future estimates have not been included.
+Instead, we attempted to include cash from investing activities lagged one quarter. We believed
+that this could show that issuances are more frequent when projects have been started, although
+we realised that the variable does not capture the financing need as well as future cash from
+investment activities does. It is not likely that all firms issue bonds when a project has already
+been started, but rather when the investment opportunity arises but has not yet lead to cash
+outflows. Different firms have different financing strategies. Furthermore, large firms that
+continuously have many new project in the loop are likely seeing a fairly constant high outflow
+of cash. Therefore we were not surprised when the variable was not found to significantly
+contribute to the likelihood of a bond issuance in the next quarter.
+       Refinancing need: The portion of debt that expires within a year, current debt, was used
+as a proxy for the refinancing need, but turned out not to be significant. Already in the partial
+correlation table we could see that the contribution to the variance of issuance was minor. We
+have tried lagging it several periods and it remains insignificant. Either it is not a good proxy
+for the refinancing need, or the refinancing need does not reflect the issuance of bonds at all.
+However, Brown and Riddiough (2003) state that it is easier to obtain financing in the form of
+bonds for new investment opportunities. Perhaps it is harder to convince the market that the
+financing is needed when there is no particular project to show. The refinancing need is as stated
+the part of the financing need that is not driven mainly by new project, but by the maturity of
+the debt of the firm. This would offer an explanation for why the current debt is not significant
+
+                                    41
+                                                                     Bernhardsson & Lindstén
+
+in the model. The current debt is still mostly bank loans, and often these can fairly easily be
+renewed by the banks if the relationship is good, no covenants have been broken and the risk is
+not too high, giving bank loans an advantage over bonds when it comes to renewing loans. We
+however believe that it is more likely that current debt lagged one to four quarters is not a good
+proxy for a particular firm’s refinancing need, since firms have very different strategies to
+renew debt. Some easily enter new revolver agreements approximately a year before the current
+one was supposed to expire, while others wait until the debt actually does expire before taking
+up new. Also, debt that matures could be replaced by equity in an effort to strengthen the capital
+structure, or simply not renewed at all. If the firm has enough cash it might not be necessary,
+which is why we also included the cash variable in the model. Since many firms have a target
+leverage ratio, it is however fair to believe that in many cases debt will be refinanced with either
+the same or another type of debt and we see it as most likely that the different refinancing
+strategies of different firms is what makes current debt insignificant.
+        Liquidity: It was our perception that the liquidity could capture the ability of companies
+to meet its payment obligations, which would affect the willingness of investors to invest in a
+company. If the EBIT over interest ratio is low interest payment requirements are harder to
+meet, meaning that the default risk becomes larger and corporate bonds supposedly become
+more expensive to issue. We therefore suspected that EBIT over interest would have a positive
+correlation with bond issuances, but found no evidence of the impact. As we have weak
+theoretical support for the impact of this variable, we believe that liquidity in most cases does
+not influence the willingness or ability to issue corporate bonds.
+       Perceived riskiness of the bond issuing firms: Diamond (1984) and Boot and Thakor
+(2009) show that banks have better incentives to acquire information about firms than other
+investors do. Hence, as argued by Fama (1985), banks typically have access to inside
+information, while most other investors typically only have access to publicly available
+information. Despite the fact that both banks and bond investors are assessing the riskiness of
+the firm, they thus do this on different bases and the required premium may differ. If the market
+perceives a firm as riskier, based on for example the credit rating, the bond will be more
+expensive to issue since the payments that compensate the investors for the risk that they take
+on are larger. This affects the choice of financing, as banks with access to other information
+may have a different perception of the riskiness. Bonds may thus be more or less expensive in
+relation to bank loans depending on the perceived riskiness and the information asymmetry. In
+the final model in this paper, we have been forced to assume that the market’s perceived
+riskiness is captured by the leverage ratio and the size of the firm, since we have not been able
+
+                                    42
+                                                                     Bernhardsson & Lindstén
+
+to extract information about the credit rating of the firm over time. We believe that the credit
+rating would have been a better proxy for the market’s perceived riskiness of the firm.
+Alternatively, the riskiness could be divided into financial risk and operative risk. The financial
+risk has been incorporated in the leverage ratio. A firm with a high leverage ratio should be
+riskier and less likely to be well received on the bond market, meaning that a higher leverage
+ratio ought to imply a smaller probability to issue a bond. The leverage ratio coefficient in the
+final model is negative. The operative risk could potentially have been assessed by classifying
+the firms into several types of businesses, but since this is an ambiguous process, it has not been
+incorporated in the model. It could be argued that larger firms tend to have less operative risk,
+as they are typically more diversified. A larger firm should be perceived as less risky and
+increase the likelihood of a bond issuance. The coefficient of the indicator variable for large
+firms was shown to be greater than the one for medium-sized firms, which was greater than the
+one for small firms.
+       The target leverage ratio and debt composition: Brown and Riddiough (2003) state that
+bond issuers target a certain leverage ratio, and that firms with a lower leverage ratio are more
+likely to issue debt in general. Since some firms have a target leverage ratio, but naturally
+deviate around it or below it, there is a chance that it would have been more appropriate to
+analyse how the target leverage ratio affects the probability of a bond issuance, rather than the
+actual leverage ratio. The reason for including the actual leverage ratio is that it is hard to
+determine how the target leverage ratio has varied over time by looking at solely publicly
+available financial data. Additionally, the debt composition has not been captured in the final
+model, despite Brown and Riddiough (2003) finding it to be the most significant factor
+determining the financing choice of REITs. The debt composition has been considered not
+easily available information, and the seniority of the currently outstanding debt of the firm was
+therefore not tested.
+       High yield bonds and investment grade bonds: High yield bonds are likely included in
+the sample. This is not shown in data, and we have chosen to analyse high yield and investment
+grade bonds in the same manner, not separating the two categories. This has been considered
+valid, since market conditions should to a great extent be favourable for high yield bond
+issuances at the same time as for investment grade bond issuances. De Fiore and Uhlig (2011)
+state that corporate bonds should mainly be used by low risk firms, and we believe that the great
+majority of the bonds in our sample are investment grade, or close to investment grade. The
+backside of not separating the two categories is that they have very different characteristics;
+investors view them as different types of investments used for different purposes. Fama and
+
+                                    43
+                                                                     Bernhardsson & Lindstén
+
+French (1993) describe the term premium and the default premium of corporate bonds, and state
+that worsened economic conditions increase the likelihood of default, making the premiums
+larger. Firms that have a high default risk and would issue high yield bonds, would by this
+reasoning be less likely to issue corporate bonds in an economic downturn. De Fiore and Uhlig
+(2011) further state that high risk firms should not use corporate bonds, especially in economic
+recessions. Investment grade bonds, on the contrary, have been reasoned to be safer investments
+than stocks, and are thus benefited by the economic uncertainties. Additionally, a firm that
+issues a high yield bond may have difficulties obtaining bank financing, while an investment
+grade bond probably corresponds to a firm that could raise bank financing. Access to the market
+and bank loans differs, and the price differences may differ too. Whether it is a high yield bond
+issuance or an investment grade bond issuance would be desirable to include in the model, but
+due to the lack of accessible information, this could not be done.
+       Price indicators: Another factor that is missing in the final model is the bond index, our
+proxy for the price of, and demand for, bonds. When the index is high, investors would demand
+less compensation for the risk, and so companies should be more willing to issue bonds. The
+index was the part of the information asymmetry proxies that captured only the price of bonds,
+where STIBOR was the other part acting as a component affecting both bond prices and bank
+loan prices. We however found that the relationship between STIBOR and the index was fairly
+constant over time, signifying that using this procedure, we were not able to identify changes
+in conditions favouring bonds or bank loans, but not the other, or any indication of information
+asymmetry in the sample period. This does not mean that there necessarily have not been any
+changing conditions in favour of the pricing of one or the other debt financing option, but that
+our proxies could not conclude it. Furthermore, since the Swedish corporate bond market is
+dominated by institutional investors, we doubt that there actually is any significant information
+asymmetry. Institutional investors often have a lot of knowledge about the firms they invest in,
+just as banks do. The NASDAQ OMX Credit SEK index reflects a portfolio of risky
+municipality bonds and corporate listed bonds trading on a market, and we cannot be sure that
+an index for all listed bonds is a good proxy for the demand and price sensitivity of bonds issued
+by real estate firms. Since real estate firms in general have a more extensive use of corporate
+bonds than other firms, the investor perception of these bonds may be different. We conclude
+that the NASDAQ OMX Credit SEK index does not imply any variance in bond issuances that
+is not given by STIBOR, and therefore does not show any information asymmetry. However,
+despite the fact that the reflected portfolio does not exactly correspond to the firms in our
+sample, the index can on a significant level be incorporated in the model, if STIBOR is
+
+                                    44
+                                                                     Bernhardsson & Lindstén
+
+excluded. The demand on real estate bonds should therefore be in line with the demand on this
+portfolio, perhaps because real estate firms represent a large part of the Swedish corporate bond
+market. The alternative model includes the same variables except the regulation indicator, as
+the index limits the sample period to 2011 to 2017. The limited time frame of the index is one
+of the main disadvantages with using this alternative model, as it is not built on a full business
+cycle. Possibly this could lead to more precise predictions in 2011 to 2017 and in years with
+similar conditions, but it is unlikely that it would be a good model in an economic downturn
+corresponding to the years of 2008 and 2009. We chose to proceed with the STIBOR model
+because we expected it to make future predictions that hold relatively better particularly in
+recessions, since the index model at present cannot be based on recessions.
+       Currency factors: We note that since we have only retrieved data for corporate bond
+issuances in SEK, we have disregarded the fact that a firm may in a quarter be classified as a
+non-issuer of bonds, although it might have made an issuance in another currency or market.
+Since we have used Swedish market data for STIBOR, GDP and the index, we have also
+attempted to only capture when the market circumstances are favourable or not for Swedish
+bond issuances in particular. It is plausible that the Swedish market conditions in themselves
+are favourable, but in relation to the market conditions in for example the euro area or Norway,
+they are not as favourable. An alternative and more detailed approach than the one taken in this
+paper would have been to include variables for example the differences in prevailing interest
+rates, currency exchange rates, and the differences in spreads in the different geographical
+markets. Since the real estate sector mostly has national operations and the firms in our sample
+have made the great majority of their issuances in SEK, it has in this paper been considered
+valid to oversee the relative market conditions between different geographies.
+
+7.3. Suggestions for future research
+We suggest that the model is updated quarterly, in order to incorporate recent trends and re-
+estimate the probabilities of corporate bond issuances based on a currently applicable sample.
+The first quarter of 2008 has been used as a starting point in this paper, and could be so in the
+future too, making the estimation sample larger. Thus, the model can become better suited to
+estimate corporate bond issuances in varying business climates.
+        If a user of the model has access to unofficial data from banks, it would be preferable
+to include price differences between bank loans and corporate bonds. We believe that this is an
+important factor when firms determine which type of financing to use, and so incorporating it
+
+                                    45
+                                                                     Bernhardsson & Lindstén
+
+in the bond issuance model could potentially produce a more accurate model than the one
+developed in this paper which has only considered publicly available data.
+        It might also be possible to incorporate future market trends in the model, as they arise
+and gain in importance. An example is the trend of increased usage of so-called green bonds.
+Today, green bonds are gaining in popularity, and the market demand for them is increasing.
+Firms within the real estate sector have been active in the issuance of green bonds, for example
+Vasakronan made a green bond issuance already in 2013, as noted by Vasakronan (2017). This
+trend should be followed and possibly in the near-term future included in a model corresponding
+to the one built in this paper.
+
+8. Conclusions
+This study sets out to investigate whether the probability of corporate bond issuances of
+Swedish real estate firms can be estimated and predicted using publicly available data. A
+logistic regression model for estimating corporate bond issuances in the Swedish real estate
+sector has been built using publicly available data from the first quarter of 2008 to the third
+quarter of 2017. Several market factors as well as company specific factors were considered
+prior to constructing the model. These have been thoroughly tested, and we find that the interest
+rate STIBOR, a residual between the regression of GDP and STIBOR, an indicator variable for
+the bank regulations implemented in 2011, the size of the firm, the leverage ratio, and EBIT
+can on an 80 percent confidence level be incorporated in a model that estimates the probability
+of corporate bond issuances. We acknowledge that there are factors with an impact on corporate
+bond issuances, such as arising investment opportunities and refinancing needs of specific
+firms, which we have not been able to incorporate in the model. However, we have been able
+to capture a large part of the firm specific variation by using indicator variables for the Swedish
+real estate firms in the sample. For the firms in the sample, the model can furthermore be used
+to predict corporate bond issuances in the near-term future. For the fourth quarter of 2017 the
+model correctly predicted 24 out of 31 issuances. However, the model produces some falsely
+positive outcomes; it predicts issuances that never happen. Furthermore, the model is only
+applicable on the 31 firms in the sample, and the conclusions are only valid on these. Therefore,
+caution needs to be taken when using the model for predicting future corporate bond activity of
+Swedish real estate firms, and users of the model should be aware of its flaws. However, a 90
+percent accuracy in the predictions of actual issuances in the fourth quarter of 2017, indicates
+that the model could be a useful tool when determining future real estate bond issuances.
+
+                                    46
+                                                                     Bernhardsson & Lindstén
+
+References
+
+Published papers
+Becker, B., and Ivashina, V., 2014, Cyclicality of credit supply: Firm level evidence, Journal
+of Monetary Economics 62, 76-93.
+
+Brown, D., and Riddiough, T., 2003, Financing choice and liability structure of real estate
+investment trusts, Real Estate Economics 31 (3), 313-346.
+
+De Fiore, F., and Uhlig, H., 2011, Bank finance versus bond finance, Journal of Money,
+Credit and Banking 43 (7), 89-93.
+
+Diamond, D., 1984, Financial intermediation as delegated monitoring, Review of Economic
+Studies 51, 393-414.
+
+Fama, E., 1985, What's different about banks?, Journal of Monetary Economics 15 (1), 29-39.
+
+Fama, E., and French, K., 1993, Common risk factors in the returns on stocks and bonds,
+Journal of Financial Economics 33, 3-56.
+
+Kaya, O., and Wang, L., 2016, The role of bank lending tightening on corporate bond
+issuance in the Eurozone, The Quarterly review of Economics and Finance 60, 1-11.
+
+Kraus, A., and Litzenberger, R., 1973, A state-preference model of optimal financial
+leverage, Journal of Finance 28 (4), 911-922.
+
+Working papers
+Grjebine, T., Szczerbowicz, U., and Tripier, F., 2017, Corporate debt structure and economic
+recoveries, Banque de France Working Paper no 646.
+
+Papers that represent contributions to collections
+Boot, A., and Thakor, A., 2009, The accelerating integration of banks and markets and its
+implications for regulation, in Berger, A., Molyneux, P., and Wilson, J., ed.: The Oxford
+Handbook of Banking (Oxford University Press)
+
+Government and authority documents
+Sveriges Riksbank, 2015, Promemoria: Kapitalkrav för de svenska storbankerna –
+Riksdagens ståndpunkt, July 3.
+
+Sveriges Riksbank, 2016, Den svenska finansmarknaden, ISSN 2001-5046.
+
+The Swedish Financial Authority, 2011, Press release: Nya kapitalkrav på svenska banker,
+November 25.
+
+Finansinspektionen, 2017, Promemoria: Förslag till anpassning av transparensregler enligt
+Mifid 2/Mifir, FI Dnr 17-5072.
+
+                                    47
+                                                                     Bernhardsson & Lindstén
+
+Other reports and documents
+The Basel Committee on Banking Supervision, 2010, Basel III: A global regulatory framework
+for more resilient banks and banking systems, December.
+
+Nasdaq OMX, 2014, Guidelines and Specification for the Construction and Maintenance of
+the NASDAQ OMX Credit SEK Indexes, April 7.
+
+SEB market review, 2017, 2017 has been a successful year for SEK issuances.
+
+Swedbank and Sparbankerna, 2013, Vad är en obligation?, May 14.
+
+Vasakronan, 2017, Press release: Vasakronan lanserar nytt skarpare ramverk för gröna
+obligationer, April 27.
+
+Online newspapers
+Johansen, E., 2017, Bond vs Note Payable, Pocket Sense, April 19. Available at:
+https://pocketsense.com/bond-vs-payable-3219.html [2018, May 5].
+
+Landeman, L., 2017, Obligationer – en allt viktigare finansieringskälla, Fastighetsnytt, March
+14. Available at:
+https://fastighetsnytt.se/2017/03/obligationer-en-allt-viktigare-finansieringskalla/
+[2018, April 3].
+
+Interviews
+Interview 1, 2018, employee at investment grade bond department at one of the largest Swedish
+banks, led by Lindstén, E., March 28.
+
+Interview 2, 2018, employee at high yield bond department at one of the largest Swedish banks,
+led by Lindstén, E., April 25.
+
+                                    48
+                                                                     Bernhardsson & Lindstén
+
+Appendix
+
+Figure I
+STIBOR and lending rates over time
+
+The graph in Figure I above displays the average STIBOR rate on a yearly basis, and the yearly average
+bank lending rate. The yearly average STIBOR rates have been calculated by dividing the accumulated
+quarterly measured 3-month STIBOR rate by 4. The quarterly 3 month STIBOR rates have been
+retrieved from Svenska Riksbanken (2018). As for the average bank lending rate, retrieved from
+Sveriges Riksbank (2018), was reported on a yearly basis.
+
+                                    49
+                                                                     Bernhardsson & Lindstén
+
+Table I
+Pair-wise correlation table for STIBOR and banks' lending rates
+
+                                  Yearly average        Yearly average
+                                STIBOR           lending rate
+ Yearly average STIBOR 1
+
+                                                 *
+ Yearly average lending rate 0.84                    1
+
+ Observations 8
+t statistics in parentheses
+***          **          *
+   p < 0.20,   p < 0.15,  p < 0.10
+Table I above displays the pair-wise correlation between the yearly averages of 3-
+month STIBOR, originally reported on a quarterly basis, and the yearly average bank
+lending rate. As shown above, the pair-wise correlation between the two rates are high
+and almost a perfect positive correlation (0.84).
+
+                                    50
+                                                                     Bernhardsson & Lindstén
+
+Table II
+Issuance per firm
+
+                        sum
+ AGORA 1
+ Sagax 7
+ ALM Equity 2
+ Akelius 2
+ Amasten 1
+ Atrium Ljungberg 7
+ Castellum 13
+ Corem 7
+ Delarka 0
+ Fabege 6
+ FastPartner 6
+ Balder 7
+ Genova 1
+ Heimstaden 1
+ Hemfosa 3
+ Hemso 9
+ Hufvudstaden 9
+ Klovern 7
+ Kungsleden 5
+ Magnolia 2
+ MaxFast 1
+ Oscar Properties 1
+ Prime Living 3
+ Rikshem 14
+ SSM 1
+ Stendorren 2
+ Tobin 1
+ Vacse 1
+ Vasakronan 36
+ Victoria Park 2
+ Wallenstam 2
+ Whilborgs 4
+ Total 164
+ Observations 829
+The figure above describes the number of issuances per firm which the estimation model is built upon
+
+Table II displays the number of issuances per firm between the first quarter of 2008 and the
+third quarter of 2017, for which the previous year of company specific data has been reported.
+Hence, the table above does only include the in sample time periods, and thereby not the fourth
+quarter of 2017, making the maximum number of issuance 39. As Delarka has no issuances
+reported in the table above, it is hereafter not included in the sample for the model built.
+
+                                    51
+                                                                     Bernhardsson & Lindstén
+
+Figure II
+STIBOR and the Swedish repo rate over time
+
+Figure II displays the 3-month STIBOR rate and the Swedish repo rate from the first
+quarter of 2008 to the last quarter of 2017. As seen in the graph above, the two rates have
+similar development over time, and one of them should reasonably be possible to use as
+a proxy for the other.
+
+Table III
+Pair-wise correlation table for STIBOR and the repo rate of Sweden
+
+                      STIBOR Repo rate
+ STIBOR 1
+
+                                   *
+ Repo rate 0.99             1
+
+ Observations 40
+t statistics in parentheses
+***          **          *
+   p < 0.20,   p < 0.15,  p < 0.10
+Table III displays the pair-wise correlation between the 3-
+month STIBOR and the Swedish repo rate, during the time
+2008 to 2017. The table shows that the correlation between the
+two rates are almost 1, and thereby very close to a positive
+perfect correlation. The correlation is calculated on a
+confidence level of 90 percent.
+
+                                    52
+                                                                     Bernhardsson & Lindstén
+
+Table IV
+Descriptive statistics for all companies
+
+                               min mean max sd
+ AGORA
+ Total assets 3527 4143.7 4656 521.9046
+ EBIT 25 37.15 53 8.048637
+ EBIT over interest 1.5 1.844 2.41 .3244551
+ Leverage ratio 65.3 66.7 68.4 1.073934
+ Current debt .818 2.0295 10.56 2.999557
+ Cash 30 80.9 121 31.68403
+ Cash from investing -318 -78.45 36 114.1331
+ Sagax
+ Total assets 6279.9 13111.04 27240 6428.733
+ EBIT 93 222.3943 483 108.2818
+ EBIT over interest 1.15 2.682 5.44 .9448679
+ Leverage ratio 55.3 69.99429 80 7.122786
+ Current debt 1.1 3.808571 8.4 1.966091
+ Cash 60 247.9457 406 84.03337
+ Cash from investing -1048 -385.4257 185 323.011
+ ALM Equity
+ Total assets 200.1 1571.197 5442.6 1553.43
+ EBIT .35 31.75028 256.9 46.52446
+ EBIT over interest .158 4.668333 14.7 3.479911
+ Leverage ratio 44.1 54.80556 63.6 4.902591
+ Current debt 44 72.75833 93 13.26138
+ Cash 22.2 154.1361 568.9 157.745
+ Cash from investing -124.6 -3.4 62 26.46429
+ Akelius
+ Total assets 34824 65812 105871 22497.98
+ EBIT 267 474.4762 607 93.97586
+ EBIT over interest .9 1.621429 2.28 .3894905
+ Leverage ratio 47.9 57.84762 72.7 8.211006
+ Current debt 6.7 14.50952 36.4 6.903833
+ Cash 28 201.0476 1100 240.5509
+ Cash from investing -4642 -1503.143 3942 1854.195
+ Amasten
+ Total assets 290.48 1891.948 3298.541 988.3283
+ EBIT .6 13.45 27.2 8.542782
+ EBIT over interest .4 1.513333 2.8 .7193625
+ Leverage ratio 56.7 64.32222 72.5 5.054358
+ Current debt 1.152 13.63022 41.328 14.76255
+ Cash 1.225 93.68778 274.938 82.05061
+ Cash from investing -399.606 -55.128 2.244 101.4924
+ Atrium Ljungberg
+ Total assets 19832.2 26515.46 42763 6830.846
+ EBIT 205.5 294.2595 413 53.49318
+ EBIT over interest .297 3.369378 25.5 3.851829
+ Leverage ratio 44.3 51.38649 54.6 2.198505
+
+                                    53
+                                                                    Bernhardsson & Lindstén
+
+Current debt 3.9 18.58378 29.1 6.435169
+Cash 58.9 297.5135 768.9 140.0518
+Cash from investing -2199 -408.2135 601.1 507.1716
+Castellum
+Total assets 28070 42916.64 83712 18226.09
+EBIT 362 538.9688 931 157.7574
+EBIT over interest .837 4.188031 47.6 8.045742
+Leverage ratio 54 60.50625 63.7 2.820425
+Current debt 0 4.609375 17.5 5.927811
+Cash 8 116.5938 425 117.8112
+Cash from investing -11480 -765.7188 2033 2085.356
+Corem
+Total assets 3902 7612.909 13353 2696.037
+EBIT 50 131.5091 271 67.48974
+EBIT over interest .4 2.153879 6.84 1.219942
+Leverage ratio 62.7 69.30606 74.3 2.641844
+Current debt 2.1 26.32424 78.7 15.67554
+Cash 2 92.66667 229 68.45056
+Cash from investing -1378 -183.3939 163 273.3667
+Fabege
+Total assets 28907 35534.75 56906 7158.258
+EBIT 260 333.5 425 31.2835
+EBIT over interest 1.41 2.158333 3.08 .4199218
+Leverage ratio 48.2 60.18889 67.2 4.871302
+Current debt .2 14 35.6 9.399514
+Cash 13 112.75 411 83.24503
+Cash from investing -2779 -96.16667 1522 748.8084
+FastPartner
+Total assets 4619.7 9945.651 20983.3 5246.461
+EBIT 54.6 125.0026 256.8 63.13364
+EBIT over interest 1.35 3.186154 8.4 1.338667
+Leverage ratio 59.4 65.41282 70.7 3.345317
+Current debt 11.3 33.4641 57.8 12.62455
+Cash 1.8 256.2103 819.5 214.1696
+Cash from investing -1314.9 -285.4128 50.1 339.3731
+Balder
+Total assets 7906.3 38029.11 106260 31555.37
+EBIT 9 420.5769 1111 304.059
+EBIT over interest .1 2.663333 5.86 1.130855
+Leverage ratio 58.2 65.54615 76.1 5.174271
+Current debt .9 31.21026 59 18.93551
+Cash .1 613.4051 5023 1124.186
+Cash from investing -4200 -993.9487 1151 1253.167
+Genova
+Total assets 1059.168 1971.522 2594.022 479.9479
+EBIT 17.3 29.40833 45.7 8.511966
+EBIT over interest 2.8 7.624167 20.7 5.32728
+Leverage ratio 47.4 53.19167 56.2 2.961713
+Current debt .907 2.8965 7.581 2.334176
+Cash 11.963 99.65475 228.354 66.06643
+
+                                   54
+                                                                    Bernhardsson & Lindstén
+
+Cash from investing -291.262 -60.94267 62.864 90.67313
+Heimstaden
+Total assets 7839.3 19130.43 52642.5 12431.98
+EBIT 40.9 131.9846 261 63.6419
+EBIT over interest .2 5.125385 37.3 9.762983
+Leverage ratio 54 61.47692 71.3 5.442909
+Current debt .6 13.16154 21 6.319222
+Cash 196.8 1167.731 3361 837.7687
+Cash from investing -4953 -1003.2 921 1423.903
+Hemfosa
+Total assets 17121 30845.59 44086 8936.245
+EBIT 197 463.4706 1049 192.1549
+EBIT over interest 1.17 4.645294 12 2.967181
+Leverage ratio 55.6 62.48824 85.3 6.927471
+Current debt 1 14.40588 36.9 11.39745
+Cash 195 594.3529 1221 282.5827
+Cash from investing -6498 -1165.353 302 1521.691
+Hemso
+Total assets 21628 27880.09 40677 6320.986
+EBIT 75 317.1364 449 92.64592
+EBIT over interest .164 3.282409 12.5 2.595228
+Leverage ratio 70.3 79.89091 88.8 7.100631
+Current debt 5.8 15.02273 25.1 6.57339
+Cash 13 579.8636 2957 785.5165
+Cash from investing -2088 -564.3182 1425 846.8166
+Hufvudstaden
+Total assets 18455.5 26408.95 40294.9 6659.218
+EBIT 207.4 264.3385 319.1 34.14857
+EBIT over interest 3.2 7.57 11.9 1.822905
+Leverage ratio 19.6 25.01538 30.4 2.387747
+Debt expiring within a year 5.2 22.18462 50.4 11.58632
+Cash 13.9 407.0667 1113.8 210.8857
+Cash from investing -1321.6 -136.5077 -33 210.2137
+Klovern
+Total assets 12433.3 24583.9 44257 10941.45
+EBIT 144 307.7875 554 123.7256
+EBIT over interest .467 5.42625 68 11.87599
+Leverage ratio 58.4 66.5475 72.8 3.05983
+Current debt .4 13.005 34.7 10.76085
+Cash 5 147.175 798 159.4104
+Cash from investing -3842 -496.32 398 680.266
+Kungsleden
+Total assets 16993.5 24645.73 31772 4499.578
+EBIT 212.2 371.7437 1368 192.2829
+EBIT over interest .867 2.294281 5.9 1.196518
+Leverage ratio 46.7 61.39063 74.4 7.060036
+Current debt 3.6 8.00625 17.1 2.852044
+Cash 41 682.6844 1975 408.6363
+Cash from investing -1287.1 128.1687 2946.6 818.9443
+Magnolia
+
+                                   55
+                                                                    Bernhardsson & Lindstén
+
+Total assets 369.7 1295.96 1888 673.6401
+EBIT 17.2 56.5 96.5 28.31457
+EBIT over interest 3.25 7.242 10.6 2.679435
+Leverage ratio 43.8 55.5 66.1 7.958329
+Current debt 1.4 10.14 15.7 7.618596
+Cash 23.3 130.5 263.9 102.3238
+Cash from investing -6.4 -1.28 3.3 3.46439
+MaxFast
+Total assets 500.516 1070.434 1435.126 315.5273
+EBIT 5.4975 11.51393 17.5 4.009544
+EBIT over interest 1.9 3.485714 4.9 1.130529
+Leverage ratio 50.1 57.78571 75.3 8.493611
+Current debt 3.576 20.93614 70.061 24.23699
+Cash 5.978 56.63157 209.259 70.69173
+Cash from investing -208.735 -95.73971 -4.55 64.40499
+Oscar Properties
+Total assets 1668.7 3690.473 5456.9 1300.062
+EBIT 7.8 60.38182 152.4 48.14733
+EBIT over interest .2 3.191818 11.2 2.946754
+Leverage ratio 54.2 61.55455 63.9 2.739841
+Debt expiring within a year 5 16.24545 32.8 9.587113
+Cash 45.3 227.9364 479.9 113.3515
+Cash from investing -502.6 -60.71818 271.2 216.4326
+Prime Living
+Total assets 966.853 1503.713 2294.093 435.4562
+EBIT .319 1.4045 3.26 1.038667
+EBIT over interest .02 .276375 .64 .2047535
+Leverage ratio 43.2 51.1375 64.2 7.178925
+Current debt .031 9.535 31.401 13.25186
+Cash 15.283 110.4525 280.057 87.49799
+Cash from investing -168.769 -94.66412 -14.053 54.5003
+Rikshem
+Total assets 13537.9 27249.35 45042 11402.56
+EBIT 111.3 270.3381 445 93.01445
+EBIT over interest .402 2.648286 11.3 2.58547
+Leverage ratio 61.1 77.71429 92.8 11.12539
+Debt expiring within a year 19.2 36.64286 56.5 13.19328
+Cash 12.6 645.3048 3172 764.5533
+Cash from investing -2368.2 -679.1619 732 770.6371
+SSM
+Total assets 430.7 494.0333 570.1 70.56694
+EBIT 7.92 12.77333 18 5.05036
+EBIT over interest .662 2.904 5.66 2.538336
+Leverage ratio 57.6 67.76667 80.2 11.46923
+Current debt 5.8 19.3 26.3 11.69402
+Cash 3.5 5.5 9.5 3.464102
+Cash from investing -52.8 -7.966667 26.9 40.77405
+Stendorren
+Total assets 2288 5271.062 6624 1118.436
+EBIT 10.1 56.62308 80 17.96701
+
+                                   56
+                                                                    Bernhardsson & Lindstén
+
+EBIT over interest 1.71 2.33 2.96 .3041929
+Leverage ratio 60.7 65.51538 72.1 4.188048
+Current debt 6.3 27.40769 40.5 10.8796
+Cash 31 93.06154 218.6 66.55287
+Cash from investing -368 -113.3846 57 108.4201
+Tobin
+Total assets 633.866 1408.011 1899.464 624.3859
+EBIT 7.43 16.466 30.2 9.922312
+EBIT over interest .4 1.6924 3.8 1.551667
+Leverage ratio 49.6 58.12 61.9 4.877192
+Debt expiring within a year 7.148 8.711 9.928 1.141644
+Cash 61.141 152.8854 244.329 76.62499
+Cash from investing -269.362 -73.7106 136.088 147.3028
+Vacse
+Total assets 5134.904 5351.751 5560.855 138.5193
+EBIT 62.3 66.45556 71.4 3.458363
+EBIT over interest .996 2.825111 9.93 2.822646
+Leverage ratio 73.6 79.11111 84 4.024129
+Current debt .187 5.926444 20.44 8.533249
+Cash 46.132 158.2742 598.802 166.924
+Cash from investing -212.808 -6.408 250.416 118.4332
+Vasakronan
+Total assets 42143 93044.23 132283 19539.41
+EBIT 425 975.2051 1150 161.8471
+EBIT over interest 1.6 2.973333 4.05 .6144845
+Leverage ratio 44.4 58.07436 63.8 3.794852
+Debt expiring within a year 6.8 21.58718 63.3 12.162
+Cash 6 2246.359 5748 1253.453
+Cash from investing -26566 -853.641 6617 4598.105
+Victoria Park
+Total assets 1745.8 8450.122 16333 4541.478
+EBIT 1.2 68.06667 141 45.29002
+EBIT over interest .3 2.351111 4.27 .9810312
+Leverage ratio 57.4 63.19444 78.9 5.221164
+Current debt .5 4.166667 8.6 2.895433
+Cash 50.9 451.7222 1033 257.145
+Cash from investing -979 -275.55 33 309.4054
+Wallenstam
+Total assets 19921 30253.86 43673 6882.585
+EBIT 135.1 226.8917 353 53.09207
+EBIT over interest .6 2.448611 5 1.039561
+Leverage ratio 47 55.14444 60.7 4.166427
+Current debt 35.2 73.44444 96.1 21.28406
+Cash 18 282.3611 730 213.0376
+Cash from investing -1473 -244.0556 962 473.5654
+Whilborgs
+Total assets 13705 21338.23 39217 7340.83
+EBIT 189 283.4333 424 74.86203
+EBIT over interest .226 2.6885 8.9 1.636832
+Leverage ratio 61.3 65.44333 68.7 2.359965
+
+                                   57
+                                                                     Bernhardsson & Lindstén
+
+ Current debt .4 11.69333 25.6 7.978503
+ Cash 23 182.1667 559 107.4835
+ Cash from investing -1637 -326.4667 114 394.2267
+ Total
+ Total assets 200.1 25440.1 132283 24623.14
+ EBIT .319 280.4517 1368 249.2038
+ EBIT over interest .02 3.38795 68 4.246244
+ Leverage ratio 19.6 60.79511 92.8 11.99304
+ Current debt 0 22.51456 96.1 22.32564
+ Cash .1 408.2914 5748 682.9166
+ Cash from investing -26566 -402.4657 6617 1376.284
+ Observations 716
+The figure above describes the descriptive statistics for each firm in the sample
+
+Table IV, displays the output of the descriptive statistics of each company. The minimum, mean,
+maximum and standard deviation has been calculated for the variables representing total assets, EBIT,
+EBIT over interest, leverage ratio, current debt, cash, and cash from investing for each company in the
+sample.
+
+                                    58
+                                                                                                                       Bernhardsson & Lindstén
+
+Table V
+Pair-wise correlation table for all variables
+
+                  Bond    STIBOR   GDP t-   Index t-   Regul-   Size t-   Recent   Current   Cash from   EBIT   EBIT /   Lever-   Cash
+                 issuance      t-1         1         1       ation      1       bond     debt t-1   investing     t-1    Interest     age      t-1
+                                                                                                                  t-1                   t-1     ratio t-1
+ Bond            1
+ issuance
+                          *
+ STIBOR t-1 -0.19        1
+                         *       *
+ GDP t-1 0.23      -0.59        1
+                         *       *      *
+ Index t-1 0.16       -0.90      0.87        1
+                         *       *      *      *
+ Regulation 0.24       -0.53      0.71      0.72       1
+                          *        ***       *
+ Size t-1 0.34     -0.048      0.067     0.038 -0.022 1
+                         *       *      *      *      *      *
+ Recent bond 0.35      -0.20      0.24     0.18      0.23     0.33       1
+                                      *       *        *                 *
+ Current debt     -0.017 0.10      -0.10    -0.091    -0.045 -0.16     -0.033 1
+ t-1
+                           *                   *        *                 *        *
+ Cash from       -0.074     0.0055 -0.082    -0.073    -0.042 -0.20    -0.059    -0.0062 1
+ investing t-1
+                         *        *      *       *                *      *       *       *
+ EBIT t-1 0.42      -0.097     0.11     0.099     0.039 0.74      0.43      -0.11      -0.18        1
+                                                             *        *       *
+ EBIT /          -0.0100 -0.031 -0.017 0.088    -0.061    -0.12    -0.0064 0.033 0.016 -0.032 1
+ Interest t-1
+                                                                                  *                  *        ***                  *
+ Leverage         0.015 0.012 -0.024 0.0077 0.042 0.11     0.022 -0.12     -0.049      -0.018 -0.062       1
+ ratio t-1
+                         *       *      *       *       *      *      *                    *      *
+ Cash t-1 0.33       -0.12      0.14     0.092     0.077    0.48      0.33      -0.045 -0.075     0.63    -0.014 -0.042 1
+ Observations 1240
+***          **          *
+   p < 0.20,   p < 0.15,  p < 0.10
+Table V shows the pair-wise correlations between all independent variables and the dependent variable. Important to note is that the index variable has a correlation
+above 0.75 with both STIBOR and GDP.
+
+                                                        59
+                                                                     Bernhardsson & Lindstén
+
+Table VI
+Index model regression
+                                Coefficient
+ Bond issuance
+                                           *
+ Index t-1 0.023            (0.0045)
+
+ Small firms t-1 0 (.)
+
+                                          *
+ Medium-sized firms t-1 2.30              (0.92)
+
+                                          *
+ Large firms t-1 3.29              (1.19)
+
+                                            *
+ EBIT t-1 -0.0034           (0.0015)
+
+                                           *
+ Leverage ratio t-1 -0.052            (0.020)
+
+                                          *
+ Constant -25.7              (4.81)
+ Observations 592
+Standard errors in parentheses
+***          **          *
+   p < 0.20,   p < 0.15,  p < 0.10
+In Table VI above, the coefficients and standard errors of the variables
+included in the alternative index model is showed. The small firms have
+no coefficient, since this is set as the base group for the size indicator
+variable. All coefficients are significant on a 90 percent confidence
+level. We note that the Nasdaq Credit SEK index is not constructed
+based on a portfolio that perfectly reflects our data sample, since it
+based on municipalities and firms in different sectors and does not
+include any debt instruments expiring within a year. Another
+disadvantage is that it only covers the period from 2011 to 2017, and
+thus likely will not be suited to predict corporate bond issuances over
+the full business cycle.
+
+                                    60
+                                                                     Bernhardsson & Lindstén
+
+Figure III
+STIBOR development over time
+
+Figure III shows the development of the 3-month STIBOR rate from the first quarter of
+2008 to the last quarter of 2017. As a reference, a line at the zero interest rate has been
+inserted. The graph makes it visible that the rate was particularly high in the first year,
+and particularly low the last few years. Since the first quarter of 2015, the 3-month
+STIBOR has had a value of below 0.
+
+                                    61
+                                                                     Bernhardsson & Lindstén
+
+Table VII
+Partial correlation table for variables in initial model
+                                       Bond issuance
+                                          Partial corr. /P-value
+ STIBOR t-1 -0.0827
+                                         0.0343
+ GDP residual t-1 0.0348
+                                          0.373
+ Recent bond 0.147
+                                       0.000160
+ Current debt t-1 0.0244
+                                          0.533
+ Cash from investing t-1 -0.00538
+                                          0.891
+ EBIT t-1 0.242
+                                           3.46e-10
+ EBIT / Interest t-1 0.0132
+                                          0.737
+ Leverage ratio t-1 0.0303
+                                          0.439
+ Cash t-1 0.0803
+                                         0.0399
+ Constant
+                                          0.691
+ Observations 664
+Indicator variables not included in partial correlation due to discrete values
+Table VII shows the partial correlation of all continuous variables included in
+the initial model. Note that the indicator variables are discrete, and therefore
+cannot be incorporated in a partial correlation. Thus, the indicator variables are
+not accounted for when the partial correlations above are calculated, meaning
+that the partial correlations most likely are higher than they would have been
+had the indicator variables been included.
+
+                                    62
+                                                                     Bernhardsson & Lindstén
+
+Table VIII
+Initial model regression
+                                Coefficient
+ Bond issuance
+                                          *
+ STIBOR t-1 -0.49             (0.12)
+
+                                             *
+ GDP residual t-1 -0.000081         (0.000049)
+
+ Small firms t-1 0 (.)
+
+                                          *
+ Medium-sized firms t-1 2.31              (1.28)
+
+                                          *
+ Large firms t-1 3.36              (1.71)
+
+                                          *
+ Regulation 2.56              (0.79)
+
+ Current debt t-1 0.00026 (0.0094)
+
+ Cash from investing t-1 0.000046 (0.000091)
+
+ EBIT t-1 -0.0015 (0.0022)
+
+ EBIT / Interest t-1 0.011 (0.021)
+
+ No recent bond 0 (.)
+
+ Recent bond -0.20 (0.36)
+
+                                          ***
+ Leverage ratio t-1 -0.047             (0.033)
+
+ Cash t-1 -0.00031 (0.00041)
+
+                                          *
+ Constant -3.46              (2.08)
+ Observations 636
+Standard errors in parentheses
+***          **          *
+   p < 0.20,   p < 0.15,  p < 0.10
+Table VIII shows the initial model regression, which includes all
+independent variables. In the table above, current debt, cash from
+investing, EBIT, EBIT over interest, recent bond and the cash variable
+are all insignificant at the 80 percent confidence level. Important to note
+is that the variable for small firms and the variable for no recent bond
+are both set to base level in the comparison to other groups, and are
+thereby 0.
+
+                                    63
+                                                                     Bernhardsson & Lindstén
+
+Table IX
+Stepwise regressions
+                      Step 1 Step 2 Step 3 Step 4 Step 5 Step 6
+                      Coeff.      Coeff.      Coeff.      Coeff.      Coeff.      Coeff.
+                      /P-value    /P-value     /P-value    /P-value    /P-value    /P-value
+ Bond issuance
+ STIBOR t-1 -0.49 -0.49 -0.52 -0.52 -0.51 -0.50
+                   0.00005   0.0000049  0.000003  0.000002  0.000007  0.000008
+                    29        4         15        33        06        83
+
+ GDP residual t-1 -       -0.000078 -            -            -            -
+                   0.00008              0.000079  0.000084  0.000085  0.000088
+                     1
+                     0.0985 0.118 0.118 0.0736 0.0611 0.0488
+
+ Small firms 0 0 0 0 0 0
+                                . . . . . .
+
+ Medium-sized        2.31 2.68 2.34 2.35 2.30 2.26
+ firms
+                     0.0714 0.0275 0.0226 0.0222 0.0224 0.0246
+
+ Large firms 3.36 4.12 3.73 3.67 3.58 3.48
+                     0.0500 0.0106 0.00971 0.00861 0.00837 0.00825
+
+ Regulation 2.56 2.73 2.72 2.74 2.70 2.76
+                    0.00127 0.000240 0.000190 0.000185 0.000139 0.000080
+                                                                      5
+
+ Current debt t-1 0.00026 -0.0016
+                     0.978 0.857
+
+ Cash from         0.00004   0.000046 0.000044
+ investing t-1           6
+                      0.614 0.606 0.614
+
+ EBIT t-1 -0.0015 -0.0022 -0.0020 -0.0020 -0.0019 -0.0024
+                     0.499 0.197 0.230 0.249 0.257 0.177
+
+ EBIT / Interest t-1 0.011
+
+                     0.596
+
+ No recent bond 0 0 0 0
+                                . . . .
+
+ Recent bond -0.20 -0.20 -0.20 -0.20
+                      0.571 0.548 0.544 0.554
+
+                                    64
+                                                                     Bernhardsson & Lindstén
+
+ Leverage ratio t-1 -0.047 -0.048 -0.041 -0.041 -0.041 -0.040
+                     0.154 0.0583 0.0474 0.0440 0.0399 0.0482
+
+ Cash t-1 -0.00031 -0.00031 -0.00031 -0.00029 -0.00027
+                      0.451 0.462 0.462 0.472 0.492
+
+ Constant -3.46 -3.93 -4.05 -4.04 -3.99 -4.07
+                     0.0967 0.0222 0.00220 0.00205 0.00165 0.00142
+ Observations 636 700 797 797 797 797
+Table IX shows the coefficients and P-values, for each variable in the stepwise regression. One by
+one, variables are rejected and at Step 6, STIBOR, the residual of GDP and STIBOR, the size
+indicator variables, the regulation dummy variable, EBIT and leverage ratio remains in the model in
+addition to the constant and company indicator variables. The indicator variable for each company
+has been chosen to not be included in the output, in order to make the output easier to interpret.
+
+                                    65
+                                                                     Bernhardsson & Lindstén
+
+Table X
+Final regression model with company indicators
+                                Coefficient
+ Bond issuance
+ AGORA 0 (.)
+
+                                          *
+ Sagax 1.82             (0.50)
+
+                                          **
+ ALM Equity 0.38             (0.24)
+
+ Akelius -0.34 (1.03)
+
+ Amasten -0.11 (0.16)
+
+                                          *
+ Atrium Ljungberg 1.38             (0.66)
+
+                                          *
+ Castellum 3.07             (1.04)
+
+                                          *
+ Corem 1.75             (0.38)
+
+                                          *
+ Fabege 1.19             (0.60)
+
+                                          *
+ FastPartner 1.36              (0.35)
+
+                                          *
+ Balder 1.88             (0.94)
+
+ Genova 0.097 (0.29)
+
+                                          *
+ Heimstaden -0.46             (0.23)
+
+                                          *
+ Hemfosa 1.41             (0.70)
+
+                                          *
+ Hemso 3.04             (0.65)
+
+ Hufvudstaden 0.59 (0.94)
+
+                                          *
+ Klovern 2.09             (0.72)
+
+                                          *
+ Kungsleden 1.23             (0.63)
+
+                                          *
+ Magnolia 0.84             (0.21)
+
+                                          *
+ MaxFast 2.43             (0.96)
+
+                                          *
+ Oscar Properties -0.46              (0.24)
+
+                                          *
+ Prime Living 2.42             (0.79)
+
+                                          *
+ Rikshem 3.69             (0.58)
+
+                                    66
+                                                                     Bernhardsson & Lindstén
+
+                                          **
+ SSM 1.46            (0.95)
+
+                                          *
+ Stendorren 0.48             (0.049)
+
+ Tobin 0.83 (0.86)
+
+ Vacse 0.35 (0.36)
+
+                                          *
+ Vasakronan 9.28             (1.84)
+
+ Victoria Park -0.035 (0.15)
+
+ Wallenstam -0.21 (0.51)
+
+                                          *
+ Whilborgs 1.20             (0.62)
+
+                                          *
+ STIBOR t-1 -0.50             (0.11)
+
+                                             *
+ GDP residual t-1 -0.000088         (0.000045)
+
+ Small firms t-1 0 (.)
+
+                                          *
+ Medium-sized firms t-1 2.26              (1.00)
+
+                                          *
+ Large firms t-1 3.48              (1.32)
+
+                                          *
+ Regulation 2.76              (0.70)
+
+                                           ***
+ EBIT t-1 -0.0024            (0.0017)
+
+                                           *
+ Leverage ratio t-1 -0.040            (0.020)
+
+                                          *
+ Constant -4.07              (1.28)
+ Observations 797
+Standard errors in parentheses
+***          **          *
+   p < 0.20,   p < 0.15,  p < 0.10
+
+Table VIII displays the output of the final model when the company
+indicator variables have been included.
+
+                                    67
+                                                                     Bernhardsson & Lindstén
+
+Table XI
+Panel data regression
+                                Coefficient
+ Bond issuance
+ Small firms t-1 0 (.)
+
+                                          *
+ Medium-sized firms t-1 2.10              (0.88)
+
+                                          *
+ Large firms t-1 3.27              (1.13)
+
+                                          *
+ STIBOR t-1 -0.49             (0.16)
+
+                                             *
+ GDP residual t-1 -0.000085         (0.000050)
+
+                                          *
+ Regulation 2.68              (0.60)
+
+                                            **
+ EBIT t-1 -0.0023           (0.0015)
+
+                                           *
+ Leverage ratio t-1 -0.037            (0.021)
+ Observations 797
+Standard errors in parentheses
+***          **          *
+   p < 0.20,   p < 0.15,  p < 0.10
+
+Table XI shows the output from the corresponding panel data regression
+(made by xtlogit in STATA). By comparing Table XI with the final
+model regression output with company specific variables, it is made
+clear that the analysis can be performed. Since this is possible, the data
+set is not suffering from high serial correlation, and the implementation
+of company indicator variables is successfully a substitute for the panel
+data regression model.
+
+                                    68

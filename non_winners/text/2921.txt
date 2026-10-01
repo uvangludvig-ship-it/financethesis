@@ -1,0 +1,2236 @@
+Stockholm School of Economics
+Degree project, spring 2016
+
+          Forecast Precision of Value at Risk:
+                 An Evaluation of ARCH-Type Models
+
+                               Jacob Lindberg (22765)
+                                      Department of Finance
+                         &
+                             Alexander Matsson (23026)
+                                    Department of Economics
+
+                                                            ∗
+Supervisors: Cristian Huse and Rickard Sandberg
+Date submitted: 16 May 2016
+Date examined: 1 June 2016
+Discussant: Patrik Edberg
+Examiner: Laurent Bach
+
+                                       Abstract
+      Over the recent years, value at risk has become an industry standard for measuring downside
+      market risk. This thesis aims to give a thorough differentiation between the different types of
+      models used to estimate value at risk. It shows what gains to be achieved going from a symmetric
+      to an asymmetric model as well as a few other tweaks that can be done to potentially improve
+      the estimates. We provide a detailed comparison of several different kinds of approaches coupled
+      with a thorough backtesting procedure giving a precise evaluation of every alternative approach.
+      Our observations show the importance of choosing a model with regards to its end use and the
+      importance of not adhering too much to convention. Moreover, we show that the asymmetric
+      models prove superior in the analysed stock indices though it is hard to predict the winning
+      model beforehand.
+
+     JEL Classification Codes: C22, C52, G17, G32
+     Keywords: value at risk, volatility modelling, GARCH models, backtesting, asymmetric effect
+
+   ∗
+    We would like to thank Christian Huse and Rickard Sandberg for giving us important guidance throughout the
+project and for pushing us to do more than we though we could. All remaining shortcomings are our own.
+
+                                           1
+Contents
+
+1 Introduction 6
+   1.1 Literature Review . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+   1.2 Research Question . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+
+2 Theory and Methodology 7
+   2.1 Time Series Concepts . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+        2.1.1 Market Returns . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+        2.1.2 Information Set and Conditionality . . . . . . . . . . . . . . . . . . . . . . . . 8
+        2.1.3 Autocorrelation Function . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+         2.1.4 Stationarity . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+         2.1.5 Volatility Clustering . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9
+         2.1.6 White Noise . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9
+   2.2 Theory for Analysing the Data . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 10
+        2.2.1 Test of Stationarity using ADF-tests . . . . . . . . . . . . . . . . . . . . . . . 10
+        2.2.2 Test Normality using Q-Q Plots . . . . . . . . . . . . . . . . . . . . . . . . . 11
+        2.2.3 Test of Autocorrelation using ACF Plots . . . . . . . . . . . . . . . . . . . . . 11
+   2.3 Value at Risk . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12
+        2.3.1 VaR in Regulations . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12
+        2.3.2 Defining and Calculating VaR . . . . . . . . . . . . . . . . . . . . . . . . . . . 13
+        2.3.3 Backtesting VaR . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+   2.4 Modelling Conditional Volatility . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
+        2.4.1 Symmetric GARCH models . . . . . . . . . . . . . . . . . . . . . . . . . . . . 18
+        2.4.2 Asymmetric GARCH models . . . . . . . . . . . . . . . . . . . . . . . . . . . 19
+        2.4.3 Maximum Likelihood Estimation . . . . . . . . . . . . . . . . . . . . . . . . . 23
+         2.4.4 Information Criteria . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 23
+        2.4.5 Rolling Window Estimation . . . . . . . . . . . . . . . . . . . . . . . . . . . . 24
+        2.4.6 Mean Squared Error . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 26
+   2.5 Model Diagnostics . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 26
+
+                                           2
+3 Data Analysis 26
+   3.1 Exploratory Data Analysis . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 27
+        3.1.1 Stationary of Prices and Returns . . . . . . . . . . . . . . . . . . . . . . . . . 27
+         3.1.2 Descriptive Statistics and Q-Q Plots . . . . . . . . . . . . . . . . . . . . . . . 28
+        3.1.3 ACF Plots of Return . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 29
+        3.1.4 ACF Plots of Squared Return . . . . . . . . . . . . . . . . . . . . . . . . . . . 30
+        3.1.5 Conclusion of EDA . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 31
+   3.2 GARCH Model Competition . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 31
+   3.3 Model Comparison of Winner and Benchmark . . . . . . . . . . . . . . . . . . . . . . 32
+        3.3.1 Fitting the GARCH Model and Estimated Coefficients . . . . . . . . . . . . . 32
+   3.4 VaR Backtesting . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 35
+        3.4.1 Tabulated Results . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 35
+        3.4.2 VaR Forecast Plot . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 36
+        3.4.3 Impact of Asymmetry . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 36
+         3.4.4 MSE . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 39
+        3.4.5 Conclusion of VaR Backstesting . . . . . . . . . . . . . . . . . . . . . . . . . 39
+   3.5 Model Diagnostics . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 39
+
+4 Conclusions 42
+   4.1 Future Research . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 43
+
+5 References 44
+
+A Appendix 48
+   A.1 Distribution Assumptions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 48
+   A.2 Complete Results from the Backtesting Procedure . . . . . . . . . . . . . . . . . . . 49
+
+                                           3
+Abbreviations
+
+ACF Autocorrelation Function
+
+ADF Augmented Dickey-Fuller
+
+ARCH Autoregressive Conditional Heteroskedasticity
+
+CDF Cumulative Distribution Function
+
+cov Covariance
+
+GARCH Generalized Autoregressive Conditional Heteroskedasticity
+
+MLE Maximum Likelihood Estimation
+
+model(m,s)-dist. where model stands for the model name (e.g. sGARCH), m,s stands for
+how many lags that are incorporated into the model (e.g. 2,1), and dist. stands for what distribu-
+tion is assumed for the residuals (e.g. N). For example sGARCH(2,1)-N.
+
+N Normal Distribution
+
+NIG Normal-Inverse Gaussian Distribution
+
+PDF Probability Density Function
+
+sstd Skewed Student’s t-Distribution
+
+std Student’s t-Distribution
+
+VaR Value at Risk
+
+var Variance
+
+Q-Q plot Quantile-Quantile Plot
+
+                                           4
+1 Introduction
+
+The recent financial crisis has shown that there are substantial risks in finance and it has spurred
+interest into measuring and managing theses risks. Financial risk is divided into four different
+categories: market risk, liquidity risk, credit risk and operational risk (Jorion, 2007:22-27). The
+most well-understood of these risks is market risk, which is the exposure that an investor has to
+changes in the underlying market prices of its investments. It is usually approximated by historically
+estimated volatility, however, this is not an optimal way of estimating market risk. For example,
+volatility effectively treats above average return and below average return the same, even though
+(for a long position) price increases above the average is something we want to achieve. For this
+reason a new measure of market risk called value at risk (VaR) was developed and gained a lot of
+momentum when J.P. Morgan published RiskMetrics in 1994 (Longerstaey and Spencer, 1996) and
+has since then been widely implemented in the world of finance. Not only is it used within financial
+institutions as a risk measurement tool as well as for risk management but also among regulators to
+enforce capital requirements that are dependent on a firm’s specific risk exposure. Regulators also
+give reprimands to institutions that fail to correctly estimate their VaR.
+    Why should the state meddle in a bank’s affairs? Let’s look at one example where financial
+regulation of a bank’s risk is desirable. The risk of bank runs, which causes premature liquidation of
+a bank’s long-term assets, has in many countries been alleviated by the state in the form of deposit
+insurances (Diamond and Dybvig, 1983, showed that this could alleviate the risk of bank runs).
+When banks have this insurance neither their investors nor their customers need to worry as much
+about economic downfall since the state will step in and save the day. This is where a moral hazard
+problem emerges because banks get an incentive to take on higher risk which in turn increases
+the state’s risk of having to pay for the party (see Kareken and Wallace, 1978). To alleviate this
+problem the state needs to accurately monitor and regulate a bank’s risk-taking.
+    VaR’s popularity has a lot to do with its simplicity. The measure is a single value that captures
+a company’s exposure to market risk. VaR answers the question: how much might the company
+lose due to adverse price movements in the market under normal circumstances? Estimating VaR,
+however, is not a straightforward process and a lot of decisions have to be made regarding what
+models to be used. In this thesis we will provide a thorough differentiation between the main
+alternatives.
+    The data set that we are going to test the models on is the capitalisation-weighted stock market
+index OMXS30 which is traded on the Stockholm Stock Exchange. It consists of the 30 most
+frequently traded stocks in Sweden in terms of turnover. The complete data set consists of observed
+daily closing prices from the beginning of January 2004 to the end of March 2016 which corresponds
+to 3076 unique observations, all of which were downloaded from Yahoo Finance. We apply 64
+different combinations of models and assumptions about the distribution of the residual which we use
+to estimate VaR. When presenting the different distributions and models we also give our predictions
+on which type of model that should provide the best estimates based on previous theory and
+observations (e.g. leptokurtic distributions usually fit financial data well and models that account for
+
+                                           5
+                                                   1
+the leverage effect should give better predictions).  After having run all the estimations we evaluate
+why the winning model was superior in this data set and compare it to the benchmark model as well
+as to our predictions. Lastly we do a robustness test to see if the results are generalisable so that
+similar models prevail for different indices.
+
+1.1 Literature Review
+
+There is a substantial literature that compares different ways of estimating value at risk, for example
+see Kuester et al. (2006), Manganelli and Engle (2001) and Giot and Laurent (2004). To contribute
+to this extensive literature we will evaluate the forecast precision of 64 different combinations of
+ARCH-type models and assumptions about the residual distribution, much like what Hansen and
+Lunde (2005) did when they compared several ARCH-type models with regards to their forecast
+performance of conditional volatility. This thesis, on the other hand, compares the different models
+with regards to the model’s forecast precision of VaR. We also provide the reader with a robustness
+test for different assets. The evaluations of the estimates are done in an out-of-sample setting.
+
+1.2 Research Question
+
+This approach can be summarised in two research questions.
+
+   1. Which ARCH-type model and assumption of the residual distribution best predicts the one-
+      day-ahead 95% VaR and is this what is expected with regards to conventional theory?
+
+   2. Are the results robust to different underlying assets?
+
+2 Theory and Methodology
+
+In this section the theoretical framework applied in this thesis for measuring market risk will be
+introduced together with the procedure followed to execute the analysis. To begin with, a few
+cornerstone definitions for time series are introduced. Following that, VaR is introduced as well as
+ways of estimating it through nonparametric methods and parametric methods. Two methods for
+evaluating VaR estimates through backtesting are presented. In the last subsections methods for
+exploratory data analysis as well as methods for model diagnostics are specified.
+
+2.1 Time Series Concepts
+
+This subsection introduces a few of the keystone concepts needed for an analysis of a financial time
+series.
+
+    1
+    However, there is uncertainty inherent in the analysis and sometimes the only differences between the models are
+minor tweaks, making an attempt to pinpoint the exact model or distribution ex ante bound to be unsuccessful. We
+will, therefore, mostly rely on inductive reasoning.
+
+                                           6
+2.1.1 Market Returns
+
+The continuously compounded return (log return) at time t is defined as
+                                 (   )
+                                                 Pt
+                                           rt = ln                                                 (1)
+                                              Pt−1
+
+where Pt is the price of an asset at time t. The log returns are used over the arithmetic returns because
+of the time additive properties as well as the advantageous statistical properties. Furthermore,
+because we are not building a portfolio of different assets we need not worry about the drawback
+that log returns are not portfolio additive. (Tsay 2013:4f)
+   VaR is usually expressed as a positive value. We therefore define the relevant loss random
+variable as
+                                    Lt = −(1 + rt)Pt (2)
+
+where Pt is the portfolio price such that losses are recorded as positive numbers while profits are
+recorded as negative losses and as such denoted as negative numbers.
+
+2.1.2 Information Set and Conditionality
+
+In this thesis we will be doing estimations for t that are conditional on the information set Ft−1
+that is available at t − 1 where Ft−1 = {r1, ...rt−1}. This means that since they are conditional
+they depend on the outcomes inside the information set. We will estimate the conditional mean
+                                                     2                                 2
+μt = E[rt|Ft−1] and the conditional variance σt = var(rt|Ft−1) = E[(rt − μt) |Ft−1]. Because we
+mostly deal with conditional estimations we call the conditional variance only variance whilst if it is
+unconditional that will be explicitly specified.
+
+2.1.3 Autocorrelation Function
+
+                                                                                   th
+In a stationary time series rt we have that the correlation between rt and its k   lag is
+
+                                      cov(rt, rt−k)       cov(rt, rt−k)    γk
+                    ρk = √             =           =                    (3)
+                                    var(rt) var(rt−k)       var(rt)    γ0
+
+for k ∈ N, due to the fact that var(rt) = var(rt−k) in a stationary time series. In Equation (3) γk
+                                      th                                                  th
+is the coiance between rt and its k   lag and γ0 is the coiance between rt and its 0   lag, i.e. its
+variance. (Tsay, 2013:45-47)
+
+2.1.4 Stationarity
+
+A time series is strictly stationary when the joint distribution is time invariant. For the time
+series models applied in this thesis, however, a weaker form of stationarity is sufficient called weak
+stationarity (or sometimes covariance stationarity). Because only this weaker form is needed we will
+
+                                           7
+in this thesis refer to weakly stationarity by simply stationarity. For a time series process, xt to be
+weakly stationary the following three properties must be fulfilled:
+
+  i E[xt] = μ
+
+             2
+ ii E[xt − μ] = γ0 < ∞
+
+ iii cov(xt, xt+k) = γk
+
+for all t ∈ Z and k ∈ N. This means that a time series is weakly stationary when the mean, the
+variance and the autocovariance structure are time invariant. (Tsay 2013:40-43; Brooks 2002:230f)
+
+2.1.5 Volatility Clustering
+
+Many asset return series go through periods of relatively low volatility while other periods exhibit
+relatively high. For example, the returns of S&P 500 had a period, after the crisis initiated by the
+dot-com bubble had stabilised, that was relatively calm---especially from 2004---up until the the
+unrest of 2007 and the Great Recession which initiated another period of high volatility. Noted
+by Mandelbrot (1963) "large changes tend to be followed by large changes---of either sign---and
+small changes by small changes" implying that absolute returns or squared returns exhibit positive
+autocorrelation. This is what has come to be referred to as volatility clustering.
+
+2.1.6 White Noise
+
+A white noise (WN) process is a process with a mean zero and no covariance between its values at
+different times. More formally: let zt be a time series, then
+
+                                                               2
+                                      zt ∼ W N (0, σz )
+
+if and only if 
+                               γ   = 0, k > 0
+                                            k
+                                                                                                  (4)
+                               γ   = σ2, k = 0
+                                             0
+
+                    2
+for k ∈ N where σz is a constant. This means that it cannot be predicted other than a best guess at
+the mean. A white noise process can follow different distributions such as the Gaussian distribution
+or the Student’s t-distribution. (Brooks, 2002:232-234; Tsay, 2010:36)
+    The assumptions we will impose on the white noise term in this thesis are the following distribu-
+tions: normal distribution, Student’s t-distribution, skewed Student’s t-distribution and normal-
+inverse Gaussian distribution, abbreviated N, std, sstd and NIG respectively. The distributions are
+discussed and their probability density function’s (PDF) are listed in the appendix section A.1.
+   Even though return series often exhibit leptokurtosis this does not necessarily have to be
+translated to a fat tail assumption for the white noise term. Jorion (2007:221f) explains that a data
+set with fatter tails does not need to have been drawn from a true distribution that exhibits fat tails
+
+                                           8
+but rather that it could be explained by autocorrelation in the data set causing the observations
+to be temporarily drawn from a distribution exhibiting an increased likelihood of what would have
+been viewed as outliers in a normal distribution (the same argument can be applied to peakiness
+around the mean). In many data sets, both of these explanations (a true distribution with fatter
+tails and autocorrelation) are likely to be part of the answer. Although, this makes ex ante (prior to
+applying the volatility model) inference about which distribution best fits the residuals difficult.
+
+2.2 Theory for Analysing the Data
+
+To decide which model that is appropriate for a specific data set a thorough analysis of the data is
+needed. Besides from analysing descriptive statistics we will also use a test of stationarity, the Q-Q
+plots and most importantly the plots of the autocorrelation function (ACF). The Q-Q plots and
+ACF are also used to evaluate the models ex post. These concepts are introduced in the following
+subsections.
+
+2.2.1 Test of Stationarity using ADF-tests
+
+If the times series {rt} is stationary then it reverts to its mean. If that’s the case then small values
+tend to followed larger values, and vice versa. In other words the level that the series is at will be a
+good predictor of the change in the next period---it’s autoregressive. The augmented Dickey-Fuller
+(ADF) test is used to determine whether the the time series exhibit stationarity or if there is some
+structural break in the data set (Dickey and Fuller, 1979).
+    The ADF regression is
+
+                                                             p
+                ∑
+                         ∆rt = α + βt + γrt−1 +    δk∆rt−k + t
+                                                    k=1
+
+where t is the regression error term, α is a constant, and β the coefficient on the time trend t. We
+test
+                                        H0 : γ = 0
+
+against the one-sided alternative H1 : γ < 0. The test statistic
+
+                                   DFobs = ˆγ/SE(ˆγ)
+
+                                                                                                  2
+is compared with DFcritical. We draw DFcritical from a table where the type I error is 5 percent.  If
+DFobs < DFcritical then the null is rejected at a 5 percent significance level and we would conclude
+that no unit root is present.
+
+    2
+    This value is obtained automatically by statistical software, although there exists critical values for the Dick-
+eyâĂŞFuller t-distribution. For example, if the sample size is 500 and a test at 5 percent significance level the value is
+3.42.
+
+                                           9
+    The test can be understood by noting that if the series is integrated then the lagged level of the
+series, yt−1, are not of any help (in the presence of the lagged changes ∆rt−k) in the change in return
+i.e. the left hand side ∆rt. If it is not of any help then γ = 0 and the null hypothesis is not rejected.
+
+2.2.2 Test Normality using Q-Q Plots
+
+Besides inspecting the descriptive statistics and histogram plots of the frequency of returns we
+use Q-Q plots to determine if the data is normally distributed or if it exhibits fatter tails. In a
+normal Q-Q plot the assumed distribution is plotted using the expected values creating a straight
+line with the theoretical probabilities on the y-axis and the sample quantiles on the x-axis. If the
+observed data follows this theoretical distribution then the observed data points and the straight line
+should coincide reasonably well. If the data exhibits fatter tails than a normal distribution then the
+observed data points should deviate above the straight line in the lower end of the distribution and
+below the straight line in the upper end of the distribution. The Q-Q plot can also be constructed
+so that the straight line follows some other distribution (e.g. the Student’s t-distribution).
+    Sometimes a formal test is used such as the Jarque-Bera test but we prefer Q-Q plot because our
+main objective is to verify whether the data has fat tails and will thus only rely on this to evaluate
+the data’s distribution.
+
+2.2.3 Test of Autocorrelation using ACF Plots
+
+To evaluate the autocorrelation function of the returns and squared returns a few tests need be
+introduced.
+
+Test of Autocorrelation in the Returns
+To determine if data is autocorrelated or not we use an ACF plot, see for example Figure 4 on
+page 30. The autocorrelation function (ACF) displays how the different lags are correlated with the
+current observation such that the 0th lag is perfectly correlated (because it is the current observation)
+and the following correlations are displayed by bars above the respective lag. That is, we plot ρk
+                                              √
+from Equation (3) for different lags. In the ACF plot the dotted lines are for −1/T ± 1.96/  T where
+T is the sample size and 1.96 = λ0.95. If a lag is above the dotted line it is statistically significantly
+different from zero at the 5 percent level.
+
+The Ljung-Box Test
+For a more formal test of the autocorrelation the Ljung-Box test is used (Ljung and Box, 1978).
+The null hypothesis of the test is
+
+                                H0 : γk = 0 for k = 1, ..., K
+
+                                          10
+against the alternative hypothesis that there exists a k such that γk  6= 0. The appropriate test
+statistic is
+                            ∑K  2
+                                                        γk
+                             Q(K) = T (T + 2)                                   (5)
+                                                  T − l
+                                                    k=1
+                                                                                                         2
+where T is the number of observations in the data set. Under the null hypothesis Q(K) ∼ χ (K).
+We will be using a confidence region of 95%. (Hull 2012:508f)
+
+The Student’s t-test
+To formally test whether the mean is signficantly different from zero a one sample t-test is applied,
+whereby we test H0 : μ = 0 against H1 : μ  6= 0. The relevant test statistic is Tobs = μ/SEˆ    (μ ˆ) where
+SE(·) is the standard error and μˆ is the sample mean of our returns. We reject the null if the
+observed test statistic tobs > tcritical where the critical value is drawn from a Student’s t-distrubution.
+
+Test of Autocorrelation in the Squared Returns
+If, on the other hand, the squared returns are autocorrelated then large absolute movements are
+followed by large absolute movements the following days. This would be call for some model of the
+conditional volatility that can account for this. To evaluate this, the same procedure is applied for
+the squared returns as was applied for the returns.
+
+2.3 Value at Risk
+
+The recent century has seen many a company suffer under sudden bursts of financial instability
+amplified by unsatisfactory risk measurement and management. Developed after the derivatives
+infused financial crisis during the beginning of the 1990s, VaR has grown into one of the most
+prominent ways of measuring and managing risk in a comprehensible and transparent way. It
+gives an answer to how much an institution might lose under normal conditions in the form of "the
+worst loss over a target horizon that will not be exceeded with a given level of confidence", Jorion
+(2007:viii). VaR can be used to estimate the risk in a specific portfolio of assets as well as for the
+total market risk faced by a financial institution. For a comprehensive and extensive outline of VaR
+see Jorion (2007) and Duffie and Pan (1997).
+
+2.3.1 VaR in Regulations
+
+In order to force financial institutions to be better prepared for severe financial losses, regulators
+enforce capital requirements on these institutions. Lately, in order to make these requirements
+reflect the underlying risk that a specific institution faces, these capital requirements are being based
+on calculations that take the firm’s underlying risk into consideration. These risk-based models are
+generally based on VaR measurements conducted by the institutions themselves.
+    One such regulation is the Basel Accords developed by Basel Committee on Banking Supervision
+(BCBS). It is currently adopted by many countries, including the United States (Federal Reserve,
+2013) and the European Union (Dierick et al., 2005). It allows for the capital requirement based on
+
+                                          11
+                                                                                                              3
+market risk to depend on an internally measured estimate of a company’s downside risk such as VaR.
+This puts pressure on the ability to verify the validity of a financial institution’s measurement of
+their market risk. This is something regulators are able to do with VaR through backtesting---which
+will be discussed in section 2.3.2. Failure to meet the validity requirements will result in reprimands
+for the financial institution making it important both for society at large as well as for the financial
+institution that the VaR is not underestimated. Moreover, if financial institutions overestimate
+their VaR they are not allocating capital to maximise capital returns making pinpointing the VaR
+estimate important both to keep financial institutions from bankruptcy as well as allowing them to
+utilise the full potential of their capital. (Basel Committee on Banking Supervision, 2011)
+
+2.3.2 Defining and Calculating VaR
+
+In this subsection a definition of value at risk is introduced together with two alternative approaches
+to estimating it, historical simulation and the modelling approach. See Tsay (2013:327-385) or Jorion
+(2007:105-115) for a more detailed explanation of VaR estimation and its definition.
+
+Defining VaR
+VaR is the worst loss---which can be seen as a loss random variable at time t denoted Lt---over the
+target horizon (in this thesis set to one day) that will not be exceeded with the given confidence
+                                                                      4
+level 1 − p, where p ∈ (0, 1) is a small probability, usually 5% or 1%.  As mentioned in 2.1.1, losses
+recorded in Lt will be denoted as positive numbers whereas profits are seen as negative losses. VaR
+is thus concerned with the upper tail quantile of 1 − p (or 0.95 and 0.99 respectively for the given
+probabilities mentioned earlier) of the loss distribution. Mathematically this can be expressed
+
+                              VaR1−p = inf{x|Ft(x) ≥ 1 − p} (6)
+
+where Ft(x) denotes the cumulative distribution function (CDF) of Lt. Thus we have
+
+                                P [Lt ≤ VaR1−p] ≥ 1 − p
+
+which is in line with what we specified earlier in this paragraph. Figure 1 displays the VaR loss
+in the PDF of the continuous variable Lt with an arbitrarily chosen distribution. From this it can
+clearly be seen that VaR is the value such that the probability to observe a bigger loss is exactly
+equal to 5%.
+    To estimate VaR it is important to assume that the underlying portfolio is constant or to
+construct the portfolio so that it does not change over time because otherwise the underlying returns
+
+    3
+    In the latest revision of these regulations from January 2016, however, the BCBS recommend the use of conditional
+value at risk (referred to in the revision as expected shortfall) because of its ability to account for tail risk. It had
+previously not been recommended due to the difficulties associated with backtesting. This is also why we choose to
+focus on VaR in this thesis because of the need for a precise and thoroughly developed backtesting procedure. (Basel
+Committee on Banking Supervision, 2016)
+    4
+    We will choose p=0.05 because it gives us more violations in the backtesting procedure to base the statistical
+tests on.
+
+                                          12
+                      Figure 1: VaR in the PDF of a loss random variable Lt.
+
+might exhibit non-stationarity. This is because the probability distribution of potential losses would
+change over time as some components or weights of the portfolio change.
+    In this thesis we will estimate the VaR for one day ahead. This is also what is commonly done in
+practice due to the difficulty of estimating it further ahead. To extend the VaR estimate N days into
+                                                 √
+the future one might use the square root of time rule in which the N − day VaR = 1 − day VaR ·   N .
+This is also allowed by the Basel accords. Suffice it to say, the one-day-ahead forecast of VaR is the
+relevant form that is of interest.
+
+Historical Simulation
+One way of estimating a VaR is through historical simulation (Hull 2012:474-478). This is executed
+by extracting the historical returns from the window of estimation and using them to simulate the
+                               th                                                                        5
+PDF of the losses. The 1 − p  quantile is then extracted and used as the 1 − day VaRp estimate.
+This approach is non-parametrical as no assumptions regarding the distribution or its parameters
+need be facilitated. The the main drawback of this approach is that it gives equal weights to every
+observation ignoring the fact that more recent observations might carry more information on the
+future volatility than older once do. More specifically we discussed in section 2.1.5 that squared
+return tend to be autocorrelated. Thus, given that the time series exhibits this empirical property,
+                                                                                       6
+some model that can account for this autocorrelation is bound to be superior.
+
+Modelling Approach
+To account for the autocorrelation in the squared return one might try a parametric modelling
+approach through some weighting scheme, shown in Tsay (2013:327-385) and Jorion (2007:110-113).
+
+    5
+    VaR is usually expressed in the home currency and therefore needs to be multiplied by the portfolio price Pt.
+    6
+    Kuester et al. (2006) compared unconditional models (such as historical simulation) with conditional models
+(such as the GARCH model) and concluded that only the conditional models gave satisfactory forecast results. We
+will therefore not include historical simulation in our analysis and instead focus on the comparison between the more
+appropriate symmetric models and the asymmetric models.
+
+                                          13
+The formula for calculating VaR is
+
+                                   VaRt = (ˆμt + z0.95 σˆt)Pt−1 (7)
+
+                                                                                th
+where μˆt is the estimated mean in the rolling sample Ft−1, z0.95 is the 1 − p  quantile in the white
+noise distribution where p=0.05, σt is the estimated volatility using the information set Ft−1 and
+Pt−1 is the portfolio value at t − 1. In Equation (7) what often proves to be most interesting and
+difficult to estimate is the volatility σˆt, atleast for financial data with short intervals, and the whole
+of section 2.4 is dedicated to it. In this thesis we will assume that Pt−1 = 1 such that the forecast
+    th
+0.95   quantile in the loss distribution is the portfolio’s VaR. This is at no loss of generality and it is
+done for easier notation. To understand this equation we break it down into it’s individual parts.
+    The model for the return at time t is
+
+                                          rt = ˆμt + εt (8)
+
+where εt is some innovation (or shock) that moves the return away from μˆt. This innovation can be
+modelled by
+                                                εt = ˆσtzt. (9)
+
+Here, σˆt could be based purely on the historically estimated variance or it could be forecast using
+some weighting scheme and forecast procedure, introduced under section 2.4, which can enable
+the volatility to be conditional on the information set up until t − 1. This can allow for volatility
+clustering to be present in the model and hence allow the model to adapt to periods of increased
+volatility. The random variable zt is usually assumed to follow the standardised normal distribution.
+
+2.3.3 Backtesting VaR
+
+To ensure that the estimated VaR complies with reality the predictions need to be evaluated ex post
+using a backtesting procedure. To begin with, we first have to specify a framework for how to treat
+an observed loss that is in excess of the VaR estimate. One such approach is to define a time series
+of such violations as an indicator variable It for the forecast VaR at time t, made at t − 1, as
+                    
+                                1, if L > VaR
+                                                     t         1−p,t
+                                  It =                       . (10)
+                                0, if L ≤ VaR
+                                                     t         1−p,t
+
+The variable It can then be used to count every time the observed loss is greater than the (1 − p)
+VaR estimate which we call a violation.
+    For an effective VaR measure, two properties must be satisfied (Christoffersen, 1998):
+
+   1. the probability of observing a violation in the data set should be p---or sufficiently close to p
+      unconditionally on the information set available at time t − 1. More formally, E[It] = p.
+
+                                          14
+   2. the probability of observing a VaR violation is not dependent on violations observed during
+      the previous days. Hence, VaR violations should not come distributed in clusters. This can be
+      expressed as E[It|Ft−1] = p, ∀t, where Ft−1 denotes the information set available at time t − 1.
+      As opposed to property 1, this property concerns the efficiency of the estimate conditional on
+     the information set at t − 1.
+
+To test these properties we will be using the Kupiec test for the first property and Christoffersen’s
+test for the second property referred to as the unconditional coverage (uc) test and the conditional
+                                   7
+coverage (cc) test respectively.
+
+Kupiec’s Test of Unconditional Coverage
+The uc test (Kupiec, 1995) evaluates whether the observed ratio between violations and the number
+of out-of-sample estimates corresponds to the level of significance specified in the VaR calculations,
+e.g. with a significance level of p = 0.05 we should expect to observe that 5% of the out-of-sample
+estimates are in excess of the VaR estimate. Let T be the number of out-of-sample estimates and N
+be the number of violations. Then the null hypothesis of the test is
+
+                                        H0,cc : p = 0.05
+
+against H1 : p  6= 0.05. The appropriate test statistic is
+                                    [(    )   (   )  ]
+                                                       T −N
+                         [     T −N  N ]            N       N
+               LRuc = −2 ln  (1 − p)    p   + 2 ln   1 −              N  . (11)
+                                              T       T
+
+                                                                              2
+Under the null hypothesis LRuc is asymptotically distributed as χ (1). The test is for a 95%
+confidence region and thus, with one degree of freedom, to reject the null hypothesis we would need
+to observe LRuc > 3.841.
+
+Christoffersen’s Test of Independence
+The test of independence developed by Christoffersen (1998) evaluate the conditional efficiency
+that a violation today does not give any information whether there will be a violation or not the
+following day. Christoffersen states that it is not enough for a VaR model to simply get the number
+of violations correct but also to account for clustered returns so that the VaR violations will not
+experience any clustering. For the VaR estimate to exhibit conditional coverage (i.e. nonclustered
+violations) the probability of observing a violation should not be affected by whether there was a
+violation the day before or not. To test if the observed distribution is significantly different from
+this, Christoffersen developed a hypothesis test where the null hypothesis is
+
+                                  H0,ind : π = π0 = π1
+
+    7
+    The two tests are summarised by Jorion (2007:143-152).
+
+                                          15
+against the alternative hypothesis π0  6= π1 where πi is the probability of observing a violation at
+time t if It−1 = i was observed the previous day and π is simply the unconditional probability of
+observing a violation. The test statistic is
+
+                                   (T00+T10)  (T01+T11)                 T00   T01         T10   T11
+         LRind = −2 ln[(1 − π)       π       ] + 2 ln[(1 − π0)  π0 (1 − π1)  π1 ] (12)
+
+where Tij is the number of days where outcome It = j followed outcome It−1 = i the day before.
+                                                                2
+The test statistic LRind is asymptotically distributed as χ (1) under the null hypothesis. Once again
+we reject the null hypothesis if LRind > 3.841 with a 95% confidence level.
+    One important critique of Christoffersen’s test is that it only treats two consecutive violations as
+a cluster and hence ignores violations that occur with a few days days between them. Even though
+violations that are a few days apart might be a consequence of clustering.
+
+Conditional Coverage Test
+To test both unconditional and conditional coverage at the same time we use the cc test in which
+
+                                   H0,cc : p = π0 = π1.
+
+Christoffersen (1998) proposed the combined test statistic
+
+                               LRcc = LRuc + LRind (13)
+
+                                                                2
+where LRcc under the null hypothesis is distributed as χ (2). For a 95 percent confidence level we
+reject the null hypothesis if LRcc > 5.991.
+
+2.4 Modelling Conditional Volatility
+
+If the time series exhibit autocorrelation and an equal weighting scheme is used to forecast volatility
+then if a VaR violation is observed we are more likely to observe a VaR violation the following
+day. This is because we know that large values tend to be followed by large values---the volatility
+clusters together as discussed under Section 2.1.5---and this would not be accounted for in the model
+that puts equal weights on all observations---i.e. making the violations cluster together as well.
+These models are "dumb" in the sense that, even though we as researchers know that the risk is
+higher during these limited periods of high volatility, the models do not alter their risk estimates
+accordingly. For this reason several volatility models that could adapt to these clusters and hence
+account for them in their estimates were developed.
+   Originally developed by Engle (1982), the autoregressive conditional heteroscedastic (ARCH)
+model laid the foundation for many different conditional volatility models. The most prominent
+of these is the standard generalized autoregressive conditional heteroscedastic (sGARCH) model
+put forth by Bollerslev (1986). For an introduction to the subject see Tsay (2010:109-173). The R
+package that is mainly used in this thesis is the rugarch package by Ghalanos (2015).
+
+                                          16
+2.4.1 Symmetric GARCH models
+
+In Equation (8) on page 15 we see that the returns are modelled by rt = μt + εt. If we let εt = σtzt
+                                                                                                     2
+as in formula (9) then εt follows a, sGARCH(1,1) process if the conditional variance σt can be
+described by
+                                          2            2          2
+                                σt = ω + α1εt−1 + β1σt−1 (14)
+
+under the constraints ω > 0, α1 ≥ 0, β1 ≥ 0 and α1 + β1 < 1. Oftentimes, it can be assumed
+                             2           8                 2
+that μt = 0 which makes εt−1 = rt−1.  The variable σt−1 is the previous day’s estimation of the
+conditional variance.
+    The innovation εt in Equation (8) is the deviation from the mean that cannot be explained by
+the mean equation. It is therefore sometimes referred to as the residual of the mean equation. In
+this thesis, however, the mean equation will simply be a constant. For some time series the mean
+equation needs to be modelled (for example using an ARMA model) and this is common for monthly
+or quarterly data. Because we will be using daily data the return is close to zero and the mean
+equation, therefore, does not need to be modelled.
+                                                                                                           2
+   In Equation (14), α1 and β1 are the respective weights on the previous day’s innovation, εt−1,
+                                                                           2
+and the estimation of the previous day’s conditional variance, σt−1. There is, however, a third
+weight γ that is put on the long-run unconditional variance VL. These have been simplified to ω
+such that
+                                      ω = γVL. (15)
+
+This simplified form is usually used for estimating the parameters, i.e. ω, α1 and β1. Because the
+weights must sum to unity such that
+                                       γ + Pˆ = 1,
+
+where, for the (1,1) model, Pˆ = α1 + β1 (which is called persistence and is a measure of the extent
+that a relatively high volatility today will affect the forecast volatility in the future) must sum to
+less than one, which is what we specified under the constraint α1 + β1 < 1, for the weight on γ to
+                                                          9
+take on a positive value needed for a stationary process.  (Hull, 2012:502f)
+    In the analysis we will also use the concept of half-life to facilitate further differentiation between
+the models. It is defined as the number of days it takes for half of the reversion back to the
+unconditional volatility VL to complete. Mathematically it is expressed as,
+
+                                          − ln 2
+                                    halflife =                                       (16)
+                                              ln Pˆ
+
+    8
+    This is often a reasonable assumption when the conditional volatility is estimated for a short window---say an
+hour or a day. This is because the mean usually is small for these short intervals, especially relative to the standard
+deviation (Hull 2012:479f). However, this assumption can be formally tested using a t-test.
+    9
+    If γ ≤ 0 then the process will not experience mean reversion which is when the level of variance returns to normal
+                                                    2
+levels after experiencing some shock, i.e. when σt > VL. Hence, the variance will not have a drift towards the long-run
+variance, VL (which is unconditional on previous innovations), and will instead move entirely conditionally on past
+innovations (past innovations are persistent) or even move away from the mean, VL, if the weight is less than zero.
+
+                                          17
+where Pˆ is the persistence parameter.
+    To allow for more of the previous days to affect the current one-day-ahead estimation of the
+conditional volatility, Equation (14) can be extended to an sGARCH(m,s) model by changing it to
+
+                   ∑m    ∑s
+                                       2                2             2
+                              σt = ω +    αiεt−i +    βj σt−j (17)
+                                                i=1           j=1
+                                             ∑max(m,s)
+   under the constraints ω > 0, αi ≥ 0, βj ≥ 0 and   i=1 (αi + βj ) < 1. Persistence is now
+given by
+                    ∑m   ∑s
+                                 Pˆ =    αi +    βj .
+
+                                                 i=1      j=1
+For most circumstances, however, many argue that the sGARCH(1,1) model is appropriate because
+                                                  2
+it incorporates earlier days’ observations in σt−1 which is the volatility forecast for t − 1 made with
+the information available at t − 2 which includes the volatility forecast for t − 2 made with the
+information available at t − 3 and so on. The model therefore includes prior innovations. In this
+thesis we will test a (2,1) model to hopefully improve on the forecast precision through a more
+precise effect of the innovation for t − 2.
+
+The Component sGARCH
+Lee and Engle (1999) developed the component sGARCH (csGARCH). They acknowledged the
+fact that volatility exhibited a long-run memory (i.e. high persistence) and therefore tried to
+more accurately account for this by decomposing the conditional volatility into a short-run and a
+long-run trend. They further motivated this by looking at the movements in the implied volatility
+term structure of equities, interest rates and foreign exchange markets and noting that, for shorter
+maturities, the volatility of implied volatility was higher than for longer maturities. By letting qt
+denote the long-run trend then the csGARCH(m,s) model can be written as
+
+               ∑m        ∑s
+                         2              ( 2        )         ( 2         )
+                      σt = qt +    αi εt−i − qt−i +    βj  σt−j − qt−j                   (18)
+                                      i=1                    j=1
+
+where the long-run trend is
+                                                            2       2
+                              qt = ω + ρqt−1 + φ(εt−1 − σt−1).
+
+   Persistence and unconditional volatility are given by the same formula as in the GARCH(m,s)
+model. This means that the expected volatility in the very long-run will converge to the same
+unconditional volatility as the GARCH(m,s) model.
+
+2.4.2 Asymmetric GARCH models
+
+The symmetric sGARCH models hold a distinct disadvantage, they fail to account for the asymmetric
+effects in financial time series of returns on volatility. Observed by Black (1976), volatility tends to
+be affected more by returns below expectation and less by returns above expectation (something
+
+                                          18
+                                                     10
+that has come to be known as the leverage effect).   This section introduces several models that
+tries to alleviate the symmetric constraint of the sGARCH models. The main differences between
+these models are mainly that they try to model asymmetry in different ways.
+   The asymmetric treatment of returns above or below expectation can be displayed for the
+different models in a news impact curve (Pagan and Schwert, 1990). It shows the effect that a
+particular innovation will have on the forecast volatility in a specific model. A symmetric model
+will treat return above and below expectation equally (and will therefore be symmetric around the
+expected value) whilst an asymmetric model may have different effects depending on if the return is
+above or below (and might therefore be distributed asymmetrically around the expected value).
+
+The Exponential GARCH model
+Nelson (1991) developed an asymmetric model called the exponential GARCH (EGARCH). The
+variance follows an EGARCH(m,s) process if
+
+              ∑m               ∑s
+                   ( 2)                                                    ( 2  )
+                ln  σt  = ω +    (αizt−i + γi (|zt−i| − E |zt−i|)) +    βj ln  σt−j             (19)
+                                   i=1                                     j=1
+
+where ω, αi, γi, βj are parameters to be estimated and zt is the white noise term. By inspecting
+the equation above we note that αi captures the sign effect and γi captures the size effect---this is
+important since it’s a major distinction from the sGARCH model.
+    The persistence is given by
+                        ∑s
+                                   Pˆ =   βj
+
+                                                     j=1
+in the EGARCH model which differs from persistence in the sGARCH model. The unconditional
+                         ω
+variance is given by VL =  ˆ . (Tsay, 2013:215-221)
+                        1− P
+    Previous research has shown that increasing the number of parameters rarely beats a (1,1) model.
+We will, however, test a (2,1) for the same reason as for the sGARCH model.
+
+The GJRGARCH model
+Another asymmetric model is the GJRGARCH model developed by Glosten et al. (1993). In this
+model the conditional variance is modelled by
+
+                              m                     p
+                  ∑(         )  ∑
+                               2                 2             2              2
+                        σt = ω +     αiεt−i + γiIt−iεt−i +    βj σt−j (20)
+                                        i=1                          j=1
+
+   10
+    This leverage effect stems from that the markets tend to react differently to positive news and negative news.
+The most prominent explanation for this is that when prices depreciate, companies’ debt-to-equity ratio appreciate.
+Hence, the companies become more leveraged causing volatility to increase. (Aït-Sahalia et al. 2013)
+
+                                          19
+where αi and βj are as in the sGARCH model, It−i is an indicator variable and γi captures the
+leverage effect. The indicator variable is
+                     
+                                     1, if ε   ≤ 0
+                                                         t−i
+                                  It−i =
+                                     0, if ε   > 0
+                                                         t−i
+
+and thus γi scales the effect of a negative innovation.
+    The persistence parameter is here given by
+
+                 ∑m   ∑m   ∑s
+                              Pˆ =    αi +    γiκ +    βj , (21)
+
+                                            i=1       i=1        j=1
+
+                    2
+where κ = E[It−izt−i] which is the probability of drawing an observation below zero in the distribu-
+tion.
+
+Asymmetric Power ARCH
+The models introduce until now are based on autocorrelation in the squared returns. Taylor (1986)
+observed that it was more common for the autocorrelations in the absolute returns to be bigger than
+in the squared returns, suggesting that a model that is based on autocorrelation in the absolute
+returns might posses superior prediction performance. A model that can account for this Taylor
+effect as well as asymmetric effects was developed by Ding et al. (1993) called asymmetric power
+ARCH (apARCH). It models the conditional volatility as
+
+                ∑m          ∑s
+                                    δ                                     δ            δ
+                          σt = ω +    αi(|εt−i| − γiεt−i) +    βj σt−j (22)
+                                         i=1                        j=1
+
+                                                                          +
+where αi and βj are as in the sGARCH mode, γi is the leverage parameter and δ ∈ R  is the
+                                                                          11
+asymmetric power parameter which is a Box-Cox transformation of σt.   What makes this model
+stand out is that it actually contains the sGARCH model as a special case (when δ = 2 and γi = 0, ∀i)
+as well as the gjrGARCH (when δ = 2). The model thus should allow for more fine tuning than
+those two models.
+    The persistence parameter is given by
+
+                   ∑m    ∑s
+                                Pˆ =    αiκi +    βj
+
+                                                i=1         j=1
+
+                         δ
+where κi = E(|z| − γiz)  which is the expected value of zt under the Box-Cox transformation of the
+term with γi.
+
+   11
+    Box and Cox (1964) introduced the power transformation function called Box-Cox transformation.
+
+                                          20
+    The unconditional variance is given by
+                                     (    )2/δ
+                                   ω
+                                 VL =           .
+                                     1 − Pˆ
+
+AVGARCH
+Taylor (1986) and Schwert (1990) discusses the absolute value GARCH (AVGARCH) model where
+the volatility is modelled as
+
+            ∑m                 ∑s
+                  σt = ω +    αiσt−i(|zt−i − η2i| − η1i (zt−i − η2i))+    βj σt−j (23)
+                               i=1                                           j=1
+where shifts and rotations in the news impact curve are modelled with η2i and η1i respectively and
+|η1i| ≤ 1.
+    Persistence in the model is given by
+
+                   ∑m    ∑s
+                                Pˆ =    αiκi +    βj
+
+                                                i=1         j=1
+
+where κi = E (|zt−i − η2i| − η1i (zt−i − η2i)) which effectively is the expected value of the standard-
+ised residual zt under the Box-Cox transformation. The unconditional variance is given by
+                                   (    )2
+                                       ωˆ
+                                  VL =          .
+                                      1 − Pˆ
+
+NGARCH
+
+   Higgins and Bera (1992) developed the nonlinear GARCH (NGARCH) model. The conditional
+volatility follows a NGARCH process when
+
+                 ∑m        ∑s
+                                       δ                   δ           δ            δ
+                            σt = ω +    αiσt−i(|zt−i|) +    βj σt−j (24)
+                                            i=1                   j=1
+
+          +
+where δ ∈ R  is the asymmetric power parameter. The non-negative restriction on δ makes sure
+that the conditional variance is defined for all innovations.
+   Persistence in the NGARCH model is given by
+
+                   ∑m    ∑s
+                                Pˆ =    αiκi +    βj
+
+                                                i=1         j=1
+
+                       δ
+where κi = E (|zt−i|)  which is the expected value of zt under the Box-Cox transformation and the
+unconditional variance is given by
+                                     (    )2/δ
+                                      ωˆ
+                                 VL =           .
+                                     1 − Pˆ
+
+                                          21
+NAGARCH
+Engle and Ng (1993) introduced another nonlinear GARCH model called the nonlinear asymmetric
+GARCH (NAGARCH) model. In this model the variance is given by
+
+                ∑m           ∑s
+                              2                2                2           2
+                         σt = ω +    αiσt−i (|zt−i − η2i|) +    βj σt−j (25)
+                                        i=1                          j=1
+
+where shifts in the news impact curve is captured in η2i.
+    Persistence is again given by the same formula as for AVGARCH but now κi is given by
+
+                                                                  2
+                                      κi = E (|zt−i − η2i|)
+
+and the unconditional variance is given by
+                                (    )
+                                        ωˆ
+                                  VL =         .
+                                      1 − Pˆ
+
+2.4.3 Maximum Likelihood Estimation
+
+To estimate the GARCH parameters we use maximum likelihood estimation (MLE). Let θ =
+(ω, α1, β1) be the parameters, and let r = (r1, . . . , rT ) be the returns data. The likelihood function
+is defined as
+                        ∏T
+                                        L(θ; r) =    f (rt | θ).
+                                                      t=1
+The log-likelihood function `(θ; r) is the natural log of the likelihood function i.e. `(θ; r) = ln L(θ; r) =
+∑T
+   t=1 ln f (rt | θ) and we use `(θ; r) because it is easier to work with in practice.
+    When calculating the maximum likelihood estimate ˆθM L we want to maximize the likelihood-
+function L given the data. But because the log-likelihood function ` = ln L is monotonically
+increasing function of L we can---instead of maximizing the likelihood function---maximize the
+log-likelihood function. This yields the same estimates but is faster computationally. Denoting the
+maximum likelihood estimate ˆθM L we define
+
+                                      ˆθM L = arg max `(θ; r)
+                                                       θ
+
+where r is the data and `(θ; r) is the log-likelihood function.
+
+2.4.4 Information Criteria
+
+The parameters are estimated such that the Likelihood function is maximized, but the likelihood is
+not merely a tool to give us the estimated parameters but is also useful in comparing two or more
+models in seeing which of them better fits the data. The value of the likelihood functions for the
+compared models are reported in the data analysis under section 3.3 but in order to compare models
+with a different number of parameters there are a few information criteria frequently used such as
+
+                                          22
+Akaike (AIC), Bayesian (BIC), Shibata (SIC) and Hannan-Quinn (HQIC). We will use AIC and
+HQIC because they compliment each other well. The definitions are
+
+                                     AIC = 2p − 2ˆ` (26)
+
+and
+                              HQIC = −2Lˆ + 2p ln (ln T ) (27)
+
+   where p is the number of estimated parameters in the model, ˆ` is the log-likelihood value, Lˆ
+is likelihood value and T is the sample size. A reason for picking one model over another, if they
+perform similarly, is to pick the one with the lowest information criteria. As seen from the formulas
+AIC and HQC penalizes a model with many parameters but rewards a high likelihood.
+    In this thesis, information criteria are used to determine whether one model fits better in the
+estimation window than another. We include these becuase a model should not only perform well in
+the forecasting window but also be sound according to statistical theory.
+
+2.4.5 Rolling Window Estimation
+
+  ∗             (1)  (2) ˆ(n)
+ t           t r        r        θ       σˆt μˆt V aRt rr rv It
+ 1 1 − wE r1−wE
+ 2 2 − wE r2−wE r2−wE
+  ..                 ..              ..             ..
+  . . . .
+ wE 0 r0 r0
+                                              (1)                                               2
+ wE + 1 1 r1 θ1 σˆ1 μˆ1 VaR1 r1 (r1 − μˆ1)      0 or 1
+                                              (2)                                               2
+ wE + 2 2 θ2 σˆ2 μˆ2 VaR2 r2 (r2 − μˆ2)      0 or 1
+  ..                 ..                                          ..           ..         ..         ..              ..         ..                        ..
+  . . . . . . . . .
+                                            (wF )                                               2
+ wE + wF wF θwF σˆwF μˆwF VaRwF rwF (rwF − μˆwF )   0 or 1
+
+                            Table 1: Rolling Window Estimation
+
+   Divide the whole data set into two windows: the estimation window, denoted wE , and the
+                                                                        ∗         ∗
+forecasting window, denoted wF . The estimation window goes from t = 1 to t = n(wE ) and the
+                                 ∗                   ∗
+forecasting window goes from t  = n(wE ) + 1 to t  = n(wE ) + n(wF ). where n(wE ) and n(wF )
+denotes the length of each window. In our sample the length of the windows are n(wE ) = 2076,
+going from 2 January 2004 to 28 March 2012, and n(wF ) = 1000, going from 29 March 2012 to
+              12
+1 April 2016.   For easier notation we define t so that the forecasting window starts at t = 1 so
+                     ∗
+do note that t  6= t . Forecasting of the VaR estimates is done using rolling window estimation
+summarised in Table 1 in which we use wE and wF instead of n(wE ) and n(wF ) for easier notation.
+
+   12
+   The reason these intervals for wE and wF have been chosen is because: (1) When estimating wE we want a
+good balance between getting enough observations to obtain precise estimates whilst only using relevant data. (2)
+When estimating wF we want to make sure that we have enough observations to get statistically reliable results when
+evaluating the backtesting procedure.
+
+                                          23
+   Define θ to be the parameter vector so for a GARCH-n θ = (ω, α, β) and for a GARCH-std
+θ = (ν, ω, α, β). In this explanatory example the parameter vector will be updated every day. The
+reestimation of the parameter vector θ is done to keep them up-to-date which improves forecasting
+                                                                    (1)
+precision. The first parameter vector is denoted θ1 where the subscript 1 stands for t and the
+                                                                          13
+superscript (1) stands for stands for the first estimation of parameters.   The estimation is done
+using the data available up until t which is the information set Ft−1. The parameters are estimated
+using MLE as described in section 2.4.3.
+                                                ˆ(1)
+    Volatility is forecast using the parameters θ1 together with the volatility formula that is being
+used, see section 2.4.1 and 2.4.2. For the first day t = 1 the innovation ε0 is, as always, set to the
+previous day’s innovation. The previous day’s estimated volatility σˆ0, however, is treated differently
+the first time and is set to the sample standard deviation in wE .
+                                                                               (1)
+   The mean is forecast using the sample mean. Using our notation r   from the table we have
+                      (1)                                          (n)
+that μˆ1 = mean(r  ) and more generally μˆt = mean(r   ).
+    VaR is forecast using the mean forecast, the volatility forecast and the quantile from the assumed
+distribution for the innovations as in Equation (7) where Pt+1 = 1 giving us
+
+                                      VaRt = ˆμt + z0.95 σˆt
+
+                                                                                  14
+where z0.95 is the quantile from the assumed distribution for the innovations εt.   In this thesis we
+                                                                                                            15
+will for example assume that z ∼ t(ν) where ν is estimated via MLE separately for both models.
+    The realised return at time t, rrt, is revealed only after we have forecast VaRt so for example
+               (1)
+we use data r   to estimate V aR1 then wait until markets close the following day and only after
+the markets have closed rr1 is revealed to us. The indicator variable It takes on the value 1 if
+rrt > VaRt, i.e. if the loss at day t is bigger than our stated VaRt.
+   After all this have been done (parameter estimation, sigma forecast, mean forecast, VaR
+calculation and violation calculation) the window is rolled forward one day---and the procedure is
+                                                                 (2)
+repeated again but this time using the data set r  . This goes on until the end of the forecasting
+window and then we have n(wF ) = 1000 different VaR estimates and their violations which is ready
+to be backtested in order to answer the question of which model is the most reliable for forecasting
+value at risk in our out-of-sample setting.
+
+  13                                                                                                ˆ(n)
+    As a side note, if we update the parameters every second day the column θ    would read
+ˆ(1) ˆ(1) ˆ(2) ˆ(2) ˆ(3)    ˆ(500)
+θ1 , θ2 , θ3 , θ4 , θ5 , ..., θ1000 . In our analysis, however, the parameter vector will only be updated every 100
+days for the first ranking procedure and every 20 days for the more thorough model comparison. We do this because
+the parameters do not change a lot on a daily basis and this also increase the speed of computation.
+   14
+    The careful reader will note that this estimation and forecast is done while knowing all the data up until the
+forecasting window while not knowing (ignoring) the information that comes after. If you will, the forecast could be
+said to be done after the markets close but before they open the next day.
+   15
+    For example using R we get qt(1 − 0.05/2, df = 9) = 2.262 whereas the quantile for normal distribution is
+qnorm(1 − 0.05/2) = 1.96.
+
+                                          24
+2.4.6 Mean Squared Error
+
+Another model selection tool is the mean squared error (MSE). It is used to determine how close the
+volatility estimates are to the realised volatility. The mathematical formula is
+
+                                                         n(wF )
+                   SSE   1  ∑
+                                                                       2
+                         M SE =      =         (ˆσt − σt)                      (28)
+                                 n(wF )   n(wF )
+                                                               t=1
+
+where n(wE ) is the number of estimations, SSE is sum of squared errors, σˆt is the estimated volatility
+and σt is the realised volatility. MSE has value when choosing a model for estimating, for example,
+a financial institutions VaR because it can help them to not take a model that overestimates the
+risk. This is important because, as we mentioned in section 2.3.1, overestimating the risk hinders
+the financial institution from allocating capital efficiently.
+
+2.5 Model Diagnostics
+
+In the GARCH model we impose a theoretical distribution on the white noise term zt, for example
+a normal or Student’s t-distribution. In order to check if this assumption is fulfilled or not we
+                                                                                               2
+plot the standardized residuals ˜t to check the adequacy of the mean equation and ˜t to check the
+adequacy of the volatility equation. If they appear as white noise then the assumption is fulfilled.
+The standardized residuals are calculated as
+
+                                                        ˆt
+                                            ˜t =                                            (29)
+                                                 σˆt
+
+where ˆt = rt − μˆt according to the GARCH model equation (8). Upon comparing the white noise
+term zt = εt/σt and the formula for ˜t we see that it is indeed logical to evaluate the assumed
+                                                                  2
+distribution of zt by plotting ˜t. This is also done for the ˜t .
+    To evaluate whether the standardized residuals seem to be white noise we plot the autocorrelation
+function, in which there should be no apparent autocorrelation, as well as the Q-Q plot, where the
+standardized residual should follow the assumed distribution. This is done in the Data Analysis
+under section 3.5.
+
+3 Data Analysis
+
+We begin with an exploratory data analysis to evaluate how the returns can be modelled given
+our research question. We then fit all 64 models to OMXS30 in the estimation window. We use
+these 64 models to forecast one-day ahead VaR in the forecasting window and these forecasts are
+then backtested using the uc and cc tests. Using the performance of the models with regards to
+backtesting, we pick the winning model and compare it to the benchmark model.
+   We need to be very careful about the distinction between the estimation window wE and the
+forecasting window wF . The estimation window is used in the exploratory data analysis as well as
+
+                                          25
+to estimate the first parameters and the forecasting window is used in VaR testing in section 3.4
+and onwards.
+    Lastly, we do a robustness test of our findings to other stock indices.
+
+3.1 Exploratory Data Analysis
+
+In this section the following steps will be performed:
+
+(1) prices are plotted together with returns and stationarity is tested using the ADF-test,
+
+(2) descriptive statistics are tabulated and the normal Q-Q plot of the return series is created
+    together with a histogram displaying the frequency of returns,
+
+(3) ACF of returns is plotted together with the Ljung-Box test to evaluate the autocorrelation in
+    returns,
+
+(4) test if the mean return is statistically different from zero using a t-test,
+
+(5) ACF of squared returns is plotted together with the Ljung-Box test to evaluate the autocorrelation
+    in squared returns,
+
+(6) test if the mean squared return is statistically different from zero using a t-test, and
+
+(7) conclude what type of model should prove superior using statistical and financial theory.
+
+From these steps we draw the following conclusions. From step (1) we conclude that returns are
+stationary. From step (2) we see that the distribution of returns is more leptokurtic than a normal
+distribution. However, drawing any conclusions regarding the best distribution assumption for the
+residuals from this is dubious because, as we discussed in subsection 2.1.6, the model that gets applied
+could "pick up" these tail events, thus rendering any fat-tail assumption superfluous. Furthermore,
+the distribution exhibit low but noticeable skewness making inference regarding appropriate skewness
+assumption difficult as well. From step (3) we can see some autocorrelation in the returns from
+the ACF plot and the LB test confirms this. However, step (4) shows that the return series is not
+statistically different from zero---hence we need not model the mean equation. Moving on to squared
+returns we see from step (5) that squared returns exhibit clear autocorrelation and this time the
+t-test in step (6) show that squared returns are statistically significantly different from zero---hence
+we need to model the variance equation. In step (7) we conclude that an asymmetric ARCH-type
+model is likely to perform best.
+
+3.1.1 Stationary of Prices and Returns
+
+In Figure 2 we plot the prices and returns for OMXS30 from 2 January 2004 to 28 March 2012
+referred to as the window of estimation we. Prices see a big dip during the Great Recession and in
+line with what Schwert found in his article from 1989---that volatility clustering tend to be more
+
+                                          26
+pronounced during economic recessions---we see a tendency for volatility clustering to becomes more
+prominent during this period.
+    To be able to estimate the conditional volatility models in this thesis we need the data set to be
+stationary. According to a Dickey Fuller-test the price series is not stationary (which also clearly
+can be seen from the plot) whilst the return series is stationary. We can therefore model the return
+series.
+
+           Figure 2: Adjusted closing prices (above) and returns (below) for OMXS30.
+
+3.1.2 Descriptive Statistics and Q-Q Plots
+
+The mean return is 0.0003, very close to zero, as expected since we have daily data and there is
+no time for a return to occur. This is confirmed by the t-test which shows that the mean is not
+statistically significantly different from zero as the test have a p-value of 0.4462.
+   The minimum value of the daily returns is −0.0751 occured on 2008-10-06 and the maximum
+value is 0.0987 occured on 2008-11-24. The first quantile and third quantile are −0.0070 and 0.0078
+respectively. These values, combined with the lower part of Figure 2 describe the return series.
+    The returns have a skewness of 0.0544 and more importantly kurtosis = 7.3103 which is 4.3103
+higher kurtosis than the normal distribution. This higher kurtosis is observed in the left part of
+Figure 3. We could use these values to test if the data is normal using a Jarque-Bera test but we
+
+                                          27
+rely on the Q-Q plot instead because of the difficulties in trying to determine an exact distribution
+for the residuals ex ante.
+    In Figure 3, we can see that the distribution is leptokurtic. In the histogram displaying the
+frequency of returns (left) we see that the distribution is more peaked at the mean than normality.
+From the normal Q-Q plot (right) we see that the return series exhibits fatter tails as is evident
+from its deviation above the straight line in the lower tail and its deviation below the straight line
+in the upper tail.
+
+     Figure 3: The histogram (left) shows that the distribution is leptocurtic and the Q-Q
+      plot (right) shows that the return distribution has fatter tails than normality.
+
+   So what can be inferred from this? We see from the GARCH-model on page 15 that rt = μˆt + σˆtzt
+where zt is assumed to follow some distribution. Does this mean that zt should be assumed to follow
+a fat tailed distribution like the t-distribution? What needs to be remembered is that zt is the
+distribution of the standardised residual (not the raw return) making them highly dependent on the
+specific volatility model applied. Our data shows clear kurtosis, suggesting that the assumption of a
+Student’s t-distribution for the white noise term might be more appropriate than that of normality.
+Although, this is provided that the volatility model does not pick up all of the tail events and the
+peakiness around the mean. However, as we discussed in section 2.1.6, some of the tail events are
+likely to be picked up by our volatility models but not all, making the assumption of a Student’s
+t-distribution still quite probable to be superior to normality for most of the models but we cannot
+say for sure ex ante to applying the volatility model.
+
+3.1.3 ACF Plots of Return
+
+In Figure 4 we display two ACF plots. On the y-axis we have the value of the ACF, see γk in
+equation (3), and on the x-axis we have the number of lags k. The left plot is the ACF of the
+return series and the right plot is the ACF of the squared returns. We use the ACF plot to see if
+
+                                          28
+                      Figure 4: ACF plots for returns and squared returns.
+
+the time series are autocorrelated or not. If γk lies within the dotted lines for many values of k
+then the data is not serially correlated, otherwise it is. The number of "many" is up to researcher.
+Formal statistical tests may be used---in this case the Ljung-Box test---and we do use this test in
+conjunction with the visual ACF plots to thoroughly evaluate whether the series are autocorrelated
+or not. Although, we consider the ACF plot to be a more useful tool than the Ljung-Box test and
+rely more on the plots.
+    By looking at the left plot in Figure 4 we see that there is some autocorrelation, though not
+very distinct. The Ljung-Box test give a p-value of 0.0045 which indicates that the lags are indeed
+autocorrelated and this would indicate the need to model the mean equation. However, the t-
+test that was conducted in subsection 3.1.2 did not show that the mean of the return series was
+statistically significantly different from zero leading us to conclude that the mean is too small to
+have any significant effect on the results. Because of this, we will not model the mean equation μt
+with an AR(p) or ARMA(p,q) model but instead use a constant mean μ. which for most practical
+purposes can be though of as zero. We will therefore sometimes refer to innovations and returns
+interchangeably.
+
+3.1.4 ACF Plots of Squared Return
+
+By looking at the right part of Figure 4 we see that squared returns exhibit strong autocorrelation
+                                                                      −16
+according to the ACF plots and this is verified by a p-value of less than 2.2 · 10    for the Ljung-Box
+test. A t-test also confirms that the squared returns are indeed statistically significantly different
+from zero since the p-value is zero. Hence there exists ARCH effects. This is an argument for using
+a GARCH model.
+
+                                          29
+    Furthermore, the Ljung Box-test display a p-value close to zero so we draw the same conclusions
+as the ACF plots (namely that squared returns are correlated) thus the formal tests point in the
+same direction as the plots---we should use a GARCH model for our data.
+
+3.1.5 Conclusion of EDA
+
+What distribution should be assumed for the white noise term? According to our EDA we deem
+it more probable that a fat-tailed distribution best fits the residual assumption (though this is
+very uncertain). We also conclude that there is no need to model the mean equation because it
+is not statistically significantly different from zero, therefore we assume it to be constant and, for
+all practical purposes, essentially zero. There is, however, strong autocorrelation in the squared
+returns giving apparent reason that a GARCH-type model should be used to model the conditional
+volatility.
+    The asymmetric models are likely to perform better than the symmetric models because of the
+leverage effect. Exactly which one, however, is difficult to say because the main differences between
+the models are minor tweaks to how the asymmetric treatment is modelled.
+
+3.2 GARCH Model Competition
+
+In this section we do a rolling fit of all the 64 GARCH models. From these models we calculate
+their individual VaR estimates and backtest these estimates. Based on the backtesting results we
+rank the models from best to worst.
+                                        16
+   From the rolling window procedure  each GARCH model produce 1000 VaR forecasts. These
+forecasts are backtested using cc test and uc test. The models are then ranked according to their
+                                           17
+p-value from the cc test from high to low.   Results from the backtesting are summarised in Table
+2. This table shows the top 10 rows from Table 6 in Appendix section A.2.
+   A clear result from Table 2 is that asymmetric models perform much better than symmetric
+models, because there are no symmetric models in the table (which is what we expected beforehand).
+More precisely, the AVGARCH, eGARCH and apARCH models perform well---as do models with
+sstd and NIG distributed innovations (even though the winner has the assumption of normality).
+The winning model having the normal assumption shows the difficulty of trying to predict the best
+residual assumption ex ante.
+   For this data set there were two winning models, AVGARCH(2,1)-N and eGARCH(2,1)-std.
+We have done a thorough analysis of both models but because they do not differ in a meaningful
+way we will only present the former here.
+
+   16
+    As a detail, in the rolling window procedure the parameters are refitted every 100 days. One model did not
+converge, this was the NAGARCH(2,1)-sstd.
+   17
+    If two models have the same p-value from the cc test we rank them based on the uc test’s p-value. These p-values
+are referred to as cc-p and uc-p. The reason for ranking on the p-value is that we wish to accept the null hypothesis
+that the violations are not clustered and that the number of violations are correct with respect to VaR’s confidence
+level. The higher the p-value the farther away we are from rejecting the null. Hence this is a reasonable sorting
+criteria.
+
+                                          30
+   The remaining part of this thesis will compare the winning model AVGARCH(2,1)-N from this
+table with a benchmark model and discuss how they differ. We will also mention why it’s important
+in risk measurement.
+
+                                                  cc-p uc-p actual
+                       AVGARCH(2,1)-N 0.949 0.885 51
+                            eGARCH(2,1)-std 0.949 0.885 51
+                             eGARCH(2,1)-N 0.904 0.884 49
+                            apARCH(1,1)-sstd 0.847 0.770 48
+                            apARCH(2,1)-sstd 0.847 0.770 48
+                         AVGARCH(2,1)-sstd 0.847 0.770 48
+                             apARCH(1,1)-nig 0.847 0.770 48
+                             apARCH(2,1)-nig 0.847 0.770 48
+                          AVGARCH(2,1)-nig 0.847 0.770 48
+                          AVGARCH(1,1)-std 0.845 0.566 54
+
+                    Table 2: Top 10 models from the backtesting evaluation.
+
+3.3 Model Comparison of Winner and Benchmark
+
+In this section we compare a benchmark model with the winning model from Table 2. Thus the two
+models to be compared are:
+
+   1. the winning model AVGARCH(2,1)-N also called winner, and
+
+   2. the benchmark model sGARCH(1,1)-N also called benchmark.
+
+Firstly, we motive our choice of benchmark model as well as perform a fit and comparison of the
+two models in the estimation window. Secondly, we compare the VaR backtesting results and VaR
+forecast plots from these models and discuss the results. The VaR forecast plots are accompanied
+by the very important news impact curve. These two plots highlights the key differences that
+distinguishes the winner from the benchmark. Lastly, we assess model fit and assumptions using
+diagnostical plots of the standardised residuals.
+
+3.3.1 Fitting the GARCH Model and Estimated Coefficients
+
+Why do we use an sGARCH(1,1)-N as the benchmark? In choosing our benchmark we have to
+decide on three things: Firstly, the family: standard, E-, GJR-, AV-, N- etc. We chose the sGARCH
+because it is heavily used as well as being the first GARCH model to be developed. Secondly, the
+number of lagged innovations: either (1,1) or (2,1) model. We chose (1,1) because it is the standard
+choice. Thirdly, the assumed distribution for the innovation: normal, std, sstd, and NIG. We chose
+a normal distribution because our winning model AVGARCH-N have a normal distribution and this
+make the comparison more appropriate.
+   The winner and benchmark models are fitted to the data from the estimation window. The
+results are seen in Table 3 and Table 4. Table 3 shows the unconditional mean, unconditional
+
+                                          31
+variance, persistence, halflife, likelihood, and information criteria. Table 4 shows rounded estimated
+coefficients, their standard errors, the t values, and p-values. Note that this is going to be the first
+                   ˆ(1)
+set of parameters θ1 in our rolling window analysis, see details in section 2.4.5. These estimates
+are used in the calculation of VaR1. We will analyse these first estimated coefficients and some
+important facts are summarised in two separate bullet lists commenting the two tables.
+
+                               AVGARCH(2,1)-N sGARCH(1,1)-N
+                     Unc. Mean 0.000082 0.000749
+                     Unc. Variance 0.000225 0.000223
+                      Persistence 0.980318 0.988307
+                    Halflife 35 59
+                    Likelihood 6160 6109
+                  AIC −5.926 −5.881
+                  HQIC −5.917 −5.878
+
+                               Table 3: Coefficient Comparison
+
+    The information in Table 3 is commented on in the bullet points below.
+
+   • The information criterions AIC and HQIC are very close to each other but they slightly favour
+     winner over benchmark.
+
+   • Recall that half lif e measures how long it takes for half of the shock to disappear, see
+      details in section 2.4.1. Because half lif e for winner is lower than for benchmark, we know
+      that the winning model will go back to its unconditional variance faster after a shock. (This
+                                                                                          winner
+     difference in inertia is also reflected in the the calculated persistence where P ersistence     <
+                  benchmark
+      P ersistence          so these two estimates show the same thing but half lif e have a nicer
+      economic interpretation.)
+
+   • The unconditional mean is lower in winner than in benchmark.
+
+   • The unconditional variance is about the same for both models. This means that in the long
+      run both models revert back to the same mean variance.
+
+    The information in Table 4 is commented on in the bullet points below.
+
+   • We see that β1 is close to 1 and α1 close to zero for both models---as is expected with financial
+      data.
+
+   • The α1 are pretty close to each other, 7/10 vs 8/10. For benchmark α1 is not significant
+      whereas for winner it is.
+
+   • There is only an α2 for winner because it is a (2,1) model. It is the weight put on the innovation
+     that occurred two days before. It is natural to expect a lower β1 when α2 is present because
+      εt−2 is also present in σt−1.
+
+                                          32
+                             AVGARCH(2,1)-N
+                              Estimate Std. Error t value p-value
+                         ω 0.0003 0.00 10.50 0.000
+                         α1 0.0705 0.00 42.97 0.000
+                         α2 0.0491 0.00 16.24 0.000
+                         β1 0.8575 0.01 129.11 0.000
+                         η11 1.0000 0.10 10.38 0.000
+                         η12 0.6595 0.02 26.76 0.000
+                         η21 0.3518 0.04 8.05 0.000
+                         η22 -2.2701 0.04 -52.37 0.000
+                                sGARCH(1,1)-N
+                              Estimate Std. Error t value p-value
+                         ω 0.0000 0.00 0.36 0.721
+                         α1 0.0883 0.05 1.71 0.088
+                         β1 0.9000 0.06 14.61 0.000
+
+                         Table 4: Coefficients and robust standard errors.
+
+   • The η values are not discussed in detail, but rather seen as the values that create the shift and
+      rotation in the news impact curve that is presented later on.
+
+   By inserting the estimated parameters into the AVGARCH formula, Equation (23) on page 22,
+we get the estimated model
+
+            σt = ω+α1σt−1(|zt−1 − η21| − η11(zt−1 − η21))+
+                  +α2σt−2(|zt−2 − η22| − η12(zt−2 − η22)) + β1σt−1 =
+           = 0.0003+0.0705σt−1(|zt−1 − 0.3518| − 1.0000(zt−1 − 0.3518))+
+                    +0.0491σt−2 (|zt−2 + 2.2701| − 0.6595[zt−2 + 2.2701]) + 0.8575σt−1.
+
+Because we allow AVGARCH(2,1) to model the innovations more precisely---through treating the
+t − 1 lag and t − 2 lag individually---it is better at forecasting VaR in our out-of-sample setting.
+However, this does not necessarily have to be the case because there could be some change between
+wE and wF that could make a (1,1) model better. Remember that η2i shifts the news impact curve
+and η1i rotates the news impact curve.
+   It is worth noting that the coefficients are not the same throughout our entire forecasting
+window, because we do a rolling window procedure where the parameters are updated. Updating
+the parameters does not only change the coefficients but also the standard errors and thereby the
+p-values. Thus the low p-values in Table 3 should be taken with a grain of salt---it is only for the
+                        ˆ(1)
+first set of parameters θ  . After the specified time newly available data is used to reestimate the
+                                                                 (2)
+parameter vector and we get the second set of parameters θ   and so on. If there is a more volatile
+period then some parameter values might become insignificant, since during volatile periods the
+standard errors increase since we get less certain about our estimates. This is one reason why models
+
+                                          33
+are not as suitable during periods of high volatility. Therefore, during crisis, we should trust our
+models less.
+   Do note that we have done a new fit for the benchmark model and the winning model. The
+reason we do a new rolling window estimation (instead of keeping the old one that was used when
+the models competed against each other) is so that we can now refit the parameter vectors every 20
+     18                                       19
+days  allowing for more precise estimates.
+    As a last note, we do the fit using data from the estimation window. The purpose of using only
+the estimation window, and not the entire sample is that we want to reserve the forecasting window
+to test our model---peeking at the forecasting window beforehand would be statistical cheating.
+
+3.4 VaR Backtesting
+
+In this section we show why the AVGARCH(2,1)-N outperforms the benchmark according to VaR
+backtesting, described in 2.3.3. We also plot the VaR forecasts and calculate the MSE.
+
+3.4.1 Tabulated Results
+
+Since we use a five percent VaR and a forecasting window of length 1000 the expected number of
+violations is 0.05 · 1000 = 50 = expected regardless of which model is used. The actual violations are
+        ∑n(wF )
+actual =   t=1 It in other words the sum of It in the forecasting window. The farther away actual
+is from expected the worse the model is. If actual < expected the model is said to overestimate risk,
+and if actual > expected the model is said to underestimate risk. Overestimating the risk is bad
+for the bank because it leads to unnecessary capital reserves and it is bad for the society because
+resources are not used efficiently. Moreover, underestimating the risk is bad for the bank because it
+leads to punishments from regulators and, in the worst case scenario, may even force a liquidation
+of the bank which can be very costly for society at large. For these reasons the best models have
+actual very close to expected.
+    The unconditional coverage test (uc test) tells us if the number of violations are correct. The
+null may be framed as H0,uc = number of violations are correct. The conditional coverage test (cc
+test) tells us if violations are clustered and if the number of violations are correct. The null may be
+framed as H0,cc = violations are not clustered and number of violations are correct. For details of
+these test see section 2.3.3. We apply the cc test as well as the uc test and summarise the findings
+in Table 5. In this table it is obvious that winner outperforms benchmark with respect to VaR
+backtesting.
+    Given the formulation of the null hypothesis of the cc test and the uc test, we wish to ‘‘accept’’
+the null hypothesis (or more formally ‘‘fail to reject’’). When both models succeed at the hypothesis
+testing we can decide which one is the better by looking at which model have the highest p-value
+since the higher the p-value the farther away we are from rejecting the null. Using this idea, winner
+
+  18
+    A refit every day would be excessive, the parameters do not change that much.
+  19
+    It was impractical to get these precise estimates before because we fitted 64 models so we did a refit every 100
+days. Now, however, we now only need to do it for two models this is computationally possible to refit more often.
+
+                                          34
+                                              expected actual cc-p uc-p
+                 Winner AVGARCH(2,1)-N 50 51 0.949 0.885
+                Benchmark sGARCH(1,1)-N 50 65 0.104 0.037
+
+     Table 5: Results from VaR backtesting. Winner is better than benchmark, based on
+      actual number of violations as well as the p-values from cc test and uc test.
+
+is better than benchmark with respect to VaR backtesting because the p-value for the uc test and cc
+test is higher than for benchmark. (If given the choice to interpret either uc-p or cc-p we would
+chose cc-p since the null of the latter tests clustering as well as unconditional coverage.)
+    Even someone who is not familiar with interpreting p-values should notice that winner outperforms
+benchmark with respect to VaR backtesting simply by comparing the actual number of violations
+and noting that 51 is closer to expected = 50 than 65 is. This is important because with 15 more
+violations than what is expected VaR is not a reliable measure of risk. This would lower a banks
+readiness to severe economic downturn and would also be call for reprimands from the regulators.
+
+3.4.2 VaR Forecast Plot
+
+In Figure 5 we plot the forecast value at risk together with the realised return rrt as well as marking
+the violations with a circle. Hence, if a violation have occurred at time t then this day is marked
+with a circle on the horizontal axis. An inspection of how the circles are spread out can be considered
+a (crude) visual test if the violations are independent. Figure 5 is the most important figure in this
+thesis.
+   The VaR forecast VaRt varies over time, and when returns are more volatile the VaR forecast
+increases---this behaviour is evident from the GARCH-formula by the relationship between σˆt and
+rt−1. The forecast VaR for the two models have similar properties because the lines exhibit similar
+patterns. But the winning model adapts faster to changing circumstances, as can be seen from the
+volatile period towards the end of the sample, and it incorporates the asymmetric effects, as can be
+seen during periods of large losses. That the winning model adapts faster may be good for estimating
+risk precisely but it makes it difficult for the bank to allocate capital correctly since the risk changes
+so often.
+
+3.4.3 Impact of Asymmetry
+
+Financial data often exhibit an asymmetric effect, as discussed in section 2.4.2 on page 19. The
+winning model AVGARCH(2,1)-N is able to incorporate this asymmetry into its treatment of
+innovations. Something that the benchmark model is unable to do. The asymmetric effects are
+illustrated in the news impact curve in part (a) of Figure 6 which is the second most important
+figure in this thesis.
+                                                           winner     benchmark
+   Given a positive innovation εt−1 > 0 we have that σˆt < σˆt . In other words when
+there is good news the winning model blows up volatility less than the benchmark model does. This
+is desired because sufficiently large positive returns does not give cause for as much an increase in
+
+                                          35
+                                             Figure 5: VaR Forecast Plot. Violations and realised return for both the winning model and the benchmark model. Violations are markedwith a circle as a visual indication of the violation.
+
+36
+Figure 6: News impact curve for both models. The winning model increase the forecast
+volatility σˆt more when the shock εt−1 is negative.
+
+                                     37
+risk. Avoiding to blow up the volatility forecast when times are good will improve the MSE which
+                                                20
+makes the capital allocation more efficient.
+                                                           winner     benchmark
+   Given a negative innovation εt−1 < 0 we have that σˆt > σˆt . In other words when
+there is bad news the winning model affects the volatility forecast more than the benchmark model
+does. As discussed under subsection 2.4.2 this is done because volatility tends to increase more when
+prices fall due to the leverage effect.
+
+3.4.4 MSE
+
+The Mean Squared Error (MSE) is a measure of how tight the estimated VaR line is to the returns.
+A low MSE measure will be shown in the VaR plot as having very little white space between the
+gray realised return and the black VaR line. It matters to banks because of capital requirements.
+MSE can be thought of as a proxy of how much money is put in the reserve.
+    MSE is calculated from data in the forecasting window just like the cc test and uc test is. The
+cc test is used to see if the actual number of violations correspond to the expected and if these
+violations are independent or clustered. By contrast, MSE is used to see how tight the VaR forecast
+is to the realised return. The lower the MSE the better the model is.
+                                  winner          −8           benchmark          −8
+   The calculated values are M SE      ≈ 4.6 · 10   and M SE         ≈ 4.9 · 10   and the
+fraction is
+                                                winner
+                            M SE
+                                        benchmark ≈ 0.94
+                           M SE
+telling us that the the winner model have a 6 percent lower MSE than the benchmark.
+
+3.4.5 Conclusion of VaR Backstesting
+
+There are three distinct reasons why winner is more appropriate than benchmark. (1) The cc test
+and VaR forecast plots suggest violations are less clustered in winner. (2) The actual violations are
+closer to the expected for winner. (3) MSE is lower for winner.
+
+3.5 Model Diagnostics
+
+In this section we show that the standardised residuals are close to white noise, hence the model
+assumptions are fulfilled.
+    As described in section 2.5 we would like to conclude that the standardised residuals
+
+                                                        ˆt
+                                            ˜t =
+                                                 σˆt
+
+   20
+    The inequality is a minor simplification of the truth so we give the whole story in this footnote. The careful
+                                                                                          winner     benchmark
+reader observes that when εt−1 is sufficiently negative (e.g less than −0.055) then in fact σˆt > σˆt but
+as illustrated in the histograms in Figure 6 (b) and (c). It is rarely the case that εt−1 is sufficiently negative in the
+full sample, as seen by histogram (b)---to be precise it occurs 9 times. And it never occurs in the forecasting window,
+as seen by histogram (c).
+
+                                          38
+           l
+                l
+                ll                                                       3
+                 lll
+                    llll
+                     llllll
+                      llllllll
+                     lllllllllll
+                        lllllllllllllll                                                  2                                         2011−12−30
+                         lllllllllllllllllll
+                          llllllllllllllllllllllll
+                           lllllllllllllllllllllllllllllll
+                           llllllllllllllllllllllllllllllllllllll
+                             llllllllllllllllllllllllllllllllllllllllllllll
+                             llllllllllllllllllllllllllllllllllllllllllllllllllllll
+                               lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+                                lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll                                          1
+                                 lllllllllllllllllllllllll lllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+                                 lllll lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+                                  llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+                                   llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+                                    lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+                                     lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll                                                                               2011−01−03
+                                      lllllllllllllllllllllllllllllllllllllllllllllllllllllll lllllllllllllllllllllllllllllllllllllllllllllllllllllllll                                    0
+                                       lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll llllll llllllllllllllll llllllll
+                                       lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll lllllllllllllllllllllllllllllllllllllllllll
+                                        lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+                                        llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+                                         llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+                                           llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+                                            lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+                                             llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll                             −1
+                                              lllllllllllllllllllllllllllllllllllllllllllllllllllll
+                                               llllllllllllllllllllllllllllllllllllllllllll                               Theoretical Quantiles
+                                                llllllllllllllllllllllllllllllllllll
+                                                  lllllllllllllllllllllllllllll
+                                                lllllllllllllllllllllll
+                                                     llllllllllllllllll                                                                2010−01−04
+                                                     llllllllllllll                    −2
+                                                      lllllllllll
+                                                        llllllll
+    (3) Normal Q−Q Plot of St.Residuals                 lllll
+                                                            lll l
+                                                lll
+                                                                 l l
+                                                                l     −3
+
+                                                                     l
+                                                                                                                                         2009−01−02
+      4        2        0        −2       −4
+
+                                               Sample Quantiles
+
+                                                                                                                                         2008−01−02
+
+
+
+                             30                                    30
+                                                                                                     (4) Time Series Plot of St.Residuals
+                                                                                                                                         2007−01−02
+
+                      25                           25
+
+
+                             20                                    20
+                                                                                                                                         2006−01−02
+                       Lag                        Lag
+                      15                           15
+
+
+     (1) ACF for St.Residuals      10                                        10                                       2005−01−03
+
+                              (2) ACF for Squared St.Residuals
+
+                             5                                     5
+
+
+                               0                                        0                                       2004−01−02
+Diagnostics for St.Residuals from Benchmark0.02    −0.02    −0.06                0.04   0.00    −0.04            4   2   0    −2   −4
+
+                ACF                               ACF                                Return
+
+           l
+             l
+              ll                                                         3
+               lll
+                llll
+                 llllll
+                  llllllll
+                 lllllllllll
+                   lllllllllllllll                                                      2                                         2011−12−30
+                     llllllllllllllllll l
+                      llllllllllllllllllllllll
+                      lllllllllllllllllllllllllllllll
+                       llllllllllllllllllllllllllllllllllllll
+                         lllllllllllllllllllllllllllllllllllllllllll lll
+                         llllllllllllllllllllllllllllllllllllllllllllllllllllll
+                          llllllllllllllllllllllllllllllllllllllllllll lllllllllllllllllll
+                           llllllllllllllllllllllllllllllllllllllllll lllllllllllllllllllllllllllllll                                               1
+                            llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+                             llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+                              lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll llllllllllllllllllllllll lllllllll
+                               llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+                                llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll lllllllll llllllllllllllllllllllllll
+                                lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll                                                                                   2011−01−03
+                                 llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll                                         0
+                                  lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll llllllllllllllllllllllllllllllllllllllll
+                                   llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+                                    lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+                                    lllllllllllllllllllllllllllllllllllllllllllllllllll lllllllllllllllllllllllllllllllllllllllllllll
+                                     llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+                                       llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+                                        lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+                                         llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll                                 −1
+                                          lllllllllllll llllllllllllllllllllllllllllllllllllllll
+                                           llllllllllllllllllllllllllllllllllllllllllll                                    Theoretical Quantiles
+                                            llllllllllllllllllllllllllllllllllll
+                                             lllllllllllllllllllllllllllll
+                                            lllllllllllllllllllllll
+                                                llllllllllllllllll                                                                     2010−01−04
+                                                llllllllllllll                         −2
+                                                  lllllllllll
+                                                    llllllll
+    (3) Normal Q−Q Plot of St.Residuals              lllll
+                                                       llll
+                                             lll
+                                                            l l
+                                                           l          −3
+
+                                                                     l
+                                                                                                                                         2009−01−02
+            2        0        −2       −4
+
+                                               Sample Quantiles
+
+                                                                                                                                         2008−01−02
+
+
+
+                             30                                    30
+                                                                                                     (4) Time Series Plot of St.Residuals
+                                                                                                                                         2007−01−02
+
+                      25                           25
+
+
+                             20                                    20
+                                                                                                                                         2006−01−02
+                       Lag                        Lag
+                      15                           15
+
+
+     (1) ACF for St.Residuals      10                                        10                                       2005−01−03
+
+                              (2) ACF for Squared St.Residuals
+
+                             5                                     5
+
+
+Diagnostics for St.Residuals from Winner0                                      0                                     2004−01−02
+        0.04   0.00    −0.04                 0.04   0.00    −0.04              2   0    −2   −4
+
+                ACF                               ACF                                Return
+
+                                                                  Figure 7: Winner (left) and Benchmark (right) model assumption check where St.Residual stands for standardised residuals. Assumptions(1) to (4) are fulfilled for both models.
+
+                             39
+follow a white noise process. To be able to say that ˜t follows a white noise process we want the
+following assumptions to be fulfilled:
+
+(1) uncorrelated ˜t,
+
+                     2
+(2) uncorrelated ˜t ,
+
+(3) ˜t ∼ N (0, 1), and
+
+(4) ˜t looks like white noise.
+
+    Assumption (1) is needed because then the mean equation is good. In this thesis we have used a
+constant (rather than an ARMA model) for the mean. The residuals from this mean equation are
+then modelled by a GARCH model. The assumption is tested by an ACF plot of the standardised
+residuals. Autocorrelation in ˜t is not present if the value of γk for most lags k lies within the dotted
+lines in an ACF plot. It can also be tested formally using a Ljung-Box test.
+    Assumption (2) is needed because then the volatility equation is good. It is tested the same way
+                                      2
+as the first assumption but using ˜t instead of ˜t. If there is no correlation there is no ARCH effects
+left in the residuals, indicating that the GARCH model was successful in removing the ARCH effect
+we observed in Figure 4 on page 30.
+   Assumption (3) is needed because when fitting a GARCH model we have assumed a certain
+distribution (for the winning model we assumed a normal distribution). If that assumption is wrong
+then the model assumptions are not met. It is tested by plotting the theoretical quantiles of the
+assumed distribution against the sample quantiles of ˜t in a Normal Q-Q Plot. If the theoretical
+distribution is similar to the sample distribution it will be a straight line.
+    Assumption (4) is that the standardised residuals should look like white noise, which is of course
+needed in order for us to draw the conclusion that we consider it to be white noise. This is seen
+visually from drawing a time series plot of ˜t. In the best of worlds you would compare this to plots
+with simulated white noise and see if they look alike, but for brevity we skip this.
+   In Figure 7 these assumptions are evaluated for the winner AVGARCH(2,1)-N and the benchmark
+sGARCH(1,1)-N. Both plots look very similar. More importantly, both models fulfil the four
+assumptions reasonably well though there is a small deviation in the the Q-Q plots making it not a
+perfect fit. Especially the lower tails deviate from the normal distribution. If one cares about a 1
+percent VaR or a conditional VaR then it would be more appropriate to use another distribution or
+perhaps model the tails using extreme value theory. However, this thesis is concerned with the 5
+                                                                           th
+percent VaR so the departure from the normal distribution below the 5   percentile does not affect
+the the estimate making it not as sensitive to the deviation observed here.
+
+                                          40
+4 Conclusions
+
+In this thesis we differentiate between several potential models when it comes to VaR forecast precision
+and rank them accordingly using conventional backtesting methods in an out-of-sample setting. The
+winning model, AVGARCH(2,1)-N, is considerably better than the benchmark, sGARCH(1,1)-N.
+The benchmark model has 30% more violations than what is expected making it unsatisfactory as a
+risk measure. The winning model only has 2% more violations than what is expected---making it a
+reliable risk measure for the analysed time series. See Figure 5 for an overview of how the models
+perform throughout the forecasting window.
+   Previous literature and common conception is that the GARCH(1,1) model is an appropriate
+model for forecasting conditional variance. We have shown the importance of selecting a model with
+regards to its end application and purpose---in our case to forecast VaR---and the importance of
+evaluating the models with regard to this same end purpose. What is usually assumed more is that
+the (1,1) models are enough so that any more developed models are often not considered. In our
+analysis, 7/10 of the 10 best models are (2,1) models, suggesting that this more developed form
+proved better when it comes to forecast VaR in our data set.
+   What makes the winning AVGARCH(2,1)-N model outperform the sGARCH(1,1)-N model is
+primarily its asymmetric treatment of positive and negative innovations, seen in Figure 6. It is
+apparent that OMXS30 exhibit a leverage effect in its market reactions to price changes and this can
+be picked up by the winning model. Something that the benchmark model is unable to do. Not only
+does this make the benchmark model underestimate the risk after negative price movements---which
+makes us observe more violations---but this also makes the benchmark model overestimate the risk
+after positive price movements---which leads to bad capital allocation efficiency (which is captured in
+the lower MSE for the winning model). For this data set the asymmetric models prove substantially
+better than the symmetric ones.
+    To test the robustness of these results we apply the same method to other stock market indices
+and find that the asymmetric models clearly outperform throughout the data sets. Although, there
+are slight variations between the specific asymmetric models that prevail. We do not, however, find
+that the (2,1) models prove considerably better in the other indices.
+   These observations show the importance of choosing a model with regards to its end use and
+purpose as well as the importance of not adhering too much to convention. We also demonstrate
+that asymmetric models outperform symmetric models and that this finding also holds for different
+indices.
+
+                                          41
+4.1 Future Research
+
+We see four potential areas for future research that would be of interest. Because we limit our analysis
+to stock indices it would be interesting to see whether the asymmetric models also outperform when
+analysing other asset classes such as bonds, foreign exchange and commodities.
+    Another important analysis that would be of interest to look into is the critique of Christoffersen’s
+test that it only treats consecutive violations as clusters and not violations with one or two days
+between them, discussed under subsection 2.3.3. This test is one that we rely heavily on and perhaps
+some other backtesting evaluation method would yield a different result.
+    Because of the growing importance of conditional VaR---especially after the latest revision of the
+Basel Accords---it would be interesting to do an evaluation of the different models’ forecast precision
+with respect to their conditional VaR backtesting performance.
+   Model uncertainty has been ignored in this thesis. We have estimated GARCH parameters
+with MLE and used these estimates to calculate volatility forecasts. The estimated parameters,
+however, are uncertain as can be seen from their standard errors. A practitioner needs to keep model
+uncertainty in mind. One way to demonstrate this uncertainty in a richer way is to not only report
+the standard errors but also (1) plot the parameters over time with their standard error bands, (2)
+plot the density of the parameter estimates (3) do a simulation with some given set of parameters
+and compute the RMSE. This could potentially be used to further differentiate between the models.
+
+                                          42
+5 References
+
+Articles
+
+Aït-Sahalia,Y., Fan, J. and Li, Y., 2013, The Leverage Effect Puzzle: Disentangling Sources of Bias
+at High Frequency, Journal of Financial Economics 109(1), 224-249.
+
+Barndorff-Nielsen, O., 1978, Hyperbolic Distributions and Distributions on Hyperbolae, Scandinavian
+Journal of Statistics 5(3), 151-157.
+
+Black, F., 1976, Studies of Stock Price Volatility Changes, 1976 Proceedings of the American
+Statistical Association, Business and Economic Statistics Section, 177-181.
+
+Bollerslev, T., 1986, Generalized Autoregressive Conditional Heteroskedasticity, Journal of Econo-
+metrics 31(3), 307-327.
+
+Bollerslev, T., 1987, A Conditionally Heteroskedastic Time Series Model for Speculative Prices and
+Rates of Return, The Review of Economics and Statistics 69(3), 542-547.
+
+Christoffersen, P. F., 1998, Evaluating Interval Forecasts, International Economic Review 39(4),
+841-862.
+
+Diamond, D. W. and Dybvig, P., 1983, Bank Runs, Deposit Insurance, and Liquidity, Journal of
+Political Economy 91(3), 401-419.
+
+Dickey, D. A., Fuller, W. A., 1979, Distribution of the Estimators for Autoregressive Time Series
+with a Unit Root, Journal of the American Statistical Association 74(366a), 427-431.
+
+Ding, Z., Granger, C. W. J. and Engle, R. F., 1993, A Long Memory Property of Stock Market
+Returns and a New Model, Journal of Empirical Finance 1(1), 83-106.
+
+Engle, R. F., 1982, Autoregressive Conditional Heteroskedasticity with Estimates of the Variance of
+United Kingdom Inflation, Econometrica 50(4), 987-1008.
+
+Engle, R. F. and Ng, V. K., 1993, Measuring and Testing the Impact of News on Volatility, The
+Journal of Finance 48(5), 1749-1778.
+
+Fernandez, C. and Steel, M. F. J., 1998, On Bayesian Modeling of Fat Tails and Skewness, Journal
+of the American Statistical Association 93(441), 359-371.
+
+                                          43
+Giot, P. and Laurent, S., 2004, Modelling daily Value-at-Risk using realized volatility and ARCH
+type models, Journal of Empirical Finance 11(3), 379-398.
+
+Glosten, L. R., Jagannathan, R., Runkle, D. E., 1993, On the Relation between the Expected Value
+and the Volatility of the Nominal Excess Return on Stocks, Journal of Finance 48(5), 1779-1801.
+
+Hansen, P. R. and Lunde, A., 2005, A forecast comparison of volatility models: does anything beat
+a GARCH(1,1)?, Journal of Applied Econometrics 20(7), 873-889.
+
+Harvey, C. R. and Siddique, A., 1999, Autoregressive Conditional Skewness, The Journal of Financial
+and Quantitative Analysis 34(4), 465-487.
+
+Higgins, M. L. and Bera, A. K., 1992, A Class of Nonlinear ARCH models, International Economic
+Review 33(1), 137-158.
+
+Kareken, J. H. and Wallace, N., 1978, Deposit Insurance and Bank Regulation: A Partial-Equilibrium
+Exposition, The Journal of Business 51(3), 413-438.
+
+Kuester, K. and Mittnik, S. and Paolella, M. S., 2006, Value-at-Risk Prediction: A Comparison of
+Alternative Strategies, Journal of Financial Econometrics 4(1), 53-89.
+
+Kupiec, P. H., 1995, Techniques for Verifying the Accuracy of Risk Measurement Models, The
+Journal of Derivatives 3(2), 73-84.
+
+Ljung, G. M. and Box, G. E. P., 1978, On a measure of lack of fit in time series models, Biometrika
+65(2), 297-303.
+
+Mandelbrot, B., 1963, The Variation of Certain Speculative Prices, The Journal of Business 36(4),
+394-419.
+
+Nelson, D. B., 1991, Conditional Heteroskedasticity in Asset Returns: A New Approach, Economet-
+rica 59(2), 347-370.
+
+Pagan, A. R. and Schwert, G. W., 1990, Alternative Models For Conditional Stock Volatility,
+Journal of Econometrics 45(1-2), 267-290.
+
+Praetz, P. D., 1972, The Distribution of Share Price Changes, The Journal of Business 45(1), 49-55.
+
+                                          44
+Schwert, G. W., 1989, Why Does Stock Market Volatility Change Over Time?, The Journal of
+Finance 44(5), 1115-1153.
+
+Schwert, G. W., 1990, Stock Volatility and the Crash of ’87, The Review of Financial Studies 3(1),
+77-102.
+
+Books
+
+Brooks, C., 2002, Introductory Econometrics for Finance, The Press Syndicate of the University of
+Cambridge, Cambridge, United Kingdom.
+
+Engle, R. F. and Lee, G. G. J., A Long-Run and Short-Run Component Model of Stock Return
+Volatility, 475-486, in Engle, R. F. and White, H. (eds.), 1999, Cointegration, Causality, and
+Forecasting: A Festschrift in Honor of Clive W.J. Granger, Oxford University Press, Oxford, United
+Kingdom.
+
+                                                                   th
+Hull, J. C., 2012, Options, Futures, and Other Derivatives, 8   ed., Pearson Education Limited,
+Essex, United Kingdom.
+
+                                                                                            rd
+Jorion, P., 2007, Value at Risk: The New Benchmark for Managing Financial Risk, 3   ed., The
+McGraw-Hill Companies, Inc., Two Penn Plaza, New York.
+
+Taylor, S. J., 1986, Modelling Financial Time Series, John Wiley & Sons, Inc., New York City, New
+York.
+
+                                                           rd
+Tsay, R. S., 2010, Analysis of Financial Time Series, 3   ed., John Wiley & Sons, Inc., Hoboken,
+New Jersey.
+
+Tsay, R. S., 2013, An Introduction to Analysis of Financial Data With R, John Wiley & Sons, Inc.,
+Hoboken, New Jersey.
+
+Electronic Resources
+
+Basel Committee on Banking Supervision, 2011, Revisions to the Basel II market risk framework,
+Bank of International Settlements, URL: http://www.bis.org/publ/bcbs193.pdf (accessed 2016-
+05-05).
+
+                                          45
+Basel Committee on Banking Supervision, 2016, Minimum capital requirements for market risk, Bank
+of International Settlements, URL: http://www.bis.org/bcbs/publ/d352.pdf (accessed 2016-05-
+05).
+
+Dierick, F., Pires, F., Scheicher, M. and Spitzer, K. G., 2005, The New Basel Capital Framework and
+Its Implementation in the European Union, European Central Bank, Occasional Paper Series 42, URL:
+https://www.ecb.europa.eu/pub/pdf/scpops/ecbocp42.pdf?819df1d197f718a070e14b8418e98aac
+(accessed 2016-05-05).
+
+Duffie, D. and Pan, J., 1997, An Overview of Value at Risk, Massachusetts Institute of Technology,
+URL: http://web.mit.edu/junpan/www/ddjpa.pdf (accessed 2016-01-22).
+
+Federal Reserve, 2013, Basel Regulatory Framework, Board of Governors of the Federal Reserve Sys-
+tem, URL: http://www.federalreserve.gov/bankinforeg/basel/default.htm (accessed 2016-
+05-05).
+
+Ghalanos, A., 2015, Introduction to the rugarch package., The Comprehensive R Archive Network,
+URL: https://cran.r-project.org/web/packages/rugarch/vignettes/Introduction_to_the_
+rugarch_package.pdf (accessed 2016-05-05).
+
+Longerstaey, J. and Spencer, M., 1996, RiskMetrics---Technical Document, Morgan Guaranty
+Trust Company and Reuters Ltd, New York, URL: http://pascal.iseg.utl.pt/~aafonso/eif/
+rm/TD4ePt_2.pdf (accessed 2016-04-30).
+
+Manganelli, S. and Engle, R. F., 2001, Value at Risk Models in Finance, European Central Bank,
+Working Paper Series 75, URL: http://www.euro.zentral-bank.eu/pub/pdf/scpwps/ecbwp075.
+pdf (accessed 2016-05-01).
+
+                                          46
+A Appendix
+
+A.1 Distribution Assumptions
+
+The Normal Distribution
+The normal (or Gaussian) distribution is one that is commonly assumed for the distribution of
+returns. If zt is normally distributed then its PDF is
+                                   (         2 )
+                                      1          1  (zt − μ)
+                            f (zt) = √    exp  −   ·     2                             (30)
+                                   2πσ       2     σ
+
+and when zt follows a standardized normal distribution we have that
+                      √
+                                       E|zt| =   2/π. (31)
+
+   The validity of the normality assumption can often be questioned when it comes to financial
+return series because they often exhibits leptokurtosis, i.e. the distribution has fat tails and is more
+peaked at the mean (Praetz, 1972; Brooks, 2002:179f).
+
+The Student’s t-Distribution
+To allow for an assumption that matches the leptokuritc distribution that financial data often
+exhibit we are going to evaluate the assumption of the Student’s t-distribution. This was also the
+distribution that Bollerslev proposed in his article from 1987. If zt follows a t-distribution then it
+has the following density function
+                                   ( ν+1)   (            )−( ν+1)
+                                    Γ                       2     2
+                                       2           (zt − α)
+                        f (zt) = √            1 +                                      (32)
+                                βνπΓ (ν/2)        βν
+
+where Γ(·) is the gamma function, ν is the distribution’s degrees of freedom, and α and β are the
+location and scale parameters respectively. When zt follows a standardized Student’s t-distribution
+we have that                     √
+                                     2  ν − 2Γ((ν + 1)/2)
+                                E|zt| =                √   . (33)
+                                      (ν − 1)Γ(ν/2)  π
+                   √
+Note that as ν → ∞ the fraction tends to   2/π which mimics the the fact that a t-distribution
+tends to a Normal distribution when ν → ∞.
+
+The Skewed Student’s t-Distribution
+In many cases, the true distribution is not symmetrically distributed around the mean but instead
+skewed positively or negatively. Previous literature has found that returns often exhibit some
+skewness (Harvey and Siddique, 1999 and the references therein) and that skewed distribution
+assumptions often are superior in estimating VaR, for example see Kuester et al. (2006) . If
+it is assumed that the distribution is symmetric when the true distribution is skewed then the
+model becomes subject to skewness risk. To alleviate this we will assume that the the WN term
+
+                                          47
+is distributed as the skewed Student’s t-distribution (Fernandez and Steel, 1998). If zt follows a
+skewed Student’s t-distribution then its PDF is
+
+                                   2    [                   −1        ]
+                        f (zt|ξ) =   −1  f (ξzt)H(−zt) + f (ξ  zt)H(zt)                    (34)
+                             ξ + ξ
+
+           +
+where ξ ∈ R  is the skew parameter and H(·) is the Heaviside function. When the distribution
+is symmetric ξ = 1. This means that if we assume this distribution then the model can account
+for distributions that are skewed as well as symmetric. Because financial data often exhibit
+skewness combined with the flexibility of this assumption makes it likely that the skewed Student’s
+t-distribution will prove superior to the normal and Student’s t-distribution.
+
+The Normal-Inverse Gaussian Distribution
+Another distribution that can account for fat tails and skewness is the normal-inverse Gaussian
+(NIG) distribution (Barndorff-Nielsen, 1978). The PDF of the NIG distribution is
+                      ( √        )
+                          αδK  α  δ2 + (z − μ)2
+                                        1              t
+                   f (zt) =      √                exp (δγ + β(zt − μ)) (35)
+                               π  δ2 + (z − μ)2
+                                                     t
+
+where δ is a scale parameter, K1 is the modified third kind Bessel function, α denotes the tail
+                         √
+heaviness, β denotes the asymmetry parameter and γ =   α2 − β2.
+
+A.2 Complete Results from the Backtesting Procedure
+
+                                          48
+     51 50 51 51 51 50 50 50 50 50 49 49 49 47 53 53 56 54 55 46 52 52 52 57 52 52 52 52 52 57 57 51 51 51 58 58 50 50 50 50 50 59 59 49 48 55 57 54 56 54 53 53 46 46 52 56 56 56 55 62 53 60 62
+   act.
+                                                                                                             DNC
+
+        1         1 1 1 1 1                                                                  1 1 1 1 1
+   uc-p                                   0.66                        0.32             0.320.32                                   0.77  0.32
+      0.885 0.8850.8850.885           0.8840.8840.884 0.6660.6660.3930.5660.4750.5570.7730.7730.773 0.7730.7730.7730.7730.773   0.8850.8850.8850.2570.257           0.2040.2040.884 0.475 0.5660.3930.5660.6660.6660.5570.5570.7730.3930.3930.3930.4750.0930.6660.1590.093DNC
+
+   cc-p                0.630.630.630.63                                                                                      0.310.31                              0.16                  0.03
+      0.9580.9490.6880.6880.6880.652         0.6010.6010.5790.4710.4140.4140.4060.4030.4020.3990.3950.3950.3950.3840.3760.3760.3760.3760.3760.3710.3710.3680.3680.3680.3550.3430.3330.3330.3330.3330.333   0.2930.2510.2090.2080.2020.1990.1890.1760.1760.1680.168 0.0890.0820.0820.0780.0720.0640.033 DNC
+
+
+CAC 40
+
+
+
+     NAGARCH(2,1)-sstdNAGARCH(2,1)-niggjrGARCH(1,1)-sstdgjrGARCH(1,1)-niggjrGARCH(2,1)-nigAVGARCH(2,1)-nigsGARCH(1,1)-sstdNGARCH(1,1)-sstdNGARCH(1,1)-nigsGARCH(2,1)-nigNAGARCH(1,1)-sstdAVGARCH(2,1)-sstdsGARCH(1,1)-nigNAGARCH(1,1)-nigAVGARCH(1,1)-NNAGARCH(1,1)-NAVGARCH(2,1)-stdcsGARCH(1,1)-sstdsGARCH(1,1)-stdeGARCH(1,1)-nigapARCH(1,1)-sstdgjrGARCH(2,1)-sstdapARCH(2,1)-NNAGARCH(1,1)-stdNGARCH(2,1)-nigsGARCH(1,1)-NNGARCH(1,1)-NsGARCH(2,1)-NNGARCH(2,1)-NgjrGARCH(1,1)-NgjrGARCH(2,1)-NAVGARCH(1,1)-sstdapARCH(1,1)-NAVGARCH(2,1)-NNAGARCH(2,1)-stdNGARCH(1,1)-stdapARCH(2,1)-sstdapARCH(1,1)-nigAVGARCH(1,1)-nigeGARCH(1,1)-NeGARCH(2,1)-NgjrGARCH(1,1)-stdgjrGARCH(2,1)-stdapARCH(2,1)-nigeGARCH(1,1)-sstdeGARCH(1,1)-stdapARCH(2,1)-stdeGARCH(2,1)-stdsGARCH(2,1)-stdcsGARCH(1,1)-nigsGARCH(2,1)-sstdNGARCH(2,1)-sstdeGARCH(2,1)-sstdeGARCH(2,1)-nigcsGARCH(2,1)-nigAVGARCH(1,1)-stdNGARCH(2,1)-stdcsGARCH(1,1)-NcsGARCH(2,1)-NapARCH(1,1)-stdcsGARCH(2,1)-sstdcsGARCH(2,1)-stdcsGARCH(1,1)-stdNAGARCH(2,1)-N
+
+     50 55 54 54 55 55 46 52 52 52 52 57 57 51 51 58 58 58 58 45 50 50 49 49 49 49 44 44 61 56 57 47 62 62 55 52 46 52 51 59 62 59 60 60 58 58 58 61 57 57 57 62 62 61 61 61 61 61 62 62 62 58 64 57
+   act.
+
+     1                                                 1 1
+   uc-p                             0.320.32                                              0.320.66                                           0.320.320.32                                0.32
+        0.4750.5660.5660.4750.4750.5570.7730.7730.7730.773   0.8850.8850.2570.2570.2570.2570.461   0.8840.8840.8840.8840.3750.3750.1220.393   0.0930.0930.4750.7730.5570.7730.8850.2040.0930.2040.1590.1590.2570.2570.2570.122      0.0930.0930.1220.1220.1220.1220.1220.0930.0930.0930.2570.051
+
+   cc-p0.63                                                                                                    0.16                           0.030.030.030.030.03                     0.010.01
+ 0.4190.4030.4030.4020.4020.3990.3950.3760.3760.3760.3710.3710.3680.3680.3550.3430.3430.3430.3290.3140.3140.2750.2750.2750.2750.2630.2630.2420.2110.2080.2080.1990.1990.1960.1730.168 0.1540.0840.0680.0330.0330.0330.0320.0320.0320.032           0.0110.0110.0110.0110.0110.0110.0110.011   0.009
+
+
+DAX
+
+
+
+     gjrGARCH(1,1)-nigAVGARCH(2,1)-stdapARCH(1,1)-NAVGARCH(1,1)-NgjrGARCH(1,1)-sstdgjrGARCH(2,1)-sstdAVGARCH(1,1)-nigNAGARCH(1,1)-sstdgjrGARCH(2,1)-nigeGARCH(1,1)-NapARCH(2,1)-NgjrGARCH(1,1)-NgjrGARCH(2,1)-NNAGARCH(1,1)-nigAVGARCH(2,1)-NNAGARCH(1,1)-NeGARCH(1,1)-stdapARCH(1,1)-stdapARCH(2,1)-stdAVGARCH(2,1)-nigeGARCH(1,1)-sstdapARCH(1,1)-sstdapARCH(2,1)-sstdeGARCH(1,1)-nigapARCH(1,1)-nigapARCH(2,1)-nigeGARCH(2,1)-sstdeGARCH(2,1)-nigNAGARCH(2,1)-stdNAGARCH(2,1)-NAVGARCH(1,1)-stdAVGARCH(1,1)-sstdNAGARCH(1,1)-stdgjrGARCH(2,1)-stdeGARCH(2,1)-stdNAGARCH(2,1)-nigAVGARCH(2,1)-sstdeGARCH(2,1)-NNAGARCH(2,1)-sstdcsGARCH(1,1)-NgjrGARCH(1,1)-stdsGARCH(2,1)-sstdcsGARCH(1,1)-sstdNGARCH(1,1)-NsGARCH(1,1)-sstdsGARCH(1,1)-nigcsGARCH(1,1)-nigsGARCH(1,1)-NNGARCH(1,1)-sstdNGARCH(1,1)-nigsGARCH(2,1)-nigsGARCH(1,1)-stdNGARCH(1,1)-stdNGARCH(2,1)-stdcsGARCH(2,1)-sstdcsGARCH(2,1)-nigsGARCH(2,1)-NNGARCH(2,1)-NcsGARCH(1,1)-stdsGARCH(2,1)-stdcsGARCH(2,1)-NNGARCH(2,1)-sstdcsGARCH(2,1)-stdNGARCH(2,1)-nig
+
+     49 50 48 52 52 51 49 49 49 48 46 46 46 46 46 46 47 47 45 45 45 45 56 53 53 53 53 52 52 52 52 52 52 52 46 46 54 54 54 44 44 55 55 55 56 56 56 56 56 45 49 57 44 58 58 58 58 58 42 47 56 58 59 49
+   act.
+
+        1
+   uc-p    0.77                0.77                0.660.66                                                                                           0.32                  0.66
+      0.884   0.7730.7730.8850.8840.8840.884 0.5570.5570.5570.5570.5570.557   0.4610.4610.4610.4610.3930.6660.6660.6660.6660.7730.7730.7730.7730.7730.7730.7730.5570.5570.5660.5660.5660.3750.3750.4750.4750.4750.3930.3930.3930.3930.3930.4610.884 0.3750.2570.2570.2570.2570.2570.233 0.3930.2570.2040.884
+
+
+   cc-p                           0.840.840.840.840.840.84                                                                                                                     0.48       0.31
+      0.9590.9520.9420.9360.9360.9220.9040.9040.9040.847              0.7740.7740.7620.7620.7620.7620.6930.6910.6910.6910.6910.6880.6880.6880.6880.6880.6880.6880.6870.6870.6770.6770.6770.6720.6720.6460.6460.6460.6030.6030.6030.6030.6030.5930.5790.5480.4970.4870.4870.4870.4870.487 0.4510.3910.343 0.275
+
+
+
+
+FTSE 100
+
+     NAGARCH(2,1)-NgjrGARCH(2,1)-NNAGARCH(1,1)-NNAGARCH(1,1)-stdNAGARCH(2,1)-stdgjrGARCH(1,1)-NeGARCH(2,1)-NapARCH(2,1)-NAVGARCH(2,1)-NapARCH(1,1)-NNAGARCH(1,1)-sstdgjrGARCH(2,1)-sstdAVGARCH(2,1)-sstdNAGARCH(2,1)-sstdapARCH(1,1)-nigAVGARCH(2,1)-nigapARCH(1,1)-sstdeGARCH(1,1)-NgjrGARCH(1,1)-sstdgjrGARCH(1,1)-nigeGARCH(1,1)-niggjrGARCH(2,1)-niggjrGARCH(1,1)-stdsGARCH(1,1)-sstdNGARCH(1,1)-sstdNGARCH(1,1)-nigsGARCH(2,1)-nigeGARCH(1,1)-stdapARCH(1,1)-stdapARCH(2,1)-stdAVGARCH(2,1)-stdsGARCH(1,1)-nigcsGARCH(1,1)-nigcsGARCH(2,1)-nigeGARCH(1,1)-sstdeGARCH(2,1)-nigAVGARCH(1,1)-stdcsGARCH(1,1)-sstdNGARCH(2,1)-nigNAGARCH(1,1)-nigNAGARCH(2,1)-nigsGARCH(2,1)-sstdcsGARCH(2,1)-sstdNGARCH(2,1)-sstdgjrGARCH(2,1)-stdsGARCH(1,1)-NNGARCH(1,1)-NsGARCH(2,1)-NNGARCH(2,1)-NapARCH(2,1)-sstdAVGARCH(1,1)-NcsGARCH(1,1)-NapARCH(2,1)-nigsGARCH(1,1)-stdcsGARCH(1,1)-stdNGARCH(1,1)-stdcsGARCH(2,1)-stdcsGARCH(2,1)-NAVGARCH(1,1)-nigAVGARCH(1,1)-sstdeGARCH(2,1)-stdNGARCH(2,1)-stdsGARCH(2,1)-stdeGARCH(2,1)-sstd
+
+     51 51 50 52 52 49 53 48 48 48 48 55 55 46 46 46 56 53 53 55 45 57 57 57 48 58 44 44 44 44 44 44 43 43 43 43 43 54 55 46 56 42 42 42 59 60 61 56 62 55 63 61 61 63 59 67 63 67 62 64 65 69 73
+   act.                                                                                                                                                                              147
+
+          1                                                                                                                                                       0
+   uc-p                  0.770.770.770.77                           0.320.320.320.77
+      0.8850.885 0.7730.7730.8840.666         0.4750.4750.5570.5570.5570.3930.6660.6660.4750.461         0.2570.3750.3750.3750.3750.3750.3750.2990.2990.2990.2990.2990.5660.4750.5570.3930.2330.2330.2330.2040.1590.1220.3930.0930.4750.0690.1220.1220.0690.2040.0190.0690.0190.0930.0510.0370.0090.002
+
+                                                                                                                                                                   0
+ cc-p                                                                                                          0.320.320.31                   0.11    0.060.030.030.01
+      0.9490.9490.9380.9360.9360.9040.9010.8620.8470.8470.8470.7750.7750.7020.7020.7020.6930.6910.6910.6460.6080.6060.6060.5480.5180.5170.5110.5110.5110.5110.5110.5110.4180.4180.4180.4050.4050.4030.4020.3990.3910.331      0.2730.2360.1990.1990.1960.1640.1470.147 0.0840.061         0.0030.0020.001
+
+
+
+S&P 500
+
+
+     NAGARCH(2,1)-stdNAGARCH(2,1)-NAVGARCH(1,1)-NapARCH(1,1)-NNAGARCH(1,1)-NAVGARCH(2,1)-NNAGARCH(1,1)-stdapARCH(2,1)-sstdgjrGARCH(1,1)-NeGARCH(1,1)-NgjrGARCH(2,1)-NapARCH(1,1)-stdAVGARCH(1,1)-stdAVGARCH(1,1)-sstdNAGARCH(1,1)-sstdapARCH(2,1)-niggjrGARCH(2,1)-stdeGARCH(2,1)-stdsGARCH(1,1)-nigeGARCH(1,1)-stdapARCH(1,1)-sstdgjrGARCH(1,1)-stdapARCH(2,1)-stdNGARCH(1,1)-nigeGARCH(2,1)-NAVGARCH(2,1)-stdeGARCH(1,1)-sstdAVGARCH(2,1)-sstdapARCH(1,1)-nigNAGARCH(1,1)-nigeGARCH(2,1)-nigAVGARCH(2,1)-nigeGARCH(1,1)-nigAVGARCH(1,1)-nigNAGARCH(2,1)-niggjrGARCH(1,1)-sstdgjrGARCH(2,1)-sstdsGARCH(1,1)-sstdapARCH(2,1)-NeGARCH(2,1)-sstdsGARCH(1,1)-NNAGARCH(2,1)-sstdgjrGARCH(1,1)-niggjrGARCH(2,1)-nigNGARCH(1,1)-sstdsGARCH(2,1)-NsGARCH(1,1)-stdsGARCH(2,1)-sstdcsGARCH(1,1)-NsGARCH(2,1)-nigcsGARCH(1,1)-sstdcsGARCH(2,1)-nigNGARCH(2,1)-NcsGARCH(2,1)-NNGARCH(2,1)-nigcsGARCH(1,1)-stdcsGARCH(1,1)-nigNGARCH(1,1)-stdNGARCH(2,1)-sstdcsGARCH(2,1)-sstdsGARCH(2,1)-stdNGARCH(2,1)-stdcsGARCH(2,1)-stdNGARCH(1,1)-N
+
+     51 51 49 48 48 48 48 48 48 54 54 47 47 47 47 47 56 53 53 53 52 52 52 52 52 52 52 52 46 46 54 55 55 56 56 56 45 44 58 62 63 64 64 65 65 65 65 66 66 66 68 68 69 69 69 69 68 70 70 69 71 72 73
+   act.
+                                                                                                             DNC
+
+   uc-p       0.770.770.770.770.770.77    0.660.660.660.660.66
+      0.8850.8850.884              0.5660.566           0.3930.6660.6660.6660.7730.7730.7730.7730.7730.7730.7730.7730.5570.5570.5660.4750.4750.3930.3930.3930.4610.3750.2570.0930.0690.0510.0510.0370.0370.0370.0370.0270.0270.0270.0130.0130.0090.0090.0090.0090.0130.0060.0060.0090.0040.0030.002DNC
+
+
+   cc-p                                                                                                                                   0.060.060.06                  0.020.02  0.010.01
+      0.9490.9490.9040.8470.8470.8470.8470.8470.8470.8450.8450.7740.7740.7740.7740.7740.6930.6910.6910.6910.6880.6880.6880.6880.6880.6880.6880.6880.6870.6870.6770.6460.6460.6030.6030.6030.5930.4970.4870.1990.1640.1320.1320.1040.1040.0750.075      0.0360.0360.0270.0270.0270.0270.024   0.018   0.005DNC
+
+
+
+OMXS30
+
+
+     AVGARCH(2,1)-NeGARCH(2,1)-stdeGARCH(2,1)-NapARCH(1,1)-sstdapARCH(2,1)-sstdAVGARCH(2,1)-sstdapARCH(1,1)-nigapARCH(2,1)-nigAVGARCH(2,1)-nigAVGARCH(1,1)-stdNAGARCH(2,1)-stdeGARCH(1,1)-sstdAVGARCH(1,1)-sstdNAGARCH(1,1)-sstdeGARCH(1,1)-nigNAGARCH(2,1)-nigAVGARCH(2,1)-stdgjrGARCH(1,1)-sstdgjrGARCH(2,1)-sstdNAGARCH(1,1)-NeGARCH(1,1)-stdgjrGARCH(1,1)-niggjrGARCH(2,1)-nigeGARCH(1,1)-NapARCH(1,1)-NAVGARCH(1,1)-NapARCH(2,1)-NNAGARCH(2,1)-NAVGARCH(1,1)-nigNAGARCH(1,1)-niggjrGARCH(1,1)-NNAGARCH(1,1)-stdgjrGARCH(2,1)-NgjrGARCH(1,1)-stdapARCH(1,1)-stdapARCH(2,1)-stdeGARCH(2,1)-sstdeGARCH(2,1)-niggjrGARCH(2,1)-stdsGARCH(2,1)-nigsGARCH(2,1)-sstdsGARCH(1,1)-nigNGARCH(2,1)-NsGARCH(1,1)-NsGARCH(2,1)-NNGARCH(2,1)-sstdNGARCH(2,1)-nigsGARCH(1,1)-sstdNGARCH(1,1)-sstdNGARCH(1,1)-nigsGARCH(1,1)-stdNGARCH(1,1)-stdcsGARCH(1,1)-nigcsGARCH(2,1)-nigcsGARCH(1,1)-NNGARCH(1,1)-NNGARCH(2,1)-stdcsGARCH(1,1)-sstdcsGARCH(2,1)-NsGARCH(2,1)-stdcsGARCH(2,1)-sstdcsGARCH(1,1)-stdcsGARCH(2,1)-stdNAGARCH(2,1)-sstd
+
+                                                                                                   Table 6: Results from backtesting the models for all indices analysed. The p-value from the cc test and uc test are denoted cc-p and uc-prespectively. The actual amount of violations is denoted as act. and DNC stands for Did Not Converge.
+
+                                             49

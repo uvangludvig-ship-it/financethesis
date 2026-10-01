@@ -1,0 +1,1425 @@
+Resilience in Fiery Seas
+
+An analysis of liquidity resilience in the Centralized ETH/USDT
+and Decentralized WETH/USDT cryptocurrency market
+
+SENAD KURJAKOVIC
+
+VIKTOR TZEVELEKIS LINDSTRÖM
+
+Bachelor Thesis
+
+Stockholm School of Economics
+
+2025
+Resilience in Fiery Seas: An analysis of liquidity resilience in the Centralized ETH/USDT
+and Decentralized WETH/USDT cryptocurrency market
+Abstract:
+       This paper investigates how liquidity reacts to pre-defined stress events on a specified
+       decentralized and centralized exchange. We study the period, 2021 to 2025, and identify
+       stress as the most volatile 10% hourly candles using ETH/USDT data from Binance and
+       Uniswap V3. The liquidity resilience of the two venues post-stress is investigated through
+       the vehicle of transaction cost, examining the unique constituents of this cost for each
+       market structure, such as gas fees and slippage. We find that liquidity tends to deteriorate
+       for both venues following market stress for different reasons. On the centralized venue,
+        market volatility causes liquidity depth to evaporate and, in turn, increase slippage. On the
+       decentralized venue, we find that gas price spikes explain the disproportionate liquidity
+       degradation for smaller trade sizes relative to larger ones. Thereafter, we decompose gas
+       prices into base and priority fees. From this, we derive the expected future liquidity
+       resilience of the two venues by only accounting for the structural aspects of the
+       decentralized venue, mainly through the priority fee of gas, as the mostly technologically
+       dependent base fee component is observed to be trending towards a zero level.
+        Furthermore, we establish a causal relationship, for specific trades sizes, between pre-stress
+       volume and the improvement of slippage for the DEX relative to CEX following a stress
+       event. These findings contribute to the existing literature by showcasing the long-run
+       competitiveness of DEX accurately and expanding on the debate for why the beneficiaries
+       of venue fees are relevant for liquidity degradation in cryptocurrency markets.
+
+Keywords:
+       Cryptocurrency Exchanges, Liquidity Degradation, Automated Market Making, Gas
+       Fees, Stress Events
+Authors:
+   Senad Kurjakovic (26147)
+   Viktor Tzevelekis Lindström (26160)
+Tutor:
+   Maíra Gonzalez, Teaching Assistant, Department of Finance
+Examiner:
+   Ramin P Baghai, Professor, Department of Finance
+
+Bachelor Thesis
+Bachelor Program in Business and Economics
+Stockholm School of Economics
+© Senad Kurjakovic and Viktor Tzevelekis Lindström, 2025
+
+                                       2
+I. Introduction
+Over the last two decades, disregarding any niche hybrids, two key cryptocurrency venues have
+bifurcated from the original motivations behind Bitcoin’s inception. These include decentralized
+exchange (DEX) venues, such as the likes of Uniswap, PancakeSwap and Aerodome, and
+centralized exchange (CEX) venues like Binance and Kraken. These two cryptocurrency market
+structures contain many technical microstructural differences but are both relevant to a wide array
+of crypto traders today. From the way pricing is set with market makers through limit order book
+                                                           1
+(LOB) in CEXs and automatic market makers (AMM)  protocols set in DEXs, it is clear to see
+why they are so intertwined with current and ongoing financial literature. In today’s market
+climate, where volume may no longer be the best way to measure success in exchanges, a
+contributing analysis in the market or an exchange venue analyzed may be how well they may fare
+during times of extreme market stress. Currently, there is a large growing body of literature that
+reviews which venue type is safer and cheaper during varying market conditions, such as with
+Angeris, Kao, Chiang, Noyes and Chitra (2020).
+
+Narrowing down, arguably, the most relevant aspect when evaluating how well these exchange
+venues fare during times of market stress is the cost of performing transactions on that venue,
+referred to as the transaction cost. In most CEXs, the components that are most relevant when
+                                                            2
+analyzing transaction costs are the price slippage , which is influenced by the state of the LOB
+through the bid-ask spread, and the fixed fee of the specific venue. Although the approach for
+computing the components for transaction costs differ for AMMs, transaction costs for DEXs are
+also determined through the components of slippage and the fixed fee of the venue, with the
+addition of the on-chain settlement costs known as “gas fees”. This represents a secondary
+stochastic variable for calculating the cost of transactions for DEX and, as their behavior is often
+governed by block-level demand [Koutmos (2023) and Karaivanov and Zarifian (2024)], this can
+make it problematic to know exactly what the optimal gas fees set for highest chance of inclusion
+                    3
+in the next block .
+
+Although research does not focus on the microstructural components of these reasons that gas fees
+will become fixed costs or zero in the future, this assumption often neglects the characteristic
+variability of gas fees and, therefore, does not represent them faithfully. Despite this, in their
+comprehensive study that examines a wide array of cryptocurrency venues and their qualitative
+attributes including transaction costs, Barbon and Ranaldo (2024), the main inspiration for
+exploring this subject, argue that DEX transaction costs are becoming better with time than CEX
+and will even eventually outperform current CEX venues; this is found to be especially true for
+smaller trade sizes. Their reasoning for this trend stems from a key assumption that gas fees will
+eventually reach a substantially lower value due to solely technological advancements made in the
+decentralized exchanges lowering the gas fees. In this study, we observe that, in the long term, a
+structural component to gas fees persists, which stems in large part from the priority fee, and is the
+
+1
+ “An automated market maker (AMM) is a type of decentralized exchange (DEX) protocol that allows users to buy
+and sell digital assets without the need for a third-party intermediary.” (CoinMarketCap, 2025)
+2
+ Price slippage (AKA simply slippage) reflects the part of transaction costs that occurs when executing an order in a
+market where available depth cannot fully absorb the trade size at the quoted price.
+3
+ “A block is the fundamental unit of a blockchain that contains a set of validated transactions and cryptographic
+links to previous blocks, forming an immutable record in the blockchain network.” (Investopedia, 2025)
+
+                                       3
+                                                                        4
+main aspect as to how traders in DEXs can compete for block space in the current block. As such,
+we believe that there is a gap remaining to exactly understand transaction costs during events of
+market stress in modern and expected future markets where gas fees will continue to vary and
+cannot be assumed to be fixed or zero. To clarify, this stress event-based study we propose in this
+paper would observe the change in transaction costs and would recognize this as a measure of
+liquidity resilience or, as we predict during market stress, liquidity degradation.
+
+Following this, we chose to analyze one very specific cryptocurrency trading pair known as the
+ETH/USDT for CEXs or otherwise recognized as WETH/USDT for DEXs. The decision for
+choosing each token in this token pair is as follows: i) USDT is the most traded and stable digital
+tokens (otherwise known as stablecoins) in most cryptocurrency exchanges as of 2025 and ii)
+Ethereum (ETH), other than bitcoin, is also among the most traded and modernized crypto tokens.
+This ensures a focused and microstructural analysis of this token swap with ample data with
+regards to trade volume and less noise when it comes to potential speculative/noise trading. In
+addition, the Binance and Uniswap V3 fee tier 0.3% were selected as the key CEX and DEX
+venues for study, respectively, based on having high quantities of publicly available data that could
+be retrieved and analyzed. With this traded pair and the venues established for the CEX and DEX,
+the scope of this research paper is detailed by this research question:
+
+ “How does liquidity resilience, or degradation, in the (W)ETH/USDT market in the Uniswap V3
+    0.3% fee tier pool and the Binance venue behave during periods of great market stress?”
+
+We define and analyze a “stress event” as the merged or individual 10% most volatile hourly
+candles in the period (09-11-2021:09-11-2025). Volatility for each candle is initially estimated
+using the Roger-Satchell volatility estimator for the purposes of identifying desired stress events
+which will predictably have a potentially non-zero drift component.
+
+Briefly, the most significant methods with which we studied liquidity degradation in this market
+were derived by first simulating transaction costs for both venues for a variety of trade sizes
+ranging from 0.1 ETH to 100 ETH, taking inspiration from the methods used by Barbon and
+Ranaldo (2024). Thereafter, the statistical significance of the degradation of transaction costs, the
+vehicle for liquidity resilience in this study, was evaluated for these trade sizes to verify the
+discrepancies between small and large trade size transaction costs. On top of this, a panel
+regression and decomposition were performed to investigate whether smaller trade sizes are
+disproportionately affected in the DEX venue and if this is due to a change in gas, supporting the
+treatment of gas as a stochastic variable and, thus, staying consistent with the approach of Koutmos
+(2023). Thereafter, the priority fee and the base fee of gas were identified and decomposed and
+regressed on every 300th block number in the past 4 years to examine how the trends in these two
+components in the WETH/USDT market vary with time. It is important to note that this is an
+effective way of measuring each components’ trends as block numbers are chronologically
+serialized in the Uniswap V3 DEX exchange to account for time. Further, this paper also employed
+a first-difference interaction regression model to examine how pre-stress trade volume impacts
+slippage through liquidity depth differently in the CEX and DEX venues, controlling for variables
+
+4
+ Block space is limited capacity in fitting transaction into a block on the blockchain. Because this space is scarce,
+users compete for it through gas fees, which determines how quickly their transactions are confirmed by validators.
+
+                                       4
+such as price directionality and realized volatility outlined by Andersen, Bollerslev, Diebold, and
+Labys (2001). This concludes the scope of our exploration.
+
+Through the results for these various tests, we effectively examine the liquidity resilience of the
+CEX and DEX venue, respectively, and evaluate the behavior of the (W)ETH/USDT market to
+stress, contributing to existing literature. Accordingly, we find that liquidity degradation for the
+DEX venue tends to disproportionately affect smaller trade sizes, while larger trade sizes tend to
+experience a liquidity degradation competitive with the studied CEX venue. In addition, we find
+that liquidity resilience on the DEX Uniswap V3 fee tier 0.3% pool for the WETH/USDT market
+is worse than CEX for small trade sizes and this difference converges to approximately zero for
+large trade sizes. However, after accounting only for the structural components of gas costs in the
+long run, we observe that the DEX venue becomes more resilient than the CEX for large trade
+sizes. While the liquidity equivalence point, defined as the trade size at which average liquidity
+degradation is equal across the two venues, shifts towards even smaller trade sizes, the DEX
+venue’s liquidity resilience does not outperform the CEX venue’s liquidity resilience across the
+full trade-size spectrum. Finally, following the framework employed by Heimbach, Schertenleib,
+and Wattenhofer (2022), we determine that, for some trade sizes, liquidity providers in the
+Uniswap V3 venue tend to concentrate their liquidity during stress to capture revenues from fees
+from increase in volume traded in the DEX venue, demonstrating that following a stress event the
+slippage in DEX tend to improve in comparison to CEX.
+
+Due to the highly technical nature of this paper, we divide and attempt to compartmentalize our
+research. As such, following this introduction, this paper has been divided into 4 separate sections:
+Section II features Related literature and Hypotheses formation, Section III outlines Data
+procurement and Methods, Section IV presents our Empirical Findings and Section V details our
+Concluding Remarks.
+
+                                       5
+II. Related literature and Hypotheses formation
+This section starts off by examining the theories related to market microstructure, identifying what
+constitutes liquidity in different market structures, and the relevant factors that impact it. We then
+proceed to delve into the financial literature’s perspective as to how liquidity is measured in DEXs
+and CEXs for cryptocurrency tokens. We conclude by grounding our research in the logic and
+justifications behind the formation our hypotheses.
+A. Background: Market Microstructure theory
+To analyze the liquidity resilience of both the CEX and DEX venues effectively, a fundamental
+understanding of slippage must be established before moving forward. Works from previous
+studies such as Glosten & Milgrom (1985) and Kyle (1985) have both been recognized for laying
+the groundwork for microstructure analysis in microstructure theory for central limit order books
+(LOB) exchanges, exploring both the explicit and implicit sources of slippage and, hence,
+transactional costs from different perspectives. These analyses are both relevant for the simulation
+of transaction costs for the Binance centralized exchange and the Uniswap V3 fee tier 0.3%
+explored for the (W)ETH/USDT market.
+
+With regards to Glosten & Milgrom (1985), they explore the notion that market makers in
+exchanges, referred to as liquidity providers for the context of this paper, will tend to act rationally
+in an attempt to minimize their risk exposure from more informed traders; this effectively
+represents the problem of adverse selection due to information asymmetry. In turn, they argue that
+market makers will, in response, charge higher risk premiums to offset this risk and that this
+becomes far more pronounced during periods of market stress. This is in the form of increasing
+the range of the bidding price at which they offer liquidity for buyers and increasing their asking
+price to sell a financial asset for, today known as the bid-ask spread. This is relevant to our study’s
+analysis as we use this concept to justify our hypotheses for much of the outcome for our testing.
+
+In equal measure, Kyle (1985) has provided the foundational concepts of the implicit market cost
+components of slippage in central LOB markets. He achieves this by establishing a model focused
+on market depth and price impact that demonstrates that market liquidity is “finite” and directly
+derivative of the ratio of noise trading, the trade volume that is motivated by random and
+uninformed decisions that excludes insider trading, from traders to the volatility of the traded
+asset’s fundamental value. He finds that market makers tend to adjust their prices in accordance
+with order flow, the difference between execution price set by efficient market makers and the
+expected execution price (for the insider acting as a monopolist calculating their own trade impact)
+of a transaction because it is a signal of private information. He concludes that the cost of executing
+a trade tends to increase as the volatility of the underlying asset increases.
+
+For the purposes of this paper, the understanding behind these analyses is paramount as they are
+the source for liquidity degradation analysis in both the Binance and Uniswap V3 (W)ETH/USDT
+exchanges, and, as a result, we utilize this literature by verifying that this effect can be observed
+in both venue types.
+
+                                       6
+B. Execution costs in DEX and CEX markets
+The existing literature examining the cryptocurrency market has put heavy emphasis on CEX and
+DEX markets in general and not specifically delved into events that cause market breakdown. As
+previously referred to, the most relevant and comprehensive study that inspired the venture into
+this topic is by Barbon and Ranaldo (2024), where they examine the differences across a plethora
+of DEX and CEX venues for the top 20 most popular currency swap pairs, finding that DEX
+transactions tend to be impeded by the presence of gas fees and slower settlement times relative to
+CEX. With higher trade sizes, however, they find that transaction costs in DEXs become very
+competitive with CEXs and that, for some currency markets, they even tend to outperform them.
+To contribute, we add to the literature by observing if this competitive nature between a given
+CEX and DEX venue persists, even during market-stress sourced liquidity degradation.
+
+To supplement their analysis, Barbon and Ranaldo (2024) further compare the DEX and CEX
+venues by removing gas prices in totality. This was justified on the basis that gas prices will, over
+time, fall to 0 as they are entirely assumed to be temporary technological hurdles of the DEX
+markets which will only shrink with time. Effectively, this removed the regressive characteristic
+of the DEX transaction costs as it was only made up of the specific protocol fee (venue pool for
+DEX) and the slippage. However, the assumption that gas costs converge to 0 is challenged by
+recent empirical studies. Specifically, Karaivanov and Zarifian (2024) research that in the post
+                       5
+EIP-1559 protocol , users actively select their priority fees in response to network congestion,
+transaction type, and block-level demand conditions. Similarly, Koutmos (2023) shows that
+Ethereum gas prices are highly sensitive to network congestion, with changes in intraday
+transaction volume, block capacity (determined by the EIP-1559 protocol) and block time all being
+found to significantly explain changes in gas fees across the full distribution of gas-price
+movements. This shows that, while there might be a technological advancement in decreasing gas
+costs due to block capacity and similar advancements, the priority fee component of gas remains
+highly sensitive to economic factors such as urgency and block utilization. In reference to this, we
+contribute to the literature by isolating the technological and structural components of gas prices
+and determining how the structural and technological aspects of gas fees change over time during
+stress events and if it is justified to assume 0 invariant gas prices in the long term.
+
+In reference to Uniswap V3, Heimbach et al. (2022) proposes a theoretical framework that models
+active liquidity providers’ decision-making, explicitly accounting for both the fee revenues and
+the additional risks liquidity providers enjoy with concentrated liquidity, where liquidity providers
+(LPs) can set their own price ranges for which they provide liquidity for. This allows for complex,
+liquidity provider-determined liquidity distributions in the Uniswap V3 venue that vary greatly
+with price. In likeness to Glosten & Milgrom (1985), this study finds that liquidity providers face
+similar adverse selection issues in decentralized market structures in the form of impairment
+losses. However, it is important to note that in a DEX on Uniswap V3, liquidity providers make
+an earning on the volume traded, determined by the pool fee. The implication of this is that there
+is a return relationship where decisions need not only be made by what the expected loss due to
+gas prices and impairment is, but also on the potential profits. We contribute to the literature by
+
+5
+  Ethereum Improvement Proposal 1559 (EIP-1559) was an upgrade to Ethereum’s fee system that introduced a base fee and a
+priority fee (tip). Before this Ethereum used a first-price auction for transaction fees.
+
+                                       7
+examining whether DEX liquidity improves following a stress event in comparison to CEX when
+factoring in the determinants of LP behavior.
+
+The literature reviewed in section A and B gives reasonable grounds to expect that the degradation
+of transaction costs during stress events will rise. This dissertation has attempted to investigate and
+verify whether this degradation applies to a specific crypto exchange in direct contribution to the
+existing body of literature.
+C. Hypotheses formation
+On the basis of the limit-order-book microstructure theory for centralized exchanges discussed in
+section A, and through evidence that gas fees and volatility increase execution costs on
+decentralized exchanges discussed in section B, the following first hypothesis can be investigated:
+transaction costs on both CEXs and DEXs are higher on average during stressed market
+conditions than during normal periods, across all trade sizes.
+
+Complementing this, Koutmos (2023) argues that that gas fees react to network congestion. As
+aforementioned, during stress events in the cryptocurrency markets, competition for block space
+is at a high in the DEX market and, as such, gas fees in that period tend to hike, with transaction
+costs following in consequence. In combination with the fixed aspect of gas prices, Barbon and
+Ranaldo (2024), we hypothesize; for smaller trade sizes, DEX transaction costs, tend to degrade
+worse during a stress period as opposed to a normal period, due to an increase in effective gas
+paid, while larger trade sizes are affected less.
+
+As reviewed briefly in section B, we examine gas costs with Barbon & Ranaldo’s (2024) claim
+that there is a technological aspect to gas. This view is reasonable: lowering gas fees aligns with
+Ethereum’s long-run design incentives, since cheaper transactions increase network usage and may
+ultimately increase the value of the underlying asset (ETH) (Butverin, 2020). This, in turn,
+strengthens their competitiveness as a network provider. Under this perspective, most of the gas
+price is driven by technological constraints such as the base fee, block capacity, and processing
+efficiency.
+
+According to current research and in reference to the findings of Karaivanov and Zarifan (2024),
+a structural component of gas may persist under future technological improvements that will limit
+how much gas price can decrease in the Ethereum network. To clarify, on the blockchain,
+competition for inclusion in the current block can persist due to the presence of priority-fee
+bidding, making this a central aspect of how the blockchain can continue to function through
+                          6
+incentivizing validators. This characteristic of user urgency and valuation of the block space does,
+therefore, imply that a non-zero minimum priority fee may very well prevail, even if the
+technological aspects of gas (such as the base fee) may shrink to a zero or zero equivalent level.
+                                                     7
+In addition to this, factors such as MEV dynamics and imperfect gas-price estimation by user and
+bot traders alike further exemplify how priority fees contain an intrinsic aspect of the block space
+market as they guide the competitive forces of the space. Given this, the trends in base gas fee and
+
+6
+ Validators are the block producers, through a proof-of-stake system locking 32 ETH capital, they are given the opportunity
+select the transactions to be included in the next block. Their compensation is the priority fees of each transaction included.
+7
+ MEV: “Maximal extractable value (MEV) refers to the maximum value that can be extracted from block production in excess
+of the standard block reward and gas fees by including, excluding, and changing the order of transactions in a block.” (Ethereum
+foundation, 2025)
+
+                                       8
+priority fee will reflect if the literatures assumptions can be validated and justified. This train of
+thought enabled us to ask the following: If it can be assumed that gas fees will reach an
+approximate zero value over time, do both the technological and structural components of gas fees
+trend downward at equally substantial rates with diminishing variance in time?
+
+A downward-trending and variance-shrinking base fee and priority fee would strengthen Barbon
+& Ranaldo (2024) claim, and provide basis for the third hypothesis; Liquidity degradation for DEX
+is lower than CEX across all trade sizes when accounting for only the structural components of
+gas price.
+
+Although our study attempts to decompose gas price to identify technological and structural
+components, the results rely on assumptions that, while validated historically, are not immutable
+in the future. Thus, a potentially more interesting analysis would be to look at the component in
+transaction costs that both markets share, the slippage. In relation to their mentioned framework
+in section B, Heimbach et al. (2022), it is determined that liquidity providers may concentrate
+liquidity in the Uniswap V3 venue by either readjusting or adding reserves at the current price
+during a volatile event if they expect that the revenue from the increase in volume may outweigh
+the rise in gas prices coupled with the expected impairment loss from the price detection. By these
+means, the fourth hypothesis is derived: for a disproportionate amount of stress events, DEX
+slippage will improve while CEX slippage degrades when the change in volume prior to the stress
+moment increases.
+
+                                       9
+III. Data procurement and Methods
+Formally, the scope of this section is to isolate moments of market shock by identifying and
+segmenting the historical ETH/USDT market into both “stress” and “normal” regimes. In equal
+measure, this section will derive the relevant methods and their data to investigate the central
+research question. The ETH/USDT pair was selected due to being one of the most liquid crypto
+pairs globally, with both having daily traded volumes reaching tens of billions of dollars, making
+them among the top 4 most traded tokens across all markets; USDT is the more prominent of the
+two (CoinGecko, 2025). However, the rationale for this pair extends beyond this as USDT is a
+USD-pegged stable coin and its value is intentionally designed to remain close to one U.S. dollar,
+irrespective of broader market conditions on the Ethereum network. This makes USDT
+functionally equivalent to a stable unit of account within the markets. Because ETH is not ERC-
+                8
+20 compliant , DEXs wrap ETH into its ERC-20 equivalent (Wrapped-ETH or WETH) to allow
+it to interact with liquidity pools and smart contracts. Thus, for the DEX venue, the pair analyzed
+is WETH/USDT. Importantly, WETH is fully backed 1:1 by ETH and, therefore, it serves as the
+functional representation of ETH in the DEX. Due to dataset constraints and API query limits,
+only one market is analyzed as representable for the measurement of liquidity on both venues,
+despite the existence of other valid pairs. The DEX and CEX venues this paper explores are
+Uniswap V3 0.3% fee tier and Binance. The rationale behind Uniswap V3 comes from its ranking
+as the third most used DEX venue in terms of traded volume across all pairs (CoinGecko, 2025).
+However, more importantly, through inspection of the WETH/USDT pools in the top 2 venues, it
+                                                                       9
+is observed that Uniswap V3 has a greater total value lock (TVL) for WETH/USDT 0.3% than
+PancakeSwap and Aerodrome Slipstream had for their highest TVL WETH/USDT pool ($11.7m
+vs $1.34m vs $200k) (PancakeSwap, 2025), (Aerodome Slipstream, 2025). Fee tier pool 0.3% was
+selected due to having the highest TVL among the fee tiers on Uniswap V3. The rationale for
+selecting Binance as the CEX representative venue is similar to Uniswap (CoinGecko, 2025).
+
+To clarify the structure of the following sections: Section A. delves into the identification of our
+stress and normal periods, section B establishes the methodologies used to test for the hypotheses,
+and section C explores the methodologies regarding the data and its collection.
+
+A. Specifying the Normal-to-Stress period sample
+To procure the primary dataset on the historical hourly data for the ETH/USDT pair, Klines API
+from the Binance centralized exchange was selected and used for its popularity among users and
+volume (Binance, 2025). This allowed for a more representative picture of the CEX venue which
+many other competing venues strive to replicate. To this end, a four-year sample, spanning from
+November 9th, 2021, to 2025, of 1-hour candles was extracted as this was the time frame in which
+the Uniswap V3 venue had become an established and relevant venue for cryptocurrency traders
+and market makers. The variance of these data points was estimated using the popular Rogers-
+Satchell (RS) volatility estimator, as opposed to the commonly employed Garman-Klass estimator,
+
+8
+ ERC-20 compliant means that a token follows the ERC-20 standard. This standard is a set of rules on the Ethereum
+blockchain that defines how tokens should behave. ETH was created before ERC-20 came into effect; thus its new
+form became WETH on chain.
+9
+ TVL represents the total monetary value of the reserved tokens provided by the liquidity providers in this pool. A
+greater TVL often implies better liquidity assuming its normally distributed around price.
+
+                                      10
+due to the particularly high frequency of the stress period data resulting in a definitive non-zero
+drift component. To justify, stress periods identified in our sample did not last more than 10 hours
+and were thus analyzed as events and not continuously. The use of the Garman-Klass estimator
+would, therefore, have been unfaithful due to its zero-drift assumption, as discussed by Shu and
+Zhang (2006). For every given hourly candle with open timestamp t, The RS volatility for each
+candle, 𝜎𝑅𝑆, was calculated as follows:
+
+                                                                          𝐻𝑡          𝐻𝑡              𝐿𝑡          𝐿𝑡
+                            𝜎𝑅𝑆 = √𝑙𝑛 (  ) 𝑙𝑛 (  ) + 𝑙𝑛 (  ) 𝑙𝑛 (  ) (1)
+                                                                          𝐶𝑡          𝑂𝑡              𝐶𝑡          𝑂𝑡
+
+Where 𝑂𝑡, 𝐻𝑡, 𝐿𝑡, and 𝐶𝑡 represent the open, high, low and close (OHLC) prices at for the candle
+with open timestamp 𝑡 for each candle, respectively. Through a percentile-based filtering process,
+stress and normal periods were identified in our dataset on the complete 4-year time series. Stress
+candles were defined as those that were at or beyond the 90th percentile of the total candle RS
+volatility distribution, while normal candles were at the bottom 50% of the distribution.
+
+Continuous stress candles were merged and sequences that did not have a normal-volatility period
+immediately before were removed. The rationale for this was to account for the lagged decay effect
+candles can have on future candles (Bouchaud, Farmer, & Lillo, 2009). With this, a data-based
+approach for determining normal and periods of market stress is derived. However, since volatile
+events can occur in a select few minutes within an hourly candle, further investigation on the
+volatility of the minute candles in the normal stress was conducted. To measure the short-horizon
+volatility of minute candles, the log of price return for ETH/USDT for each candle with a 1-minute
+difference (𝑡) was computed. In addition, the realized volatility (RV) was also determined using a
+
+                                      11
+rolling 10-period window, decided based on the robustness test results from Table 1, with 𝑡 here
+representing the candle index in our normal-stress (normal or stress timestamp) period:
+
+                                                                                        𝑃𝑡
+                                        𝑟𝑡 = 𝑙𝑛 (    ) (2)
+                                                          𝑃𝑡−1
+
+                                                                                                                                         𝑡
+                                                         2
+                                𝑅𝑉10(𝑡) = √ ∑ 𝑟𝑡                              (3)
+                                                            𝑖=𝑡−9
+
+Examining realized volatility in such a manner follows the Andersen-Bollerslev-Diebold-Labys
+(ABDL) framework (Andersen et al., 2001) and is a noteworthy method for the purposes of
+selecting moments of liquidity degradation, both due to the immediate volatility, but also the
+delayed volatility effect from previous candles (Bouchaud, Farmer, & Lillo, 2009). To identify
+persistent normal and stress volatility states, the mean RV inside 35% windows throughout the
+entire normal-stress event was computed.
+
+The highest and lowest points of RV were labelled, and, thereafter, the stress timestamp 𝑡𝑠𝑡𝑟𝑒𝑠𝑠
+and normal timestamp 𝑡𝑛𝑜𝑟𝑚𝑎𝑙 were selected accordingly. These timestamps were then translated
+into block numbers for the DEX venue, which occurred at or immediately after 𝑡𝑠𝑡𝑟𝑒𝑠𝑠 and 𝑡𝑛𝑜𝑟𝑚𝑎𝑙,
+formalized as: 𝑏𝑙𝑠𝑡𝑟𝑒𝑠𝑠 and 𝑏𝑙𝑛𝑜𝑟𝑚𝑎𝑙 (refer to Appendix B.1 and Figure 2). After removing
+continuous adjacent normal-stress events with gaps lasting less than 1 hour and where a stress
+event, 𝑖, has 𝑡𝑠𝑡𝑟𝑒𝑠𝑠 < 𝑡𝑛𝑜𝑟𝑚𝑎𝑙 (refer to Appendix B.2), the final normal-stress event sample size
+was 417, with a timestamps/block for each 𝑡𝑛𝑜𝑟𝑚𝑎𝑙 and 𝑡𝑠𝑡𝑟𝑒𝑠𝑠 .
+
+                                      12
+B. Variable construction for testing Hypotheses
+
+To derive an empirical method for testing the hypotheses for the liquidity resilience/degradation
+of the Binance ETH/USDT market CEX venue and the Uniswap V3 fee tier 0.3% WETH/USDT
+DEX venue, transaction costs are utilized as the primary dependent variable for observing and
+comparing the market quality of the two analyzed venues. This variable summarizes the effective
+cost for a user executing a trade and is determined by the underlying mechanisms of the two
+venues, thus making it possible to investigate them through transaction cost components.
+
+B.1 Computing Transaction costs
+
+The total transaction cost (𝑇𝐶) for the identified normal and stress timestamps, 𝑡𝑛𝑜𝑟𝑚𝑎𝑙 and 𝑡𝑠𝑡𝑟𝑒𝑠𝑠 ,
+was constructed as the main investigated dependent variable for both the Binance and Uniswap
+V3 venues for a range of standardized ETH (𝑋). According to the following formula used by
+Barbon and Ranaldo (2024), the total transaction cost for a given trade size, ∆𝑥 (ranging from 0.1
+to 100ETH), traded to or from USDT (𝑌) at a given timestamp 𝑡 (block number, 𝑏𝑙, for DEX), for
+normal-stress period, 𝑖, on either the Binance or the Uniswap V3 fee tier 0.3% venue is defined as
+follows when accounting for the key cost components for the trading of CEX versus DEX:
+
+                                               𝐶𝐸𝑋                 𝐶𝐸𝑋                 𝐶𝐸𝑋
+                                  𝑇𝐶𝑋𝑌,𝑖 (Δ𝑥, 𝑡) = 𝑆𝑋𝑌,𝑖 (Δ𝑥, 𝑡) + 𝑓𝑣𝑒𝑛𝑢𝑒                              (4)
+
+                                   𝐷𝐸𝑋                 𝐷𝐸𝑋                 𝐷𝐸𝑋    𝑔𝑖 (𝑏𝑙)
+                          𝑇𝐶𝑋𝑌,𝑖 (Δ𝑥, 𝑏𝑙) = 𝑆𝑋𝑌,𝑖 (Δ𝑥, 𝑏𝑙) + 𝑓𝑣𝑒𝑛𝑢𝑒 +                              (5)
+                                                                 Δ𝑥
+
+             𝐶𝐸𝑋
+For 𝑇𝐶𝑋𝑌,𝑖 (Δ𝑥, 𝑡):
+
+   𝐶𝐸𝑋
+𝑆𝑋𝑌,𝑖 (Δ𝑥, 𝑡) represents the spread-based measure of slippage, calculated as the difference between
+the volume-weighted ask and bid prices and normalized by their sum for a specific ETH order size,
+Δ𝑥, at time, 𝑡. This value measures the relative cost or market friction of executing an order of size
+                                                                         𝐶𝐸𝑋
+Δ𝑥 (refer to Appendix B.3 for further explanation). The 𝑓𝑣𝑒𝑛𝑢𝑒 is the fixed percentage fee of the
+                                                                    10
+venue for Binance, and, assuming the utilization of BNB  , is fixed at 0.075%.
+
+            𝐷𝐸𝑋
+For 𝑇𝐶𝑋𝑌,𝑖 (Δ𝑥, 𝑏𝑙):
+
+  𝐷𝐸𝑋
+𝑆𝑋𝑌,𝑖 (Δ𝑥, 𝑏𝑙): the average of the slippage when buying (W)ETH and when selling (W)ETH. This
+method differs from the CEX venue, and a more detailed overview provided in Appendix B.4.
+  𝐷𝐸𝑋
+𝑓𝑣𝑒𝑛𝑢𝑒: the fixed percentage fee of the Uniswap V3 venue, which is the pool fee tier of 0.3% in
+this case. 𝑔(𝑏𝑙)𝑖: represents the settlement cost of the on-chain gas fee required for users to validate
+their (W)ETH/USDT swap, exclusive to the DEX venue, and is the effective median gas price at
+block 𝑏𝑙 (See Appendix B.5 for more details).
+
+10
+  BNB is Binance’s native utility token used to reduce trading fees and facilitate various services across the Binance
+ecosystem.
+
+                                      13
+B.2 Testing for Hypotheses 1&2: Degradation in liquidity
+
+For the measurement of degradation in liquidity of both venues, the change in transaction cost
+between the stress and normal time/block within the normal-stress event 𝑖 is examined. For the
+CEX Binance venue, it is as follows:
+
+                                      𝐶𝐸𝑋                          𝐶𝐸𝑋                                   𝐶𝐸𝑋
+                  ∆𝑇𝐶𝑋𝑌  (∆𝑥, 𝑖) = ∆𝑇𝐶𝑋𝑌  (∆𝑥, 𝑡𝑠𝑡𝑟𝑒𝑠𝑠 ) − ∆𝑇𝐶𝑋𝑌  (∆𝑥, 𝑡𝑛𝑜𝑟𝑚𝑎𝑙 ) (6)
+
+And for the Uniswap V3 DEX:
+
+                                  𝐷𝐸𝑋                         𝐷𝐸𝑋                                   𝐷𝐸𝑋
+                ∆𝑇𝐶𝑋𝑌  (∆𝑥, 𝑖) = ∆𝑇𝐶𝑋𝑌  (∆𝑥, 𝑏𝑙𝑠𝑡𝑟𝑒𝑠𝑠 ) − ∆𝑇𝐶𝑋𝑌  (∆𝑥, 𝑏𝑙𝑛𝑜𝑟𝑚𝑎𝑙) (7)
+
+After the degradation in liquidity for CEX and DEX are determined, a one-sided (right tail) t-test
+is performed to test if hypothesis 1 (refer to Hypotheses formation) is significant at the 5% level,
+allowing for the verification of whether or not the DEX and CEX venues do both, in fact, have
+higher transaction costs post-stress:
+
+                                                                                              ̅   ̅   ̅   ̅   ̅   ̅  𝐶𝐸𝑋̅   ̅   ̅   ̅  /̅  𝐷𝐸𝑋̅   ̅   ̅   ̅                                ̅   ̅   ̅   ̅   ̅   ̅  𝐶𝐸𝑋̅   ̅   ̅   ̅  /̅  𝐷𝐸𝑋̅   ̅   ̅   ̅
+                         𝐻0: ∆𝑇𝐶∆𝑥       ≤ 0, 𝐻1: ∆𝑇𝐶∆𝑥       > 0 (8)
+
+With regards to hypothesis 2, this study has attempted to investigate whether smaller trades for a
+DEX degrade more than larger trades during stress and if this degradation becomes stronger
+when gas is removed. To test for this, a panel regression with an interaction term is performed.
+Using the natural log of the trade size (∆𝑥) to linearize the inverse relationship in equation 5:
+
+                   𝐷𝐸𝑋
+             𝑇𝐶𝑖,𝑏𝑙  = 𝛽0 + 𝛽1𝑆𝑡𝑟𝑒𝑠𝑠𝑏𝑙 + 𝛽2𝑙𝑛(∆𝑥𝑖) + 𝛽3(𝑆𝑡𝑟𝑒𝑠𝑠𝑏𝑙 ∙ 𝑙𝑛(Δ𝑥𝑖)) + 𝜀𝑖,𝑏𝑙 (9)
+
+Where 𝑆𝑡𝑟𝑒𝑠𝑠𝑏𝑙 is a dummy variable that takes on the values of 0 or 1 if the observed block is
+normal or stress, respectively; 𝑆𝑡𝑟𝑒𝑠𝑠𝑏𝑙 ∙ 𝑙𝑛(Δ𝑥𝑖) is the interaction term. Lastly, 𝜀𝑖,𝑏𝑙 is the error
+term, or the unexplained variation of the regression due to omitted variable bias. This regression
+is re-ran excluding the gas component in the DEX transaction cost:
+
+                                        𝐷𝐸𝑋,𝑛𝑜 𝑔𝑎𝑠                       𝐷𝐸𝑋
+                           𝑇𝐶𝑋𝑌,𝑖        (∆𝑥, 𝑏𝑙) = 𝑇𝐶𝑋𝑌,𝑖 (∆𝑥, 𝑏𝑙) − 𝑔𝑖 (𝑏𝑙)
+
+A positive and statistically significant 𝛽1 would prove that the degradation in DEX liquidity after
+a stress event holds. A negative and statistically significant 𝛽2 would signify that larger trades tend
+to have a lower relative liquidity degradation, consistent with the diminishing marginal slippage
+that is present at AMM pricing (Adams, Zinsmeister and Robinson 2020). The key parameter for
+our hypothesis is the coefficient 𝛽3 which details whether market stress affects transaction costs
+                                                                                                                𝐷𝐸𝑋,𝑛𝑜 𝑔𝑎𝑠             𝐷𝐸𝑋
+differently. More profoundly, the comparison of this coefficient between 𝑇𝐶𝑋𝑌,𝑖           and 𝑇𝐶𝑋𝑌,𝑖
+                                                       𝑛𝑜 𝑔𝑎𝑠
+gives rise to a noteworthy relationship. If 𝛽3      is less negative and statistically significant than
+𝛽3, this would imply that the disproportionate deterioration in liquidity observed for smaller trades
+                                                                                                                                   𝑛𝑜 𝑔𝑎𝑠
+is caused by the gas component of DEX execution costs. Namely, a reduction in the size of 𝛽3
+relative to 𝛽3would provide direct support for this paper’s second hypothesis, shedding light to
+whether gas fees are a driver of weaker liquidity for small trade sizes during stress.
+
+                                      14
+B.3 Testing for Hypothesis 3: Additive decomposition
+To test for hypothesis 3, leading question on how the behavior of gas varies in the WETH/USDT
+market in the Uniswap V3 fee tier 0.3% venue over time must be addressed. Since gas fees
+constitute a core component of transaction costs in DEXs, understanding their historical long-run
+behavior is vital for assessing if the DEX venue’s liquidity will converge towards being
+competitive with those on CEXs like Binance, as proposed by Barbon and Ranaldo (2024).
+Significantly, this examination would determine if there were a time effect that needs to be adjusted
+for in the gas fee component of transaction costs for, at least, the WETH/USDT market. Through
+an additive decomposition of the time series of gas prices, effective gas prices are deconstructed
+into two primary, non-overlapping components, following the design of EIP-1559: base fee, 𝐵,
+and the priority fee, 𝑃𝑟, for block, 𝑏𝑙, and transaction number, 𝑡𝑥. Consistent with the method in
+B.1, we use the median priority fee and the base fee for a given block, yielding a relation as follows:
+
+                                 𝐺𝑇𝑜𝑡𝑎𝑙(𝑏𝑙) = 𝐵(𝑏𝑙) + 𝑀𝑃𝑟(𝑏𝑙) (10)
+
+The aim with this is to observe the time effect of the base fee and the median priority fee. This is
+achieved by regressing the trend as follows:
+
+                                                                                                𝐵
+                                      𝐵𝜆 = 𝛼𝐵 + 𝛽𝐵𝜆 + 𝜀𝜆 , (11)
+
+                                                                                                      𝑀𝑃𝑟
+                                  𝑀𝑃𝑟𝜆 + 𝛼𝑀𝑃𝑟 + 𝛽𝑀𝑃𝑟𝜆 + 𝜀𝜆   , (12)
+
+                                              𝑏𝑙 − 𝑏𝑙0
+                                       𝜆 =         , (13)
+                                               ∆𝑏𝑙
+
+                                    th
+Where, 𝜆 represents every 300  incremental block (∆𝑏𝑙), from block number 𝑏𝑙0 = 13623124
+to 238286124 (𝜆𝑚𝑎𝑥 = 34210). For more information as to why this was done, please refer to
+section C.2. The squared residuals of the base fee and priority fee are then regressed:
+
+                                        2
+                                                      ̂  𝐵                             𝐵
+                                    (𝜀𝜆 )  = 𝛾𝐵 + 𝛿𝐵𝜆 + 𝑢𝜆                                (14)
+
+                                      2
+                                               ̂ 𝑀𝑃𝑟                                    𝑀𝑃𝑟
+                                (𝜀𝜆   )  = 𝛾𝑀𝑃𝑟 + 𝛿𝑀𝑃𝑟𝜆 + 𝑢𝜆                              (15)
+
+All regressions listed above are estimated using ordinary least square (OLS) and the statistical
+significance of the trend coefficients is evaluated using two-sided t-tests; the conclusions drawn
+from them will provide the groundwork for the new construction for the gas component, referred
+                                        𝐴𝑑𝑗
+to as adjusted gas (𝑔𝑖   ):
+
+                                                     𝐴𝑑𝑗                             𝐴𝑑𝑗                       𝐴𝑑𝑗
+                           𝑔𝑖   (𝑏𝑙) = 𝑈𝐶 ∙ (𝐵    (𝑏𝑙) + 𝑀𝑃𝑟    (𝑏𝑙)) (16)
+
+                                           𝐴𝑑𝑗                                                              𝐴𝑑𝑗
+We adjust the base, 𝐵    (𝑏𝑙), and median priority, 𝑀𝑃𝑟    (𝑏𝑙), gas fee components based on
+observations on the regression coefficients and their respective significance:
+
+                                      15
+                           0 𝑖𝑓: 𝛽̂ 𝐵 < 0 𝑎𝑛𝑑 𝑝̂   < 0.05 𝑎𝑛𝑑 𝛿̂ 𝐵 < 0 𝑎𝑛𝑑 𝑝̂   < 0.05,
+                                                               𝛽𝐵                                      𝛿𝐵
+                                𝐴𝑑𝑗                                                 ̂                                                            ̂
+        𝐵    (𝑏𝑙) = {𝐵𝜆 + 𝛽𝐵(𝜆𝑚𝑎𝑥 − 𝜆) 𝑖𝑓: 𝛽𝐵 < 0 𝑎𝑛𝑑 𝑝𝛽̂   < 0.05 𝑎𝑛𝑑 𝑝 𝛿̂   ≥ 0.05,
+                                                                              𝐵                     𝐵
+                                       𝐵(𝜆) 𝑖𝑓: 𝑝𝛽̂   > 0.05 𝑎𝑛𝑑 𝑝 𝛿̂   > 0.05 .
+                                                            𝐵                     𝐵
+
+                        0 𝑖𝑓: 𝛽̂ 𝑀𝑃𝑟 < 0 𝑎𝑛𝑑 𝑝̂     < 0.05 𝑎𝑛𝑑 𝛿̂ 𝑀𝑃𝑟 < 0 𝑎𝑛𝑑 𝑝̂     < 0.05,
+                                                              𝛽𝑀𝑃𝑟                                          𝛿𝑀𝑃𝑟
+                 𝐴𝑑𝑗                                                           ̂                                                                    ̂
+𝑀𝑃𝑟    (𝑏𝑙) = {𝑀𝑃𝑟𝜆 + 𝛽𝑀𝑃𝑟(𝜆𝑚𝑎𝑥 − 𝜆) 𝑖𝑓: 𝛽𝑀𝑃𝑟 < 0 𝑎𝑛𝑑 𝑝𝛽̂ 𝑀𝑃𝑟 < 0.05 𝑎𝑛𝑑 𝑝 𝛿̂ 𝑀𝑃𝑟 ≥ 0.05,
+                                     𝑀𝑃𝑟(𝜆) 𝑖𝑓: 𝑝𝛽̂      > 0.05 𝑎𝑛𝑑 𝑝 𝛿̂       > 0.05 .
+                                                              𝑀𝑃𝑟                     𝑀𝑃𝑟
+
+Where: 𝑏𝑙 is the block observed, 𝑏𝑙0 is block number 1362314 (𝜆0 = 0), and ∆𝑏𝑙 = 300 is the
+incremental size for the trend data we retrieve. The expression for the second-row conditions
+preserves the fee level at the newest block and incrementally shifts earlier blocks. This adjustment
+removes the deterministic decline in fees over time while retaining idiosyncratic cycle-by-cycle
+variation that is economically relevant for transaction-cost formation for modern day analysis.
+Using these derived insights and in the pursuit of examining whether these gas fee trends will
+continue in the future, a new set of adjusted transaction costs for the DEX Uniswap V3 venue is
+obtained which better models the transaction cost that can be expected in future.
+
+                                                                                                                                   𝐴𝑑𝑗
+                                   𝐷𝐸𝑋,𝐴𝑑𝑗                   𝐷𝐸𝑋                   𝐷𝐸𝑋     𝑔𝑖    (𝑏𝑙)
+                      𝑇𝐶𝑋𝑌,𝑖     (∆𝑥, 𝑏𝑙) = 𝑆𝑋𝑌,𝑖 (∆𝑥, 𝑏𝑙) + 𝑓𝑣𝑒𝑛𝑢𝑒 +                            (17)
+                                                                  ∆𝑥
+
+The difference in liquidity degradation between DEX and CEX, for a specific normal-stress event
+                                                                                                    𝐷𝐸𝑋,𝐴𝑑𝑗
+𝑖, reusing equation 6 and adjusting equation 7 with the new 𝑇𝐶𝑋𝑌,𝑖     is as follows:
+
+                                                                                𝐷𝐸𝑋,𝐴𝑑𝑗                            𝐶𝐸𝑋
+                         𝐷(∆𝑥, 𝑖) = ∆𝑇𝐶𝑋𝑌     (∆𝑥, 𝑖) − ∆𝑇𝐶𝑋𝑌  (∆𝑥, 𝑖) (18)
+
+Where a one-sided (right tail) t-test for the mean of a trade size, ∆𝑥, across all normal-stress events
+is performed to test for hypothesis 3:
+
+                                             𝐻0: ̅𝐷̅ ̅ ∆̅ 𝑥̅  ≥ 0, 𝐻1: ̅𝐷̅ ̅ ∆̅ 𝑥̅  < 0
+
+B.4 Testing for Hypothesis 4: Explaining Improved Slippage on DEX
+
+In this section, the empirical method for testing whether pre-stress volume has a differential impact
+on DEX and CEX slippage during volatile events is established, as formulated in our fourth
+hypothesis in Hypotheses formulation. To test for this, a first-difference interaction regression
+model is constructed that compares how DEX and CEX slippage react to changes in pre-stress
+volume. This model was chosen to control for omitted variable bias, allowing for the better
+isolation of the effect of the pre-stress volume on DEX and CEX slippages.
+
+For each event, 𝑖, occurring in a venue (DEX / CEX), slippage is measured at stress (𝑡𝑠𝑡𝑟𝑒𝑠𝑠 or
+𝑏𝑙𝑠𝑡𝑟𝑒𝑠𝑠 ) and at normal (𝑡𝑛𝑜𝑟𝑚𝑎𝑙 or 𝑏𝑙𝑛𝑜𝑟𝑚𝑎𝑙). The dependent variable is the change in slippages
+between these states,
+
+                                      16
+                                        𝑣𝑒𝑛𝑢𝑒                 𝑣𝑒𝑛𝑢𝑒,𝑠𝑡𝑟𝑒𝑠𝑠                  𝑣𝑒𝑛𝑢𝑒,𝑛𝑜𝑟𝑚𝑎𝑙
+                      ∆𝑆𝑋𝑌,𝑖   (∆𝑥) = 𝑆𝑋𝑌,𝑖         (∆𝑥) − 𝑆𝑋𝑌,𝑖          (∆𝑥) (19)
+
+A positive and statistically significant value in the change in slippage signals worsened slippage
+following a stress event while a negative value would reflect an improvement. Trade volume
+activity before a stress timestamp occurs is examined as this is observable by liquidity providers.
+To quantify this activity, ETH/USDT transaction volume in two windows is compared: ten minutes
+prior to the stress timestamp, and ten minutes prior to the normal timestamp:
+
+                                                                       𝑠𝑡𝑟𝑒𝑠𝑠        𝑛𝑜𝑟𝑚𝑎𝑙
+                                 ∆𝑉𝑜𝑙𝑢𝑚𝑒𝑖 = 𝑉𝑖       − 𝑉𝑖
+
+This denotes the change in volume or otherwise interpreted as volume pressure. Prior to our stress
+and normal timestamps, starting precisely at the 10-minute mark leading up, it is observed that the
+stress–normal difference in volume spikes sharply. This sudden and enduring increase in trading
+activity suggests that liquidity and order-flow conditions begin to shift meaningfully only within
+the final ten minutes before a stress event.
+
+The following first-difference interaction model is derived from this information to test for whether
+this volume build up affects slippage differently between DEX and CEX:
+
+    𝑣𝑒𝑛𝑢𝑒                                                                                                       𝑣𝑒𝑛𝑢𝑒
+∆𝑆𝑋𝑌,𝑖  (∆𝑥) = 𝛼 + 𝛽1Δ𝑉𝑜𝑙𝑢𝑚𝑒𝑖 + 𝛽2Market𝑖 + 𝛽3(∆𝑉𝑜𝑙𝑢𝑚𝑒𝑖 ∙ Market𝑖 ) + 𝛾𝑋𝑖 + 𝜀𝑖     (20)
+
+                                      17
+Where Market𝑖 is a dummy variable taking on the values of 0 or 1 if the observation is for either
+the Binance or Uniswap V3 venue, respectively. The main coefficient of interest is 𝛽3, or the
+coefficient of the interaction term of the Market dummy variable and the volume pressure which
+captures the additional sensitivity of the Uniswap V3 slippage for the WETH/USDT pair to change
+in pre-event volume, relative to the Binance slippage for the ETH/USDT pair. A statistically
+significantly and negative value for this coefficient would support the hypothesis that increases in
+pre-stress trading activity disproportionately improve execution on the DEX.
+
+To isolate the effect of when LPs withdraw reserves or stay passive during these events, we account
+for several control variables in the vector 𝑋𝑖. Firstly, realized volatility change between stress and
+normal is controlled for, as the change in realized volatility between the normal and stress
+timestamps controls for shifts in price variability. Secondly, price directionality (defined in
+equation 2) is included to control for directional price moves that generate impermanent-loss-
+driven liquidity changes. This allows for the determination of whether rising pre-stress volume
+improves DEX liquidity only when prices are not trending strongly. Thirdly, the change in
+effective gas price between the two timestamps is also included as a control as it is a viable proxy
+for examining blockchain congestion, which influences repositioning decisions by LPs. Finally,
+the asset price at the normal timestamp is used to control for the mechanical scale effect by which
+slippage increases with the level of the underlying asset.
+
+C. Data for Hypothesis testing
+
+To procure reliable results for the scope of this paper and to give a robust review of the hypotheses,
+certain data requirements need to be satisfied. Namely, data on liquidity depth, the gas fee
+components, and trade volume data must be retrieved for both the CEX and DEX venue to test for
+the four hypotheses established. As such, this section details exactly how and why we retrieve the
+data required and is formally to support choices made leading up to the empirical findings.
+
+C.1 Collecting Data on liquidity depth
+
+To capture liquidity conditions on the Binance venue, the identified timestamps 𝑡𝑠𝑡𝑟𝑒𝑠𝑠𝑖 and
+𝑡𝑛𝑜𝑟𝑚𝑎𝑙𝑖 in section A were used to query CoinAPI in an attempt to fetch the snapshots of the
+historical limit orderbook (LOB) states for each normal-stress event, 𝑖, on the Binance venue and,
+in particular, the twenty best bid levels and the twenty best ask levels for ETH/USDT (CoinAPI,
+2025):
+
+                      𝐵𝑖 = {(𝑏𝑖, 𝑣𝑖): 𝐼 = 1, … ,20}, 𝐴𝑖 = {(𝑎𝑗, 𝑣𝑗): 𝑗 = 1, . . . ,20}
+
+Because LOBs on the CEX venue are a form of continuous data, it is expensive to store the state
+of every timestamp. For this reason, many free APIs, such as CoinAPI, have gaps in their database
+(CoinAPI, 2025). As such, a tolerance window is needed to match event timestamps to the closest
+available book state. After different tolerance intervals were tested for, a ±35 second time was
+selected as a reasonable time interval based on the logarithmic relationship between recovered
+events and window size. Orderbook states were retrieved in this interval and the closest ones to
+
+                                      18
+their respective query timestamp were selected as the representable timestamps. However, due to
+missing data from CoinAPI, our main data extractor for the Binance venue, our sample of
+orderbook snapshots for Binance (CEX) was reduced to 294 events.
+
+Unlike Binance, DEXs, such as Uniswap V3, do not organize liquidity in a LOB. Rather, price
+movements evolve endogenously based on how liquidity is distributed across price intervals
+(known as “ticks”, an internal price measurement for Uniswap V3 smart contract), implying that
+slippage on DEXs is determined entirely by the current price in the liquidity curve at the exact
+block in which the trade is executed. Because Uniswap V3 operates on a public blockchain, all
+interactions with smart contracts are permanently recorded on-chain, including liquidity additions
+and removals to tick intervals and swap transactions by liquidity providers. From these raw events,
+free and commercial APIs, such as the Alchemy RPC endpoint, reconstruct the liquidity curve and
+store it as a snapshot (Alchemy, 2025). Using this, a ± 333 tick window around current price, 𝑃0,
+of net liquidity, 𝐿   11, with its corresponding tick on the Uniswap V3 WETH/USDT 0.3% pool
+                                     𝑛𝑒𝑡
+state for normal and stress blocks, 𝑏𝑛𝑜𝑟𝑚𝑎𝑙 and 𝑏𝑠𝑡𝑟𝑒𝑠𝑠 , for normal-stress event, 𝑖, were retrieved
+to observe the state of the liquidity distribution at the event observed and accounted for.
+
+C.2: Setting up gas price data
+
+Gas data was retrieved for two purposes: i) to investigate the technological components of gas,
+and ii) to identify the gas prices for our blocks, 𝑏𝑠𝑡𝑟𝑒𝑠𝑠 and 𝑏𝑛𝑜𝑟𝑚𝑎𝑙 . With this data, we can
+effectively use these gas components in the simulation for transaction costs in the DEX venue for
+testing our third hypothesis.
+
+Formally, a time series of gas data (including base fee, median priority fee, etc) was retrieved from
+Alchemy API. Due to computational constraints, the fetched historical dataset contained the base
+fee and the median priority fee for every 300th block, 𝜆, between block numbers 13,623,124 and
+23,886,141 (15 Nov 2021 to 26 Nov 2025). This sampling approach provided a consistent and
+computationally efficient way to observe gas-market trends without the need to query every
+individual block on the blockchain. Thereafter, using Alchemy API once more, a dataset was
+retrieved specifically for the stress and normal blocks containing transaction-level gas data for
+every transaction in the block. (Alchemy, 2025)
+
+C.3: Volume and Price directionality
+
+To retrieve data capable of testing Hypothesis 4 (refer to section B.4), 30 minutes of decentralized-
+exchange swap events preceding each normal and stress timestamp was collected from the
+Uniswap V3 WETH/USDT 0.3% pool using the API endpoint “The Graph” (The Graph,
+2025). For each normal and stress timestamp in event, 𝑖, all swaps occurring in the 30 minutes
+leading up to the timestamp were aggregated into minute-level volumes, yielding the vector:
+
+                                       (𝑉𝑡−30, 𝑉𝑡−29, 𝑉𝑡−28, . . . , 𝑉𝑡−1, 𝑉𝑡)
+
+11
+  Liquidity net is the change in active liquidity when the price crosses a tick boundary, reflecting how much
+liquidity is added or removed. It can be observed at every tick and essentially determines how the pool’s total active
+liquidity updates as price moves through the tick grid.
+
+                                      19
+                                                                                                th
+𝑉𝑡−𝑚 represents the total ETH-denominated trading volume executed in the m  minute before
+timestamp, t. This produced a consistent and aligned set of pre-event volume observations for both
+the normal and stress events to be used to examine whether increases in on-chain trading activity
+helped explain differences in slippage behavior between DEX and CEX during stress periods;
+effectively, it enabled the construction of the main explanatory variable testing for the fourth
+hypothesis. Once more, The Binance public API Klines was queried to fetch both a ten-minute
+lagged benchmark price and the current price for each of the stress and normal timestamps which
+is depicted by Figure 4 (Binance, 2025). This allowed for the construction of the price-
+directionality measure, the control variable for testing hypothesis 4.
+
+                                      20
+IV. Empirical findings
+
+This section presents the empirical results and descriptive statistics for testing hypotheses 1-4. We
+begin by examining how transaction cost changes in the DEX and CEX. We then turn to the
+estimates from the panel regression that assess the relationship between stress and the liquidity
+degradation across trade sizes for testing our second hypothesis. Thereafter, the gas fee trend over
+time and the tables featuring the estimates from the regressions for the main structural and
+technological components of gas are illustrated, setting the grounds for the results comparing the
+liquidity degradation in the DEX and CEX. Lastly, the regression on whether DEX liquidity,
+relative to CEX, can improve under stress by studying how pre-stress trading activity affects the
+outcome is shown.
+A. Hypotheses Results
+A.1 Results for Hypothesis 1
+
+                                      21
+Inspecting Table 2, it is observed that transaction costs statistically significantly increase following
+a stress event for both the Binance (CEX) and Uniswap V3 (DEX) venues. The mean change in
+transaction costs, the liquidity degradation, is positive across all trade sizes for both CEX and DEX
+and is statistically significant at the 1% level, except for CEX trade size 100 ETH which is only
+statistically significant at the 5% level. With increased trade size in CEX, the results become more
+unreliable due to insufficient data on liquidity depth and this is accounted for by applying a
+bootstrapping method for 10000 iterations, depicted by the error bars in Figure 5. In reference to
+this figure, on average, liquidity degradation occurs across both venues and there is a clear
+convergence between CEX and DEX as trade size increases. Both the DEX and CEX liquidity
+degradation trends show that, for larger trade sizes, the average liquidity degradation stabilizes.
+Overall, these results showcase that both venues experience a deterioration in market quality when
+volatility spikes.
+
+                                      22
+A.2 Results for Hypothesis 2:
+
+                                      23
+Furthermore, Table 3 showcases the results of the panel regression performed on the total
+transaction cost for each block in the WETH/USDT market that is studied during a stress event, 𝑖,
+with gas prices included for both the normal and the stress blocks. The regression features 2 key
+variables for testing hypothesis 2: i) a stress dummy, 𝑆𝑡𝑟𝑒𝑠𝑠𝑏𝑙 , taking on values of 0 or 1, and ii)
+natural logarithm of the trade size, ln(∆𝑥𝑖). An interaction term between the two is also included
+to review whether transaction costs are lower for higher trade sizes. All the coefficients for these
+variables are found to be statistically significant at the 1% level.
+
+Table 4 shows an identically setup panel regression as performed in Table 3 for the adjusted
+transaction cost (exclusion of effective gas prices) for each block for event, 𝑖. We observe that
+  𝑛𝑜 𝑔𝑎𝑠
+𝛽1      gas is negative, having the opposite sign from Table 2 regression. This implies that, for
+very small trade sizes, pure slippage is slightly lower during stress in the DEX venue. Similarly,
+                                      𝑛𝑜 𝑔𝑎𝑠
+we see a reverse in sign for 𝛽2     , where a relative size up in traded ETH (e.g doubling) has a
+positive effect on transaction costs, implying that without gas, transaction costs scale with trade
+                                                   𝑛𝑜 𝑔𝑎𝑠
+size. Lastly, the coefficient of interest, 𝛽3      , shows also a reverse in sign, turning positive. This
+means that during a stress moment (𝑆𝑡𝑟𝑒𝑠𝑠 = 1) a relative increase in ETH traded (e.g. doubling)
+will increase transaction cost for DEX.
+
+Table 5 presents a decomposition panel for the transaction costs for the DEX and CEX venues of
+different trade sizes. It is observed that, on average across all events, for a small trade size such as
+0.1 or 2 ETH, more than 99% of the average transaction cost increase is explained by the average
+change in gas fee. Meanwhile, by the time the trade size reaches 100 ETH, only 16.82% of the
+
+                                      24
+transaction cost in DEX is explained by gas. These results prove our hypothesis 2, that gas
+disproportionally impacts liquidity degradation of smaller trades sizes.
+A.3 Hypothesis 3: The gas component and adjusted Transaction cost
+
+                                      25
+All figures examine the relationship between the trend in the effective gas price, 𝐺𝑇𝑜𝑡𝑎𝑙(𝑏𝑙), or its
+constituents, 𝐵(𝑏𝑙) or 𝑀𝑃𝑟(𝑏𝑙), with time, represented by 𝜆, tracked by every 300th chronological
+block number, indexed by 𝜆, in the past 4 years (from 09-11-2021 to 09-11-2025). For the effective
+gas price, there is an apparent downward trend, often associated with an improvement in
+technological costs in existing literature (Barbon et al, 2024). Through the additive decomposition
+(III B.3), base gas fees show a clear downward trend with time in Figure 8. On the other hand, as
+observed in Figure 7, median priority fees tend to have much less downward pressure, with a more
+unambiguous trend revealed. Although both components experience large volatility over time,
+Median priority fee is much more constant over time than the base fee, revealed by the trend
+differences.
+
+                                      26
+27
+Table 6 is a regression performed (following equations 11 and 12) on the separate components of
+the effective gas fee in the WETH/USDT market from the Uniswap V3 pool, with one regression
+targeting the base gas fee, and the other the median priority fee trends over block numbers
+normalized to. The statistically significant base fee coefficient, 𝛽𝐵, has a negative value of 0.0019.
+This number suggests that for one increase in 𝜆, which is 300 blocks (meaning every 25 minutes),
+the base fee has had a downward trend of 0.0019 Gwei, over the past 4 years. Similarly, we see a
+statistically significant 𝛽𝑀𝑃𝑟 that is negative. Importantly, this value is much smaller than the
+magnitude of 𝛽𝐵.
+
+In parallel to this, a divergence in the results between the estimated variance in base fee and median
+priority fee is observed. We observed a statistically significant and negative 𝛿𝐵, implying that the
+variance of the base fee has decreased over time. In contrast, while 𝛿𝑀𝑃𝑟 takes on a negative value,
+it is not statistically significant with a p-value < 5%. Based on the conditions set in, section III B.3
+and on the assumption that these observed results in trends will maintain in the future, we set
+    𝐴𝑑𝑗                                                  𝐴𝑑𝑗                                       ̂
+𝐵   (𝑏𝑙) = 0, and 𝑀𝑃𝑟   (𝑏𝑙) = 𝑀𝑃𝑟𝜆 + 𝛽𝑀𝑃𝑟 (𝜆𝑚𝑎𝑥 − 𝜆) thus obtaining a new adjusted
+transaction costs for DEX making for a better comparison between DEX and CEX.
+
+                                      28
+Figure 9 shows the average liquidity degradation for both the CEX and DEX venues after removing
+the technological component of the gas fee from the DEX transaction cost. In comparison to figure
+5, the liquidity degradation for DEX is smaller, on average, than that of CEX for larger trade sizes.
+The adjustment for DEX is also significant in the pattern of the liquidity degradation of DEX
+across trade sizes. Despite this change, we still observe that for small trades such as 0.1 ETH, the
+CEX venue experiences superior liquidity resilience, a pattern that reverts around the trade sizes 1
+
+                                      29
+ETH. These observations in Figure 9 backed by our paired difference t-test in Table 8, disproves
+our hypothesis 3.
+
+A.4 Hypothesis 4: Liquidity improvements post stress
+
+Figure 10 compares the proportion of events in which slippage improves for each venue across
+trade sizes, grouping events by their quartiles. The figure shows two clear patterns: i) across all
+trade sizes, the slippage of the CEX venue has a declining proportion of improvement when going
+from small to large trade sizes and ii) DEX shows that for higher trade sizes, for a large proportion
+of events, slippage improves. Secondly, we observe that for large trades (> 70 ETH) DEX slippage
+improves, while CEX worsen, nearly every second of time a stress event occurs.
+
+                                      30
+Table 9 presents the first-difference interaction regression model results for the [%] transaction
+costs across each trade size in our sample except for the case of x >85 ETH due to very few
+matched pairs (N) present. Here, we estimate whether increases in pre-stress trade volume on
+Uniswap V3 actively increase differential improvements of the DEX venue’s slippage as compared
+with the CEX’s. The coefficient of interest is 𝛽3, which is the interaction term between the market
+dummy variable and the change in volume, and it is found to be statistically insignificant, having
+mostly negative values for differing trade sizes. This, combined with figure 10, indicates that
+slippage statistically insignificantly improves with pre-stress volume in a DEX exchange. In
+addition, however, we observe that 𝛽3 is statistically significant for trade size between 4 and 20
+ETH. This pattern of negative sign and rising magnitude in the coefficient of the interaction term
+
+                                      31
+for larger trade sizes is consistent with what was observed in Figure 10. However, the discrepancy
+exists for trade sizes 35, 40, 50, 55, and 65, which are found to be statistically significant at the
+5% level.
+
+B. Discussion of findings
+We observe that our first hypothesis is proven based on the results found in A.1; across all trade
+sizes, the mean change in transaction costs for the market of the (W)ETH/USDT pair through
+Binance and the Uniswap V3 venues are positive and statistically significant, implying that both
+venues experience higher associated trading costs following an average stress event. The economic
+intuition behind this comes from the observed price directionality in Figure 4, where it is apparent
+that stress events are associated with stronger and more unstable price movements when followed
+by normal periods. This could be because greater price volatility tends to indicate the presence of
+price information asymmetry in the market and this effectively forces liquidity providers to charge
+larger premiums to compensate for the adverse selection, consistent with the mechanisms
+described in the study of Glosten and Milgrom (1985).
+
+Interestingly, the observed behavior of DEX liquidity degradation is disproportionally larger for
+smaller trade sizes due to gas, as seen in our Table 3 and 4 panel regression, complemented by the
+decomposition Table 5. A similar conclusion made by Barbon and Ranaldo (2024) outlines that
+gas affects the transaction cost of smaller trade sizes. However, the economic intuitiveness here
+differs as, unlike the fixed-cost nature that gas is assumed to be in related literature, gas is found
+to vary in our data; it is a stochastic variable based on factors such as network congestion derived
+from, among other factors, the economic urgency to be included in the next block Koutmos (2023).
+While this paper does not replicate the exact conditions studied by Koutmos (2023), our results
+echo his findings through our sample selection as stress moments are defined by large price
+movements. If markets were efficient and there was no arbitrage opportunity, traders would not
+have the urgency to execute their trade to the point of overpaying by setting higher priority fees
+than others. Though this relation is not empirically proven in our paper, we can draw a logical
+connection through the results we have as the disproportionate effect of smaller trade sizes tending
+to have higher associated liquidity degradation is maintained when moving from a normal to a
+stress period as users are willing to drive this fixed cost higher based on urgency through priority
+fee bidding. Therefore, the implication for many smaller traders is to not assume gas costs are
+fixed, but rather that they tend to change with stress events and to take note of this prior to
+liquidating assets in the DEX market.
+
+On the contrary, a greater limitation when testing for our second hypothesis and the conclusions
+drawn from it is that the underlying data may be flawed due to a persistent time effect. Through
+our additive decomposition leading up to hypothesis 3, we observed a time effect in the base gas
+fee, both in its trend but also in the variance. This finding aligns with Barbon and Ranaldo (2024)
+claim that there is a technological aspect to gas prices. While we do not explicitly model for
+technological advancements, we can draw the connection between the statistically significant
+downward trend observed in the base gas fee and the economic incentive of Ethereum to lower gas
+prices; cheaper transactions increase network usage and may ultimately increase the value of the
+underlying asset (ETH) and, in turn, their competitiveness as a network provider (Ethereum, 2025).
+Under this perspective, most of the gas price is driven by technological constraints, such as the
+
+                                      32
+base gas fee which is determined mostly by usage of block capacity and processing efficiency.
+Nevertheless, an anomaly that is observed in Table 6 is the time effect in the median priority fee.
+This went against our expectations since priority fees, unlike base fees, are not automatically set
+by the Ethereum protocol, but rather by the users Karaivanov and Zarifian (2024); one reasonable
+explanation for this could be the correlation between base gas fees and priority gas fees. While this
+paper does not investigate this, this relationship would examine whether the technological aspect
+of the base gas fees influence, or is shared by, the priority gas fees and, hence, we offer this as an
+extension to our work. Economically, simple supply and demand incentive structures could further
+give light as to why this relationship between base and priority gas fees persists as the block
+capacity has increased over the past four years, e.g. EIP-1559I. In essence, as users and bot
+programmers become more aware that there is more room for trading and less competition among
+other users for block space, the need for out-bidding others competing traders decreases. Despite
+this, the trend in the median priority fee is particularly economically negligible in comparison to
+the base fee, making it more difficult to assume that, in the long run, the median priority fee will
+trend towards zero. As such, for comparative purposes, we adjusted for the time effect in the
+median priority fee to at least reflect the modern conditions that may persist in the future. Another
+anomaly observed was the negative trend in variance over time. One technological explanation to
+                             12
+this is the presence of bots   in DEX venues that can suggest an estimated optimal priority fee
+                                                 13
+based on the current state of the mempool  . While modelling gas is outside the scope of this paper,
+gas-suggestion bots could be an explanatory variable as to why we observe priority fee pricing
+converges to one point. Regardless of this fact, due to its statistical insignificance, the 𝛿̂ 𝑀𝑃𝑟
+coefficient cannot prove a trend in diminishing noise.
+
+Furthermore, after adjusting for the time effect in the median priority fee and the expected trend
+in the base gas fee (reaching 0 Gwei in the long-term) to better reflect what might be expected in
+the future, we observe a complete change from what was found previously in hypothesis 1. For
+larger trade sizes, the Uniswap V3 venue for the (W)ETH/USDT market tends to experience lower
+liquidity degradation with only the structural gas components, on average, as opposed to the
+Binance venue, backed statistically by the findings in Table 8. Despite this change, our third
+hypothesis was not proven to be correct as, even when assuming long-run base gas fees 0 and the
+median priority fee adjusted for the time effect, a disproportionate liquidity degradation for smaller
+trade sizes persists post-stress. This implies that when accounting for technological improvements
+in the long-term, the effect of gas fees on smaller trade sizes is still present. This, in turn, translates
+to the fact that degradation in liquidity for the (W)ETH/USDT market for the Uniswap V3 venue
+for some trade sizes is still greater for the DEX venue than for the CEX venue. Despite this, for
+larger trade sizes, the long-term liquidity degradation for the DEX venue is shown to be much
+more competitive than the CEX transaction costs.
+
+To conclude, as shown in Figure 10, the slippage component of the transaction costs in the
+Uniswap V3 DEX venue improves disproportionally through normal-stress events in comparison
+to CEX for large trade sizes. This phenomenon is attempted to be explained by our first-difference
+interaction regression model which was grounded in economic incentives for liquidity providers
+derived by Heimbach et al. (2022). 𝛽3, the coefficient of the interaction term in the regression,
+
+12
+  For instance: (Unibot, 2025)
+13
+  Mempool is the space in which all pending transactions gather. These have an priority fee attached to them and is
+observable and influences the decisions made by validators.
+
+                                      33
+implies an improved slippage for DEX in comparison to CEX post-stress for most trade sizes. This
+relationship is observed to be statistically significant for small to mid-trade sizes (4 to 20 ETH)
+with p-value levels of 10% to 1%. Despite this, we find the discrepancy between the trade sizes,
+both in terms of significance and sign, to not show enough support for our hypothesis across all
+trade sizes. Still, the economic intuition is consistent with the literature on liquidity provider
+behavior; liquidity providers in a market with concentrated liquidity may experience higher fee
+revenues during increased volatility, incentivizing them to re-enter or reposition liquidity toward
+the active price (tick) band. We still strongly believe this to be true across all trade sizes rather
+than only the ones observed in our results (Table 9). An explanation to why we could not observe
+this phenomenon is because our data only looks at the Uniswap V3 pool with fee tier 0.3%.
+Through the insights provided by the Heimbach et al. (2022) study, we are confident that liquidity
+providers will jump to pools with higher fee tier during times of market stress. Despite this
+essential fact, due to data constraints and query limits, investigating every fee tier pool was not
+feasible for this paper and, as such, we appreciate that controlling for this or incorporating it into
+the model in supplement would potentially make this model even more representative. With this,
+it may be possible to prove that by shifting the venue fee to liquidity providers (as DEX does in
+opposition to CEX), slippage will improve in times of stress, which will, ultimately, economically
+benefit the users and liquidity providers of cryptocurrency exchanges, rather than the exchange
+itself (e.g. Binance), creating a more efficient market and mitigating the costs associated with
+stress.
+
+Another major point of evaluation for insignificant interaction coefficient amongst most trade sizes
+may be sample heterogeneity, as larger trade sizes may be rarer relative to small trades. A reason
+for why this may occur, which our simulation for transaction cost does not incorporate, is MEV
+bots. Additionally, data constraints also presented a clear limitation for the analysis of the CEX
+venue, as observed in all preceding tables featuring trade sizes, the number of observations tended
+to decrease gradually with increasing trade sizes. For most events, CEX data did not have enough
+liquidity depth to cover the trade sizes during either normal or stress events. This may have been
+a significant source for bias in our data considering that when the trade size approaches 75 ETH,
+there are only 36 valid observations for CEX. These observations may, in addition, share common
+attributes and thus not truly represent random out of the 417 events we selected. This limitation
+applies to the rest of the CEX data collected and is regarded in our concluding remarks.
+
+                                      34
+V. Concluding Remarks
+The main objective set out in this paper, as per our research question, was to reliably compare the
+degradation/resilience of liquidity in the (W)ETH/USDT pair market for the centralized Binance
+exchange crypto venue and the decentralized Uniswap V3 fee tier 0.3% venue, respectively,
+following volatile stress events, in silo and in relation to one another. One central result of our
+investigations is that while both venues suffer from liquidity degradation during stress due to the
+risk aversive tactics employed by liquidity providers against adverse selection, the structure and
+source of that degradation is fundamentally different. The CEX Binance venue was found to be
+linear and liquidity depth-dependent, while the DEX Uniswap V3 venue degradation was found to
+be structurally regressive, implying that smaller traders tended to face larger liquidity degradation
+for smaller transactions than institutional-sized traders during times.
+
+Furthermore, our second and third hypotheses were focused on exploring the mechanisms as to
+why smaller trade sizes are affected disproportionately relative to larger trade sizes in the DEX
+Uniswap V3 venue. This was achieved by i) running a panel regression and panel decomposition
+to examine whether larger trade sizes for the DEX venue fare better in terms of liquidity resilience
+relative to stress, and ii) decomposing gas fees into their constituent components: the base gas fee
+and the priority gas fee. For the former, our results confirm that the DEX liquidity degradation are,
+indeed, far worse for smaller trade sizes after times of market volatility than for larger trade sizes,
+and this was mainly in association with the change in gas fees before and after a stress event. For
+the latter hypothesis, once evaluated, the trend in the base fee of gas and its variance were found
+to be decreasing significantly with time, akin to what Barbon and Ranaldo (2024) reason for gas
+being solely technological. However, we observe that in the priority fee the same pattern does not
+persist. The fundamental contribution that we make, therefore, to this literature is the fact that the
+total gas fee of DEXs cannot be assumed to be zero in the long-term due to the underlying presence
+a structural aspect of the priority fee which is driven by economic factors. Without this structural
+component, the validators in the DEX venue lose incentives to provide liquidity for traders who
+can no longer prioritize their transactions to the validators; thus trading becomes more difficult for
+traders with urgency Karaivanov and Zarifian (2024). As such, despite the long-run improvement
+of technologies associated with the blockchain, the necessary persistence of this fundamental
+economic structure in the DEX venue will not let the (W)ETH/USDT market reach a zero-
+equivalent value in gas fees. We further contribute by mapping out what liquidity degradation will
+look like with only the long-term structural component of gas fees, assumed to be only the value
+long-run priority fees in the (W)ETH/USDT market, which shows, on average, much more
+favorable and competitive liquidity degradation for most trade sizes relative to the Binance CEX
+venue. However, retail size trades below 1 ETH are still heavily impacted in the long run.
+
+Finally, our last investigation into this topic came in the form of testing for slippage behavior for
+the CEX Binance venue and the Uniswap V3 fee tier 0.3% DEX venue. This was achieved through
+a first-difference interaction regression approach examining whether, during a stress event, the
+slippage for the DEX venue improves relative to CEX slippage when the change in volume prior
+to the stress moment increases. Despite a statistically weak and insignificant coefficient for most
+trade sizes, the interaction terms measuring change in pre-stress/normal event volume to if the
+event was a stress period or not show improved slippage for DEX relative to CEX. Notably, this
+only shows a statistically significant relationship for the at least the 5% level for trade sizes
+between 8 and 20 ETH. In consequence this shows that in a DEX like Uniswap v3, shifting the
+
+                                      35
+venue fees into the hands of the liquidity providers favors its users during stress more in
+comparison to users on Binance, creating a more efficient market to trade in.
+
+With regards to the weaknesses of this study, the limited publicly available data on CEX liquidity
+depth and volume, unfortunately, meant that we could not simulate the transaction cost for all
+events; for instance, for trade size 100 ETH, the sample size that could be analyzed with the
+available liquidity data was only 11. Consequently, this may have biased our results, since some
+events display greater order-book depth within the nearest 20 bid and ask levels relative to others.
+In addition, the lack of data on modelling and representing MEV bot trading also made the
+simulation and analysis of transaction costs for DEX more difficult to accurately analyze. The
+discovery and incorporation of a variable that can capture the effect of MEV bot trading for stress
+periods would prove fruitful for the betterment of this area of research. Crucially, this research
+analyzes only the fee tier 0.3% pool in Uniswap V3, thus not allowing for the full observation of
+the behavior of liquidity provider across the whole Uniswap V3 venue for (W)ETH/USDT. As
+such, a comprehensive study focused on accounting for these different fee tier pools could provide
+a better understanding of liquidity provider behavior in relation to pre-stress volume buildup.
+Finally, we have only performed a microstructural analysis on one token pair (W)ETH/USDT on
+two specific venues; a study covering many different venue types for decentralized and centralized
+exchanges could also be viable towards further examining the effect of stress periods on liquidity
+degradation and its components.
+
+                                      36
+VI. Reference List
+
+Adams, Hayden, Noah Zinsmeister, and Dan Robinson, 2020, Uniswap v2 Core, Whitepaper,
+Uniswap. https://app.uniswap.org/whitepaper.pdf
+
+Aerodrome, 2025, Liquidity pool
+information. https://aero.drome.eth.limo/liquidity?query=USDT
+
+Alchemy, 2025, Ethereum API documentation: JSON-RPC access. https://docs.alchemy.com/
+
+Andersen, Torben G., Tim Bollerslev, Francis X. Diebold, and Paul Labys, 2001, The
+distribution of realized exchange rate volatility, Journal of the American Statistical
+Association 96, 42–55.
+
+Angeris, Guillermo, Hsien-Tang Kao, Rei Chiang, Charlie Noyes, and Tarun Chitra, 2020, An
+analysis of Uniswap markets, Cryptoeconomic Systems 1, 1–25.
+
+Barbon, Andrea, and Angelo Ranaldo, 2024, On the quality of cryptocurrency markets:
+Centralized versus decentralized exchanges, Management Science (Forthcoming).
+
+Binance, 2025, Public data collection: Klines. https://data.binance.vision/
+
+Bouchaud, Jean-Philippe, J. Doyne Farmer, and Fabrizio Lillo, 2009, How markets slowly digest
+changes in supply and demand, in T. Hens and K. Schenk-Hoppé, eds.: Handbook of Financial
+Markets: Dynamics and Evolution (North-Holland, Amsterdam).
+
+Buterin, Vitalik, 2020, A rollup-centric ethereum roadmap, Ethereum
+Magicians. https://ethereum-magicians.org/t/a-rollup-centric-ethereum-roadmap/4698
+
+CoinAPI, 2025, Cryptocurrency market data API: Historical limit order book
+data. https://www.coinapi.io
+
+CoinGecko, 2025, Cryptocurrency exchanges: Decentralized finance
+(DeFi). https://www.coingecko.com/en/exchanges/decentralized
+
+CoinGecko, 2025, Highlights: High volume cryptocurrencies. https://www.coingecko.com/
+
+CoinGecko, 2025, Top crypto exchanges ranked by trust
+score. https://www.coingecko.com/en/exchanges
+
+CoinMarketCap, 2025, Glossary: Automated market maker
+(AMM). https://coinmarketcap.com/academy/glossary/automated-market-maker-amm
+
+Ethereum Foundation, 2025, Maximal extractable value
+(MEV). https://ethereum.org/developers/docs/mev/
+
+                                      37
+Etherscan, 2025, API Documentation: Get Block Number by
+Timestamp. https://docs.etherscan.io/
+
+Glosten, Lawrence R., and Paul R. Milgrom, 1985, Bid, ask and transaction prices in a specialist
+market with heterogeneously informed traders, Journal of Financial Economics 14, 71–100.
+
+Hasbrouck, Joel, 2007, Empirical Market Microstructure: The Institutions, Economics, and
+Econometrics of Securities Trading (Oxford University Press, New York).
+
+Heimbach, Lioba, Eric Schertenleib, and Roger Wattenhofer, 2022, Risks and returns of
+Uniswap V3 liquidity providers, arXiv preprint arXiv:2205.08904.
+
+International Monetary Fund, 2015, Policymakers face new challenges as financial markets
+shift, IMF News, September
+28. https://www.imf.org/en/news/articles/2015/09/28/04/53/sopol092915a
+
+Investopedia, 2025, What Is a Block in the Crypto Blockchain, and How Does It Work?
+https://www.investopedia.com/terms/b/block-bitcoin-block.asp
+
+Karaivanov, Alexander, and Shayan Zarifian, 2024, Granular fee markets in Ethereum, Working
+paper.
+
+Koutmos, Dimitrios, 2023, Network activity and Ethereum gas prices, Journal of Risk and
+Financial Management 16, 1–14.
+
+Kyle, Albert S., 1985, Continuous auctions and insider trading, Econometrica 53, 1315–1335.
+
+PancakeSwap, 2025, V3 pair info: WETH/USDT. https://pancakeswap.finance/
+
+Roughgarden, Tim, 2021, Transaction fee mechanism design for the Ethereum blockchain: An
+economic analysis of EIP-1559, Proceedings of the 22nd ACM Conference on Economics and
+Computation, 258–293.
+
+Sarr, Abdourahmane, and Tonny Lybek, 2002, Measuring liquidity in financial markets, IMF
+Working Paper No. 02/232.
+
+Shu, Jinghong, and Jin E. Zhang, 2006, Testing range estimators of historical volatility, Journal
+of Futures Markets 26, 297–313.
+
+The Graph, 2025, Decentralized data querying protocol. https://thegraph.com/
+
+Unibot, 2025, Telegram cryptocurrency trading bot. https://unibot.app/
+
+Uniswap Labs, 2025, Pool explorer: WETH/USDT 0.3%. https://app.uniswap.org/explore/pools/
+
+                                      38
+Appendix A: Tables and Figures
+
+                                      39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+Appendix B: Technical Appendix
+B.1 Finding block numbers
+
+The Ethereum blockchain is indexed by block numbers rather than UTC time. This is such that
+when a swap is executed, its referenced execution ‘time’ is the block number in which the
+transaction was verified by the block validators. Nevertheless, a comparison through the
+translation of different time units (UTC to block number) can be achieved. In the Ethereum proof-
+of-stake system, blocks are created for every 12-second slot, meaning effective block time remains
+approximately 12 seconds. Each block contains a timestamp, set by the validator, indicating the
+time when the block was proposed to be created and attached to the larger block chain. This makes
+it possible to identify when a block entered the chain’s production process, using UNIX
+timestamps converted from UTC time. Using the endpoint “getblockbytime” on Etherscan v2 API,
+a query is made to convert the UTC derived timestamps 𝑡𝑠𝑡𝑟𝑒𝑠𝑠 and 𝑡𝑛𝑜𝑟𝑚𝑎𝑙 from body section III
+A.1 (Etherscan, 2025). The closest block number, 𝑏𝑙, after timestamp 𝑡 is found using this method.
+Formally, for a given target timestamp 𝑡, the identified block 𝑏𝑙 satisfies:
+
+                                      +
+                         𝑏𝑙 = 𝑚𝑖𝑛{𝑏 ∈ ℤ  + |𝑇𝑖𝑚𝑒𝑠𝑡𝑎𝑚𝑝 (𝑏) ≥ 𝑡|
+
+(back to body)
+
+B.2 The stress period sample and deriving the Final sample size
+
+The initial dataset contained some normal-stress cycles that occurred near or adjacent to one
+another. If this was left unaddressed, these could have contaminated the analysis as shock candles
+(stress) tend to have a decay effect (Hasbrouck 2007). To resolve this issue, the time gap between
+all hourly-merged normal-stress event pairs was calculated as the time difference between the close
+timestamp of a stress period in one normal-stress pair and the open timestamp of the next normal
+period of the next normal-stress pair. If the gap between these two was ≤ 1 hour and the calm
+period lasted also only approximately 1 hour, the immediate normal-stress period with the open
+normal timestamp was removed from the sample and merged with the previous normal-stress
+period to form a single normal-stress period.
+
+In addition, within normal-stress events, stress timestamps that came before the normal timestamp
+were also removed. This was done by first selecting our normal and stress periods using hourly
+candle data and then looking within them using a granularized minute candle approach. This is a
+tradeoff of having adjacent low volatile periods to stress periods using hourly and narrowing down
+stress / normal moments using minute candles. This filtering yielded a final sample size of 417
+normal-stress periods.
+(back to body)
+
+                                      49
+B.3 Deriving Slippage for CEX
+
+The Spread is defined as follows:
+
+                                               𝐴𝑋𝑌 (∆𝑥, 𝑡) − 𝐵𝑋𝑌(∆𝑥, 𝑡)
+                                𝑆𝑋𝑌,𝑖(∆𝑥, 𝑡) =                                                       (𝐴1)
+                                               𝐴𝑋𝑌 (∆𝑥, 𝑡) + 𝐵𝑋𝑌(∆𝑥, 𝑡)
+
+Where, 𝐴𝑋𝑌 (∆𝑥, 𝑡) [𝐵𝑋𝑌(∆𝑥, 𝑡)] represent the volume-weighted ask [bid] price for a buy [sell] order
+of size ∆𝑥 at time 𝑡. 𝐴𝑋𝑌 (∆𝑥, 𝑡) and 𝐵𝑋𝑌(∆𝑥, 𝑡) are computed as follows:
+
+                              ∑ 𝑗 𝑣𝑗𝑎𝑗                   ∑ 𝐼 𝑣𝐼𝑏𝐼
+         𝐴𝑋𝑌 (∆𝑥, 𝑡) =         , 𝐵𝑋𝑌(∆𝑥, 𝑡) =         , 𝑤ℎ𝑒𝑟𝑒 ∑ 𝑗 𝑣𝑗 = ∆𝑥, ∑ 𝐼 𝑣𝐼 = ∆𝑥
+                         ∆𝑥                  ∆𝑥
+
+Where, 𝑎𝑗 is the ask price at level 𝑗 (price of sellers), and 𝑣𝑗 is available volume at that ask price 𝑎𝑗.
+Similarly to the ask structure, 𝑏𝐼 is bid price at level 𝐼 (price of buyers) and 𝑣𝐼 is available volume at
+that bid price 𝑏𝐼 .
+By running a simulation for a given trade size ∆𝑥, we sweep through the liquidity for both buying and
+and selling:
+
+                        𝐴𝑋𝑌 = {(𝑎𝑗, 𝑣𝑗): 𝐼 = 1, . . . ,20}, 𝐵𝑋𝑌 = {(𝑏𝐼, 𝑣𝐼): 𝐼 = 1, . . . ,20}
+
+This is done until a trade order of ∆𝑥 ETH is filled or stop if there is no further liquidity to fulfill it in
+one of the directions, resulting in a computed slippage component for CEX for snapshots.
+(back to body)
+
+B.4 Deriving Slippage for DEX
+                                                                                         𝐷𝐸𝑋
+For each normal-stress event 𝑖, the slippage cost [𝑆𝑋𝑌,𝑖 (Δ𝑥, 𝑏𝑙)] is calculated, using the simulated
+outcome of test trade sizes that traverse the Uniswap WETH/USDT V3 0.3% pool liquidity
+distribution. In Uniswap V3, the function allowing liquidity providers (LPs) to set a range for their
+reserves has the consequence of changing the active liquidity 𝐿𝑎𝑐𝑡𝑖𝑣𝑒 as price moves across the venue’s
+                                                                                                                                                  𝑡𝑖𝑐𝑘
+internal price measurement called ticks, where 𝑃 = 1.0001   . While price can move to any tick
+number, the range set by LPs must have its upper and lower tick divisible by 60, which is the tick
+spacing for a 0.3% fee tier on Uniswap. This creates multiple 60 incremental intervals
+[𝑃𝑡𝑖𝑐𝑘 , 𝑃𝑡𝑖𝑐𝑘+60] , also referred to as tick (price) band, that contain a constant active liquidity. This
+constant is determined by the virtual reserves provided by LPs, and is defined as:
+
+                                        𝐿𝑎𝑐𝑡𝑖𝑣𝑒 = √𝑥𝑦 (𝐴2)
+
+The virtual reserves at in a tick band and at the tick boundaries (*) are given by
+
+                                      50
+                           𝐿𝑎𝑐𝑡𝑖𝑣𝑒                                            ∗     𝐿𝑎𝑐𝑡𝑖𝑣𝑒               ∗                     ∗
+              𝑥 =             𝑦 = 𝐿𝑎𝑐𝑡𝑖𝑣𝑒 ∙ √𝑃 𝑥  =     ∗ 𝑦  = 𝐿𝑎𝑐𝑡𝑖𝑣𝑒 ∙ √𝑃
+                       √𝑃                                   √𝑃
+
+Thus, the relationship for a change in the virtual reserves within a 60-tick boundary is identified as:
+
+                            1    1
+                    ∆𝑥 = 𝐿     (    −   ), ∆𝑦 = 𝐿     (√𝑃∗ − √𝑃)
+                                     𝑎𝑐𝑡𝑖𝑣𝑒       ∗                        𝑎𝑐𝑡𝑖𝑣𝑒
+                               √𝑃   √𝑃
+
+By knowing the net liquidity, 𝐿𝑛𝑒𝑡, at each tick boundary, the liquidity curve can be constructed, thus
+allowing for an updated, 𝐿𝑎𝑐𝑡𝑖𝑣𝑒 , and reuse this relationship across all prices and trade sizes. Simulating
+a trade entails trading until the lower (higher) tick bound is reached, and then subtracting (adding) the
+net liquidity at that tick, and updating all initial parameters, such as price, active liquidity, and the
+remaining ETH (x) to be traded. The effective price (𝑃𝑒𝑓𝑓,𝑏𝑙) of doing a swap (∆𝑥), at block number
+bl is represented as:
+
+                                                                      ∆𝑦
+                                                𝑃𝑒𝑓𝑓 𝑏𝑢𝑦/𝑠𝑒𝑙𝑙,𝑏𝑙 =
+                                                                        ∆𝑥
+
+From which the slippage for buying and selling was computed as:
+
+                                    𝑃𝑒𝑓𝑓 𝑏𝑢𝑦 − 𝑃0                   𝑃0 − 𝑃𝑒𝑓𝑓 𝑏𝑢𝑦
+                   𝑆𝑏𝑢𝑦(∆𝑥, 𝑏𝑙) =                  , 𝑆𝑠𝑒𝑙𝑙 (∆𝑥, 𝑏𝑙) =                 ,
+                                              𝑃0                                   𝑃0
+
+(back to body)
+
+B.5 DEX gas component of transaction cost
+
+The gas cost, (𝑔𝑏𝑙 (𝑡𝑥)), for a user in a given block (𝑏𝑙) executing a transaction (𝑡𝑥) is calculated
+with two components, the effective gas price, 𝐺(𝑡𝑥), which reflects the cost per unit of
+computation, and the gas used, (𝑈𝑐(𝑡𝑥)), which reflects the amount of computation required for
+the transaction.
+
+                                      𝑔𝑏𝑙 (𝑡𝑥) = 𝑈𝑐(𝑡𝑥) ∙ 𝐺(𝑡𝑥) (𝐴3)
+
+Gas used, 𝑈𝑐(𝑡𝑥), is determined by the underlying contract that the DEX trader calls upon. In
+Uniswap V3 swap, this varies depending on the ticks crossed to complete the transaction and the
+complexity of the underlying swap, for instance doing multiple coin swaps in one call. The
+effective gas price 𝐺(𝑡𝑥) is further constructed with two components following the introduction
+of the EIP-1559 design; the base fee of the block 𝐵𝑏𝑙 (a fixed cost for all users in the block) and
+the priority fee 𝑃𝑟(𝑡𝑥) set by the users.
+
+                                     𝐺(𝑡𝑥) = 𝐵𝑏𝑙 + 𝑃𝑟(𝑡𝑥) (𝐴4)
+
+                                      51
+ Thus, the effective gas cost for a user, for transaction number, 𝑡𝑥, in block number, 𝑏𝑙, can be
+expressed as,
+
+                                 𝐺𝑏𝑙 (𝑡𝑥) = 𝑈𝑐(𝑡𝑥)(𝐵𝑏𝑙 + 𝑃𝑟(𝑡𝑥))
+
+For our paper we assume, similar to Barbon and Ranaldo (2024), a constant 𝑈𝑐 gas used of 130
+881, which is approximately how much a Uniswap V3 smart contract required, and similarly once
+again we use the median priority fee in the block, defining the effective ETH gas cost component
+          𝐷𝐸𝑋
+of 𝑇𝐶𝑋𝑌,𝑖 (∆𝑥, 𝑏𝑙) as:
+
+                                 𝐺𝑏𝑙 (𝑡𝑥) = 𝑈𝑐(𝑡𝑥)(𝐵𝑏𝑙 + 𝑃𝑟(𝑡𝑥))
+
+(back to body)
+
+                                      52
+Appendix C: AI Disclosure
+
+This section of the appendices outlines what AI tools were used to aid our investigation, the
+purpose of their use for this paper and our statement of integrity. These tools were used in
+compliance with the course guidelines for the bachelor’s thesis in Finance at Stockholm School of
+Economics and were strictly used to improve the efficiency and structure of the investigation’s
+workflow, meaning all ideas, arguments, and the final writing were our original work.
+
+Tools Used: Gemini AI and VSC copilot (Via Github Copilot)
+
+Purpose of their Use
+Gemini was used for: helping with understanding the ideal structural organization and style for the
+sections/subsections of this paper; accurately interpreting and comprehending some of the more
+complicated literature reviewed due to the high-level understandings required for some of the more
+nuanced and extensive PhD level papers studied; for aid in how to use word styles to match that
+of a bachelor level thesis.
+
+VSC copilot (via Github copilot) was utilized in the Virtual Studio Code (VSC) software to help
+with debugging code produced for errors and to ensure that the codes ran as efficiently as possible
+once written, due to API query limits and for the sake of time saving during data extraction. This
+is following the standard practice when programming through VSC.
+
+                                      53

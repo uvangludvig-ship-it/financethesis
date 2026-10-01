@@ -1,0 +1,1245 @@
+An Investigation of Diseconomies of Scale in
+Volatile Markets under Short-term Turbulence
+Analyzing the Impact of fund-specific Variables on Mutual Fund
+Performance during Market Turbulence
+
+Elias Tjärnqvist
+Malek Minarji
+
+Bachelor Thesis
+Stockholm School of Economics
+2024
+An Investigation of Diseconomies of Scale in Volatile Markets under short-term
+Periods: Analyzing the Impact of fund-specific Variables on Mutual Fund Performance
+during Market Turbulence
+
+Abstract:
+This thesis explores the relationship between mutual fund size and performance during
+market volatility, focusing on U.S.-equity actively managed mutual funds from 2019 to 2023.
+Unlike findings from stable, long-term periods, no significant relationship is observed
+between assets under management and benchmark-adjusted returns in this turbulent time
+frame. Turnover ratio emerges as a key factor, showing a significant negative relationship
+with gross and net returns, likely due to higher trading costs, and a weak negative relationship
+with fund size, suggesting larger funds trade less actively. However, low R² values indicate
+limited explanatory power. These results highlight the complexity of fund performance
+during volatile periods and the need for broader research to better understand the interplay
+between fund-specific and market-level factors.
+
+Keywords:
+Mutual Funds, Turnover ratio, Expense ratio, Assets Under Management, Performance
+metrics
+
+Authors:
+Elias Tjärnqvist (25562)
+Malek Minarji (25598)
+
+Tutors:
+Marieke Bos, Associate Professor, Swedish House of Finance
+
+Examiner:
+Ramin Baghai, Professor, Swedish House of Finance
+
+Bachelor Thesis
+Bachelor Program in Business and Economics
+Stockholm School of Economics
+© Elias Tjärnqvist and Malek Minarji, 2024
+1. Introduction
+1.1 Background
+Mutual funds are financial instruments that have grown to become increasingly important
+instruments, having their level of assets under management (AUM) more than tripled in the
+last two decades, according to Statista (2024), accounting for over $20 trillion in assets in
+2019. This financial instrument has become a popular choice of investment, where more than
+40% of American households have had holdings in mutual funds since the year 2000. As
+mutual funds have become popular financial instruments, their asset holdings have logically
+also increased.
+
+Mutual fund size is an area of finance literature that, in comparison to other areas, is
+relatively unexplored. However, some research has been performed on this topic. Both Zhu
+(2018) and Yan (2008) find significant evidence for actively managed mutual funds
+exhibiting decreasing returns to scale when exploring the relationship between fund returns
+and fund size, measured in assets under management (AUM). On the contrary, Elton, Gruber,
+Blake (2012) find no significant evidence for a relationship between a fund's performance
+and size, but they find that fund fees decrease as they grow in size.
+
+The debate regarding returns to scale is about whether there are decreasing returns to scale.
+The sample tested by Zhu (2018) ranges from January 1995 - December 2014 and uses
+benchmark-adjusted returns; Yan (2008) ranges from January 1993 - December 2002 and
+uses returns, and Elton et al. (2012) features a range from January 1999 - December 2009 and
+uses a Fama French Model. These sample windows represent extended time periods that are
+generally regarded as stable, with the exception of the 2008 financial crisis.
+
+Unexplored is the gap in research on how mutual fund performance is correlated during a
+shorter timeframe with a more volatile market. Considering the popularity of this financial
+instrument, awareness regarding how mutual funds react to unstable market conditions should
+be better explored, and whether funds experience decreasing returns to scale should be
+examined.
+
+In this paper, we perform sample testing on US-equity actively managed mutual funds, on a
+sample ranging from January 2019 to December 2023, to examine how fund size correlates
+with benchmark-adjusted returns and fund-specific variables, including expense ratio and
+turnover ratio. This period is characterized by several events that had a significant impact on
+the stock market, among those, COVID-19, as explored in Zhang, Hu, and Ji (2020), and the
+start of the Russo-Ukrainian war, as explored in Boungou, Yaité (2022).
+
+Building on the previously identified gap in mutual fund performance research, this study
+aims to explore the following questions:
+
+    - Do mutual funds exhibit diseconomies of scale in shorter, turbulent periods?
+    - Are the effects exhibited consistent with patterns observed in more extended and
+       stable time frames?
+
+The rationale for the research questions is that while existing research has challenged the
+assumption of constant returns to scale, most studies focus on long-term, more stable periods,
+leaving a gap in understanding how fund size influences performance in short-term, volatile
+conditions. By examining fund performance in a volatile period against AUM, this research
+aims to clarify whether previously observed relationships persist under high-stress conditions,
+such as during economic shocks.
+
+1.2 Methodology
+
+1.2.1 Research Design
+This study examines the relationship between mutual fund size and performance during
+periods of significant market volatility, with a particular focus on recent disruptions caused
+by the COVID-19 pandemic and the Russo-Ukrainian war. These events have created
+considerable instability in global financial markets, as explored by Zhang et al. (2020) and
+Boungoue and Yaité (2022), providing an opportunity to explore how mutual fund size may
+influence performance during such turbulent periods. By analyzing the performance of
+mutual funds across these volatile episodes, the study aims to assess whether fund size has a
+distinct impact on benchmark-adjusted returns and whether this impact differs from that
+observed in more stable market conditions.
+
+1.2.2 Data Sources and Sample Construction
+The data on mutual funds, fund characteristics, and performance metrics were obtained from
+Morningstar Direct. Performance metrics consist of gross return and net return. The data for
+this study was sourced from a single comprehensive file on Morningstar Direct, containing
+performance metrics for a sample of American US-equity mutual funds. The data was
+organized into multiple sheets, and calculations were performed across these sheets before
+the results were consolidated into separate Excel files, which were then imported into R for
+further analysis. These files included key performance indicators such as Assets Under
+Management (AUM), net returns, gross returns, expense ratios, and turnover ratios extracted
+from various sheets within the Excel files. The data spans multiple years, with time-series
+observations for each fund, identified uniquely by a FundID. This structure enables a
+comprehensive examination of the fund's performance across different time periods, helping
+to uncover patterns and trends in how fund size and other characteristics influence
+performance under varying market conditions.
+
+1.2.3 Data Processing, Transformation and Imputation
+
+1.2.3.1 Data Importing and Reshaping
+Data was imported from multiple Excel sheets using the readxl package in R. The relevant
+performance metrics, AUM and fund-specific variables were extracted from different sheets
+within the Excel files. The data was then reshaped using the pivot_longer() function from the
+tidyr package, transforming the dataset from a wide format to a long format. This reshaping
+procedure allowed for the creation of a uniform dataset where each row represents a single
+observation for a given fund, performance metric, and time period.
+
+Additionally, the data was extracted and organized into column groups to facilitate the use of
+the rowMeans() function. This method allowed for efficient data aggregation, streamlining
+the calculations required for Ordinary Least Squares (OLS) regression analyses.
+
+Several key transformations were applied to the data during this reshaping process. The core
+performance metrics and AUM were standardized. For instance, AUM was scaled to billions
+of dollars (AUM / 10^9) to ensure consistency across the data and to facilitate easier
+comparison. To further facilitate easier comparison, each metric was labeled with its
+corresponding category (AUM, net returns, gross returns, expense ratios and turnover) using
+the mutate() function from dplyr and rows with zero values were excluded from the dataset,
+as zero values indicate periods before the fund's inception or after its closure, which do not
+contain data that is relevant to the analysis.
+
+This reshaping and transformation process ensures that the data is in a format conducive to
+time-series and panel data analysis, where each metric is treated as a separate variable, and
+observations are correctly aligned with the time dimension.
+
+1.2.3.2 Outlier Management and the Use of Benchmark-Adjusted Variables
+To ensure the robustness of the analysis and mitigate the influence of extreme values, a
+Winsorization procedure was applied to key performance metrics and fund-specific variables.
+In financial data, outliers can disproportionately distort statistical results, as extreme values
+may not accurately represent typical behavior and could mask underlying trends.
+Winsorization addresses this issue by capping extreme values at predefined percentiles, more
+specifically, the 1st and 99th percentiles in this study. This approach reduces the impact of
+outliers without removing the data points entirely, thus preserving the dataset's integrity while
+ensuring that the results are not overly influenced by anomalous observations.
+
+Mutual fund performance is assessed using benchmark-adjusted returns, while the academic
+Fama-French factors, though helpful in explaining return variation, are non-tradable and can
+lead to biased evaluations. Morningstar benchmarks, based on fund holdings rather than
+objectives, provide a more practical and unbiased alternative. We assume a benchmark beta
+of 1 and calculate performance using benchmark-adjusted gross and net returns, which reflect
+the manager's ability to outperform the benchmark and the investor’s return after fees.
+
+For the performance metrics in this study, benchmark-adjusted gross returns and
+benchmark-adjusted net returns were computed by subtracting the respective benchmark
+returns from the fund’s returns. After this adjustment, extreme values in the performance
+metrics were capped at the 1st and 99th percentiles. This process, implemented within the R
+programming language using mutate() and percentile-based capping, ensures that the analysis
+provides a more accurate and representative view of fund performance. By mitigating the
+influence of outliers, the procedure helps maintain focus on typical performance patterns,
+which is critical for drawing valid conclusions about mutual fund behavior, especially in
+fluctuating market conditions.
+
+By carefully managing outliers, this procedure improves the reliability of the analysis,
+offering a clearer picture of how mutual funds perform, particularly during periods of market
+volatility. This enhances both the accuracy of the statistical analysis and the overall validity
+of the study's findings.
+
+1.2.3.3 Data Imputation Methodologies
+In this study, missing data was addressed through column mean imputation. During the
+Ordinary Least Squares (OLS) regression analyses, R flagged missing observations with
+messages such as "15 observations deleted due to missingness." Upon review, it was found
+that missing values were not due to random omission but rather resulted from the fact that
+certain mutual funds in the dataset were active only for certain periods between January 2019
+and December 2023. This non-random missingness arose because some funds were either
+incepted after January 2019 or ceased operations before December 2023, leading to gaps in
+the data.
+
+Excluding observations with missing values through complete-case analysis would have
+significantly reduced the sample size, with some outputs indicating the removal of as few as
+14 observations and, in other cases, over 1,000 observations out of a relatively small sample
+size of mutual funds. Such a reduction would have been extensive, impacting the statistical
+power of the analysis. To avoid this and preserve the integrity of the dataset, column mean
+imputation was applied. This method replaces missing values in each column with the mean
+of the available observations for that column. The decision to use column mean imputation
+was driven by its simplicity, computational efficiency, and minimal disruption to the overall
+data structure. It allowed for retaining a larger portion of the dataset and avoiding significant
+data loss while ensuring that the analysis remained based on a more complete sample.
+
+The imputation was executed in R using the following code:
+
+                      Variable[is.na(Variable)] <- mean(Variable, na.rm = TRUE)
+
+This code replaces any missing values (denoted by NA) in the variable with the mean of the
+observed values for that variable, ensuring that the dataset remains intact.
+
+While column mean imputation is widely used and considered efficient, it is important to
+acknowledge that this method may introduce some bias. Specifically, replacing missing
+values with the mean of observed data can underestimate variability and may not fully
+capture the underlying distribution of missing values, particularly if the missingness is not
+completely random. In this study, it was recognized that while the missingness was not
+random due to the nature of fund inception and closure, the imputation process may have
+slightly skewed the results, especially for variables where the missingness was systematic.
+However, given the manageable level of missing data and the need to retain a robust sample
+size, it was deemed that this approach was a reasonable trade-off for the analysis. The
+potential bias introduced by imputation was acknowledged and believed not to substantially
+affect the reliability of the findings.
+
+While more advanced imputation methods, such as predictive mean matching (PMM) or
+Bayesian linear regression, could potentially offer more accurate imputations by modeling
+relationships between variables, these methods are computationally more demanding and
+require stronger assumptions about the data. Given the manageable level of missing data and
+the absence of evidence suggesting non-random missingness beyond the fund start and end
+dates, column mean imputation was considered an appropriate and efficient choice.
+
+1.2.4 Statistical Analysis
+To provide a comprehensive overview of the dataset, a summary statistics table was created,
+which included key metrics such as the number of observations, mean, standard deviation,
+and percentiles (1%, 25%, 50%, 75%, and 99%) for various categories, featuring gross
+returns, benchmark-adjusted gross returns, net returns, benchmark-adjusted net returns,
+expense ratios, turnover ratios, and AUM.
+
+To investigate the relationship between mutual fund size and performance, this study
+employed a combination of Ordinary Least Squares (OLS) regression models, Monte Carlo
+simulations and Multilinear regressions (MLR). The OLS models were used to assess the
+strength and direction of the relationship between various metrics, such as Average Assets
+Under Management (AUM) and Average benchmark-adjusted fund returns (both gross and
+net). The Monte Carlo simulations, on the other hand, were used to assess the robustness of
+the findings and to explore the variability of benchmark-adjusted returns under different
+scenarios. Below, each method is explained in detail. The MLR model refers to a regression
+model with multiple predictors and independent variables. The relationship between the
+independent variable and each predictor is assumed to be linear.
+
+1.2.4.1 Ordinary Least Squares (OLS) Regression Analysis
+OLS regression is a fundamental statistical technique used to model the relationship between
+a dependent variable and an independent variable. In the context of this study, OLS
+regression was used to assess the impact of fund size (AUM), the independent variable, on
+the performance metrics, specifically benchmark-adjusted returns, the dependent variables.
+
+The general form of the OLS regression model is:
+
+                                                  Yi=β0+β1Xi+ϵi
+
+Where Yi is the dependent variable, Xi is the independent variable, β0 is the intercept term, β1
+is the coefficient for the independent variable, representing the relationship between AUM
+and fund performance and ϵi is the error term.
+
+The OLS model minimizes the sum of squared residuals to estimate the coefficients β0 and β1.
+This is performed under the assumption that residuals are homoscedastic and normally
+distributed.
+
+                                                ∑(ϵi^2) = ∑(yi−𝑦 i)^2
+
+In this study, several OLS-regression models were used to explore the relationship between
+Assets Under Management (AUM) and benchmark-adjusted returns. These models analyze
+different time periods and performance metrics. The following regression models were
+implemented:
+
+Regression Model 1: This model examines the relationship between average
+benchmark-adjusted gross return and average AUM for the period 2019-2023. The
+corresponding code implementation is:
+
+              Regression1 <- lm(AVGBenchmarkAdjustedGrossReturn ~ AverageAllAUM)
+                                     summary(Regression1)
+
+Mathematically, the model can be expressed as:
+
+               AVGBenchmarkAdjustedGrossReturni=β0+β1⋅AverageAllAUMi+ϵi (1)
+
+Regression Model 2: This model examines the relationship between average
+benchmark-adjusted net return and average AUM for the period 2019-2023. The
+corresponding code implementation is:
+
+               Regression2 <- lm(AVGBenchmarkAdjustedNetReturn ~ AverageAllAUM)
+                                     summary(Regression2)
+
+Mathematically, the model can be expressed as:
+               AVGBenchmarkAdjustedNetReturni=β0+β1⋅AverageAllAUMi+ϵi (2)
+
+Regression Model 3: This regression examines the relationship between average
+benchmark-adjusted gross return and average AUM for the period 1995-2014. The
+corresponding code implementation is:
+
+             Regression3 <- lm(AVGBenchmarkAdjustedGrossReturnBaseArticleFullData ~
+                               AverageAllAUMBaseArticleFullData)
+                                     summary(Regression3)
+
+Mathematically, the model can be expressed as:
+
+                     AVGBenchmarkAdjustedGrossReturnBaseArticleFullData=β0+
+                        AverageAllAUMBaseArticleFullData+ϵi (3)
+
+Regression Model 4: This regression examines the relationship between average
+benchmark-adjusted net return and average AUM for the period 1995-2014. The
+corresponding code implementation is:
+
+              Regression4 <- lm(AVGBenchmarkAdjustedNetReturnBaseArticleFullData ~
+                               AverageAllAUMBaseArticleFullData)
+                                     summary(Regression4)
+
+Mathematically, the model can be expressed as:
+
+                      AVGBenchmarkAdjustedNetReturnBaseArticleFullData=β0+
+                        AverageAllAUMBaseArticleFullData+ϵi (4)
+
+Regression Model 5: This regression examines the relationship between average
+benchmark-adjusted gross return and average AUM for the period 2006-2010. The
+corresponding code implementation is:
+
+    Regression5 <- lm(AVGBenchmarkAdjustedGrossReturnBaseArticle ~ AverageAllAUMBaseArticle)
+                                     summary(Regression5)
+
+Mathematically, the model can be expressed as:
+
+                         AVGBenchmarkAdjustedGrossReturnBaseArticle=β0+
+                                  AverageAllAUMBaseArticle+ϵi (5)
+
+Regression Model 6: The model examines the relationship between average
+benchmark-adjusted net return and average AUM for the period 2006-2010. The
+corresponding code implementation is:
+
+     Regression6 <- lm(AVGBenchmarkAdjustedNetReturnBaseArticle ~ AverageAllAUMBaseArticle)
+                                     summary(Regression6)
+
+Mathematically, the model can be expressed as:
+
+                          AVGBenchmarkAdjustedNetReturnBaseArticle=β0+
+                                  AverageAllAUMBaseArticle+ϵi (6)
+
+Regression Model 7: The model examines the relationship between average
+benchmark-adjusted gross return and average expense ratio for the period 2019-2023. The
+corresponding code implementation is:
+          Regression7 <- lm(AVGBenchmarkAdjustedGrossReturn ~ AverageALLExpenseRatio)
+                                     summary(Regression7)
+
+Mathematically, the model can be expressed as:
+
+                          AVGBenchmarkAdjustedNetReturnBaseArticle=β0+
+                                 AverageALLExpenseRatio+ϵi (7)
+
+Regression Model 8: The model examines the relationship between average
+benchmark-adjusted net return and average expense ratio for the period 2019-2023. The
+corresponding code implementation is:
+
+           Regression8 <- lm(AVGBenchmarkAdjustedNetReturn ~ AverageALLExpenseRatio)
+                                     summary(Regression8)
+
+Mathematically, the model can be expressed as:
+
+                               AVGBenchmarkAdjustedNetReturn=β0+
+                                 AverageALLExpenseRatio+ϵi (8)
+
+Regression Model 9: The model examines the relationship between average
+benchmark-adjusted gross return and average turnover ratio for the period 2019-2023. The
+corresponding code implementation is:
+
+          Regression9 <- lm(AVGBenchmarkAdjustedGrossReturn ~ AverageAllTurnoverRatio)
+                                     summary(Regression9)
+
+Mathematically, the model can be expressed as:
+
+                              AVGBenchmarkAdjustedGrossReturn=β0+
+                                  AverageAllTurnoverRatio+ϵi (9)
+
+Regression Model 10: The model examines the relationship between average
+benchmark-adjusted net return and average turnover ratio for the period 2019-2023. The
+corresponding code implementation is:
+
+           Regression10 <- lm(AVGBenchmarkAdjustedNetReturn ~ AverageAllTurnoverRatio)
+                                     summary(Regression10)
+
+Mathematically, the model can be expressed as:
+
+                               AVGBenchmarkAdjustedNetReturn=β0+
+                                 AverageAllTurnoverRatio+ϵi (10)
+
+Regression Model 11: The model examines the relationship between the average turnover
+ratio and average AUM for the period 2019-2023. The corresponding code implementation
+is:
+
+                    Regression11 <- lm(AverageAllTurnoverRatio ~ AverageAllAUM)
+                                     summary(Regression11)
+
+Mathematically, the model can be expressed as:
+
+                                     AverageAllTurnoverRatio=β0+
+                                         AverageAllAUM+ϵi (11)
+For the regression models, the summary output includes the coefficients, p-values, and
+R-squared values, which help assess the statistical significance and explanatory power of the
+models. Moreover, each regression was accompanied by scatterplots. In these scatterplots, the
+independent variable was plotted on a logarithmic scale for the x-axis. This transformation
+helps to better visualize the relationship between the dependent and the independent variable.
+By applying a logarithmic scale, we ensure that the independent variables across a broad
+range are more appropriately represented, making it easier to observe patterns and trends in
+the data.
+
+1.2.4.2 Monte Carlo Simulations
+
+Monte Carlo simulations are used to model the uncertainty and variability of mutual fund
+benchmark-adjusted returns under different scenarios. This technique involves generating
+random samples from the distribution of benchmark-adjusted returns and simulating possible
+outcomes. By running a large number of simulations, for this instance, 1000, it allows for
+estimating the range of possible outcomes and assesses the risk and return profiles under
+various conditions.
+
+In this study, the Monte Carlo simulation is employed to evaluate the robustness of the
+regression models and to examine how variations in AUM may influence
+benchmark-adjusted returns under different market conditions. The process involves several
+steps: sampling, simulation, repetition, and analysis. For the Monte Carlo analysis, data from
+Tzu (2018), which spans 20 years, was readily available, as explained by the data extraction
+in the Data Description, and used for the simulation. A total of 1,000 iterations were
+conducted to assess the potential impact of changes in AUM on benchmark-adjusted returns.
+
+Randomly sampled data points were drawn from the distribution of historical AUM and
+benchmark-adjusted return values. The regression coefficients derived from the OLS models
+were then applied to each set of sampled data, generating simulated return outcomes. This
+process was repeated for 1,000 iterations to simulate a wide range of possible returns. The
+results of these iterations were aggregated to create a distribution of simulated returns. From
+this distribution, key statistics such as the mean and standard deviation were calculated to
+estimate the potential range of outcomes and understand the variability in returns across
+different market conditions. Additionally, histograms were used to visualize the distribution
+of simulated returns, providing insight into the spread and frequency of potential outcomes,
+and the mean and standard deviation for each histogram were calculated to receive accurate
+results regarding the histogram data.
+
+To test the robustness of the Monte Carlo simulation, we repeated all of the previous steps to
+ensure the results remained accurate when not applying column means, which had been
+continuously used up until that point and was continuously used after the robustness test.
+
+The Monte Carlo simulations provide insights into the potential risk and return profiles of
+mutual funds under varying market conditions, especially during periods of heightened
+market volatility. This approach helps to quantify the uncertainty in the relationship between
+AUM and fund performance and allows for a better understanding of how these variables
+interact in the face of market disruptions such as the COVID-19 pandemic and the
+Russo-Ukrainian wars market impact.
+1.2.4.2 Multivariable Regression Analysis
+
+Regression model 12: The model examines the relationship between average
+benchmark-adjusted gross returns on the three variables, average AUM, average expense
+ratio and average turnover ratio for the period 2019-2023. The corresponding code
+implementation is:
+
+Regression12 <- lm(AVGBenchmarkAdjustedGrossReturn ~ AverageAllAUM + AverageALLExpenseRatio +
+                                   AverageALLTurnoverRatio)
+                                     summary(Regression12)
+
+Mathematically, the model can be expressed as:
+
+        AVGBenchmarkAdjustedGrossReturn=β0+ AverageAllAUM + AverageALLExpenseRatio +
+         AverageALLTurnoverRatio +ϵi (12)
+
+Regression model 13: The model examines the relationship between average
+benchmark-adjusted net returns on the three variables, average AUM, average expense ratio
+and average turnover ratio for the period 2019-2023. The corresponding code implementation
+is:
+
+ Regression13 <- lm(AVGBenchmarkAdjustedNetReturn ~ AverageAllAUM + AverageALLExpenseRatio +
+                                   AverageALLTurnoverRatio)
+                                     summary(Regression13)
+
+Mathematically, the model can be expressed as:
+
+          AVGBenchmarkAdjustedNetReturn=β0+ AverageAllAUM + AverageALLExpenseRatio +
+            AverageALLTurnoverRatio +ϵi (13)
+
+1.2.4.4 Model Evaluation
+
+The models were evaluated using several statistical measures. The R-squared values provide
+insight into how well the independent variable accounts for the dependent variables. The
+coefficients reflect the strength and direction of the relationship between the dependent and
+the independent variable, with t-values showing the significance of these coefficients.
+P-values below 0.05 suggest a statistically significant relationship between the independent
+and dependent variables. These metrics collectively demonstrate the degree to which the
+independent variable influences the dependent variable.
+2. Results
+
+Figure 1: OLS Regression of Average Benchmark-adjusted Gross Return vs. Average AUM (2019–2023)
+The figure illustrates the relationship between the Average Benchmark-adjusted Gross Return and the logarithmic Average
+AUM (in billions) from January 2019 to December 2023. The regression analysis underlying the plot is detailed in the
+Appendix (Figure 18), where the R output shows that the relationship is not statistically significant (p = 0.4345), with a
+negative near-zero coefficient for Average AUM, indicating no strong linear correlation. The OLS equation corresponding to
+this scatterplot is equation (1).
+
+Figure 2: OLS Regression of Average Benchmark-adjusted Net Return vs. Average AUM (2019–2023)
+The figure illustrates the relationship between the Average Benchmark-adjusted Net Return and the logarithmic Average
+AUM (in billions) from January 2019 to December 2023. The regression analysis underlying the plot is detailed in the
+Appendix (Figure 19), where the R output shows that the relationship is not statistically significant (p = 0.8821) with a
+negative near-zero coefficient for Average AUM, indicating no strong linear correlation. The OLS equation corresponding to
+this scatterplot is equation (2).
+Figure 3: OLS Regression of Average Benchmark-adjusted Gross Return vs. Average AUM (1995–2014)
+The figure illustrates the relationship between the Average Benchmark-adjusted Gross Return and the logarithmic Average
+AUM (in billions) from January 1995 to December 2014. The regression analysis underlying the plot is detailed in the
+Appendix (Figure 20), where the R output shows that the relationship is not statistically significant (p = 0.7002) with a
+positive near-zero coefficient for Average AUM, indicating no strong linear correlation. The OLS equation corresponding to
+this scatterplot is equation (3).
+
+Figure 4: OLS Regression of Average Benchmark-adjusted Net Return vs. Average AUM (1995–2014)
+The figure illustrates the relationship between the Average Benchmark-adjusted Net Return and the logarithmic Average
+AUM (in billions) from January 1995 to December 2014. The regression analysis underlying the plot is detailed in the
+Appendix (Figure 21), where the R output shows that the relationship is not statistically significant (p = 0.7209) with a
+negative near-zero coefficient for Average AUM, indicating no strong linear correlation. The OLS equation corresponding to
+this scatterplot is equation (4).
+
+Figure 5: OLS Regression of Average Benchmark-adjusted Gross Return vs. Average AUM (2006–2010)
+The figure illustrates the relationship between the Average Benchmark-adjusted Gross Return and the logarithmic Average
+AUM (in billions) from January 2006 to December 2010. The regression analysis underlying the plot is detailed in the
+Appendix (Figure 22), where the R output shows that the relationship is not statistically significant (p = 0.7625) with a
+positive near-zero coefficient for Average AUM, indicating no strong linear correlation. The OLS equation corresponding to
+this scatterplot is equation (5).
+Figure 6: OLS Regression of Average Benchmark-adjusted Net Return vs. Average AUM (2006–2010)
+The figure illustrates the relationship between the Average Benchmark-adjusted Net Return and the logarithmic Average
+AUM (in billions) from January 2006 to December 2010. The regression analysis underlying the plot is detailed in the
+Appendix (Figure 23), where the R output shows that the relationship is not statistically significant (p = 0.4343), with a
+positive near-zero coefficient for Average AUM, indicating no strong linear correlation. The OLS equation corresponding to
+this scatterplot is equation (6).
+
+Figure 7: A histogram for the distribution of Average AUM (Including Column Mean)
+This histogram shows the distribution of average AUM values across 1,000 Monte Carlo iterations, with the red dashed line
+indicating the original average AUM (Original Avg AUM = Calculated Value). The comparison highlights whether the
+observed AUM falls within a typical range of the simulated outcomes or if it deviates significantly. The distribution is
+approximately symmetric, centered around the observed average AUM ( ≈ 1.1709*10^9) . This alignment of the observed
+value with the center of the simulated distribution suggests that the original average AUM is typical and consistent with what
+is expected under random sampling of 5-year periods. This simulation takes into consideration column means imputation.
+Figure 8: A histogram for the distribution of Average Gross Returns (Including Column Mean)
+This histogram illustrates the distribution of simulated average benchmark-adjusted gross returns across 1,000 Monte Carlo
+iterations based on randomly sampled 5-year periods from the dataset. The blue dashed line marks the observed average
+benchmark-adjusted gross return from the original data ( ≈ 0.0530). The distribution is centered around a value close to the
+observed average, suggesting that the original benchmark-adjusted gross return is typical within the simulated context. The
+range of simulated values indicates variability in benchmark-adjusted gross returns due to differences in sampled periods,
+and the alignment of the observed average with the peak of the distribution reinforces its consistency with the underlying
+data. Outliers or deviations in the tails highlight less likely scenarios. This simulation takes into consideration the column
+means imputation.
+
+Figure 9: A histogram for the distribution of Average Net Returns (Including Column Mean)
+This histogram shows the distribution of simulated average benchmark-adjusted net returns across 1,000 Monte Carlo
+iterations derived from randomly sampled 5-year periods. The purple dashed line represents the observed average
+benchmark-adjusted net return (≈ 0.02788) from the original data. The distribution appears symmetric and is centered around
+a value close to the observed average, indicating that the original benchmark-adjusted net return is typical within the context
+of the simulated scenarios. The spread of the histogram reflects the variability in benchmark-adjusted net returns due to
+different combinations of sampled periods, with the observed average aligning closely with the peak of the simulated
+distribution, suggesting consistency with the underlying data. Outliers on the tails highlight less frequent outcomes. This
+simulation takes into consideration column means imputation.
+Figure 10: A histogram for the distribution of Average AUM (Excluding Column Mean)
+This histogram shows the distribution of average AUM values across 1,000 Monte Carlo iterations, with the red dashed line
+indicating the original average AUM (Original Avg AUM = Calculated Value). The comparison highlights whether the
+observed AUM falls within a typical range of the simulated outcomes or if it deviates significantly. The distribution is
+approximately symmetric, centered around the observed average AUM ( ≈ 1.1719 * 10^9) . This alignment of the observed
+value with the center of the simulated distribution suggests that the original average AUM is typical and consistent with what
+is expected under random sampling of 5-year periods. This simulation does not take into consideration column means
+imputation.
+
+Figure 11: A histogram for the distribution of Average Gross Returns (Excluding Column Mean)
+This histogram illustrates the distribution of simulated average benchmark-adjusted gross returns across 1,000 Monte Carlo
+iterations based on randomly sampled 5-year periods from the dataset. The blue dashed line marks the observed average
+benchmark-adjusted gross return from the original data ( ≈ 0.0529). The distribution is centered around a value close to the
+observed average, suggesting that the original benchmark-adjusted gross return is typical within the simulated context. The
+range of simulated values indicates variability in benchmark-adjusted gross returns due to differences in sampled periods,
+and the alignment of the observed average with the peak of the distribution reinforces its consistency with the underlying
+data. Outliers or deviations in the tails highlight less likely scenarios. This simulation does not take into consideration the
+column means imputation.
+Figure 12: A histogram for the distribution of Average Net Returns (Excluding Column Mean)
+This histogram shows the distribution of simulated average benchmark-adjusted net returns across 1,000 Monte Carlo
+iterations derived from randomly sampled 5-year periods. The purple dashed line represents the observed average
+benchmark-adjusted net return (≈ 0.02796) from the original data. The distribution appears symmetric and is centered around
+a value close to the observed average, indicating that the original benchmark-adjusted net return is typical within the context
+of the simulated scenarios. The spread of the histogram reflects the variability in benchmark-adjusted net returns due to
+different combinations of sampled periods, with the observed average aligning closely with the peak of the simulated
+distribution, suggesting consistency with the underlying data. Outliers on the tails highlight less frequent outcomes. This
+simulation does not take into consideration column means imputation.
+
+Figure 13: OLS Regression of Average Benchmark-adjusted Gross Return vs. Average Expense Ratio (2019–2023)
+The figure illustrates the relationship between the Average Benchmark-adjusted Gross Return and the logarithmic average
+expense ratio from January 2019 to December 2023. The regression analysis underlying the plot is detailed in the Appendix
+(Figure 24), where the R output shows that the relationship is near statistically significant (p = 0.09385) with a positive
+coefficient (0.104801) for Benchmark-Adjusted gross return, indicating near strong linear correlation. The OLS equation
+corresponding to this scatterplot is equation (7).
+Figure 14: OLS Regression of Average Benchmark-adjusted NetReturn vs. Average Expense Ratio (2019–2023)
+The figure illustrates the relationship between the Average Benchmark-adjusted Net Return and the logarithmic average
+expense ratio from January 2019 to December 2023. The regression analysis underlying the plot is detailed in the Appendix
+(Figure 25), where the R output shows that the relationship is not statistically significant (p = 0.9011) with a positive
+coefficient (0.007763) for Benchmark-Adjusted net return, indicating no strong linear correlation. The OLS equation
+corresponding to this scatterplot is equation (8).
+
+Figure 15: OLS Regression of Average Benchmark-adjusted Gross Return vs. Average Turnover Ratio (2019–2023)
+The figure illustrates the relationship between the Average Benchmark-adjusted Gross Return and the
+logarithmic average turnover ratio from January 2019 to December 2023. The regression analysis underlying the
+plot is detailed in the Appendix (Figure 26), where the R output shows that the relationship is statistically
+significant (p = 1.383*10^-7) with a negative coefficient (-4.689*10^-4) for Benchmark-Adjusted gross return,
+indicating strong linear correlation. The OLS equation corresponding to this scatterplot is equation (9).
+Figure 16: OLS Regression of Average Benchmark-adjusted Net Return vs. Average Expense Ratio (2019–2023)
+The figure illustrates the relationship between the Average Benchmark-adjusted net Return and the logarithmic
+average turnover ratio from January 2019 to December 2023. The regression analysis underlying the plot is
+detailed in the Appendix (Figure 27), where the R output shows that the relationship is statistically significant (p
+= 1.887*10^-10)) with a positive coefficient (0.02393) for Benchmark-Adjusted net return, indicating strong
+linear correlation. The OLS equation corresponding to this scatterplot is equation (10).
+
+Figure 17: OLS Regression of Average Turnover Ratio vs. Average AUM (2019–2023)
+The figure illustrates the relationship between the Average turnover ratio and the logarithmic average AUM
+from January 2019 to December 2023. The regression analysis underlying the plot is detailed in the Appendix
+(Figure 28), where the R output shows that the relationship is statistically significant (p = 0.03011)) with a
+negative coefficient (-0.17783) for Benchmark-Adjusted net return, indicating strong linear correlation. The
+OLS equation corresponding to this scatterplot is equation (11).
+
+Table 1: Regression Coefficients for benchmark-adjusted gross return and three independent variables
+This table presents the results of the Multilinear regression used to analyze the relationship between
+benchmark-adjusted gross returns (AVGBenchmarkAdjustedGrossReturn) and three independent variables: fund
+size (AverageAllAUM), cost structure (AverageALLExpenseRatio), and trading activity
+(AverageAllTurnoverRatio). The OLS equation corresponding to this scatterplot is equation (12) and the
+regression analysis underlying the plot is detailed in the Appendix (Figure 29).
+Table 2: Regression Coefficients for benchmark-adjusted Net return and three independent variables
+This table presents the results of the Multilinear regression used to analyze the relationship between
+benchmark-adjusted net returns (AVGBenchmarkAdjustedNetReturn) and three independent variables: fund size
+(AverageAllAUM), cost structure (AverageALLExpenseRatio), and trading activity (AverageAllTurnoverRatio).
+The OLS equation corresponding to this scatterplot is equation (13) and the regression analysis underlying the
+plot is detailed in the Appendix (Figure 30).
+
+3. Literature Review
+Previous studies have conducted returns to scale analyses and consistently concluded that
+U.S. equity mutual funds exhibit decreasing returns to scale. However, these analyses are
+typically conducted over extended investment horizons, often spanning around 10–20 years,
+which frames them as longer-term periods capturing average performance and volatility over
+relatively stable market periods. This long-term approach provides valuable insights but may
+overlook how returns to scale behave during shorter, more volatile periods, such as the 2008
+financial crisis or the COVID-19 pandemic.
+
+This paper primarily builds on Zhu (2018), who examined U.S. equity mutual funds from
+January 1995 to December 2014. Zhu finds evidence for mutual funds to experience
+decreasing returns to scale on an individual fund level. Zhu performs testing on fund size
+using OLS regressions, a fixed-effects model, as well as two econometric models from Berk
+and Van Binsbergen (2015). To further extend the analysis, Zhu finds that fund managers
+decrease performance as fund size increases due to suboptimal behavior from managing more
+than optimal capital. Zhu attributes this suboptimal behavior to be a major source of the
+difference between optimal and actual fund performance. However, Zhu does not address the
+question if there exist other variables than value-added, that would indicate how and if a fund
+changes behavior as size differs.
+
+Elton et al. (2012) argue that there are no, or insignificant, diseconomies of scale as fund size
+increases. They perform their testing on a sample of mutual funds during 1999-2009 and they
+perform testing on fund size by modeling an estimated predicted alpha and comparing the
+predicted alpha with actual alpha. The results are driven by the fact that if funds returns
+would decrease with size, then it would not be possible to predict future returns. Furthermore,
+they perform testing on expense ratios and find that as funds grow in size and/or perform
+better, they decrease expense ratios and management fees. Meanwhile, as funds decrease in
+size and/or perform worse, they increase their expense ratios and management fees. The
+addition of performing a similar analysis on expense ratio and turnover during a more volatile
+period, which this paper intends to do, will shed more light on how funds behave as size
+differs and when markets become unstable.
+
+This thesis extends the literature by examining the relationship between fund size and returns
+during volatile periods, with a particular focus on expense ratios and turnover. By addressing
+these gaps, this study aims to provide a more nuanced understanding of mutual fund behavior
+under varying market conditions, challenging and complementing existing findings on returns
+to scale.
+4. Data description
+The dataset, imported from Morningstar Direct, consists of 6,855 records of U.S.-equity
+mutual funds share classes over a 5-year period from January 2019 to December 2023. This
+time reflects an initially stable period, later on experiencing high rates of volatility due to the
+COVID-19 pandemic, among other events, that offers insights into how funds have
+performed through various market conditions. By including only actively managed domestic
+equity funds in the U.S. market, the dataset allows us to assess the relationship of AUM to
+performance metrics in a controlled environment, avoiding the noise that could arise from
+including passive funds or funds with international exposures. An essential feature of our
+dataset is the inclusion of both live (currently active) and dead (inactive) funds. This
+inclusion mitigates survivorship bias, a common issue in financial studies where only
+currently active funds are analyzed, thereby omitting funds that may have closed due to poor
+performance. By including inactive funds, the dataset provides a more balanced view of the
+mutual fund markets over time, capturing the entire landscape of funds available during the
+period. To further refine the analysis, the dataset is restricted to specific Morningstar
+categories, representing various investment styles and holdings. These include Small Value,
+Small Growth, Small Blend, Mid-cap Value, Mid-Cap Growth, Mid-Cap Blend, Large-Value,
+Large growth, and Large Blend. This categorization allows us to explore performance
+nuances across different fund types.
+
+Morningstar Direct is a leading data platform for mutual fund research. It offers
+comprehensive datasets on fund performance, expense ratios, AUM, among others.
+Additionally, its robust analytical tools allow for precise filtering and benchmarking, further
+increasing its reliability. However, missing data exists and is more apparent among older or
+less popular funds, which affects the whole dataset and requires imputation methods that may
+introduce bias. We apply methods to address these biases, as explained in 4.3 Sample
+Inclusion Criteria. In addition, fund classifications might sometimes lack clarity, posing a
+threat for potential inaccuracies.
+
+4.1 Data Refinement
+Once the data was imported into Microsoft Excel, the dataset underwent additional filtering
+to ensure that only actively managed funds were retained. Funds identified by Morningstar as
+“passively managed” were removed, as were any funds with “index” or “enhanced-index” in
+their names. This step was critical in isolating actively managed funds, and aligning the
+dataset with the goal to assess the performance of active management as opposed to passive
+strategies.
+
+4.2 Handling Share Classes and Aggregating Data
+Mutual funds often provide multiple share classes, but treating each share class as a separate
+fund in analysis can lead to misleading results. Share classes represent claims on the same
+underlying assets and typically differ only in their fee structures and target clientele. Apart
+from these differences, they share identical returns before accounting for expenses and loads.
+Therefore, failing to account for this distinction would skew the analysis and produce
+inaccurate findings.
+
+This paper addresses this by grouping these share classes together. Morningstar assigns each
+fund a FundID and a SecID, which we use to aggregate these share classes. Funds with a
+single FundID but multiple SecID totaled 1477 groups and funds with one SecID accounted
+for 576 mutual.
+
+When aggregating returns, turnover ratios, and expense ratios across different share classes,
+an AUM-weighted average is used, calculated across all non-missing values to ensure a
+representative measure of the fund’s performance. To standardize the expense ratio, the
+monthly expense ratio, as reported by Morningstar, is derived by dividing the reported annual
+gross expense ratio by twelve. The turnover ratio is calculated by dividing the minimum of
+the aggregate purchases and sales by the average annual AUM, expressed as a percentage, to
+reflect the fund’s trading activity relative to its size. All returns and expense ratios are
+expressed on a monthly basis, ensuring consistency in temporal measurement across the
+fund’s performance metrics. This approach allows for a comprehensive and accurate
+evaluation of the fund’s financial health and operational efficiency.
+
+4.3 Sample Inclusion Criteria
+In accordance with Zhu (2018), each fund is required to have at least $15 million in net assets
+at some point during the period to be included in the sample. This is to avoid sample selection
+bias. This screening criteria was followed in the new dataset as well. Furthermore, each fund
+was required to have at least two years of data, ensuring a stable panel data structure that
+captures within-fund variation over time. These criteria were chosen as a precaution to avoid
+sample selection bias.
+
+These criteria ensured that only funds with a notable market presence and sufficient data
+points were included, enhancing the reliability of our performance metrics and ensuring our
+results were based on funds of practical relevance to investors.
+
+4.4 Benchmarking
+Morningstar assigns each fund a benchmark portfolio based on its actual holdings, known as
+the “FTSE/Russell Benchmark.” By categorizing funds based on actual asset composition
+rather than reported objectives, this approach reduces cherry-picking bias, as it aligns each
+fund with a realistic benchmark that reflects its actual holdings. Data on the benchmark
+returns were retrieved from Morningstar Direct.
+
+4.6 Performance Measures
+Two key performance measures were created to evaluate fund management effectiveness.
+The first measure is the benchmark-adjusted gross return, which reflects the fund manager’s
+skill in generating returns before fees and expenses and is calculated as the difference
+between a fund’s gross return and the benchmark return, isolating the impact of the
+manager’s decision-making. The second is the benchmark-adjusted net return. This measure
+reflects the actual return investors receive after all fees and expenses. It is calculated as the
+difference between a fund’s net return and its benchmark return and offers a realistic view of
+net returns from the investor’s perspective.
+
+For defining Benchmark-adjusted returns, we denote the return for the i-th fund at time t as Rt
+and the corresponding Morningstar benchmark return as Bit. The benchmark-adjusted returns
+for the i-th fund at time t is:
+                                                        rit = Rit – Bit
+
+For summary statistics, the dataset included monthly figures for gross returns,
+benchmark-adjusted gross returns, net returns, benchmark-adjusted net returns, AUM and
+expense ratios, while the turnover ratio was reported annually. The table includes key
+descriptive statistics, such as the mean, median, standard deviation, and winsorized minimum
+and maximum values for each variable. Each category, except for AUM, is computed in
+percentage. AUM is computed as an absolute value in Dollars.
+
+Table 3: Summary statistics of financial metrics, including the number of observations, mean, standard
+deviation, and percentiles for returns, expense ratios, turnover ratios, and AUM.
+
+A second, similar dataset was retrieved from Morningstar Direct and the aforementioned
+screening processes were applied again. This sample is from Zhu (2018) and features a time
+range from January 1995 to December 2014, used to assess and compare the shorter, more
+volatile market against a longer, more stable market.
+
+5. Empirical Analysis
+
+5.1 Decreasing Returns to Scale
+
+Basing the time frame on a volatile period, specifically 2019–2023, the aim was to assess
+whether the decreasing returns to scale relationship from Zhu’s (2018) and Elton et al. (2012)
+articles persisted even when examining a five-year period characterized by volatility.
+Regarding Figure 1, the OLS regression was plotted with the average AUM for all years
+(coded as the vector AverageAllAUM, the independent variable, scaled by 10^9) and the
+average benchmark-adjusted gross return (coded as AVGBenchmarkAdjustedGrossReturn, the
+dependent variable).
+
+The results of the regression indicated that for every additional unit of AUM (in Billions), the
+AVGBenchmarkAdjustedGrossReturn decreased by -0.0002346, or -2.3464*10^−4. The
+t-value of -0.782 indicates that the coefficient is not significantly different from zero,
+meaning there is no strong evidence of a linear relationship between AUM and
+benchmark-adjusted returns. This interpretation is further reinforced by the p-value of 0.4345,
+which is substantially higher than typical significance thresholds. A p-value this large
+confirms that there is insufficient evidence to reject the null hypothesis (H0: β=0), indicating
+the predictor variable does not significantly explain variation in the dependent variable.
+
+In Figure 2, the Ordinary Least Squares (OLS) regression follows a similar structure to the
+previous analysis but introduces a change: the dependent variable is now the
+benchmark-adjusted net return, coded as AVGBenchmarkAdjustedNetReturn, rather than the
+benchmark-adjusted gross return. The independent variable remains the average AUM, scaled
+by 10^9, allowing for comparability between the two regressions. This shift in focus leads to
+some unexpected and thought-provoking results.
+
+The regression output revealed a coefficient indicating that for every additional unit of 10^9
+AUM, the benchmark-adjusted net return increased by -0.00004444, or -4.444*10^-5.
+Surprisingly, this is a more pronounced effect than observed in the benchmark-adjusted gross
+return regression, where the coefficient was only -2,3464*10^−4. The result appears
+counterintuitive because, in a world of decreasing returns to scale, net returns, which account
+for relatively stable costs such as management fees and trading expenses, are expected to
+decline more significantly compared to benchmark-adjusted gross returns as AUM increases
+due to the added impact of these fees on the already diminishing benchmark-adjusted gross
+returns.
+
+Adding to the complexity, the regression's t-value of -0.148 and p-value of 0.8821 indicate
+that the coefficient for average AUM is not statistically significant. A t-value so close to zero,
+paired with a p-value well above common significance thresholds, provides insufficient
+evidence to reject the null hypothesis that the coefficient is zero. This suggests that the
+observed relationship between AUM and net returns could be attributed to random variation
+rather than a meaningful underlying relationship. Alternatively, it may stem from the
+influence of another factor, such as a mediating variable, that affects both AUM,
+benchmark-adjusted net returns and benchmark-adjusted gross returns, or an omitted
+relationship that has yet to be identified.
+
+The adjusted R^2 value for the model further compounds the unexpected nature of the results.
+At -0.0005835, the adjusted R^2 suggests that the regression model explains less of the
+variation in benchmark-adjusted net returns than a simple average of the dependent variable
+would. Negative adjusted R^2 values are rare and typically indicate that the model is not only
+failing to fit the data but is actively underperforming relative to a baseline model. This raises
+significant concerns about the model's suitability, suggesting that key variables influencing
+benchmark-adjusted net returns may be missing or improperly specified.
+
+Additionally, the use of a sample period of only 5 years could exacerbate these issues, as a
+short time frame increases the likelihood that the observed relationship between AUM and
+benchmark-adjusted net returns or AUM and benchmark-adjusted gross returns is influenced
+by random variation or market dynamics. This limitation strengthens the argument that the
+relationship might not be meaningful but rather driven by unobserved factors, such as a
+mediating variable that impacts both AUM and benchmark-adjusted net returns or an omitted
+variable yet to be identified. Incorporating longer-term data could help establish greater
+clarity, reduce noise, and provide a more robust foundation for the analysis.
+
+Using the same timeframe as in Zhu (2018), allows for a direct evaluation of whether the
+claimed effects are observed when applying the identical regression model over their
+specified timeframe, January 1995 to December 2014. Additionally, this comparison provides
+insight into whether the model produces results consistent with those found in previous
+analyses. Regression outputs for the timeframe spanning January 1995 to December 2014,
+displayed in Figure 20 and Figure 21 in the appendix and as scatterplots in Figures 3 and 4,
+reveal notable differences between the datasets. When comparing the previous regression
+outputs to those based on the article’s dataset, it becomes evident that in the regressions
+aligned with the article’s data, the benchmark-adjusted gross return exhibits a higher value
+than the benchmark-adjusted net return for each additional unit increase in AUM (in billions).
+The unexpected results between the regressions, specifically the higher coefficient for
+benchmark-adjusted net returns compared to benchmark-adjusted gross returns, will be
+referred to as the "discrepancy" from this point onward.
+
+The discrepancy between the regressions is hypothesized to arise from differences in the
+timeframe, as the first two regressions cover a 5-year period (2019–2023), while the two
+subsequent regressions span 20 years (1995–2014). To further investigate this discrepancy,
+the same model was applied to Zhu’s (2018) timeframe but restricted to a 5-year period. The
+years 2006–2010 were selected for analysis, as this period also captures the effects of a
+highly volatile market environment, the financial crisis of 2008.
+
+This analysis aimed to determine whether the difference in output from the 2019–2023 data
+could be attributed to the shorter timeframe, another variable, or some other underlying
+factor.
+
+The output from the 2006-2010 regression revealed that for each additional unit increase in
+AUM (in billions), the benchmark-adjusted gross return increased by a smaller margin
+compared to the benchmark-adjusted net return. This suggests that the discrepancy may
+indeed be influenced by the time frame, as the shorter periods appear to produce outputs
+distinct from those observed in longer timeframes, potentially due to heightened sensitivity to
+fluctuating market conditions or other unobserved factors.
+
+5.2 Monte Carlo
+
+To evaluate whether the observed discrepancy between the regression outputs for different
+time frames can be attributed to the inherent sensitivity of shorter periods to volatile market
+conditions, Monte Carlo Simulations were introduced. The Monte Carlo simulations provided
+a crucial tool for understanding the variability introduced by shorter timeframes. By
+generating 1,000 random iterations on 5-year samples on the dataset from January 1995 -
+December 2014, which was readily available and comparing their average metrics to the
+original dataset, the simulations highlighted the potential for variability in AUM,
+benchmark-adjusted gross returns, and benchmark-adjusted net returns. The hypothesis
+regarding discrepancies in regression outputs between shorter (5-year) and longer (20-year)
+timeframes suggested that fluctuating market conditions and variability inherent in shorter
+periods might explain the observed differences. However, the Monte Carlo simulations
+conducted on average AUM, benchmark-adjusted gross returns, and benchmark-adjusted net
+returns offer new insights.
+
+The simulated distributions for the three metrics revealed relatively narrow ranges centered
+around their respective averages, as highlighted by the histograms in Figures 7, 8 and 9. This
+suggests that variability in shorter timeframes, while present, is not as substantial as
+hypothesized. Instead, the results demonstrate a degree of consistency between the sampled
+5-year averages and the original dataset’s values. This observation challenges the notion that
+random variation during shorter periods significantly skews outputs.
+
+The revised interpretation points toward fluctuating market conditions, other interfering
+variables, or unique events, such as the financial crisis of 2008, as more plausible drivers of
+the discrepancies. These conditions introduce structural shifts in relationships, such as
+between AUM and returns that are less likely to smooth out over shorter intervals. For
+instance, during periods of heightened volatility, fund managers may adjust strategies in
+response to capital flows, causing variations in benchmark-adjusted gross and net returns
+relative to AUM.
+
+The Monte Carlo results highlight the importance of considering market-specific dynamics
+when analyzing short timeframes rather than attributing discrepancies to random variability
+alone. By emphasizing the role of external factors, such as mediating variables or other
+underlying relationships, this approach strengthens the argument that the discrepancies
+observed in the 2019–2023 regression outputs are likely driven by transient market conditions
+rather than inherent variability in shorter time periods. To further validate these findings, we
+will replicate the analysis without using column mean imputation for missing data. This will
+help determine whether the imputation process had any significant impact on the results,
+adding an extra layer of robustness to the analysis.
+
+This relationship, explored through Monte Carlo simulations and regression analyses, offers
+deeper insights into the underlying drivers of variability in the relationship between AUM
+and benchmark-adjusted returns. By synthesizing the results of the simulations with earlier
+regression analyses, a clearer picture emerges regarding the role of timeframe and volatility
+in shaping these discrepancies.
+
+As a robustness check for the previous Monte Carlo simulations, we repeated the analysis
+without applying column mean imputation to the missing data. This allowed us to assess
+whether the imputation had any significant effect on the results. However, the new
+simulations yielded results that were nearly identical to those obtained with the column mean
+imputation, as seen in figures 9, 1,0 and 11. This suggests that the original findings were not
+significantly influenced by the imputation process, reinforcing the accuracy and reliability of
+the results from the initial Monte Carlo analysis. The consistency between both sets of
+simulations supports the conclusion that the findings are robust and that the use of column
+mean imputation did not distort the overall patterns observed. Therefore, the original Monte
+Carlo results are likely to be accurate, and the conclusions drawn from them can be more
+confidently upheld.
+
+5.3 Extended analysis
+
+Following this, an evaluation of the relationship between expense ratios and returns may
+allow for a deeper understanding of the discrepancy. Specifically, an assessment of how the
+benchmark-adjusted gross return and benchmark-adjusted net return are influenced by the
+expense ratio. The expense ratio, a measure of the cost of managing the fund, can have a
+direct impact on returns, and understanding its effect on both benchmark-adjusted gross and
+net returns will provide further insights into the dynamics of fund performance.
+
+An OLS-regression was performed between the expense ratio and the benchmark-adjusted
+returns using AverageALLExpenseRatio as the independent variable, while keeping the
+returns as the dependent variables. This will allow us to determine whether a higher expense
+ratio leads to a more significant reduction in returns, and whether the effect differs between
+benchmark-adjusted gross and net returns.
+
+The regression for benchmark-adjusted gross returns yielded a coefficient of 0.104801,
+accompanied by a p-value of 0.09385. The positive coefficient suggests that for each unit
+increase in the expense ratio, the benchmark-adjusted gross return is expected to increase by
+approximately 0.104801. While this indicates a positive relationship, the statistical
+significance of the result is weak. The p-value of 0.09385 is just below the commonly used
+threshold of 0.1, which implies that while the relationship may be statistically meaningful, it
+is not robust enough to confidently assert a causal effect. In other words, the observed
+positive relationship between the expense ratio and benchmark-adjusted gross returns may be
+due to random variation or external factors not accounted for in the model.
+
+In analyzing the relationship between expense ratio and benchmark-adjusted net return, the
+regression results show that the coefficient for Expense Ratio is 0.007763, with a p-value of
+0.9011. This suggests a weak, positive relationship between the two variables. Specifically,
+for every unit of increase in the expense ratio, the benchmark-adjusted net return is expected
+to increase by 0.007763. However, the very high p-value indicates that this relationship is not
+statistically significant.
+
+These results indicate that the expense ratio has a limited effect on returns, and the weak
+significance calls for further exploration of other factors, such as the turnover ratio. Moving
+on to test turnover ratio could provide more insight into the key drivers of fund performance
+and help strengthen the analysis.
+
+When performing OLS-regressions on the turnover ratio in relation to both
+benchmark-adjusted gross and net return. The regression results revealed a coefficient of
+-4.689e-04 and a p-value of 1.383e-07 for benchmark-adjusted gross return and a coefficient
+of -5.648e-04 and a p-value of 1.887e-10 for benchmark-adjusted net return. These results
+suggest a significant negative relationship between tthe urnover ratio and both types of
+returns, with higher turnover associated with lower returns. The strong statistical significance
+(p-values much smaller than 0.05) indicates that the turnover ratio is a meaningful predictor
+of both benchmark-adjusted gross and net returns.
+
+This could help explain the discrepancy. Turnover likely increases trading costs more for net
+returns than for benchmark-adjusted gross returns, which makes benchmark-adjusted net
+returns more sensitive to factors such as AUM and expense ratios. The higher coefficient for
+benchmark-adjusted net returns suggests that these factors are playing a larger role in the
+determination of net returns than in gross returns, possibly due to the added impact of
+turnover and related costs. Moving forward, two multivariable regression models were used
+to assess how the variables in tandem explain the variation in benchmark-adjusted returns and
+to better understand the role of turnover as a mediating factor in this discrepancy.
+
+In order to explore the relationships between benchmark-adjusted returns, AUM, expense
+ratios, and turnover, we conducted two multivariable regression analyses, one for
+benchmark-adjusted gross returns and another for benchmark-adjusted net returns. The
+findings are displayed in table 1 and 2. These regressions incorporate AUM, expense ratio,
+and turnover ratio as independent variables to assess their impact on the dependent variable,
+benchmark-adjusted returns.
+
+For the benchmark-adjusted gross return regression, it revealed that AUM showed a negative
+coefficient of -0.0002825, with a p-value of 0.3435, indicating that AUM does not have a
+statistically significant relationship with gross returns. This suggests that changes in AUM do
+not significantly affect gross returns when controlling for other variables. The expense ratio
+had a positive coefficient of 0.1420, with a p-value of 0.0232, which is statistically significant
+at the 5% level. This suggests that an increase in the expense ratio is associated with a higher
+gross return, which aligns with expectations that higher costs may correlate with higher risk
+and, thus, higher returns. The turnover ratio displayed a negative coefficient of -0.0004970,
+with a highly significant p-value of 2.95*10^-08. This implies that as turnover increases,
+gross returns decrease, likely due to the higher transaction costs associated with frequent
+trading.
+
+For the benchmark-adjusted net return regression, it revealed that AUM had a negative
+coefficient of -0.0001316, but with a p-value of 0.65754. This relationship was not
+statistically significant. Similar to the gross return regression, AUM does not have a
+meaningful impact on net returns. Regarding the expense ratio, it showed a positive
+coefficient of 0.05329, but with a p-value of 0.39193, the relationship was not statistically
+significant. Unlike the gross return model, the expense ratio did not seem to have a strong
+impact on net returns. Additionally, regarding tthe urnover ratio, it had a negative coefficient
+of -0.0005758, with a highly significant p-value of 1.2*10^-10. This confirms that turnover
+continues to negatively affect net returns, which is expected as higher turnover usually leads
+to higher transaction costs that eat into the net return.
+
+The model for net returns exhibited a slightly higher R-squared value of 0.0245, indicating
+that it explains around 2.5% of the variation in net returns. Although this remains low, the
+significance of Turnover Ratio in this model is striking and underscores its importance as a
+factor affecting net returns more so than other variables.
+
+The results from the gross and net return regressions help illuminate the discrepancy
+observed between these two return types. Despite both models showing a negative
+relationship between turnover and returns, the impact of turnover on net returns is far more
+pronounced and statistically significant. The negative coefficient for turnover in both models
+suggests that turnover reduces both gross and net returns. However, the fact that turnover has
+a stronger and more significant effect on net returns can explain the discrepancy observed
+between gross and net return coefficients.
+
+This could be due to turnover's direct impact on transaction costs, which reduces the net
+returns more than gross returns. Since gross returns are calculated before transaction costs are
+subtracted, the added impact of turnover in the context of net returns may explain why the net
+return regression yields a higher coefficient for Expense Ratio and a much more significant
+result for turnover, suggesting that turnover is a larger factor influencing net returns than
+gross returns.
+
+Finally, testing the relationship between Turnover Ratio and AUM is a crucial next step in
+understanding the discrepancy between the benchmark-adjusted gross and net returns. If
+turnover acts as a mediating variable, it could explain how AUM indirectly impacts returns.
+By testing this relationship, we can determine whether AUM drives turnover and how
+turnover might influence the returns. This will help clarify whether turnover contributes to
+the unexpected discrepancy in the regression results, offering a more comprehensive
+understanding of the dynamics at play between AUM, turnover, and returns.
+
+The test between Turnover Ratio and AUM reveals a statistically significant negative
+relationship, with a coefficient of -0.17783 and a p-value of 0.0301, suggesting that as AUM
+increases, turnover tends to decrease. While this relationship is statistically significant, it is
+relatively weak, as indicated by the low R-squared value of 0.0028, meaning that AUM
+explains only a small portion of the variation in turnover. Nonetheless, the significant p-value
+confirms that the relationship is unlikely to be due to random chance.
+
+This negative relationship could offer some insight into the unexpected discrepancy observed
+in earlier regressions, where net returns appeared to be more sensitive to factors like AUM
+and expense ratios than gross returns. The negative link between turnover and AUM suggests
+that larger AUM may result in less frequent trading, potentially reducing trading costs, which
+could impact net returns differently than gross returns. In particular, the costs associated with
+turnover, such as trading fees and expenses, are more directly reflected in net returns, which
+could explain why net returns were more responsive to AUM and expense ratios.
+
+6. Conclusion
+This thesis set out to explore the relationship between mutual fund size and performance
+during volatile periods, focusing on U.S.-equity actively managed mutual funds from 2019 to
+2023. While prior research often identifies clear trends of decreasing returns to scale over
+longer, stable periods, our analysis during this shorter, turbulent time frame did not yield
+similarly definitive results. Specifically, the findings indicate no significant direct relationship
+between assets under management and benchmark-adjusted returns, diverging from
+long-term studies such as Zhu (2018). One notable outcome, however, is the identification of
+turnover ratio as a critical explanatory variable. Turnover ratio demonstrated a consistent and
+statistically significant negative relationship with both benchmark-adjusted gross and net
+returns. This suggests that higher turnover, likely associated with increased trading costs,
+diminishes fund performance, particularly net returns. Additionally, the analysis revealed a
+statistically significant, albeit weak, negative relationship between turnover ratio and fund
+size, indicating that larger funds tend to trade less actively. Despite these findings, it is
+important to note that the R² values remain low across these regression models, suggesting
+limited explanatory power of these variables. Nevertheless, it is important to recognize the
+limitations of turnover ratio as a standalone explanatory variable. While it provides insight
+into how funds behave during volatile periods, it does not fully account for the observed
+variability in returns. Other factors, including broader market conditions, fund management
+strategies, and external shocks, may also play significant roles but were beyond the scope of
+this study.
+
+Ultimately, this thesis highlights the complexity of mutual fund performance during volatile
+periods and raises questions for further research. The findings suggest that turnover ratio
+warrants closer examination as part of a broader framework of explanatory variables, but it
+remains insufficient on its own to draw robust conclusions about fund performance. Future
+studies may benefit from incorporating additional fund-specific and market-level variables to
+develop a more comprehensive understanding of mutual fund dynamics during market
+instability. By focusing on a short-term, volatile period, this thesis contributes to the literature
+by exploring mutual fund performance in a context that remains under-researched. While the
+results do not provide definitive conclusions, they challenge assumptions about constant
+returns to scale and emphasize the need to consider the role of fund-specific variables,
+particularly turnover, during periods of market disruption. For fund managers, the findings
+suggest that reducing trading activity in volatile markets could help mitigate performance
+losses. For researchers, this study underscores the importance of investigating performance
+over varying timeframes and contexts, paving the way for more nuanced analyses of mutual
+fund behavior. This thesis underscores the importance of continued research into the intricate
+relationship between fund-specific variables and market conditions. The turnover ratio stands
+out as a significant factor influencing fund performance, yet the findings also highlight the
+complexity of navigating fund performance during periods of market turbulence. By
+contributing valuable insights into mutual fund behavior under stress, this study provides a
+solid foundation for future research aimed at equipping investors and fund managers with
+strategies to navigate the growing uncertainty in financial markets.
+7. Definitions of Variables
+
+The following definitions outline the key variables used in the statistical models and analysis:
+
+AverageALLExpenseRatio: The average expense ratio for all funds in the dataset.
+
+AverageAllAUM: The average of all assets under management (AUM) across the dataset for
+the period January 2019 - December 2023. This represents the mean value of the total assets
+managed by all funds in the dataset.
+
+AverageAllAUMBaseArticle: The average assets under management (AUM) for Zhu’s
+(2018) article’s dataset. More specifically, the subset of the dataset is the years 2006-2010.
+
+AverageAllAUMBaseArticleFullData: The average assets under management (AUM) for all
+funds across the full dataset of Zhu’s article.
+
+AverageAllTurnoverRatio: The average turnover ratio for all funds, indicating how frequently
+portfolio assets are traded, averaged across all funds in the dataset.
+
+AVGBenchmarkAdjustedGrossReturn: The average gross return of funds, adjusted for
+performance relative to a benchmark index. This measures the funds' raw returns before
+expenses or fees are deducted and benchmarked against a comparable index.
+
+AVGBenchmarkAdjustedGrossReturnBaseArticle: The average gross return of funds,
+adjusted for performance relative to a benchmark index for Zhu’s article’s subset of years
+2006-2010 of her time frame.
+
+AVGBenchmarkAdjustedGrossReturnBaseArticleFullData: The average gross return of
+funds, adjusted for performance relative to a benchmark index for Zhu’s article’s full set of
+data.
+
+AVGBenchmarkAdjustedNetReturn: The average net return of funds, adjusted for
+performance relative to a benchmark index. This captures the funds' returns after expenses
+and fees have been deducted, providing a more realistic view of investor returns.
+
+AVGBenchmarkAdjustedNetReturnBaseArticle: The average net returns of funds for Zhu’s
+article’s dataset. More specifically, the subset of the dataset that is the years 2006-2010,
+adjusted for performance relative to a benchmark index.
+
+AVGBenchmarkAdjustedNetReturnBaseArticleFullData: The average net return of funds,
+adjusted for performance relative to a benchmark index for Zhu’s article’s full set of data.
+8. References
+Boungou, Whelsy and Yaité, Alhonita, 2022, “The impact of the Ukraine-Russia war on
+world stock market returns”, Economic letters, v.215.
+https://www.sciencedirect.com/science/article/pii/S0165176522001355
+
+Dayong Zhang, Min Hu, Qiang J, 2020, “Financial markets under the global pandemic of
+COVID-19”. Finance Research Letters, v.36
+https://www.sciencedirect.com/science/article/pii/S1544612320304050
+
+Elton J. Edwin, Gruber J. Martin, Blake R. Christopher, 2012, “Does Mutual Fund Size
+Matter? The Relationship Between Size and Performance”, The Review of Asset Pricing
+Studies, v.2, p-31-55
+https://academic.oup.com/raps/article/2/1/31/1562725?login=true
+
+Jonathan B. Berk, Jules H. van Binsbergen, 2015, “Measuring skill in the mutual fund
+industry”. Journal of financial economics, v.118, 1-20
+https://www.sciencedirect.com/science/article/pii/S0304405X15000628
+
+Pástor Lubos, Stambaugh Robert F., Taylor Lucian A., 2015, “Scale and skill in active
+management”. Journal of financial economics, v.116, 23-45
+https://www.sciencedirect.com/science/article/pii/S0304405X14002542
+
+Yan Xuemin, 2008, “Liquidity, Investment Style, and the relation between Fund Size and
+Fund Performance”. Journal of Financial and Quantitative Analysis, v. 43, 741-767
+https://www.jstor.org/stable/27647369
+
+Zhu Min, 2018, “Informative fund size, managerial skill, and investor rationality”. Journal of
+financial economics, v.130, 114-134
+https://www.sciencedirect.com/science/article/pii/S0304405X18301508#sec0003
+
+Websites
+ICI, 2024. Share of households owning mutual funds in the United States from 1980 to 2023.
+In Statista, retrieved November 29, 2024
+https://www.statista.com/statistics/246224/mutual-funds-owned-by-american-households/
+
+ICI, 2024, Mutual Funds worldwide - statistics and facts. In Statista, retrieved November 29,
+2024
+https://www.statista.com/topics/1441/mutual-funds/#topicOverview
+9. Appendix
+
+Figure 18: OLS-Regression Output One
+An OLS-regression output for the relationship between AVGBenchmarkAdjustedGrossReturn and AverageAllAUM (in
+Billions) for the period January 2019 - December 2023.
+
+Figure 19: OLS-Regression Output Two
+An OLS-regression output for the relationship between AVGBenchmarkAdjustedNetReturn and AverageAllAUM (in
+Billions) for the period January 2019 - December 2023.
+
+Figure 20: OLS-Regression Output Three
+An OLS-regression output for the relationship between AVGBenchmarkAdjustedGrossReturnBaseArticleFullData and
+AverageAllAUMBaseArticleFullData (in Billions) for the period January 1995- December 2014.
+Figure 21: OLS-Regression Output Four
+An OLS-regression output for the relationship between AVGBenchmarkAdjustedNetReturnBaseArticleFullData and
+AverageAllAUMBaseArticleFullData (in Billions) for the period January 1995- December 2014.
+
+Figure 22: OLS-Regression Output Five
+An OLS-regression output for the relationship between AVGBenchmarkAdjustedGrossReturnBaseArticle and
+AverageAllAUMBaseArticle (in Billions) for the period January 2006 - December 2010.
+
+Figure 23: OLS-Regression Output Six
+An OLS-regression output for the relationship between AVGBenchmarkAdjustedNetReturnBaseArticle and
+AverageAllAUMBaseArticle (in Billions) for the period January 2006 - December 2010.
+Figure 24: OLS-Regression Output Seven
+An OLS-regression output for the relationship between AVGBenchmarkAdjustedGrossReturn and
+AverageALLExpenseRatio for the period January 2019 - December 2023.
+
+Figure 25: OLS-Regression Output Eight
+An OLS-regression output for the relationship between AVGBenchmarkAdjustedNetReturn and AverageALLExpenseRatio
+for the period January 2019 - December 2023.
+
+Figure 26: OLS-Regression Output Nine
+An OLS-regression output for the relationship between AVGBenchmarkAdjustedGrossReturn and AverageAllTurnoverRatio
+for the period January 2019 - December 2023.
+Figure 27: OLS-Regression Output Ten
+An OLS-regression output for the relationship between AVGBenchmarkAdjustedNetReturn and AverageAllTurnoverRatio
+for the period January 2019 - December 2023.
+
+Figure 28: OLS-Regression Output Thirteen
+An OLS-regression output for the relationship between AverageAllTurnoverRatio and AverageAllAUM for the period
+January 2019 - December 2023.
+
+Figure 29: OLS-Regression Output Eleven
+An OLS-regression output for the relationship between AVGBenchmarkAdjustedGrossReturn, AverageAllAUM,
+AverageALLExpenseRatio and AverageAllTurnoverRatio for the period January 2019 - December 2023.
+Figure 30: OLS-Regression Output Twelve
+An OLS-regression output for the relationship between AVGBenchmarkAdjustedNetReturn, AverageAllAUM,
+AverageALLExpenseRatio and AverageAllTurnoverRatio for the period January 2019 - December 2023.
+
+10. AI-disclosure
+    - AI spelling and grammar assistance
+Artificial Intelligence (AI) was used to assist the writers of this thesis with spelling and
+grammar. This precaution was taken to enhance the paper's quality by making it more
+adaptable to the reader.
+    - AI programming assistance
+AI was further used to assist the authors with programming. The programming was
+performed in R, which sometimes requires extensive knowledge of coding language and
+packages, among other things. Hence, AI was used to assist the authors in producing the
+correct code when facing a roadblock, which, in turn, generated the correct output.

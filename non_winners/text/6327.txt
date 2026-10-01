@@ -1,0 +1,1165 @@
+APPLICATION OF CATBOOST FOR
+CREDIT RATING PREDICTION
+
+HUGO BRUNLID
+
+Bachelor Thesis
+
+Stockholm School of Economics
+
+2025
+Application of CatBoost  for Credit Rating Prediction
+
+Abstract:
+
+   Deep learning models have recently emerged as a promising approach to financial
+  distress prediction. In particular, the CatBoost model—a gradient boosting algorithm
+  optimized for categorical data—has shown promising results. This report evaluates
+   the effectiveness of CatBoost in predicting active S&P credit ratings using financial
+   data for public and private companies. SHAP (SHapley Additive exPlanations) is
+   used to improve model interpretability and analyze feature importance, and SMOTE
+   (Synthetic Minority  Over-Sampling Technique) is explored to address class
+   imbalance. Results show that the model performs well, with most misclassifications
+   occurring within one or two adjacent rating categories. Key predictors include
+   categorical variables like sector and country, as well as financial ratios like net
+   margin, return on equity, interest coverage ratio and debt-to-assets. Additionally,
+   these findings offer some insight into the otherwise proprietary credit rating
+   methodologies employed by rating agencies.
+
+Keywords:
+
+   Credit Rating, Distress Prediction, Financial Ratios, Deep Learning, CatBoost,
+  Feature Importance, SMOTE, SHAP
+
+Authors:
+
+   Hugo Brunlid  (25719)
+
+Tutors:
+
+   Ran Guo,  Assistant  Professor,  Stockholm Business School
+
+Examiner:
+
+   Ramin Baghai,  Professor, Department of  Finance
+
+Bachelor Thesis
+Bachelor Program in  Business and Economics
+Stockholm School of Economics
+© Hugo Brunlid, 2025
+
+                                   1
+Table of Contents
+
+1 Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 1
+
+2 Literature Review . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2
+   2.1 Credit Ratings . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2
+   2.2 Financial Models . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+   2.3 Deep Learning Models . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+   2.4 Decision Trees . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+   2.5 Gradient Boosting . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+   2.6 CatBoost . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+
+3 Method . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+   3.1 Data Collection . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+   3.2 Feature Selection . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9
+   3.3 Model Development . . . . . . . . . . . . . . . . . . . . . . . . . . . . 10
+   3.4 Model Evaluation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 11
+
+4 Results . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12
+   4.1 Data . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12
+   4.2 CatBoost . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 14
+   4.3 CatBoost & SMOTE . . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
+   4.4 SHAP . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 18
+
+5 Discussion . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 23
+   5.1 Future Research . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 23
+   5.2 Practical Applications . . . . . . . . . . . . . . . . . . . . . . . . . . . 24
+
+6 Conclusion . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 25
+
+Appendix . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 26
+   A Distribution of Credit Rating per Sector . . . . . . . . . . . . . . . . . 26
+   B Normalized Ratios per Credit Rating . . . . . . . . . . . . . . . . . . . 26
+
+References . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 27
+
+                                                                  i
+                           Abstract
+Deep learning models have recently emerged as a promising approach to finan-
+cial distress prediction. In particular, the CatBoost model—a gradient boosting
+algorithm optimized for categorical data—has shown promising results. This re-
+port evaluates the effectiveness of CatBoost in predicting active S&P credit rat-
+ings using financial data for public and private companies. SHAP (SHapley Ad-
+ditive exPlanations) is used to improve model interpretability and analyze fea-
+ture importance, and SMOTE (Synthetic Minority Over-Sampling Technique)
+is explored to address class imbalance. Results show that the model performs
+well, with most misclassifications occurring within one or two adjacent rating
+categories. Key predictors include categorical variables like sector and country,
+as well as financial ratios like net margin, return on equity, interest coverage
+ratio and debt-to-assets. Additionally, these findings offer some insight into the
+otherwise proprietary credit rating methodologies employed by rating agencies.
+
+Keywords: S&P Credit Rating, Distress Prediction, Financial Ratios, Deep
+Learning, CatBoost, Feature Importance, SMOTE, SHAP.
+
+                                                         ii
+1 Introduction
+
+Modeling credit risk and financial distress prediction has long been areas of inter-
+est for financial institutions, investors, and rating agencies alike. Financial distress
+is defined as a situation where cash flow is insufficient to cover current obligations
+(Wruck 1990). This can result from a combination of economic, financial, legal, and
+managerial factors, making credit risk evaluation a complicated task. In the seminal
+paper by Altman (1968) a discriminant model is developed using financial indicators
+as predictors of distress, but the increasing complexity of financial markets and the
+growing availability of data necessitates a new modeling approach.
+
+Credit rating agencies like S&P, Moody’s, and Fitch assign credit ratings to large cor-
+porations, financial institutions, and sovereign governments. These ratings are widely
+regarded as reliable indicators of default risk, guiding investors on financial stabil-
+ity and influencing interest rates on debt financing. Predicting financial distress is,
+therefore, a heavily researched topic among financial institutions and investors (Tang
+2009). Both quantitative and qualitative methods are used for bankruptcy prediction,
+but the methodologies employed by credit rating agencies are often proprietary. This
+creates information asymmetry between firms and creditors which further complicates
+the assessment process, often leading to inefficiencies in financial distress prediction
+(Huynh et al. 2020).
+
+Recent studies suggest that deep learning models offer a promising approach to
+bankruptcy prediction by addressing the limitations of traditional models. In par-
+ticular, a class of tree-based ensemble models referred to as gradient boosting models
+have gained attention in financial distress prediction and credit scoring, as it is an ef-
+fective machine learning technique that introduces non-linear interactions, eliminates
+multicollinearity and provides high predictive accuracy (Jabeur et al. 2021). These
+frameworks enhance the reliability of business failure prediction, making them valu-
+able tools for improving transparency of credit ratings.
+
+This paper aims to validate and extend the findings of previous studies on gradient
+boosting algorithms for financial distress prediction by applying CatBoost to predict
+active S&P credit ratings using relevant financial metrics from a dataset of public
+and private companies. Despite many gradient boosting models showing promising
+results, Jabeur et al. (2021) finds that CatBoost in particular exhibits the best perfor-
+mance compared to other models, including discriminant analysis, logistic regression,
+support vector machine, neural networks, random forest, gradient boosting, deep neu-
+ral networks and XGBoost. This motivates the selection of the CatBoost model.
+
+Motivated by the promising results of CatBoost for credit rating prediction in pre-
+vious studies, this report aspires to evaluate the model robustness and usefulness by
+performing multiclass classification on active S&P credit ratings. Furthermore, the
+paper aspires to evaluate the effect of individual financial metrics on credit ratings,
+and by proxy default prediction, by utilizing the feature importance functionality.
+Finally, a complementary purpose is to validate the S&P credit rating process itself
+to see whether a clear distinction can be made based on the financial properties of
+companies with different credit ratings.
+
+                                    1
+As an initial approach, a CatBoost multiclass classification model is developed to pre-
+dict credit ratings based on financial metrics, using a dataset comprising both private
+and public companies. A feature importance analysis is conducted to identify the key
+financial ratios affecting credit ratings and their relevance to financial distress predic-
+tion. To address class imbalance, the Synthetic Minority Over-Sampling Technique
+(SMOTE) is applied. SHapley Additive exPlanations (SHAP) are used to evaluate
+the model and provide deeper insights into the prediction process. Therefore, the
+following research questions are proposed:
+
+   1. Is the CatBoost model able to effectively predict current S&P credit ratings
+      with high accuracy based on underlying financial metrics?
+
+   2. Which financial metrics have the highest predictive value for classification of
+      firms into different S&P credit rating groups?
+
+2 Literature Review
+
+Previous studies on financial distress prediction span from Altman’s seminal Z-score
+model to more recent work by Jabeur et al. (2021), who compared the performance of
+eight machine learning models for bankruptcy classification. To maintain coherency,
+the literature review covers core concepts such as credit rating agencies and financial
+ratios, followed by a discussion on the application of deep learning models.
+
+2.1 Credit Ratings
+Standard & Poors (2022) define credit ratings as independent assessments of an is-
+suer’s ability and willingness to meet its financial obligations, in full and on time.
+They provide investors and financial institutions with insights into the creditworthi-
+ness of corporations, governments, and financial instruments. By offering a standard-
+ized measure of credit risk, credit ratings help facilitate capital market transactions,
+enabling entities to raise funds through debt issuance while allowing investors to as-
+sess risk before purchasing bonds or other fixed-income securities. Unlike investment
+recommendations, credit ratings strictly measure credit quality and do not guarantee
+an issuer’s financial stability.
+
+Credit rating agencies operate under either an issuer-paid model, where issuers pay
+for their ratings, or a subscription model, where investors pay for access (Standard
+& Poors 2022). As a result, credit ratings are typically obtained by well-established
+companies, where the potential reduction in cost of debt outweighs the expense of
+acquiring a rating.
+
+Credit ratings are typically expressed as letter grades, for example from ‘AAA’ to
+‘D’ to communicate the rating institute’s opinion of the relative level of credit risk.
+These differ slightly across rating institutes, but follow the same pattern from prime
+debt to default grade. Bonds issued by governments, banks or companies with high
+credit rating are referred to as investment grade, while debt with lower credit rating
+is referred to as speculative grade or high yield, often issued by emerging market gov-
+ernments or corporations. In the following figure, credit ratings from the three most
+prominent credit rating institutes are shown.
+
+                                    2
+      Figure 1: Credit Rating Comparison adapted from Afonso et al. (2007)
+
+Each rating agency applies its own proprietary methodology to assess creditworthi-
+ness. However, the general approach—outlined in the official ’Guide to Credit Rating
+Essentials’ by Standard & Poors (2022)—can be summarized as follows.
+
+   1. Request and Initial Evaluation
+      Issuers request a rating, and the agency conducts a preliminary assessment.
+
+   2. Information Gathering
+      Review of financial statements, industry conditions, and macroeconomic factors.
+
+   3. Issuer Meetings
+      Analysts meet issuer’s management to discuss financial & strategic aspects.
+
+   4. Analysis and Committee Review
+      A rating committee reviews the findings and votes on the final rating.
+
+   5. Publication and Surveillance
+      The determined credit rating is published, while agencies continue monitoring
+      for potential adjustments.
+
+In their 2024 annual report, S&P presents global corporate default rates per credit
+rating category. This provides clear insight into the relationship between the credit
+risk and default rates for investment-grade and speculative-grade issuers of bonds or
+
+                                    3
+other credit instruments. Of all of defaults reported, 72.0% were rated below ’CCC+’
+when they defaulted, while investment-grade issuers account for just over 0.5% of
+all defaults (Standard & Poors 2024). This motivates why credit ratings serve as a
+good proxy of credit risk, despite limited transparency due to their categorical nature
+and proprietary rating process. Another option is to measure credit risk as estimated
+probability of default, but this metric is not readily available. However, Table 1 shows
+the actual default outcomes per rating category.
+
+       Table 1: Recent Corporate Default Rates per Rating Category (in %)
+
+       Year AAA AA A BBB BB B CCC/C
+           2022 0.00 0.00 0.00 0.00 0.32 1.10 13.84
+           2023 0.00 0.00 0.00 0.11 0.25 1.25 30.89
+           2024 0.00 0.00 0.00 0.05 0.17 1.72 28.36
+
+Between 1981 and 2024, issuers initially rated ’CCC+’ or lower had a 43.2% lifetime
+default rate and defaulted, on average, within 2.0 years. In contrast, those rated ’B’
+had a 21.2% default rate with a longer average time to default of 5.2 years, while ’A’
+rated issuers had a significantly lower default rate of 3.2% and much longer average
+time to default of 14.7 years. Only eight issuers initially rated ’AAA’ defaulted over
+the entire period, averaging 18 years until default (Standard & Poors 2024). Table 2
+contains the average time to default and number of defaults per credit rating.
+
+          Table 2: Default Statistics for Corporate Defaulters (1981-2024)
+
+ Avg. Time to Default AAA AA A BBB BB B CCC/C
+      Original Rating 18.0 17.2 14.7 9.7 7.3 5.2 2.0
+      Revised Rating 27.4 14.9 11.9 8.8 6.3 3.4 0.9
+  Number of Defaults 8 33 102 239 701 1971 502
+
+2.2 Financial Models
+Modeling corporate failure is essential to provide investors with an accurate represen-
+tation of credit risk, potentially representing a significant loss for high for creditors
+and banks in the event of partial or total default. Credit ratings influence issuers’
+credit quality, where downgrades can increase borrowing costs and trigger regulatory
+restrictions. Due to the proprietary nature of the rating process performed by the
+rating institutes, there are few insights into the underlying financial ratios and anal-
+ysis that support the credit rating, despite extensive academic research published on
+the subject of financial distress prediction.
+
+In the original paper by Altman (1968), a total of twenty-two variables are selected
+from the five standard ratio categories: liquidity, profitability, leverage, solvency, and
+activity ratios. The selection is based on (1) popularity in the literature and (2)
+relevancy to the study. After performing a Multiple Discriminant Analysis (MDA)
+analysis, five of the most indicative variables for corporate bankruptcy are included
+in the final model.
+
+            Z = 0.012X1 + 0.014X2 + 0.033X3 + 0.006X4 + 0.999X5
+
+                                    4
+where the variables correspond to
+   • X1 = Working Capital / Total Assets
+   • X2 = Retained Earnings / Total Assets
+   • X3 = Earnings before Interest and Taxes / Total Assets
+   • X4 = Market Value of Equity / Book Value of Total Debt
+   • X5 = Sales / Total Assets
+   • Z = Overall Index
+Empirical results indicate that the model achieves 95% classification accuracy in dis-
+tinguishing between bankrupt and non-bankrupt firms one year before failure. Alt-
+man’s Z-score model remains a cornerstone within bankruptcy prediction.
+
+Ohlson (1980) introduces a probabilistic approach to predicting corporate bankruptcy
+using financial ratios and maximum likelihood estimation of a conditional logit model.
+It estimates the probability of a firm’s failure within one year, identifying key finan-
+cial indicators that significantly contribute to the likelihood of bankruptcy. Results
+indicate that company size, financial structure, performance, and liquidity measures
+are significant predictors. The logistic function employed by the model is defined as
+                                       1
+                        P =
+                                1 + exp(−y)
+
+            T
+where y = β X is a linear combination of financial ratios and firm characteristics.
+Key predictor variables in the model include:
+   • SIZE - Log of total assets adjusted for inflation.
+   • TLTA - Total liabilities / Total assets (leverage measure).
+   • WCTA - Working capital / Total assets (liquidity measure).
+   • CLCA - Current liabilities / Current assets (short-term financial health).
+   • NITA - Net income / Total assets (profitability measure).
+   • FUTL - Funds from operations / Total liabilities.
+   • OENEG - A binary indicator if total liabilities exceed total assets.
+   • INTWO - A binary indicator if net income was negative for the last two years.
+   • CHIN - Change in net income relative to absolute net income over 2 periods.
+The model effectively distinguishes between bankrupt and non-bankrupt firms, with
+an estimated classification accuracy of over 96%. However, the predictive power of
+financial ratios alone may be overstated, suggesting that incorporating market-based
+indicators could further enhance accuracy.
+
+Many studies have been made on corporate bankruptcy preduction, including the
+pioneering discriminant analysis model (Altman 1968) and logistic regression (Ohlson
+1980). Son et al. (2019) criticized these types of statistical models for being con-
+strained in their ability to increase predictive power. This necessitates the use of
+more advanced statistical methods, including deep learning models—a subset of ma-
+chine learning that employs artificial neural networks.
+
+                                    5
+2.3 Deep Learning Models
+Recent literature delves into the application of deep learning models for improving
+predictive accuracy for default risk. In particular, a subclass of models utilizing gradi-
+ent boosting have been shown to be the most effective and interpretable. Zięba et al.
+(2016) were the first to explore this approach, developing a novel bankruptcy predic-
+tion model by leveraging Extreme Gradient Boosting. The model is evaluated on a
+dataset of Polish companies, predicting bankruptcy across different time horizons (1
+to 5 years before failure), demonstrating superior performance to traditional models.
+
+Further studies suggest that XGBoost offers significant advantages in financial dis-
+tress prediction, particularly in handling high-dimensional datasets and identifying
+key risk factors (Jones 2017, Carmona et al. 2019). Unlike traditional parametric
+models, XGBoost accommodates a large number of predictors and ranks them based
+on predictive power, allowing for more comprehensive risk assessment (Jones 2017).
+Additionally, it has been successfully applied in bank failure prediction, where it
+demonstrated superior accuracy in identifying leading indicators of distress, such as
+financial leverage and profitability ratios (Carmona et al. 2019).
+
+Jabeur et al. (2021) highlights the effectiveness of CatBoost, a gradient boosting model
+developed by Prokhorenkova et al. (2019) which improves categorical feature handling,
+reduces overfitting and enhances classification accuracy. The authors propose a novel
+approach using CatBoost to address the classification problem of bankruptcy pre-
+diction based on financial factors. First, the importance of the financial features is
+investigated. Second, the model is benchmarked against eight reference machine learn-
+ing models that are applied and tested using corporate default data from 2014–2016
+from France. The results show that CatBoost had the highest performance out of all
+implemented models.
+
+The authors argue that most previous bankruptcy prediction studies lack interpretabil-
+ity. This supports the case for using CatBoost, as it offers greater transparency com-
+pared to ’black box’ deep learning models. It provides variable importance measures
+and partial dependence plots, offering insight into individual predictions and inter-
+actions between variables. These features make it an adequate choice for enhancing
+interpretability, combined with providing superior classification performance in rela-
+tion to other models.
+
+Coşkun & Turanli (2023) examined credit risk assessment using gradient boosting
+algorithms CatBoost, XGBoost, and LightGBM, leveraging data on Home Credit De-
+fault Risk. Their findings support the robustness of these methods, once again with
+CatBoost outperforming other gradient boosting models when incorporating credit-
+ing tendency. Furthermore, a recent study by Akinjole et al. (2024) highlights the
+importance of addressing data imbalance in credit default risk modeling using a re-
+sampling method, Synthetic Minority Over-Sampling Technique (SMOTE), for data
+augmentation in conjunction with XGBoost to enhance classification results.
+
+2.4 Decision Trees
+
+                                                        m
+A decision tree is a model built by a recursive partition of the feature space R  into
+disjoint regions (nodes) based on input attributes. These attributes are either binary
+                                                                                      k
+or continuous and are used for splitting the tree into more nodes if the feature x
+exceeds a threshold t, expressed as a = 1{xk >t} Each final region (leaf) is assigned a
+
+                                    6
+value representing either the estimated response y in regression tasks or the predicted
+class label in classification. The decision tree function h is thus given by
+
+                  XJ
+                              h(x) =    bj 1{x∈Rj }
+                                         j=1
+
+where Rj are the disjoint regions corresponding to the tree’s leaves (Breiman et al.
+1984, Prokhorenkova et al. 2019). For regression, this corresponds to taking the mean
+of the node. In case of classification, the class is selected by most frequent occurrence.
+
+2.5 Gradient Boosting
+Gradient Boosting is a supervised machine learning technique first introduced by
+Friedman (2001) that builds an ensemble of decision trees in a sequential manner
+                                                            n
+to minimize a given loss function. Given a dataset D = {(xi, yi)}i=1, where xi is
+a vector of input features and yi the target values, the model iteratively constructs
+functions Ft(x), refining previous estimations to reduce prediction error (Hancock &
+Khoshgoftaar 2020).
+
+Consider the loss function L(yi, Ft) that takes a target value yi and t:th function
+Ft as input values. In the optimization process, we want to update the function using
+a decision tree ht by finding another function Ft+1(x) = Ft(x) + ht(x) such that we
+minimize the expected value of the loss function.
+
+                           ht(x) = arg min E[L(y, Ft+1)]
+                              h∈H
+This is implemented using the gradient descent scheme, iteratively updating the model
+using the decision tree h(x) that minimizes the estimated mean squared error the loss
+function. Assuming that L(y, Ft(x)) is continuous and differentiable, we approximate
+the decision tree ht as
+                          "            #
+                                                                   2
+                                           ∂L(y, Ft)
+                 ht(x) ≈ arg min E   −         − ht
+                           h∈H           ∂Ft
+
+Considering the entire training set D, we find the estimate of the decision tree as
+follows.                      "                   #
+                  Xn                  2
+                               1            ∂L(yi, Ft(xi))
+            ht(x) ≈ arg min      E   −             − ht(xi)
+                      h∈H   n             ∂Ft(xi)
+                                     i=1
+This approach allows each successive tree to correct errors made by previous ones, it-
+eratively improving prediction accuracy. Popular implementations include XGBoost,
+LightGBM, and CatBoost, each with optimizations tailored for efficiency and accu-
+racy. Based on the findings by Jabeur et al. (2021) and Coşkun & Turanli (2023), we
+limit the scope of this research project to the CatBoost model as it has been shown to
+outperform other similar models in the context of credit scoring and financial distress
+prediction.
+
+2.6 CatBoost
+Categorical Boosting (CatBoost) is an open-source gradient boosting model devel-
+oped by Prokhorenkova et al. (2019). This model has native support for categorical
+features, implements a novel gradient boosting scheme to improve accuracy and offers
+
+                                    7
+hyperparameter optimization. These improvements have been made possible by using
+two key refinements: ordered target statistics and ordered boosting.
+
+CatBoost encodes categorical variables using ordered target statistics, avoiding target
+leakage by ensuring the target value yk of an instance is never used in computing its
+categorical encoding. Given a dataset D, the algorithm assigns a random permutation
+σ and constructs subsets Dk = {x1, x2, . . . , xk−1} for encoding. The encoded value
+for the i:th categorical feature of the k:th sample is computed as
+             P
+                                        1  i   i  · yj + ap
+                           i      xj ∈Dk  {xj =xk }
+                  xˆk =  P
+                                        1  i  i  + a
+                                    xj ∈Dk  {xj =xk }
+
+where p is a prior, and a > 0 prevents division by zero (Prokhorenkova et al. 2019).
+
+Standard gradient boosting suffers from prediction shift, where target encoding affects
+gradient estimates, leading to biased updates. This is mitigated using ordered boost-
+ing, where the same examples in Dk that were used in the categorical encoding are
+used to compute estimates for ht+1. CatBoost builds multiple independent permuta-
+tions σ1, σ2, . . . , σs of D to ensure that residual estimates use only past observations
+in each permutation. This maintains robust gradient estimates
+
+                                   ∂L (y, Ft(x))
+                                      ∂Ft(x)
+
+computed without target leakage (Hancock & Khoshgoftaar 2020). The result is
+a gradient boosting framework that natively handles categorical features and out-
+performs leading gradient boosting models with state-of-the-art results on common
+benchmarks.
+
+3 Method
+
+As outlined in the introduction, the main purpose in this paper is to evaluate whether
+CatBoost is an efficient deep learning framework for predicting S&P credit ratings
+based on underlying financial metrics. Therefore, the methodology is comprised of
+the following main steps to provide a comprehensive evaluation of the research ques-
+tions: (1) data collection, (2) feature selection, (3) model development, and (4) model
+evaluation.
+
+A structured approach is employed to ensure consistency and replicability of results.
+An iterative development process was pursued to enhance interpretability and ro-
+bustness, allowing for necessary adjustments to maintain coherence in addressing the
+research questions. Next, we consider the general outline for data collection and
+developing the model framework.
+
+3.1 Data Collection
+Training and evaluating a deep learning model requires a significant amount of data
+to generate accurate and generalizable results. Therefore, to ensure that a sufficient
+number of companies are present in the dataset, there is no geographical restriction
+imposed. Instead the dataset contains all global companies that currently have an
+active S&P credit rating as of 2024-12-31.
+
+                                    8
+In order to compute the underlying financial metrics to be used in the model, we
+need to impose restrictions to ensure that the dataset contains sufficient information
+on company financials and credit ratings. Setting these delimitations ensures that we
+are able to reliably compare financials across different firms. We utilize the screening
+feature on S&P Capital IQ to select companies based on the following criteria:
+
+            Company on S&P Capital IQ
+                AND Private or Public Company (No Municipalities)
+              AND S&P Credit Rating <= ’AAA’
+               AND S&P Credit Rating <> ’NR’
+               AND Has Current Financials == True
+               AND Cash and Equivalents <> ’NA’
+
+This selection was iteratively developed to comply with aforementioned restrictions
+and ensure completeness. Only private and public firms are included, eliminating any
+municipalities and other governmental bodies to ensure comparability across compa-
+nies. Each company in the selection has an active credit rating, excluding any non-
+rated (NA) companies. Finally, we exclude any companies that have not reported
+their cash and equivalents, used to ensure availability of relevant financial data.
+
+3.2 Feature Selection
+Determining what financial metrics to include in the dataset is heavily dependent on
+availability of underlying financial data for the selected companies. There is a trade-
+off between including as many companies as possible, and computing a wide range of
+financial metrics that may have a predictive value for the S&P credit ratings, and by
+proxy credit default risk. Therefore, a few different metrics from each of the following
+categories are selected, including liquidity, profitability, efficiency and solvency ratios.
+
+This selection is partly inspired by Jabeur et al. (2021), but is complemented with
+other ratios that are qualitatively deemed to have a potential predictive effect on the
+credit rating. After downloading the raw financial data for each of the companies,
+these ratios are computed manually while ensuring data coverage. Selected financial
+ratios and their definitions are presented in Table 3.
+
+In addition to the numerical financial ratios, there are categorical data points in-
+cluded in the dataset. Features such as country, company type, sector and industry
+may have a systematic effect on the S&P credit rating. Financial markets generally
+differentiate between developed and emerging markets, the latter often representing
+high-risk investments with uncertainty about repayment prospects (Galizia & Lund
+2024). Thus, country may therefore be an important property for determining credit
+risk. CatBoost natively supports encoding of categorical features, making the imple-
+mentation process is straight-forward.
+
+In multi-class classification, we need to provide special attention to the target vari-
+able S&P credit rating. In the raw dataset, there are 22 unique categories ranging
+from AAA, AA+, AA, AA- to CCC+, CCC, CCC-, D and SD. Having this many
+categories with few data points in each makes classification difficult, motivating the
+definition of S&P credit rating group which maps these to 10 distinct categories: AAA,
+AA, A, BBB, BB, B, CCC, CC, D and SD. This is used as the target variable.
+
+                                    9
+                Table 3: Comprehensive List of Model Variables with Definitions
+
+Category Variable Definition
+Identifiers Country Company registration country
+              Company Type Private or public company
+               Sector Financials, industrials, healthcare, etc.
+               Industry More specific partitioning of sector
+               S&P Credit Rating Active credit rating
+              S&P Credit Rating Group Aggregated credit rating (target variable)
+Liquidity Current Ratio Current assets / Current liabilities
+               Quick Ratio (Current assets - Inventory) / Current liabilities
+               Cash Ratio Cash and equivalents / Current liabilities
+Solvency Equity Ratio Total equity / Total assets
+               Debt-to-Equity Total debt / Total equity
+               Debt-to-Assets Total debt / Total assets
+               Interest Coverage Ratio EBIE / Interest expenses
+Profitability Gross Margin Gross profit / Total revenue
+              Operating Margin EBITDA / Total revenue
+              Net Margin Net profit / Total revenue
+              Return on Assets EBIE / Total assets
+              Return on Capital Employed EBIE / Capital employed
+               Return on Equity Net profit / Total equity
+Efficiency Asset Turnover Total revenue / Total assets
+              Inventory Turnover COGS / Average inventory
+               Receivables Turnover Revenue / Average receivables
+              Payables Turnover Purchases / Average payables
+
+     3.3 Model Development
+      In the model development stage, the CatBoost framework is imported and imple-
+      mented using Python. Following feature selection and data cleaning, the final dataset
+       is split into training and testing subsets to prevent overfitting and ensure the gener-
+       alizability of results. 90% of the data is used for training, while the remaining 10% is
+      reserved for testing. A CatBoostClassifier is trained to perform multiclass classifica-
+      tion on the S&P credit rating group, capturing non-linear relationships between the
+       input features across the various rating categories.
+
+      Hyperparameter optimization of the learning rate, tree depth and number of iter-
+      ations is performed to identify an adequate model specification with high predictive
+      accuracy and interpretability. Once trained, the CatBoost model is used to predict
+      the testing dataset. Evaluation tools include the feature importance plot, identifying
+      the most influential predictors, and the confusion matrix, which provides a detailed
+       view of classification accuracy across rating groups. Together, these offer valuable in-
+       sights into the model’s strengths, as well as areas where misclassifications may indicate
+       potential limitations or bias in the data.
+
+                                          10
+Performance of multiclass classification models is limited by imbalanced datasets,
+occurring when some classes are significantly underrepresented compared to others.
+This can lead to biased models that favor majority classes, often at the expense of
+correctly identifying minority classes. In this case, companies with low credit ratings
+are severely underrepresented in the dataset, which is particularly problematic as they
+represent the “interesting” outcome of financial distress prediction.
+
+One technique to address this issue is the Synthetic Minority Over-sampling Tech-
+nique (SMOTE). It works by generating synthetic examples of the minority class
+rather than duplicating existing instances. It creates new samples by interpolating
+between existing minority class examples, effectively increasing their representation
+without simply repeating data. When combined with under-sampling of the major-
+ity class, SMOTE can help rebalance the dataset, improving classifier sensitivity to
+underrepresented classes to enhance overall model performance (Chawla et al. 2002).
+
+Missing values ("nan") in the dataset introduces problems when implementing the
+SMOTE algorithm as it requires complete data to interpolate and generate synthetic
+examples of the underrepresented classes. Further problems are created when at-
+tempting to synthetically generate categorical features, e.g. it is tricky to interpolate
+the midpoint between a public and private company, or the average of Sweden, France
+and the US. To remedy these limitations, missing values can be replaced with zeros,
+mean values of each ratio, or mean values within each credit rating group. This sig-
+nificantly affects model performance, in the latter case introducing backtracking bias
+where the model is able to predict categories in the testing set based on averages
+observed in the training set. Further discussion on this topic is provided later.
+
+3.4 Model Evaluation
+Evaluation of multiclass classification models involves assessing both predictive per-
+formance and interpretability. Standard metrics such as accuracy and the confusion
+matrix provide an overview of how well the model distinguishes between different
+credit rating categories. However, we are interested in why the model makes specific
+predictions to understand the importance of individual financial metrics for predict-
+ing the credit rating and their default risk implications. Additionally, such insights
+may expose aspects of the proprietary credit rating methodologies employed by rating
+institutions.
+
+SHapley Additive exPlanations (SHAP) is a unified framework designed to explain
+the output of machine learning models, including gradient boosting models like Cat-
+Boost. SHAP assigns each feature an importance value for individual predictions,
+based on principles from cooperative game theory. This allows users to evaluate how
+much each feature contributes to the prediction of a specific class, offering insights
+into the model’s internal decision-making. SHAP values help reconcile the trade-
+off between accuracy and interpretability, making it possible to trust and validate
+high-performing but complex models (Lundberg & Lee 2017).
+
+                                    11
+4 Results
+
+4.1 Data
+Based on the selection process outlined in Section 3.1, there are a total of 5,203
+companies on S&P Capital IQ satisfying all specified criteria. Private companies
+constitute 52.4%, and the remaining 47.6% are public companies. There are a total of
+97 unique countries represented in the dataset, with USA (29.3%), Germany (15.6%)
+and United Kingdom (7.2%) being the most frequent entries. Each company belongs
+to a sector with frequencies as shown in Figure 2. Sectors are further subdivided into
+industries, providing additional insight into company operations.
+
+                          Figure 2: Frequency of Sectors
+
+Financials is a vastly overrepresented sector in the dataset, including industries such
+as banks, capital markets, financial services, consumer finance and insurance. These
+companies exhibit very different financial ratios compared to non-financial firms due
+to the nature of their operations. In general, their solvency ratios such as debt-
+to-equity can appear higher, due to the leverage-intensive structure of banks and
+insurers. Interestingly, all but 4 companies that are ’AAA’ rated are classified as
+financials, indicating that sector is an important aspect to consider. See Appendix A
+for the distribution of credit ratings per sector.
+
+Considering the target variable S&P Credit Rating Group, it is evident that we have
+an imbalanced dataset, with most companies being concentrated in the ’AA’ to ’B’
+credit rating groups. In the context of multiclass classification, this is problematic as
+models tend to be biased toward majority classes, resulting in poor predictive perfor-
+mance for underrepresented categories. Additionally, the critical categories are often
+the ones underrepresented — in this case high default-risk companies with ratings
+’CCC’ and below, which are precisely the cases where accurate prediction is most im-
+portant. Figure 3 shows the frequency of companies in each S&P credit rating group.
+Lower credit rating groups have very few entries, creating an imbalanced dataset.
+
+                                    12
+                        Figure 3: Frequency of S&P Credit Rating Groups
+
+                Table 4: Average Financial Ratios in each S&P Credit Rating Group
+
+Financial Ratio AAA AA A BBB BB B CCC CC SD
+Current Ratio 4.50 1.89 1.59 1.48 1.88 2.12 1.80 1.13 0.69
+Quick Ratio 1.97 1.19 0.99 1.01 1.23 1.11 0.87 0.83 0.56
+Cash Ratio 0.23 0.40 0.28 0.36 0.49 0.42 0.33 0.29 0.10
+Equity Ratio 0.22 0.22 0.20 0.32 0.33 0.30 0.07 -0.04 0.09
+Debt-to-Equity Ratio 9.65 2.85 1.41 1.63 1.74 3.73 8.68 4.83 0.81
+Debt-to-Assets Ratio 0.45 0.21 0.17 0.33 0.39 0.46 0.66 0.85 0.56
+Interest Coverage Ratio 9.84 18.73 7.50 6.58 5.58 2.43 0.22 1.31 0.42
+Gross Margin 0.76 0.43 0.47 0.42 0.39 0.43 0.37 0.40 0.21
+Operating Margin 1.50 0.76 0.63 0.39 0.27 0.20 0.15 0.27 0.07
+Net Margin 0.38 0.24 0.16 0.15 0.09 -0.18 -0.36 -0.01 -0.13
+Return on Assets 0.11 0.08 0.06 0.08 0.09 0.08 0.01 0.07 0.02
+Return on Capital Employed 0.14 0.19 0.11 0.11 0.11 0.08 0.02 0.09 0.03
+Return on Equity 0.05 0.12 0.08 0.11 0.11 -0.03 -0.68 0.93 0.24
+Asset Turnover 0.07 0.22 0.16 0.45 0.62 0.49 0.56 0.42 0.57
+Inventory Turnover 59.48 13.99 22.24 17.18 24.15 19.64 15.82 7.08 22.72
+Receivables Turnover 3.01 8.34 9.75 10.13 11.46 9.28 8.37 4.85 2.91
+Payables Turnover 2.14 5.14 4.11 4.14 4.68 4.47 4.20 2.87 2.26
+
+                                            13
+In addition to the varying default rates presented in Section 2.1, it is possible to
+discern differences in financial ratios across credit rating categories. Table 4 presents
+the average value of each financial ratio within each rating group, calculated after
+removing outliers below the 5th percentile and above the 95th percentile to reduce
+noise. This reveals some interesting patterns, showing how underlying financial ratios
+tend to align with the credit ratings. Appendix B presents a plot of normalized
+average financial ratios, offering a visual representation of these patterns across credit
+rating categories.
+
+Liquidity This category of ratios showcase intuitive patters across credit ratings.
+Higher-rated firms, particularly those rated ’AAA’, tend to have stronger liquidity
+positions, as indicated by significantly higher current and quick ratios (4.50 and 1.97,
+respectively). As credit ratings decline, these ratios generally decrease, with the lowest
+values observed among companies rated ’CC’ and ’SD’, suggesting a weaker ability to
+meet short-term obligations. Cash ratio does not exhibit the same pattern.
+
+Solvency Equity ratio is quite consistent for groups ’AAA’ to ’B’, but is significantly
+lower for ’CCC’ to ’SD’, indicating that solvency shows a clear deterioration as credit
+ratings decline. Debt-to-assets and debt-to-equity ratios are generally lower for mid-
+rated firms, with the exception of ’AAA’. This is mainly due to a high prevalence of
+financial firms in this group. Interest coverage ratio is largest for high-rated firms,
+indicating their ability to repay obligations arising from debt. In contrast, lower-rated
+firms exhibit weaker solvency, with higher leverage and low interest coverage.
+
+Profitability All profitability ratios consistently decline as credit ratings worsen,
+with high-rated firms showing stronger gross, operating, and net margins. Particu-
+larly, net margin becomes negative for firms rated ’B’ and below, reflecting operating
+losses and financial strain. Return measures such as ROA and ROCE are relatively
+stable across mid-tier ratings but drop sharply in the lowest-rated categories. Anoma-
+lies like the high ROE for ’CC’ rated firms may be due to extremely low or negative
+equity values, inflating the ratio and skewing the interpretation.
+
+Efficiency These ratios display less consistent patterns across credit ratings com-
+pared to other financial metrics. Asset turnover tends to improve with lower ratings,
+peaking in mid-tier categories, suggesting higher sales relative to assets in lower-rated
+firms. Receivables and payables turnover are generally higher for firms rated ’A’ to
+’B’, indicating more active working capital management. Exceptionally high inven-
+tory turnover for ’AAA’ rated firms reflects sectoral differences arising from financial
+institutions with minimal inventory, rather than operational efficiency.
+
+4.2 CatBoost
+As the initial model, a CatBoostClassifier was trained for multiclass classification
+using 1,000 boosting iterations, a learning rate of 0.1, and a tree depth of 8. Best
+performance was achieved after 243 iterations, after which the model training was
+stopped to prevent overfitting. On the test set, the model yielded an accuracy of
+63.7%, with a mean squared error (MSE) of 4.47 and an R-squared value of 0.13,
+indicating some predictive ability, although with room for further improvement.
+
+                                    14
+Figure 4: Feature Importance: CatBoost
+
+ Figure 5: Confusion Matrix: CatBoost
+
+                 15
+Feature importance as shown in Figure 4 reveals that categorical variables such as
+country, sector, and industry are the most influential predictors in determining credit
+ratings. Financial companies tend to have higher credit ratings in particular, motivat-
+ing the importance of sector. Geographical location is another important predictor,
+as firms based in developed economies often face lower credit risk compared to those
+operating in emerging markets, where default risk is higher.
+
+Among financial ratios, net margin, return on equity, and interest coverage ratio stand
+out as particularly important, highlighting the relevance of profitability and debt re-
+payment capacity in credit risk assessment. This is consistent with what was observed
+in the previous section when looking at the average ratios across credit ratings cate-
+gories. Solvency and liquidity measures like the debt-to-assets ratio and current ratio
+also contribute meaningfully, albeit to a lesser extent.
+
+On the other end, features such as inventory turnover, gross margin, payables turnover,
+and quick ratio rank lower in importance. This is likely due in part to data sparsity,
+especially for turnover ratios, which are not uniformly available across firms. While
+these metrics may carry analytical value, their limited representation and weaker sta-
+tistical relationship with credit ratings reduce their influence in the model’s predictive
+process.
+
+Looking at the confusion matrix in Figure 5, it is evident that the model performs
+reasonably well in predicting credit ratings, with most predictions falling close to the
+true diagonal. Misclassifications are generally within one or two adjacent rating cat-
+egories, suggesting that credit risk is effectively identified, even if the exact class is
+not always correctly predicted. For instance, a large number of ’A’ ratings are mis-
+classified as ’BBB’ or ’AA’, rather than more distant categories such as ’CCC’ or ’SD’.
+
+However, the model struggles with accurately predicting lower credit rating cate-
+gories, such as ’CCC’, ’CC’, and ’SD’. This is mainly due to class imbalance in the
+dataset, where low-rated firms are underrepresented in the test set. These categories
+are often of greatest interest in credit risk modeling due to their association with
+higher default probability. Addressing this imbalance is therefore essential to improve
+the model’s ability to identify near-default cases.
+
+4.3 CatBoost & SMOTE
+To address class imbalance, we apply the Synthetic Minority Over-Sampling Tech-
+nique (SMOTE) to generate synthetic samples of the underrepresented credit rating
+categories. This helps mitigate the bias toward majority classes in the training pro-
+cess, in theory improving model prediction rate for minority classes, that are often
+not predicted in imbalanced settings.
+
+A limitation of SMOTE is its inability to process missing values, requiring imputation
+prior to oversampling. We test three fill strategies: (1) replacing missing values with
+zeros, (2) with the overall dataset mean, and (3) with the mean of the corresponding
+rating category. While the first two methods yield only marginal improvements, us-
+ing the rating category mean leads to noticeably better performance. This approach,
+however, introduces backtracking bias as the imputation uses label information as-
+sociated with the target variable, potentially leaking data from the test set into the
+training process. This may create a risk of overfitting to the test set.
+
+                                    16
+Figure 6: Feature Importance: CatBoost & SMOTE (Category Fill)
+
+ Figure 7: Confusion Matrix: CatBoost & SMOTE (Category Fill)
+
+                             17
+Figure 6 shows feature importance for CatBoost trained with SMOTE, revealing a
+notable shift compared to the baseline model. Once again, categorical variables such
+as country, sector, and industry remain relevant, although their relative importance
+has decreased. Features that were previously of lower importance, such as payables
+turnover, inventory turnover, and return on capital employed, now rank among the
+top predictors.
+
+This change can be attributed to backtracking bias introduced during preprocess-
+ing. These features had higher rates of missing values and were imputed using rating
+group means, indirectly exposing the model to target variable information. Although
+this improves accuracy on the test set, it leads to overfitting on the training data and
+ultimately reduces the model’s ability to generalize to unseen observations.
+
+The increase in accuracy is evident in Figure 7 as the predictions are increasingly
+present on the main diagonal, partly driven by overfitting. More interestingly, SMOTE
+preprocessing helped reduce class imbalance in the training dataset, resulting in im-
+proved prediction rates for lower credit rating categories. This is reflected in the
+model more accurately predicting categories ’CCC’, ’CC’ and ’SD’.
+
+Table 5 summarizes the test set accuracy across all four models, varying the de-
+grees of freedom for prediction results. This refers to whether predicting adjacent
+categories, by one or two steps, is still regarded correct or not. In the original model,
+the accuracy jumps from 63.72% to 93.09% when allowing one adjacent category, and
+97.50% when allowing two steps. Given that the SMOTE models did not significantly
+improve performance without introducing backtracking bias, we return to the original
+CatBoost model in the subsequent section.
+
+               Table 5: Overview of CatBoost Accuracy on Test Set
+
+                             CatBoost CatBoost + SMOTE
+           Degrees of Freedom
+                               Original Zero Mean Category
+                 Zero 63.72% 56.24% 53.93% 85.80%
+                 One 93.09% 91.75% 91.94% 97.12%
+                 Two 97.50% 96.74% 97.31% 99.42%
+
+4.4 SHAP
+While feature importance provides some insight into model prediction, we seek an even
+more detailed view of the prediction process. SHapley Additive exPlanations (SHAP)
+enables this by quantifying the contribution of each feature to individual predictions,
+generating further insights by evaluating the extent to which each feature contributes
+to a specific prediction. A SHAP summary plot visualizes these contributions across
+all observations, showing both the magnitude and direction of each feature’s impact.
+
+Each SHAP value quantifies the contribution of a feature to shifting a model’s pre-
+diction away from or toward a specific class, relative to the average prediction. A
+high positive SHAP value indicates that the feature increases the probability of the
+corresponding class, while a large negative SHAP value suggests the feature decreases
+the likelihood of that class. Values close to zero imply minimal influence.
+
+                                    18
+Figure 8 is interpreted similarly to a feature importance plot. Horizontal positioning
+indicates whether the feature increases or decreases the probability of predicting the
+rating category, with the colors representing actual feature values. For high credit
+ratings (using ’AA’ as a proxy) categorical features are the most important. These
+are gray as they are not quantifiable. Regarding financial ratios, a high (red) debt-
+to-assets ratio decreases likelihood of ’AA’ belonging, and low (blue) increasing the
+likelihood. Conversely, a high net margin increases the possibility of high credit
+ratings, and vice versa. Principally, red to blue color scale can be interpreted as a
+negative coefficient and blue to red color scale as a positive coefficient. This may be
+somewhat complex to interpret, but still provides a visual demonstration of how the
+model makes predictions based on underlying features.
+
+            Figure 8: SHAP Summary Plot for Rating Category ’AA’
+
+                                    19
+Figure 9 showcases SHAP values for low credit ratings (using ’CCC’ as a proxy).
+Once again, net margin, debt-to-assets and categorical features are prominent for
+predicting credit ratings. On the other hand, note that the color scales for these
+ratios have flipped. High net margin decreases the likelihood of low credit rating,
+while low values increase the likelihood significantly as shown by high positive SHAP
+values. High values of debt-to-assets ratio are very predictive of a low credit rating,
+demonstrated by the red dots spanning over large positive SHAP values, while low
+values signify the opposite, albeit to a lesser extent. Other relevant features include
+high interest coverage ratio, decreasing the likelihood of low credit ratings. Low equity
+ratio also contributes to predicting the ’CCC’ class. Most ratios are less important
+for prediction, as indicated by SHAP values concentrated around zero.
+
+           Figure 9: SHAP Summary Plot for Rating Category ’CCC’
+
+                                    20
+Next, SHAP waterfall plots are introduced to offer a detailed, instance-level expla-
+nation of how individual features contribute to a specific model prediction. They
+visualize the step-by-step impact of each feature on shifting the model’s output from
+a base value (average model prediction) toward the final predicted value. Features
+pushing the prediction higher are red, while those pushing it lower appear in blue.
+
+Figure 10 illustrates the CatBoost model correctly classifying an Australian insur-
+ance company as having an ’A’ credit rating using its financial ratios. Sector is the
+feature with the strongest positive impact, in this case ‘Financials’ which significantly
+increases the predictive score towards the correct class. At the same time receivables
+turnover is unusually high, exerting a large negative influence, pulling the predic-
+tion downward and acting as a key outlier. Other influential features include the
+company’s location and its moderate cash ratio, both contributing positively, while a
+low net margin and high asset turnover detract slightly from the score. Overall, the
+model correctly balances competing signals, with sector and geographic classification
+proving as central features in this case.
+
+             Figure 10: SHAP Waterfall Plot: Correctly Predicting ’A’
+
+                                    21
+In Figure 11 the model incorrectly predicts a Dutch materials company to have a
+’BBB’ credit rating, when it in fact belongs to the much lower ’CCC’ rating category.
+Highly negative values for net margin and return on equity exert strong downward
+pressure on the predicted rating, aligning more closely with characteristics typical of
+distressed firms. However, these effects are partially offset by a relatively high interest
+coverage ratio and moderate values for debt-to-asset ratios, which push the prediction
+upward, resulting in the incorect ’BBB’ prediction.
+
+Considering a misclassified example provides insight into the main limitation of the
+original model, i.e. its tendency to underpredict lower credit ratings due to class
+imbalance in the training data. Reduced sensitivity to rare but critical classes like
+’CCC’ limits its ability to correctly identify firms with high default risk. This justifies
+the use of techniques like SMOTE, which aim to rebalance the dataset and improve
+recognition of underrepresented categories.
+
+          Figure 11: SHAP Waterfall Plot: Incorrectly Predicting ’BBB’
+
+                                    22
+5 Discussion
+
+Overall, the model results are reasonable and, given the complexity of credit rating
+prediction, quite strong. It is important to acknowledge that S&P credit ratings are
+not purely based on quantitative financial metrics; they often incorporate qualitative
+assessments, non-financial indicators, and direct interactions with company manage-
+ment. These discretionary elements can introduce variation that is difficult for any
+data-driven model to capture, thereby explaining some of the observed discrepancies
+between predicted and actual ratings.
+
+Nevertheless, the CatBoost model effectively captures clear dependencies between
+financial ratios and S&P credit ratings. In particular, solvency ratios such as debt-
+to-assets, equity ratio, and interest coverage ratio emerged as strong predictors, often
+varying significantly between high and low credit rating categories. Profitability ratios
+such as net margin and return on equity provide some predictive power, with lower-
+rated firms frequently exhibiting negative margins. Additionally, categorical features
+proved important as country helped capture differences in credit risk between devel-
+oped and emerging markets, while sector reflected the influence of industry-specific
+financial stability.
+
+SMOTE addressed class imbalance in credit ratings, improving predictive perfor-
+mance for underrepresented categories. However, the use of rating group means for
+imputation introduced backtracking bias, potentially inflating performance metrics
+and overfitting the model. Imbalances are also present in other dimensions, such
+as country and sector. Companies in the financial sector are overrepresented in the
+dataset, skewing the model perception to associate high debt-to-asset with high credit
+ratings, which is counterintuitive. US firms are also overrepresented in the dataset, af-
+fecting model results. There is an inherent trade-off between the quantity and quality
+of input data, which is problematic as deep learning like CatBoost generally require
+large, well-balanced datasets to perform reliably.
+
+SHAP plays an important role in enhancing the interpretability of the model results,
+particularly in complex applications such as credit rating prediction. In addition to
+evaluating model performance, SHAP provides insight into which financial features
+drive predictions, offering a means to assess whether S&P credit ratings align under-
+lying financial characteristics. This framework not only supports model validation,
+but also provides some insight into the otherwise proprietary methodologies used by
+rating agencies, revealing systematic patterns in their decision-making process based
+on underlying financial metrics.
+
+5.1 Future Research
+Rating Changes Credit ratings are not necessarily constant over time. Another
+research approach is to consider data on S&P Credit Rating Action, containing events
+such as upgrade, downgrade, new rating and monitor. Evaluating the recent develop-
+ments of financial ratios would be valuable to identify patterns that precede rating
+changes. Investors in debt instruments may be able to preemptively adjust their port-
+folio by predicting these changes prior to publication. This approach is coherent with
+previous research using financial metrics to predict defaults prior to their event.
+
+                                    23
+Scope of Companies Given the wide variation in sectors, industries and countries,
+future research could benefit from restricting the dataset to a more homogeneous sub-
+set, such as firms within a specific region or sector. While this would reduce the total
+number of observations, it would improve comparability and may enhance the accu-
+racy of the model by minimizing noise. There exists a trade-off between dataset size
+and consistency across included firms to ensure comparability. Separating financial
+firms from other sectors, like industrials or manufacturing, would be interesting to
+create more specialized prediction models.
+
+Additional Metrics Incorporating non-financial metrics such as ESG scores, gov-
+ernance indicators, and headcount data is another possible direction for future re-
+search. These factors are often considered in credit rating assessments but were ex-
+cluded from this study due to the complexity of sourcing consistent data across thou-
+sands of companies. Credit rating institutes rely on qualitative information gathered
+through issuer meetings and other discretionary processes, which cannot be captured
+by a purely quantitative model. Additionally, expanding the range of financial ratios
+or incorporating macroeconomic variables could further enhance the model’s predic-
+tive power. Instead of relying on static, most-recent-year data, a time-series approach
+could be implemented to capture trends in financial ratios over time.
+
+Model Comparison Following the approach of Jabeur et al. (2021), future research
+could benchmark credit rating prediction models by comparing the performance of
+various machine learning frameworks alongside traditional models such as Altman’s
+Z-score and Ohlson’s probabilistic method. In addition, combining models through
+ensemble techniques could enhance classification accuracy, particularly in the presence
+of imbalanced and high-dimensional financial data. Future work might also explore
+models that generate probabilistic predictions with calibrated confidence scores, pro-
+viding a more nuanced assessment of classification uncertainty.
+
+5.2 Practical Applications
+In general, this study showcases the potential of CatBoost for credit rating classifi-
+cation, and by proxy, financial distress prediction. This framework can be used by
+fixed income investors, banks and regulators for modeling the credit risk of non-rated
+companies by using financial ratios. This could also be used as a complement to of-
+ficial S&P credit ratings, which may be slow to update due to organizational inertia
+or reputational concerns of downgrading companies. An accurate measure of credit
+risk is essential for monitoring portfolio exposure and taking preemptive actions to
+mitigate potential rating downgrades, or in the worst case failure to meet the legal
+obligations, e.g. default.
+
+                                    24
+6 Conclusion
+
+This paper has been guided by the following research questions:
+
+   1. Is the CatBoost model able to effectively predict current S&P credit ratings
+      with high accuracy based on underlying financial metrics?
+
+   2. Which financial metrics have the highest predictive value for classification of
+      firms into different S&P credit rating groups?
+
+One of the main purposes of this paper is to evaluate whether the CatBoost model can
+effectively predict S&P credit ratings based on a company’s financial characteristics,
+and additionally to determine which financial metrics contribute most significantly
+to these predictions. Based on strong performance of CatBoost for financial distress
+prediction in prior research, the model is applied to a dataset of public and private
+firms, using financial ratios and categorical variables to classify credit ratings.
+
+After selecting a subset of companies with an active S&P credit rating, financial
+ratios were computed as part of the feature engineering process. Using Python, a
+CatBoost multiclass classification model is developed, later evaluated using SHapley
+Additive exPlanations (SHAP). An attempt was made to address class imbalance
+for lower rated firms like ’CCC’ and ’SD’ using Synthetic Minority Over-Sampling
+Technique (SMOTE). However, while this improved the representation of minority
+classes, it introduced backtracking bias due to label-informed imputation. SHAP was
+employed to further interpret model predictions and to identify which financial ratios
+had the greatest impact on credit rating classification.
+
+These results indicate that CatBoost performs reasonably well in predicting S&P
+credit ratings, with most misclassifications occurring within one or two adjacent cate-
+gories. Categorical features like country and sector emerged as important predictors,
+in addition to financial ratios such as net margin, return on equity, interest coverage
+ratio and debt-to-assets. Additionally, the study provides insight into the proprietary
+rating process used by rating agencies by identifying patterns in financial ratios across
+S&P rating categories.
+
+                                    25
+Appendix
+
+A Distribution of Credit Rating per Sector
+
+                 Figure 12: S&P Credit Rating Group per Sector
+
+B Normalized Ratios per Credit Rating
+
+           Figure 13: Normalized Ratios per S&P Credit Rating Group
+
+                                    26
+References
+
+Afonso, A., Gomes, P. & Rother, P. (2007), ‘What ’hides’ behind sovereign debt
+  ratings?’, European Central Bank Working Paper 711.
+
+Akinjole, A., Shobayo, O., Popoola, J., Okoyeigbo, O. & Ogunleye, B. (2024),
+  ‘Ensemble-based machine learning algorithm for loan default risk prediction’,
+  12(21).
+  URL: https://doi.org/10.3390/math12213423
+
+Altman, E. I. (1968), ‘Financial ratios, discriminant analysis and the prediction of
+  corporate bankruptcy’, The Journal of Finance 23(4), 589–609.
+  URL: https://doi.org/10.1111/j.1540-6261.1968.tb00843.x
+
+Breiman, L., Friedman, J., Olshen, R. & Stone, C. J. (1984), Classification and Re-
+  gression Trees, 1st edn, Chapman and Hall/CRC.
+  URL: https://doi.org/10.1201/9781315139470
+
+Carmona, P., Climent, F. & Momparler, A. (2019), ‘Predicting failure in the u.s.
+  banking sector: An extreme gradient boosting approach’, International Review of
+  Economics Finance 61, 304–323.
+  URL: https://doi.org/10.1016/j.iref.2018.03.008
+
+Chawla, N. V., Bowyer, K. W., Hall, L. O. & Kegelmeyer, W. P. (2002), ‘Smote: syn-
+  thetic minority over-sampling technique’, Journal of artificial intelligence research
+  16, 321–357.
+
+Coşkun, S. B. & Turanli, M. (2023), ‘Credit risk analysis using boosting methods’,
+  Journal of Applied Mathematics, Statistics and Informatics 19(1), 5–18.
+  URL: https://doi.org/10.2478/jamsi-2023-0001
+
+Friedman, J. H. (2001), ‘Greedy function approximation: A gradient boosting ma-
+  chine’, The Annals of Statistics 29(5), 1189–1232.
+  URL: http://www.jstor.org/stable/2699986
+
+Galizia, F. & Lund, S. (2024), ‘Reassessing risk in emerging market lending: Insights
+  from gems consortium statistics’.
+  URL: https://www.ifc.org/en/insights-reports/2024/reassessing-risk-in-emerging-
+  market-lending
+
+Hancock, J. T. & Khoshgoftaar, T. M. (2020), ‘Catboost for big data: an interdisci-
+  plinary review’, Journal of Big Data 7(21).
+  URL: https://doi.org/10.1186/s40537-020-00369-8
+
+Huynh, T. L. D., Wu, J. & Duong, A. T. (2020), ‘Information asymmetry and firm
+  value: Is vietnam different?’, The Journal of Economic Asymmetries 21, e00147.
+  URL: https://doi.org/10.1016/j.jeca.2019.e00147
+
+Jabeur, S. B., Gharib, C., Mefteh-Wali, S. & Arfi, W. B. (2021), ‘Catboost model
+  and artificial intelligence techniques for corporate failure prediction’, Technological
+  Forecasting and Social Change 166, 120658.
+  URL: https://doi.org/10.1016/j.techfore.2021.120658
+
+Jones, S. (2017), ‘Corporate bankruptcy prediction: a high dimensional analysis’,
+  Review of Accounting Studies 58, 1366–1422.
+  URL: https://doi.org/10.1007/s11142-017-9407-1
+
+                                    27
+Lundberg, S. & Lee, S.-I. (2017), ‘A unified approach to interpreting model predic-
+   tions’.
+  URL: https://arxiv.org/abs/1705.07874
+
+Ohlson, J. A. (1980), ‘Financial ratios and the probabilistic prediction of bankruptcy’,
+  Journal of Accounting Research 18(1), 109–131.
+  URL: http://www.jstor.org/stable/2490395
+
+Prokhorenkova, L., Gusev, G., Vorobev, A., Dorogush, A. V. & Gulin, A. (2019),
+  ‘Catboost: unbiased boosting with categorical features’.
+  URL: https://doi.org/10.48550/arXiv.1706.09516
+
+Son, H., Hyun, C., Phan, D. & Hwang, H. (2019), ‘Data analytic approach for
+  bankruptcy prediction’, Expert Systems with Applications 138, 112816.
+  URL: https://doi.org/10.1016/j.eswa.2019.07.033
+
+Standard & Poors (2022), ‘Guide to credit rating essentials’, spglobal.com/ratings .
+  URL: https://www.spglobal.com/ratings/_division-
+  assets/pdfs/guide_to_credit_rating_essentials_digital.pdf
+
+Standard & Poors (2024), ‘Default, transition, and recovery: 2024 annual global
+  corporate default and rating transition study’.
+  URL: https://www.spglobal.com/ratings/en/research/articles/250327-default-
+  transition-and-recovery-2024-annual-global-corporate-default-and-rating-transition-
+  study-13452126
+
+Tang, T. T. (2009), ‘Information asymmetry and firms’ credit market access: Evidence
+  from moody’s credit rating format refinement’, Journal of Financial Economics
+  93(2), 325–351.
+  URL: https://doi.org/10.1016/j.jfineco.2008.07.007
+
+Wruck, K. H. (1990), ‘Financial distress, reorganization, and organizational efficiency’,
+  Journal of Financial Economics 27(2), 419–444.
+  URL: https://www.sciencedirect.com/science/article/pii/0304405X90900636
+
+Zięba, M., Tomczak, S. K. & Tomczak, J. M. (2016), ‘Ensemble boosted trees with
+  synthetic features generation in application to bankruptcy prediction’, Expert Sys-
+  tems with Applications 58, 93–101.
+  URL: https://doi.org/10.1016/j.eswa.2016.04.001
+
+                                    28

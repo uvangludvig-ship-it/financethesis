@@ -1,0 +1,1042 @@
+ The Effects of Monetary Reward Distribution on
+            Company Performance
+               - Introducing Wage Dispersion Volatility
+
+                                    ∗                          †
+               Oliver Hanes     Michael Luxemburg
+                          May 14, 2018
+
+                                Abstract
+   This paper aims to explore the effects of monetary reward distribution within the
+   company on company performance. We introduce a measure called wage distribu-
+   tion volatility (WDV), that captures how the pay gap between the CEO and other
+   employees varies over time. Linear regression is performed for both WDV against
+   company alpha and relative standard deviation of CEO salary (RSDC) against
+   company alpha for a seven year period for companies listed on the Stockholm Stock
+   Exchange during 2010-2016. For companies with alpha ∈ {−2, 2} and WDV <10
+   we find a significant negative correlation between WDV and performance (adjusted
+     2
+   R  = 0.191, p < 0.01), and even stronger for companies with <1000 employees
+                2
+   (adjusted R  = 0.275, p < 0.01). We also create a binary classifier that is able
+   to predict the sign of alpha with 78% accuracy, given the constraints. However,
+   most, if not all, of the effect stems from the RSDC alone. This study suggests that
+   Swedish companies should keep the total CEO salary relatively constant, especially
+   if the company has less than 1000 employees, and adopt the culture behind such
+   a wage composition. We suggest further research to investigate whether WDV has
+   an additional effect compared to RSDC or not, and to expand to different countries.
+
+  Keywords: WDV, CEO salary, wage dispersion, pay gap
+
+                                Bachelor Thesis
+                       Stockholm School of Economics
+                             Tutor: Marieke Bos
+
+∗
+ 23272@student.hhs.se
+†
+ 23427@student.hhs.se
+
+                                    1
+Contents
+
+1 Introduction 3
+   1.1 Background . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+   1.2 Purpose . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+
+2 Extended Background and Mechanisms 5
+   2.1 The Macroeconomic Aspects in Sweden . . . . . . . . . . . . . . . . . . . 5
+   2.2 Profit Sharing and the Free Rider Problem . . . . . . . . . . . . . . . . . 6
+   2.3 Productivity and Motivation . . . . . . . . . . . . . . . . . . . . . . . . . 7
+   2.4 Tournament Theory . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+   2.5 Preferences Among Graduates . . . . . . . . . . . . . . . . . . . . . . . . 8
+   2.6 Human Capital . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9
+
+3 Data 10
+
+4 Methods 11
+   4.1 The Ideal Experiment: Enabling better Comparison Between Firms . . . 11
+   4.2 Measuring Performance . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12
+   4.3 Choosing Independent Variables . . . . . . . . . . . . . . . . . . . . . . . 13
+         4.3.1 Wage Dispersion Volatility . . . . . . . . . . . . . . . . . . . . . . 13
+         4.3.2 Relative Standard Deviation of CEO Salary . . . . . . . . . . . . 14
+         4.3.3 CEO Salary . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 14
+   4.4 Regression Model . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 14
+   4.5 Binary Classifier . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+
+5 Potential Biases in the Study 16
+
+6 Results 18
+   6.1 Linear Regression . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 18
+   6.2 SVM . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 22
+
+7 Conclusion 26
+
+8 Appendix 28
+
+                                      2
+1 Introduction
+
+1.1 Background
+
+CEO remuneration is an invariably topical subject often discussed in media and in the
+academic literature. The trigger for debate is often increases of CEO salaries due to
+bonus programs. The idea of variable compensation is that the CEO is motivated to
+work more in the shareholder’s interests by compensation contracts that are tied to stock
+price changes. Motivating employees at lower levels with such contracts is however not
+common. This may evidently be because employees at lower levels have even less impact
+on the stock price than the CEO.
+    In the academia total CEO remuneration and different remuneration components
+are often linked to company performance. Evidence of CEO remuneration tied to com-
+pany performance is inconclusive. Instead, research suggests that intrinsic motivation
+outperforms extrinsic motivation for non-routine tasks and that contingent pay may
+even impede performance for creative tasks [1]. Company performance is a wide topic
+and can be measured in numerous ways. E.g. Fahlenbrach and Stulz (2010) measures
+performance as resistance to financial crisis and finds a negative relationship to CEO
+bonuses [2] and Smirnova and Zavertiaeva finds inconclusive evidence when measuring
+performance as Sharpe ratio and ROA [3].
+     There are also numerous studies investigating the effect of monetary compensation
+for other employees. For example, as early as 1960, McGregor critically discusses variable
+pay. He states that even though the logic for variable pay is evident, issues such as
+prioritizing approval of fellow colleagues and distrust in the incentive system is prevailing
+[6]. Kohn (1995) further discusses the effects of variable pay on motivation, and states a
+number of disadvantages [5].
+    The so called CEO pay gap is a comparison of CEO pay and other manager pays.
+How such a gap influences company performance incorporates other mechanisms. Hen-
+derson (2017) looks at the issue from both a behavioral and economical view. The
+behavioural view suggests that because more equal pay promotes collaboration, greater
+coordination needs encourage smaller pay gaps, and the combination of greater needs
+and smaller gaps enhances firm performance. The economic view implies the opposite
+because larger gaps create tournament-like incentives that address monitoring problems
+associated with joint decisions [4]. An extension of the pay gap would be to study the pay
+differences between employees at different levels than just top management. Further, it
+
+                                      3
+may be interesting to study this notion as a dynamic measure, incorporating fluctuations
+of the pay gap in addition to size. To the knowledge of the authors, this has not been
+studied in detail before.
+
+1.2 Purpose
+
+This report introduces a new perspective on monetary compensation by introducing the
+concept of wage distribution volatility (WDV). The WDV is a measure of how much the
+relative pay difference between the CEO and other employees fluctuates over time. A low
+WDV indicates that all employees are rewarded and punished similarly in good and bad
+times. A high WDV indicates that either the CEO or the other employees have a highly
+variable salary, or that both have a highly variable salary that is uncorrelated with each
+other. The report investigates how this amount of "fairness" within a company affects
+its performance. The concept of pay gap volatility amounts for interesting mechanisms
+not covered by looking at each group separately, or just looking at the size of the pay
+gap.
+     Section 2 describes relevant research related to this topic and introduces possible
+mechanisms affecting the results. Section 3 and 4 describe the data and methods, re-
+spectively. The method is centered around a linear regression model, described in section
+4.4, but a binary classifier in the form of a support vector machine is also implemented.
+Section 5 acknowledges potential biases of the results. The results and corresponding
+discussion is presented in section 6. The report concludes in section 7, including recom-
+mendations for future research.
+
+                                      4
+2 Extended Background and Mechanisms
+
+WDV is based on monetary data and captures extrinsic motivation in the form of mon-
+etary compensation. However, the definition of the WDV is such that it may serve as a
+measure of fairness within the company. Intrinsic motivation is therefore a highly impor-
+tant aspect affecting the outcome of our study, in addition to extrinsic motivators. Even
+though our aim is not to draw conclusions regarding drivers and motivators for employ-
+ees besides the pure monetary aspect, extrinsic and intrinsic motivation is interlinked
+in a complex relationship, and many of the mechanisms behind WDV as a predictor for
+performance are intrinsic. Kohn (1995) motivates a number of factors pointing towards
+a complicated relationship between intrinsic and extrinsic motivation, e.g. 1) Employees
+may feel punished if an expected reward is not given. 2) Effective team work is under-
+mined by reward schemes that create competition. 3) Rewards pulls the focus away from
+root-causes of problems, towards temporary solutions. 4) Monetary incentives weakens
+intrinsic motivation by shifting focus to the amount of pay from the work itself [5]. While
+Kohn and many other authors are skeptical towards reward programs (see e.g. McGregor
+(1960) [6]) the obvious logic of reward programs is that employees work harder for more
+money. It also has to be stated once again that WDV measures the change of the pay
+gap over time, which captures how evenly distributed the rewards are within the com-
+pany, expressing a sense of fairness. The mechanisms behind the relationship between
+WDV and performance thus vary in nature. In this section, a few of the most important
+mechanisms are presented.
+
+2.1 The Macroeconomic Aspects in Sweden
+
+Sweden is, according to Statista [7], the second most unionized country in the world at 67
+percent of total employees. The effects of unionization are according to Lemieux (1998)
+increased average wages as well as compressed returns to observable measures of skill [8].
+This means that the variance of employee salary is decreased when introducing unions.
+Especially, dramatically lowering the employee wage in bad times does not seem to be
+common in a highly unionized country. Lemieux uses data from Canada, which is the
+sixth most unionized country. This suggests that a high WDV in Sweden is mostly due to
+changes in CEO salary, and less because of a variable component in the salaries for other
+employees. This does not however exclude the possibility that a low WDV may coexist
+with a highly variable CEO salary, if the company policy is such that all employees
+
+                                      5
+gets rewarded in good times. This may still prove to be a factor worth investigating,
+making the WDV contributing more information than just using the volatility of the
+CEO salary.
+     Another factor regarding unionization is that it may contribute to employees striving
+more towards overall pay-equality and ‘fairness’ when it comes to compensation. Swedish
+companies might with this reasoning be more prone to applying a wage distribution
+that contributes to a lower WDV than other countries. If there is a correlation between
+‘fairness’ and performance, this could imply that Swedish workers, and employers for that
+matter, value the collective good and promotes these ideas through a fair distribution of
+earnings, keeping employees happy and motivated. Sweden would therefore have a lower
+WDV than most other countries. Former king Gustaf VI Adolfs motto: Plikten framför
+allt - Duty above all, might still be very much relevant in today’s Sweden if this is the
+case.
+
+2.2 Profit Sharing and the Free Rider Problem
+
+A classic dilemma concerning profit sharing is the free rider problem. In big firms,
+where individual performance is hard, perhaps even impossible, to measure, rewarding
+employees as groups for good performance might be the only feasible compensation plan
+a manager can design. The idea of rewarding every employee for a job well done is
+generous and would be the most natural way of compensating the employees, in the
+ideal world that is. The problem arise when the most talented employees feel mistreated
+and overlooked by management, and even though they get a piece of the profit-pie, they
+are not content, due to the fact that the rest of his or her co-workers, who might not
+deserve this reward as much, also de facto gets rewarded. A generous compensation
+plan implemented in this way might rather create discontent among the employees that
+the company most want to retain. A Tournament model might be more fitting, as hard
+working employees will strive toward a promotion, rather than sharing at their current
+level. [9]
+     The implication on our study is that larger firms with more employees who have a
+harder task monitoring every worker will probably not contribute to a possible correlation
+as much as smaller firms. Large firms may by this reasoning have a higher WDV than
+smaller firms. Smaller firms on the other hand, where individual effort is more easily
+monitored, should naturally in more cases have a profit-sharing program in place.
+
+                                      6
+2.3 Productivity and Motivation
+
+High productivity should not be perceived as the only factor affecting performance, but
+productivity is nonetheless important for any company. In a study by Pfeffer and Langton
+(1993) [10], high wage dispersion within academic departments have shown clear negative
+effects on individual faculty members satisfaction and research productivity. The results
+also point out that the negative effects of wage dispersion are lower at private universities,
+when salaries are less likely to be known. This shows that one’s relative standing in the
+wage hierarchy has a negative effect, if that information is disclosed to the individual.
+The authors continue to discuss the effects on performance and concludes that pay-for-
+performance is not always the case in many firms. The individual salary level may not
+be solely based on performance but on other factors as well, such as favoritism. These
+results tell us that low wage dispersion may be more important in companies where
+salaries are more likely to be known, such as smaller companies, where relations between
+management and employees may be more intimate. The findings in the article also have
+implications on wage dispersion and performance, as compensation may not always be a
+result of satisfactory individual performance. Further, Levine (1989) [13] argues that a
+more compressed wage structure increases productivity.
+     Van Herpen et. al. [11] discuss how reciprocity and fairness is important in employee
+motivation. In order to maximize incentives, "the surplus, created by the agency contract
+should be fairly divided". He continues to argue that for risk averse agents, transparency
+plays an important role, as a transparent system communicates the rules associated with
+the contract, creating better understanding and a higher level of support.
+     This theory suggests that the effect of wage dispersion on performance have filters
+that make a relationship harder to deduce. It depends e.g. on the level transparency and
+the personalities of individuals in the firm. While the theory covers wage dispersion and
+not WDV, it is close at hand to carry these effects over to WDV as well.
+
+2.4 Tournament Theory
+
+Lazear and Rosen (1981) [12] invents tournament theory to analyze the effect of wages on
+incentives. They show that when workers are risk neutral, wages based upon rank induce
+the same efficient allocation of resources as an incentive reward scheme based on indi-
+vidual output levels. This suggests that some amount of WDV, based on rewards being
+biased towards higher hierarchical levels, may not be negative for performance.
+
+                                      7
+     The conclusion of previous research seems to be that some wage dispersion has a
+positive effect on firm performance. This is further discussed by Heyman (2002) [14]. He
+states that there are conflicting views as to how more compressed wage structures affect
+firm performance and he also uses the tournament model to show how “the prize” of a
+promotion is used as an incentive when monitoring of each workers performance is costly.
+Heyman’s conclusion is that there is a positive relationship between wage dispersion and
+firm performance for white-collar-workers between 1991 and 1995. This is however not
+straightforward to assume is valid for WDV, in addition to wage distribution. Others
+argue that individual effort as well as cooperation is reduced when the wage distribution
+is perceived to be unfair (Akerlof and Yellen, 1990) [15]. A high WDV is intuitively
+unfair, which is arguably the reason for the attention in media, but since the studies do
+not explicitly mention profit sharing or some other sense of WDV, we treat conclusions
+about WDV with precaution.
+
+2.5 Preferences Among Graduates
+
+Lyons et al. (2010) [16] present that millennials in Canada found that the most important
+factor of a job was rapid advancement and pay rises with the average expectation for
+a promotion within 15 months. However, 71 percent would accept a less-than-ideal
+first job. They show that graduates in Canada put more emphasis on individualistic
+factors and a nurturing environment than a high initial salary. They do however, expect
+rapid advancement and also the opportunity to develop new skills. The results support
+that a high wage distribution might not be perceived as something bad, but rather
+that millennials see this as an opportunity. As a clear majority are willing to start at
+a less-than-ideal firm, it also supports a higher wage distribution. It might also be the
+case that with ambition to make more money in the future, comes the realization and the
+understanding that one must start with a low salary but that the promise of high return in
+the future attracts graduates. The results presented by Lyons is consistent with previous
+research by Quinn Trank et. al (2002) [17]. They conclude that high achieving graduates
+put great emphasis on challenging and rewarding work, opportunities for training and
+promotion opportunities. This group also show tendencies toward favoring pay-schemes
+based on individual rather than group performance, which is also consistent with Lyon’s
+conclusion, that millennials put greater emphasis on individualistic factors. No evidence
+suggest however, that high achievers are willing to start at a less-than-ideal-firm and
+work their way up. What all graduates seem to favour, is individualistic treatment and
+
+                                      8
+the prospect of rapid advancement.
+     In firms that are abundant of these employees, rewarding and punishing the higher
+levels relatively more than the lower levels may be an attractive feature. This is further
+evidence on that the relationship between WDV and performance depends on which
+kind of employees the company has, and it may be a point to test for differences in e.g.
+industry.
+
+2.6 Human Capital
+
+Performance, equity and monetary based incentives have in the past been more of a
+privilege for top management rather than for lower level employees. In recent years
+however, more companies have adopted company wide incentive programs. Decision-
+making is performed on all levels in most firms and aligning all employees with the
+shareholders ambition have therefore become more important (Frye, 2004) [18]. Frye
+shows a significant positive relation between Equity-Based-Compensation for employees
+and firm performance, indicating that when firms become more human capital intensive,
+compensation plans become more important for retaining employees.
+
+                                      9
+3 Data
+
+Compensation for the CEO, the total compensation for all employees, and the number
+of employees were manually collected from annual reports for 129 companies registered
+on Stockholm Stock Exchange in August 2014. This corresponds to 49 % of the listed
+companies. The companies are divided into ten industries. These industries can be seen
+in e.g. [19].
+    Shareholder return, Rj,t, was collected from Yahoo Finance as adjusted returns
+(adjusted for both dividends and splits). Weekly values of the expected market return,
+E(Rmt), and the risk free rate, Rft, were collected from the Swedish House of Finance
+data center.
+     All data were collected for the seven year period 2010-2016. From the annual reports
+871 instances of salary and employee data was collected. 91 of the 129 companies had
+complete data for the whole period (also considering that some companies did not have
+complete stock data on Yahoo) and were used in the model, meaning that 637 instances
+of salary and employee data were used in the end. We would like to stress that even
+though each of the 91 companies exist seven times in the data, each company only exists
+as one data point in the end. This is because we always calculate the volatility or mean of
+a certain measure over the whole period. For example, each company only has one WDV
+and one alpha. This means that we cannot and should not consider fixed effects.
+     As it was discovered during initial data analysis that firms with more than about
+1000 employees did not produce any pattern, the data is slightly biased towards com-
+panies with less than 1000 employees. Furthermore, the choice was also biased towards
+firms that provided annual reports in Swedish with well-structured information for all
+collected data. Other than this, the sample can still not be considered randomized since
+no sophisticated sampling method was implemented, even if the samples were picked in
+a random fashion.
+     The final analysis consists of companies with less than 1000 employees, WDV below
+10 and alpha between -2 and 2. With these restrictions, 39 companies were eligible.
+     The salary data collection was possible since Swedish corporate law (ÅRL, 5 Kap,
+40 §) requires all listed companies to disclose information about the remuneration of top
+managers including the CEO in their annual reports.
+
+                                     10
+4 Methods
+
+4.1 The Ideal Experiment: Enabling better Comparison Between
+    Firms
+
+A comparison between all firms regardless of characteristics is not ideal. In the ideal
+world, firms with different WDVs would be compared only to firms with all other param-
+eters fixed. This is necessary for determining causation and not just correlation.
+     One group of parameters is those affecting performance. Hawawini et al. (2003)
+demonstrated that variance in firm performance is more attributable to industry-level
+factors rather than firm-level factors for firms in the US [24]. However, McNamara
+et al. (2005) take issue with their methodology and demonstrate that this is not the
+case [25]. Matyjas (2014) determines that the industry effects have no significance for
+performance, and displays some evidence for some effect from firm specific factors for
+Polish companies [26]. Furman (2000) investigates four OECD countries and finds that
+firm-specific factors are predominantly determining performance, even though industry
+and corporate parent effects are also important [27]. Duhaime and Stimpert (1990)
+summarize that industry, extent of diversification, economical, as well as organizational
+factors influence performance [28]. Using alpha as performance measure incorporates
+economical effects and also the industry effect of leverage. While it is unclear how much
+industry affects the results, industry differences will be tested for in the analysis.
+     Discussions about firm specific factors are often revolving around financial measures
+or ownerships (see e.g. Chandrapala and Knápková (2013) and Barbosa and Louri (2005)
+[29] [30]). However, the firm specific parameters we are most concerned about is the
+internal motivating factors for the employees at each company, which will affect how the
+company responds to a certain WDV. These may in fact also be seen at industry-level.
+One mechanism behind this is explained in section 2.5. Additionally, it would not be
+surprising e.g. if employees at companies in the financial sector may be more accepting
+and motivated by large executive bonuses, than employees in tech-firms. There probably
+exist a multitude of firm-specific factors to separate by, however the only such factor used
+in this report is size expressed as the number of employees. Size may be of significant
+importance as discussed in section 2.2. Only using size as a separating firm-specific factor
+may be a significant deviation from the ideal experiment.
+     As no sophisticated sampling method was implemented, the sample is not random-
+
+                                     11
+ized appropriately. However, this effect is mitigated by the fact that our initial sample
+of 129 companies covers 49 % of the population (the number of companies registered on
+the Stockholm Stock Exchange in 2014 was 265). Clustering of standard errors for a
+small sample would oftentimes be necessary, but there are arguments against the need
+for clustering in this context. Abadie et al. argue that clustering is either a sampling
+design or experimental design issue [20]. If the sample is a subset of clusters, there is
+a sampling design issue. However, our sample includes all industries and most likely all
+other relevant clustering dimensions (to be precise, when applying all boundaries, the
+industries utilities, telecommunications, and oil & gas are not prevalent, but it can be
+reasonably argued that the number of these companies would not be more than very few
+even if including the whole population). This is due to the large size of our sample. If
+the assignment is correlated within the clusters, there is an experimental design issue.
+Because our treatment is assigned at the individual level (and we do not have multiple
+time periods) this does not either apply to our data. Thus, we find support for not im-
+plementing clustering of standard errors in this report, since we do not have a significant
+sampling or experimental design issue. Clustering is therefore not implemented.
+
+4.2 Measuring Performance
+
+There are many metrics for judging firm performance (see e.g. Al-Matari et al. (2014) for
+a review of many accounting and market based performance dimensions [21]). Bacidore
+et al. (1997) discuss the operating versus trading-based performance. They state that
+shareholders are interested in the abnormal returns, which is the excess of what one would
+expect to earn for a company in the particular systematic risk class. A positive abnormal
+return means that the shareholder has earned more than the risk-adjusted cost of capital.
+A negative abnormal return means inadequate compensation for risk. [22]
+     The abnormal stock returns is measured by alpha. The alpha for firm i in time
+period t is defined as the shareholder return, Ri,t, minus the expected shareholder return,
+E(Ri,t).
+                              αj,t = Ri,t − E(Ri,t) (1)
+
+E(Ri,t) is calculated using the capital asset pricing model (CAPM), which states that
+
+                         E(Ri,t) = Rft + βi[E(Rmt) − Rft], (2)
+
+where Rft is the risk free rate in period t, E(Rmt) is the expected market return in
+
+                                     12
+period t, and βi is the sensitivity of the expected excess asset returns to the expected
+excess market returns. βi is a measure of the firm’s systematic risk. It is calculated in
+this report for every firm i as
+                                    Cov(Ri,t, Rmt)
+                                                                                       (3)
+                                     V ar(Rmt)
+     The problem with alpha is that shareholder wealth creation need not be the same as
+firm performance. In the long run, the alpha and any other performance should converge,
+but they are not generally the same in a one-year period [22]. The company may be
+"cooking the books" or implementing other methods for short-term gains affecting the
+stock price. However, since we aggregate the performance for a seven year period, this
+problem is diminished. If a company has a positive alpha in total during this period, it
+has arguably performed well. With regard to the seven year period, we therefore suggest
+that alpha is an appropriate measure for company performance.
+
+4.3 Choosing Independent Variables
+
+4.3.1 Wage Dispersion Volatility
+
+The point of this study is to compare how WDV affects firm performance. The WDV is
+a measure of how much the relative pay difference fluctuates over years. A high WDV
+is caused by a highly variable salary of either the CEO or of the other employees, or
+that both is variable with different performance metrics in the foundation. A low WDV
+means that the salaries for the CEO and the other employees fluctuates together in a
+correlated manner, or that none of the salaries fluctuates significantly at all.
+    If C and A are vectors with the CEO salary and average employee salary for every
+year respectively, the WDV is defined as
+
+                 √
+                                 V ar(C/A)
+                                10000                                           (4)
+                                    M ean(C)
+
+The WDV is thus adjusted for the size of the CEO wage in order to eliminate the size
+dependence. It is multiplied by 10000 in order to obtain more convenient numbers. C
+and A include seven data points for every company, and the result is one WDV value for
+every company.
+     An improvement would be to collect remuneration data for all executives in addi-
+tion to the CEO. This would have made the possibility of a concept closer to the Gini
+
+                                     13
+coefficient possible. The Gini coefficient is an economical measure of the inequality, for
+example in income distribution, built on the Lorenz curve. Including welfare services,
+Sweden has the lowest Gini coefficient in the world [23]. In order to save time however,
+we assume that a certain CEO salary either suggests a certain philosophy for other ex-
+ecutives, or that the CEO salary on its own is enough for other employees to feel the
+effect.
+
+4.3.2 Relative Standard Deviation of CEO Salary
+
+The relative standard deviation of CEO salary (RSDC) may capture most of WDV. This
+may be because C is significantly more varying than A, as motivated in section 2. This
+motivates an investigation of RSDC against alpha, as well as a multiple regression with
+RSDC together with WDV against alpha. We define RSDC as
+                 √
+                                   V ar(C)
+                                                                                       (5)
+                                 M ean(C)
+
+4.3.3 CEO Salary
+
+Finally, the size of the CEO salary is analyzed. Since the WDV and RSDC is adjusted
+for the size of CEO salary, it may be interesting to see the effect of CEO salary as a
+complement. The CEO salary is the vector C, and the variable used will be
+
+                                  M ean(C) (6)
+
+4.4 Regression Model
+
+Linear regression was implemented in the programming language R. The assumptions for
+linear regression are 1) that the relationship is linear, 2) That there is no auto-correlation
+between residuals, 3) Homoscedasticity, 4) Multivariate normality (univariate in our case)
+and 5) No or little multicollinearity (not relevant when having only one regressor). As
+only one independent variable is used for the prediction, it is possible to see the validity
+of the assumptions for the linear regression directly in the plot. Especially the linearity
+and homoscedasticity is straightforward to see in our plots. We will plot the residuals
+of the model as well as the Q-Q plot in order to demonstrate the auto-correlation and
+normality assumptions explicitly.
+     Alpha was the target in all experiments. The first analysis included all data with
+
+                                     14
+WDV as the predictor. Then, the selection was restricted to companies with less than
+1000 employees. Further, the selection was limited to companies with alphas between -2
+and 2, as well as a WDV below 10.
+     The equation for the regression model is the following.
+
+                              y = β0 + β1x +  (7)
+
+y is a vector of the alphas for every company and x is a vector of observed values in the
+regressor (predictor). β0 is the intercept, β1 a parameter interpreted as the slope, and 
+the error term.
+    The predictor x is the WDV for every company in with the three different data
+selections described above. Additionally, RSDC and the mean of CEO salary is used as
+predictors in separate regressions using equation (7). In total, we perform five regressions
+using this model with different predictors x. Three using WDV (4), one using RSDC (5),
+and one using the mean of CEO salary (6).
+     A multiple regression with WDV and RSDC does not fulfill the multicollinearity
+condition. The covariance between these two are 0.67. Figure 11 in the appendix displays
+this covariance.
+
+4.5 Binary Classifier
+
+We use a binary classifier in order to further investigate how the WDV serves as a
+predictor for success. The classifier also visualizes the results in an alternative way. A
+support vector machine (SVM) serves this purpose well. The boundary of a support
+vector machine is easily controlled through setting the kernel and adjusting the slack
+parameter C. The kernel specifies the constraint on the boundary, and C sets the relative
+importance of avoiding slack versus getting a wider margin. We used a linear kernel in
+order not to overfit. We used a wide margin of C = 10 since our data undoubtedly
+contains a lot of information not accounted for. The SVM originally has low bias and
+high variance but increasing the slack lowers the variance and increases the bias. While
+a much higher variance than that of the linear regression surely leads to overfitting, a
+slightly higher variance may capture a pattern not seen in the linear model. The SVM
+was generated in R without any further modifications.
+     In order to test the prediction accuracy of the SVM, the data will be split into 75%
+training data and 25% test data.
+
+                                     15
+5 Potential Biases in the Study
+
+Different firms use different performance measures as basis for their respective reward
+programs. Our predictor is based on internal comparison of wages within each company,
+and does not take into account factors that may affect how the employees at each firm
+react to certain WDVs. Discriminating only by size and industry does probably leave a
+significant amount unaccounted for.
+     Another problem with the predictor is its use of all employees no matter the com-
+pany structure. Additionally, the underlying data is compiled of salaries from the whole
+companies, as groups. Companies have low wage employees in developing countries to
+a varying extent, entirely disconnected from the work environment in Sweden and other
+Western countries. These employees will arguably not expect to be rewarded differently
+depending on the state of the company, and have little information about other parts of
+the company, if any information at all. Comparison of companies with different number
+of employees in developing countries is therefore fallacious. Figure 12 in the appendix
+shows two deceivingly similar companies in the same industry, where one of them has a
+third of the workforce in Sri Lanka.
+     Change of CEO and the associated severance pay may distort the results. A change
+of CEO usually means a significantly higher total salary for the year because of extra
+remuneration for both the new and especially the prior CEO. As WDV is based on total
+CEO salary, this problem is not avoided. However, the extra total CEO remuneration
+may also be a factor that we want to capture. Extensive severance pay to the CEO is
+preferably captured by the WDV. The problem is that the number of changes over the
+seven year period varies for the firms, which provides an unfair comparison.
+     There is also the issue of policy changes within the firm for CEO remuneration.
+There may be cases where the CEO receives a permanent raise or cut that may be in
+line with the essence of a low WDV, even though the WDV inevitably is high.
+     We do not consider many of the factors that may affect firm performance and at
+the same time might be correlated with our predictor. For example, it could be the
+case that foreign ownership leads to lower performance and higher variable CEO salary
+at the same time. The meaningful relationship would in this case be foreign ownership
+tied to alpha, instead of WDV tied to alpha. Furthermore, firm performance may be
+the cause of a highly variable CEO or other employee salary. Perhaps companies that
+do worse have to make wage cuts in response, increasing WDV as an effect of poor
+
+                                     16
+performance. We cannot exclude that there are unobserved variables or any other reason
+causing endogeneity, which means that any correlation found in this report should not
+be taken for granted to be a causal relationship in the desired direction.
+     Finally, our method for exclusion of outliers is very basic. For alpha, we judge that
+a firm with less than -2 or more than 2, is delivering too abnormal returns to be part
+of the study, since a high absolute alpha means that something specific outweighs all
+other factors abnormally. For WDV, we discovered that most values is below 10, and
+that firms with WDV above 10 had unusual characteristics in some sense, e.g. numerous
+CEO replacements. The results depend strongly on where the lines are drawn. This is
+for example seen in the different results of the previously mentioned Hawawini et al. [24]
+and McNamara et al [25].
+
+                                     17
+6 Results
+
+6.1 Linear Regression
+
+When using all data, we find no correlation between WDV and alpha, arguably due to
+outliers. This is seen in figure 1. Figure 1 serves as the motivation for limiting WDV
+and alpha. However, it is also seen that our limits for alpha and WDV is decided rather
+arbitrarily.
+
+Figure 1: WDV as a predictor for alpha without exclusion of outliers. We see a pattern
+for companies with limited alpha and WDV.
+
+     When limiting the selection to alpha between -2 and 2 as well as limiting WDV to
+less than 10, we find a significant correlation. Focusing on companies with less than 1000
+further improves the correlation. This also limits the problem of employees in developing
+countries, since the vast majority of Swedish companies with less than 1000 employees
+do not have many of those employees.
+
+                                     18
+Figure 2: WDV as a predictor for alpha for companies with WDV < 10 and alpha between
+-2 and 2. Adjusted R-squared: 0.18.
+
+Figure 3: WDV as a predictor for alpha for companies with less than 1000 employees,
+WDV < 10 and alpha between -2 and 2. Adjusted R-squared: 0.26.
+
+     If lowering the limit of WDV so that the two data points furthest to the right
+in figure 3 is excluded, the adjusted R-squared increases to 0.44. This highlights the
+importance of the boundary for outliers. See table 2 in the appendix for the complete
+regression information of figures 1, 2 and 3.
+                                                                                              2
+    Figure 4 displays the correlation between the RSDC and alpha. The adjusted R is
+close to that of figure 3. This suggests that WDV is not a better predictor for performance
+
+                                     19
+than RSDC. WDV may still convey additional information, even though this information
+is not enough to produce a significantly better result. The correlation of 0.67 is not high
+enough to prove an argument that WDV is useless when already having RSDC. We
+present no analysis of A separately and no closer analysis of the relationships between
+the different parameters to be able to deduce a possible information or prediction gain
+from using WDV. The main question is if the found relationship between WDV and
+alpha is solely due to successful companies keeping salary for all employees including
+CEO constant, or if the trend persists even for companies with a higher employee salary
+volatility, as long as the CEO also has a high salary volatility. It is less common that
+employees get a varying salary to the extent of the CEO (if the CEO has a highly
+varying salary), and we have not investigated how often this occurs in our data. This
+means that we may have missed a potentially stronger relationship between WDV and
+alpha, compared to RSDC and alpha.
+
+Figure 4: Relative standard deviation of CEO salary (RSDC) as a predictor for alpha
+for companies with less than 2000 employees, WDV < 10 and alpha between -2 and 2.
+Adjusted R-squared: 0.25.
+
+     Just using the CEO salary as predictor for alpha yields no significant relationship,
+as seen in figure 5. This suggests that the size of the CEO salary has nothing to do with
+performance for companies within the specified outlier boundaries.
+
+                                     20
+Figure 5: CEO salary as a predictor for alpha for companies with less than 2000 employ-
+ees, WDV < 10 and alpha between -2 and 2.
+
+     The residuals for figure 3 are plotted in figure 9 and the Q-Q plot is in figure 10,
+in the appendix. These show that the conditions 2 and 4 for linearity are fulfilled. The
+fulfillment of the other conditions can be seen directly in the previous plots.
+     Regarding biases, we can see examples of severance pay issues and policy changes
+in the underlying data. For example, in Malmbergs elektriska, the CEO recieved about
+1 million SEK and one year received a permanent raise to about 2 million SEK, while
+salaries of the company otherwise fluctuated together with the salary of the CEO. 2
+million SEK is still a low salary for a CEO of a listed company. The essence of what we
+want to capture suggests a low WDV for this company, but in reality the one time raise
+severely impacts the WDV. Malmbers elektriska was however excluded due to an alpha
+above 2.
+     As stated in the method, the comparison would also be separated by industry and
+size. Figure 6 reveals the industry for each data point presented earlier in figure 3. Since
+there are only 39 data points in the sample, divided over seven industries, comparing the
+fit for each industry will not be fruitful. We judge that this is the case even when not
+limiting the sample to less than 1000 employees, producing 59 data points, supported
+by the fact that the naked eye could not find anything particularly interesting even for
+this graph (not shown in the report). We therefore conclude that no particular difference
+between the industries is proved.
+
+                                     21
+Figure 6: WDV as a predictor for alpha for companies with less than 1000 employees,
+WDV < 10 and alpha between -2 and 2. The data points are labelled with their respective
+industry.
+
+     The mechanisms presented in section 2 helps to illuminate the results. Profit shar-
+ing and the free rider problem along with monitoring difficulties is one explanation to
+why the pattern weakens with larger companies. Furthermore, when workers are more
+informed about their standing in the compensation hierarchy, which is more often the
+case for smaller companies, they are more prone to take interest in receiving a fair com-
+pensation. The macroeconomic aspects in Sweden is a possible explanation for finding
+a strong relationship overall, and for smaller companies in particular. Unionization and
+the mindset in Sweden including less hierarchies make Sweden a rather special case, and
+it would be interesting to investigate if the strength of the relationship varies together
+with the degree of e.g. unionization for different countries. Mechanisms pointing to-
+wards different trends for different industries did not have a fair chance to be discussed
+because of the low amount of data points for each industry, making drawing conclusions
+difficult.
+
+6.2 SVM
+
+The SVM model yields a different graphical overview of the relationship between WDV
+and alpha, which also includes the number of employees. This method enables detailed
+separation by size, which was the second separating factor for closing in on the ideal
+experiment. Including firms with more than 1000 employees (limited to 10000 because
+
+                                     22
+of outliers far above these numbers), leads to a fair amount of miss-classifications as seen
+in figure 7. However, when reducing the sample to 1000 employees, the classification
+performs remarkably well as seen in figure 8. We can see that the threshold of 1000
+employees serves its purpose well, and no further separation is constructive, perhaps due
+to the limited number of data points.
+
+Figure 7: WDV combined with the number of employees as a predictor for alpha for
+companies with less than 10000 employees, WDV < 10 and alpha between -2 and 2. Red
+cross or ring marks a company with positive alpha, while black means negative alpha.
+The rings are the data points that serve as support vectors for the model.
+
+                                     23
+Figure 8: The same as Figure 7 except that the data is limited to companies with less
+than 1000 employees.
+
+     The prediction quality after training on 75% of the sample is presented in table 1.
+Observe that the number of predictions is small because of the limited number of com-
+panies below 1000 employees and alpha ∈ {−2, 2} in our sample, and that the prediction
+is for 25% of this sample.
+
+                                         Truth
+                          Prediction alpha < 0 alpha > 0
+                         alpha < 0 3 1
+                         alpha > 0 1 4
+
+                             Table 1: SVM accuracy
+
+     The numbers on the diagonal is the correctly classified companies. The accuracy of
+the model is thus 78%. According to this, we can look at a company within the specified
+number of employees and alpha at the Stockholm Stock Exchange, and determine with
+a 78% accuracy if that company has a positive or negative alpha. Of course, the exact
+number of 78% will not persist when changing sample size, but it has still been proven
+that this model performs remarkably well above chance. This brings into question if the
+method in some way is endogenous, as discussed in section 5. Perhaps companies with
+large WDV have a large WDV because they have not performed well and had to make
+temporary cuts to e.g. salary, making the salaries volatile. This would imply that a com-
+pany cannot expect to become more successful by keeping salaries constant. If the model
+
+                                     24
+is indeed producing a causal relationship in the desired direction, this report provides
+strong support for keeping the CEO salaries relatively constant over time for the specified
+company characteristics. Considering the theory presented in the introduction in section
+2 as well as section 2.1 and 2.2, we furthermore argue that salaries for other employees
+than the CEO should be held relatively constant. Only striving towards keeping salaries
+constant however, without adopting the company culture related to this practice, may
+render futile results anyway.
+
+                                     25
+7 Conclusion
+
+This paper has presented a new way of analyzing wage dispersion by introducing wage
+dispersion volatility as a predictor for success. We present new research in a field that
+previously focused either on management compensation or employee compensation sep-
+arately, and neither as relative changes over time. Measuring relative volatility based
+on intra-company wage dispersion enables comparison between different companies with
+different remuneration plans. The regression analysis shows clear indications that with a
+lower WDV, companies are more likely to perform above average, i.e. positive abnormal
+returns. In Sweden, especially for companies with less than 1000 employees, having a
+more ’fair’ compensation scheme pays off. One concern with our paper is the cause of
+WDV, as it could depend either on average wages changing or the CEO wage changing,
+                                                            2
+or both. By using RSDC as a predictor for alpha, R  = 0.25, while using WDV as a
+                                     2
+predictor for alpha resulted in R  = 0.26. This means that the RSDC to a large ex-
+tent explains WDV. It remains a question however, if the inclusion of average employee
+salary contributes anything. The average employee salary was not investigated further.
+We suspect that there are few companies that have a constant CEO salary but varying
+average employee salary, producing a high WDV this way, or highly varying salaries that
+correlate enough to produce a low WDV. This means that even if WDV would be able
+to better explain alpha than RSDC, lack of data may be an obstacle for further research.
+The paper finds support in previous research on similar topics. Mainly, typical Swedish
+values concerning fairness in the workplace along with heavy unionization explain why
+we see a strong trend. Other research have pointed out the effect of salary transparency,
+as well as monitoring difficulties. The findings in this research align with our results that
+fairness is more important in relatively smaller companies.
+    Finally, a comment about the causality between WDV or RSDC and alpha has
+to be made. It should not be taken for granted that we have found causality in the
+described direction and that endogeneity does not exist. Unobserved variables correlated
+with both WDV and alpha, e.g. foreign ownership, may explain the results. It could
+also be the case that firms react to bad times by increasing volatility of salaries. This
+has neither been proved nor disproved in this paper. The SVM is able to predict the
+sign of alpha with 78% accuracy. From a pessimistic standpoint, this high number alone
+suggests that either the data selection is skewed, or there is some form of unaccounted
+relationship.
+
+                                     26
+     For future research, it would be interesting to compare our results with other coun-
+tries with similar characteristics beside unionization, to see how this might affect WDV.
+Another topic of interest would be to conduct further research focusing more specifically
+on different industries. Further, one could investigate if low-WDV firms having a highly
+variable CEO salary also fit the trend shown between WDV and alpha. This connects to
+the main question left unanswered: if RSDC fully explains the WDV or if the combina-
+tion with average employee salary add further prediction accuracy. The average employee
+salary was not investigated separately, and doing so may be a first step for further re-
+search in this topic. Low-WDV firms could also be further investigated in order to find
+a common denominator among these.
+
+                                     27
+8 Appendix
+
+                     Figure 9: Residuals from the plot in Figure 3
+
+                       Figure 10: Q-Q from the plot in Figure 3
+
+                                     28
+                                             Dependent variable:
+                            alpha alpha alpha
+                               (1) (2) (3)
+
+                                                                 ∗∗∗         ∗∗∗
+WDV −0.031 −0.234             −0.274
+                             (0.052) (0.064) (0.073)
+
+                                      ∗∗∗       ∗∗∗       ∗∗∗
+Constant 1.686                 0.949                   0.985
+                             (0.548) (0.299) (0.341)
+
+Observations 91 59 39
+  2
+R                         0.004 0.191 0.275
+             2
+Adjusted R               −0.007 0.177 0.256
+Residual Std. Error 4.112 (df = 89) 0.971 (df = 57) 0.989 (df = 37)
+                                                        ∗∗∗                         ∗∗∗
+F Statistic 0.368 (df = 1; 89) 13.485   (df = 1; 57) 14.061   (df = 1; 37)
+
+                                                                           ∗         ∗∗          ∗∗∗
+Note:  p<0.1;  p<0.05;   p<0.01
+
+Table 2: Summary of the three regressions with WDV as predictor. (1) includes all data,
+(2) is limited to WDV < 10 and alpha ∈ {−2, 2}, (3) is additionally limited to less than
+1000 employees.
+
+                                           Dependent variable:
+                                                alpha
+
+                                                                     ∗∗∗
+             RSDC −5.331
+                                                    (1.452)
+
+                                                                    ∗∗∗
+                 Constant 1.091
+                                                    (0.374)
+
+                 Observations 39
+                      2
+             R                        0.267
+                                2
+                Adjusted R                     0.247
+                 Residual Std. Error 0.994 (df = 37)
+                                                        ∗∗∗
+                  F Statistic 13.475   (df = 1; 37)
+
+                                                 ∗         ∗∗          ∗∗∗
+              Note:  p<0.1;  p<0.05;   p<0.01
+
+Table 3: Summary of the regression with relative standard deviation of CEO salary as
+predictor.
+
+                                     29
+                                           Dependent variable:
+                                                alpha
+             RSDC −2.995
+                                                    (2.023)
+
+            WDV −0.166
+                                                    (0.102)
+
+                                                                    ∗∗∗
+                 Constant 1.235
+                                                    (0.376)
+
+                 Observations 39
+                      2
+             R                        0.317
+                                2
+                Adjusted R                     0.279
+                 Residual Std. Error 0.973 (df = 36)
+                                                       ∗∗∗
+                  F Statistic 8.353   (df = 2; 36)
+
+                                                 ∗         ∗∗          ∗∗∗
+              Note:  p<0.1;  p<0.05;   p<0.01
+
+Table 4: Summary of the regression with WDV and RSDC as predictors. This regression
+was subject to multicollinearity and is therefore rendered useless. The table serves as a
+reference for any future interest.
+
+           Figure 11: The correlation between WDV and RSDC visualized.
+
+                                     30
+                 (a) Hexpol
+
+                                                         (b) Holmen
+
+Figure 12: Number of employees in different countries for Hexpol and Holmen. Tables
+collected from their respective 2016 annual reports.
+
+                                     31
+References
+
+ [1] Cable, Dan, and Vermeulen, Freek, 2016, Stop Paying Executives for Performance,
+    Harvard Business Review, February 23,
+     https://hbr.org/2016/02/stop-paying-executives-for-performance.
+
+ [2] Fahlenbrach Rüdiger, and Stulz, René M., 2011, Bank CEO incentives and the
+     credit crisis, Journal of Financial Economics, Volume 99, Issue 1, pp. 11-26,
+     https://www.sciencedirect.com/science/article/pii/S0304405X10001868.
+
+ [3] Smirnova, Aleksandra S., and Zavertiaeva, Marina A., 2017, Which came first, CEO
+      compensation or firm performance? The causality dilemma in European companies,
+     Research in International Business and Finance, Volume 42,
+     https://www.sciencedirect.com/science/article/pii/S0275531916302616.
+
+ [4] Henderson, Andrew D., and Fredrickson, James W., 2017, Top Management Team
+    Coordination Needs and the CEO Pay Gap: A Competitive Test of Economic and
+     Behavioral Views , Academy of Management Journal, Vol. 44, No. 1
+     https://journals.aom.org/doi/abs/10.5465/3069339.
+
+ [5] Kohn, Alfie, 1995, The case against reward programs, ACA Journal, June.
+
+ [6] Douglas, McGregor, 1960, The Human Enterprise, McGraw Hill, New York.
+
+ [7] McCarthy, Niall, 2017, The State Of The Unions, Statista.com,
+     https://www.statista.com/chart/9919/the-state-of-the-unions/.
+
+ [8] Lemieux, Thomas, 1998. Estimating the Effects of Unions on Wage Inequality in a
+    Panel Data Model with Comparative Advantage and Nonrandom Selection, Journal
+     of Labor Economics 16, no. 2, pp. 261-291,
+     https://www.journals.uchicago.edu/doi/abs/10.1086/209889.
+
+ [9] Weitzman, Martin, and Kruse, Douglas, 1990, Profit Sharing and Productivity. The
+     Economic Nature of the Firm: A Reader, ch. 20,
+    https://books.google.se/books?hl=sv&lr=&id=Nu5HTngps1YC&oi=fnd&
+    pg=PA288&dq=profit+sharing+and+performance&ots=GN9eOE8MRR&sig=
+    4RkaI1r3A-yCilEObQrCOoMHxys&redir_esc=y#v=onepage&q=profit\
+     %20sharing\%20and\%20performance&f=false.
+
+[10] Pfeffer, Jeffrey, and Langton, Nancy, 1993, The Effect of Wage Dispersion on
+     Satisfaction, Productivity, and Working Collaboratively: Evidence from College and
+     University Faculty, Administrative Science Quarterly, Vol. 38, No. 3, pp. 382-407,
+
+                                     32
+    http://www.jstor.org/stable/pdf/2393373.pdf?refreqid=excelsior\
+     %3A64792a19a896935f00b66e782e683eea.
+
+[11] Herpen, Marco Van, Praag, Mirjam Van, and Cools, Kees, 2005, The Effects of
+     Performance Measurement and Compensation on Motivation: An Empirical Study,
+    De Economist 153, No. 3,
+    https://link.springer.com/content/pdf/10.1007\%2Fs10645-005-1990-z.
+     pdf.
+
+[12] Lazear, Edward P., and Rosen, Sherwin, 1981, Rank-Order Tournaments as Opti-
+    mum Labor Contracts, Journal of Political Economy, Vol. 89, No. 5, pp. 841-864,
+    http://www.jstor.org/stable/pdf/1830810.pdf?refreqid=excelsior\
+     %3Ae120d2abff803e1707e16d02906834b5.
+
+[13] Levine, David, 1989, Cohesiveness, Productivity, and Wage Dispersion,
+    https://cloudfront.escholarship.org/dist/prd/content/qt8kd4d0p4/
+     qt8kd4d0p4.pdf.
+
+[14] Heyman, Fredrik, 2007, Pay inequality and firm performance: evidence from
+    matched employer–employee data, Applied Economics, 37:11, pp. 1313-1327,
+    https://www.tandfonline.com/doi/full/10.1080/00036840500142101?
+     scroll=top&needAccess=true.
+
+[15] Akerlof, George A., and Yellen, Janet L., 1990, The Fair Wage-Effort Hypothesis
+    and Unemployment, The Quarterly Journal of Economics, Vol. 105, No. 2, pp.
+     255-283,
+    http://www.jstor.org/stable/pdf/2937787.pdf?refreqid=excelsior\
+     %3Ad8245254436197ab659c2a10c696a45d.
+
+[16] Lyons, Sean T., Ng, Eddy S. W., and Schweitzer, Linda, 2010, New Generation,
+     Great Expectations: A Field Study of the Millennial Generation. J Bus Psychol, 25
+    pp. 281–292,
+    https://link.springer.com/content/pdf/10.1007\%2Fs10869-010-9159-4.
+     pdf.
+
+[17] Trank, Christine, Quinn, Rynes, Sara L., Bretz, and Robert D. Betz Jr., 2002,
+    Attracting Applicants in the War for Talent: Differences in Work Preferences
+    among High Achievers, Journal of Business and Psychology, Vol. 16, No. 3, pp.
+     331-345,
+    http://www.jstor.org/stable/pdf/25092775.pdf?refreqid=excelsior\
+     %3A1f83670856ee485776ccd612a2e74af3.
+
+[18] Frye, Melissa B., 2004, Equity-Based Compensation for Employees: Firm Perfor-
+
+                                     33
+    mance and Determinants, The Journal of Financial Research, Vol. XXVII, No. 1,
+     pp. 31–54,
+    https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1475-6803.2004.
+     00076.x.
+
+[19] Euroinvestor, May 16 2018,
+     http://www.euroinvestor.se/sektorer.
+
+[20] Abadie, Alberto, Athey, Susan, Athey, Guido, and Wooldridge, Jeffrey, 2017, When
+     Should You Adjust Standard Errors for Clustering?, Cornell University Library,
+     https://arxiv.org/abs/1710.02926.
+
+[21] Al-Matari, Ebrahim Mohammed, 2014, The Measurements of Firm Performance’s
+    Dimensions, Asian Journal of Finance & Accounting, Vol. 6, No. 1
+    http://www.macrothink.org/journal/index.php/ajfa/article/viewFile/
+     4761/4198.
+
+[22] Bacidore, Jeffrey M., Boquist, John A., Milbourn, Todd T., and Thakor, Anjan V.,
+     1997, The Search for the Best Financial Performance Measure, Financial Anaiysts
+    Journai, May/June,
+    https://pdfs.semanticscholar.org/9eaf/63ef01ec579a094c254d4f2573ff828c39fb.
+     pdf.
+
+[23] Ekonomifakta, 2018, Ginikoefficient - internationellt, February 12,
+    https://www.ekonomifakta.se/Fakta/Arbetsmarknad/Loner/
+     Ginikoefficient---internationellt/.
+
+[24] Hawawini, Gabriel, Subramanian, Venkat, and Verdin, Paul, 2002, Is performance
+     driven by industry-or firm-specific factors? A new look at the evidence, Strategic
+    Management Journal, Volume 24, Issue 1,
+     https://onlinelibrary.wiley.com/doi/abs/10.1002/smj.278.
+
+[25] McNamara, Gerry, Aime, Federico, Vaaler, Paul M., 2005, Is performance driven
+     by industry- or firm-specific factors? A response to Hawawini, Subramanian, and
+    Verdin, Strategic Management Journal, Volume 26, Issue 11,
+     https://onlinelibrary.wiley.com/doi/abs/10.1002/smj.496.
+
+[26] Matyjas, Zbigniew, 2014, Industry and Firm Influences on Performance: Evidence
+     from Polish Public Firms, Journal of Management Policy and Practice vol. 15(2),
+     http://t.www.na-businesspress.com/JMPP/MatyjasZ_Web15_2_.pdf.
+
+[27] Furman, Jeffrey L., 2000, Does industry matter differently in different places?, MIT
+    – Sloan School of Management,
+
+                                     34
+    https://pdfs.semanticscholar.org/4415/459654ac5665d778fd266c7e4e1cd0056514.
+     pdf.
+
+[28] Duhaime, Irene M., and Stimpert, J.L., 1998, One More Time: A Look at the Fac-
+    tors Influencing Firm Performance, faculty working paper no. 90-1630, University
+    of Illinois Urbana-Champaign,
+    https://www.ideals.illinois.edu/bitstream/handle/2142/30033/
+     onemoretimelooka1630duha.pdf?sequence=2.
+
+[29] Chandrapala, Pathirawasam, and Knápková, Adriana, 2013, Firm-specific factors
+     and financial performance of firms in the Czech Republic, Acta Universitatis Agri-
+     culturae et Silviculturae Mendelianae Brunensis, 2013, LXI, No. 7, pp. 2183–2190,
+    https://pdfs.semanticscholar.org/7f9d/02c3b98e5654b935ec4964b13e096f184cdc.
+     pdf.
+
+[30] Barbosa, Natália, and Louri, Helen, Corporate Performance: Does Ownership
+    Matter? A Comparison of Foreign- and Domestic-Owned Firms in Greece and
+    Portugal, Review of Industrial Organization, August 2005, Volume 27, Issue 1, pp
+    73–102,
+     https://link.springer.com/article/10.1007\%2Fs11151-005-4920-y.
+
+                                     35
