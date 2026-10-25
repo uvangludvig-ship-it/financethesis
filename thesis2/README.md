@@ -4,7 +4,7 @@ Deep-research pass on thesis 2 (forced flows, Greenwood and Sammon anchor), 11 t
 
 | file | what it is |
 |---|---|
-| `THESIS_IN_PLAIN_WORDS.md` | **Start here.** The thesis in plain words (25 Oct): what it is, what each section contains, which papers go where and what we take from each, how every table is built, who does what. Replaces `Thesis_in_plain_words.docx`. |
+| `THESIS_IN_PLAIN_WORDS.md` | **Start here.** The thesis in plain words, version 2 (25 Oct, also as `.docx`): what it is, what each section contains with what the winners did and what the losers did, which papers go where and what we take from each, how every table is built, who does what. Replaces `Thesis_in_plain_words.docx`. |
 | `00_VALIDATION.md` | The verdict: does thesis 2 hold up against the blind referee, with the data found tonight. Two of three Friday gates met. |
 | `01_DESIGN.md` | The pre-analysis plan: theory with equations (slow-moving capital price path, square-root impact law, dilution identity), four hypotheses each tied to one table, exposure measure, abnormal-return model, inference (cluster + wild bootstrap, Kolari-Pynnonen, randomisation within day), power with numbers, cost-benefit arithmetic, robustness. |
 | `03_DATA.md` | What is on disk, what was found, and the three things you must do: pull the stock panel (LSEG or FinBas, exact field list), download ten FI zips (links), email Pensionsmyndigheten for sale dates (draft). |
