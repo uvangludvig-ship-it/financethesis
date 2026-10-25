@@ -1,0 +1,27 @@
+All code and CSVs are in /tmp/claude-0/-home-claude/5b447583-b5ae-51ff-a30e-274749b6d7af/scratchpad/fresh/facts/ (common.py, fact1_appeal.py ... fact5_concentration.py; outputs fact1_*.csv ... fact5_concentration.csv). Panel de-duplicated (22 duplicate fund-months in 2018-06), AP7 excluded.
+
+FACT 1 - appeal natural experiment (Global active, award 24 Feb 2026, no move through Aug 2026)
+Losers = FTN report sec 4.1 list (45) minus 6 incumbent winners minus AXA (left Oct 2025) = 38 funds, 125.5 bn SEK, 606,560 savers at Feb 2026. Pooled monthly net trade % of lagged MV:
+| window | losers | winners_inc (6) |
+| Sep25-Jan26 ex-Dec | -0.49 | -0.29 |
+| award month Feb26 | -0.83 | -0.38 |
+| Mar-Aug26 mean | -0.21 | -0.14 |
+Cumulative after award, event month 1..6 (losers): -0.78, -1.26, -0.92, -1.35, -1.47, -1.22 % of capital (ex Evli Global, a merger receiver in Aug 2026: -1.85 at m6); savers -0.63, -1.02, -1.35, -1.64, -1.69, -1.18 %. Median fund: capital -2.2 %, savers -2.2 % over six months. Control (135 equity funds in non-procured categories, same window): median -1.5 % capital, -1.9 % savers. Other executed rounds, losers pre-move, same event months: m1 mean -0.34 %, m2 -1.82 % (ex-Dec -2.21); beyond m2 most rounds had already moved. Answer: being told the fund will go, with nothing forced, releases roughly 1-2 % of capital and savers over six months, no faster than ordinary attrition; winners do not gain. Thesis section: yes, clear and clean (N=38 funds / 0.6m savers, one event, descriptive only).
+
+FACT 2 - gender gap in opting out before forced move (award month A to M-1)
+| sample | funds | savers (w/m) | opt-out women | men | gap pp | ratio |
+| FTN pooled (9 rounds) | 78 | 335k / 435k | 4.85 % | 7.11 % | 2.26 | 1.47 |
+| FTN, losers >= 1 bn | 25 | 278k / 367k | 5.07 | 7.32 | 2.25 | 1.44 |
+| 2019 purge, AP7-default exits | 234 | 167k / 203k | 5.10 | 8.29 | 3.19 | 1.63 |
+Capital-weighted (return-adjusted): FTN women 5.8 % vs men 8.6 %; 2019 6.4 vs 9.4. Men higher in 63/78 FTN funds and 176/234 purge funds; every FTN round except two tiny ones (EU_smallcap 3 funds, Nordic_active with net inflows). Baseline attrition in untreated equity funds over the same windows: 0.2-0.4 % for both sexes, gap ~0 or slightly negative. Women are 43.5 % of loser savers and hold 125k vs 147k SEK per saver. Problems: net saver change understates gross exits; Dec windows add capital not savers. Thesis section: yes, strongest of the five (two independent episodes, 770k + 370k savers, same direction).
+
+FACT 3 - winners' share-class strategy (49 winners with contract observed; R5 Global active and R7 Tech not implemented)
+Only 4/49 (8 %) use a PPM-dedicated class (gross = net): Nordea 1 European Stars, Mercer Passive Global, SEB Nordic Small Cap, Cliens Sverige; all four are new-to-platform (4/22 new, 0/27 incumbents). 19 use a cheap/institutional class with a small rebate (gap 0.03-0.5 pp), 26 a retail class with a large rebate (gap > 0.5 pp). Incumbent winners all kept their existing ISIN; mean fee cut 0.086 pp (cap-weighted 0.074). PPM share of fund TNA (SEK funds, month before award): n=18 incumbents, mean 33 %, median 32 %; 14/18 have PPM < 50 % of TNA and all use the retail/institutional class with rebate, so the retail-base hypothesis cannot be tested: there is no variation among incumbents. Coverage: 10 EUR + 2 NOK funds unmeasurable (no FX), 8 no TNA, 11 not on platform pre-award. Thesis: a paragraph, not a section (N small, near-zero variation).
+
+FACT 4 - fee savings in SEK (panel fee_net; moved capital priced at inflow-weighted winner fee)
+Executed rounds through SE_index: (a) stayers in 28 incumbent winners: 160 bn x cut = 118 MSEK/yr, 1.07m fund-savers, 110 SEK/saver/yr; (b) 92 bn moved from losers: 60 MSEK/yr (equal-weighted winner fee: 68), 668k savers, 90 SEK/saver/yr; total 178 MSEK/yr, 102 SEK per affected saver per year. Including pending smallcap rounds: 222 MSEK/yr. By round (total MSEK/yr): EU_active 8, EU_index 12, Global_index 41, Nordic_active 10, Nordic_small -3 (Nordea Småbolag Norden rose 0.27->0.35 on 7 bn), SE_active 79, SE_index 30 (Avanza Zero 0.00->0.04 costs -8 MSEK), EU_small 4, SE_small 40. Check: FTN category averages (equal-weighted before-fee) x same capital give 328 MSEK/yr, 1.8x higher, because capital sat in the cheap incumbents (cap-weighted before-fee 0.12-0.32 vs FTN ew 0.13-0.52). Savers are fund-saver pairs (one person can be counted in several funds). Thesis: yes, as a short section; the ew-vs-cw point is the sharp part.
+
+FACT 5 - concentration (procured sub-category universe, award vs +12m/latest; cap-weighted pooled)
+Top-5 company share 90.2 -> 96.5 %, HHI 2548 -> 2997, funds 106 -> 64, companies 88 -> 55 (with overlap); Swedish-managed share 91.7 -> 90.3 %. By round top5/Swedish: EU_active 91->94 / 55->49; Global_index 94->100 / 95->86; Nordic_active 81->100 / 64->50; SE_active 85->93 / 97->96; SE_index 92->100 / 97->100; smallcaps unchanged (moves pending). Whole-panel-category version in fact5_concentration.csv. Thesis: a table at most; mostly mechanical from fewer funds.
+
+Data problems: upphandlad flag starts Nov 2024, so R1 contract fees are observed only from then; task2 move_start detection misses staggered moves (Avanza Zero still 2.7 bn/95k savers in Aug 2026); December rows carry new pension rights (+1.2-1.6 % all funds); merger receivers contaminate pooled flows (Evli Global, Monyx 2019, handled by exclusion); Morningstar TNA unusable for non-SEK funds.

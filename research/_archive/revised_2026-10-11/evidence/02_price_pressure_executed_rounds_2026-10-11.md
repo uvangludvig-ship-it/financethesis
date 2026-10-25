@@ -1,0 +1,28 @@
+# Price pressure on executed FTN rounds (agent report, 11 Oct 2026)
+
+Blind rule respected: no stock returns used. Holdings = FI VPFO quarterly files on disk (2023Q4, 2024Q1, 2024Q2, 2026Q2). FIP = net SEK / company market cap; Oct 2026 caps from stockanalysis.com for large names, mid/small caps approximated from a SIXPRX tracker's weights (flagged). Files in `data/agentP/`.
+
+## Per-round feasibility
+
+| Round | FI coverage (loser cap / winner alloc) | Net-demand dispersion | Index placebo? | Execution window (monthly panel) | Dates known? |
+|---|---|---|---|---|---|
+| SE_active (21.2 bn) | 85% / 83-89% | corr(buy,sell) 0.82-0.89; sd(net)/sd(gross) 0.30-0.34; top-10 share of squared net 0.62-0.72; 32-46 stocks with abs(net) > 100m; sum abs(net) 12-14 bn of 35 bn gross. FIP large caps sd 0.15 pp (Elekta -0.59%, Lagercrantz +0.32%, AAK -0.31%, Getinge -0.23%, Tele2 -0.21%, Ericsson -0.15%); all names (approx caps) sd 0.25-0.35 pp, 33-47 names > 0.25%, 10-18 > 0.5%, max 1.2% | no (active) | Jan-26 51%, Feb-26 34%, Mar-26 11% of award capital | month only |
+| SE_index (37.6 bn incl. Avanza Zero) | 95% / 100% | corr 0.96-0.97; sd(net)/sd(gross) 0.12-0.21; top-10 0.76-0.89; 13-24 names > 100m; sum abs(net) 6-9 bn of 73 bn. FIP sd 0.05-0.09 pp, max 0.3% (Evolution -0.21%, Saab -0.17%, H&M -0.09%; Investor B, Industrivarden C, Epiroc, Indutrade, SSAB +0.13 to +0.16%) | NOT identical: losers track OMXS30 (Avanza Zero, Evli), SBX (Storebrand Sverige, LF Index), SIXPRX (Skandia, Ohman, Storebrand Plus); winners SIX30 SRI (Topp Sverige), Solactive ESG Sweden 100 (HB 100), SIX Sweden SRI (HB Index Criteria), Solactive ESG Select Sweden (HB LM), SBX (Robur Access). Pairwise overlap 72-95%. Signs predictable, dose placebo-strength (per tranche ~0.02%) | Oct-25 8%, Nov 28%, Dec 7%, Jan-26 19%, Feb 18%, Mar 5%, Apr 6%, Jun 8%, Jul 3%, Aug 2%. Avanza Zero IS being drained in ~10 monthly tranches (22.1 to 2.7 bn) | month only |
+| Nordic_active (6.7 bn) | 79% / 52% | corr 0.42-0.61; FIP sd 0.04 pp, max 0.17% | no | May-25 14%, Jun-25 68%, Jul 15% | month only |
+| Nordic_smallcap (0.08 bn) | 0% (Finnish losers) | non-event | | May-25 | |
+| Global_index (23 bn) | 72% / 71% | corr 0.98; 3,017 names; FIP negligible | diffuse | Mar-25 17%, Apr 59%, May 14% | month only |
+| SE_smallcap (8.9 bn) | prior evaluation: sd 0.73 pp | | no | Jun-26 -7% so far; closed to new choices 18 Aug 2026, choice deadline 25 Sep 2026 | pending |
+
+Extra facts: PPM = 41% of Avanza Zero NAV, 41% Storebrand Sverige, 44% Ohman Sverige, 28% Lannebo Sverige, 23% LF Sverige Vision (fund-level fire-sale scale). SEB Sweden Equity Fund C (loser, 0.75 bn) was converted into winner "SEB 3 Sweden Equity Fund" in Nov-25: share-class swap, no stock trades; exclude. A/B share-class pairs (Atlas Copco, Investor, Industrivarden) carry much of the ISIN-level net; company-level numbers given.
+
+## Transfer dates
+No per-fund dates published for 2025-26. Found: Pensionsmyndigheten "Avslutsprocess" document (pensionsmyndigheten.se, for fondbolag): letter about two weeks before exit; exit order = 100% of holdings on one day ("Vi har tyvarr inte mojlighet att dela upp var avslutsorder"). Press: letters in monthly batches, about two weeks to choose, 85-95% accept the proposed fund (dagensps.se 2025-10-08, 2026-08-20; efn.se 2026-09-03; realtid.se 2025-10-08). Per-fund final avslutsdatum in the membership CSV (e.g. Storebrand Sverige 2026-03-09, LF Sverige Vision 2026-03-25). Exact days: request from Pensionsmyndigheten, or infer from daily fund TNA/units outstanding.
+
+## FI files to download
+fi.se/sv/vara-register/fondinnehav-per-kvartal/, pattern https://www.fi.se/FondInnehavLista/download?filnamn=Fondinnehav_YYYYQn_<timestamp>.zip: 2025Q4 (2026-08-16 17.37), 2025Q3 (2026-06-10 14.33), 2025Q2 (2026-06-10 14.28), 2026Q1 (2026-08-16 17.42), 2024Q4 (2026-06-10 14.03), 2025Q1 (2026-06-10 14.23), 2024Q3 (2026-06-10 13.53). 2026Q3 not yet posted.
+
+## Funds not in FI (need Morningstar/LSEG holdings)
+SE_active losers Odin Sverige (NO, 1.95 bn; FI file empty shell), Danske Invest SICAV Sverige (LU, 0.42), C WorldWide Sweden (LU, 0.04), SEB Sweden Equity Fund C (LU, swap); winner SEB 3 Sweden Equity Fund (LU). SE_index: Evli Sverige Aktieindex (FI, 1.9 bn; tracks SIX30). Nordic_active: Odin Norden, Delphi Nordic, Holberg Norden, DNB Gront Skifte Norden (NO); winners Alandsbanken Norden Aktie (FI), Nordea Nordic Fund. Nordic_smallcap: Fondita, Aktia, Nordea Smabolagsfond Norden (FI), SEB Nordic Small Cap (LU). Global: Danske SICAV x2 (LU), DNB Global Indeks (NO), Mercer CCF (IE), Storebrand Global Indeks (NO). HB Sverige LM Index exists only from 2025 (2026Q2: 115 holdings, 30.8 bn).
+
+## Verdict
+Objection 1 (no execution event) is fixed: three executed Swedish/Nordic rounds with dated, mechanical loser-side redemptions (100% of PPM units on single days; Jan-Feb 2026 SE_active, Jun 2025 Nordic, ~10 monthly tranches Oct-25 to Aug-26 SE_index) and FI holdings for 77-95% of loser capital; the sell side is the clean instrument since winners buy at their own pace (index winners excepted). Objection 2 (single-round tail dependence) is partly fixed: SE_active adds a ~200-stock cross-section with sd(FIP) 0.25-0.35 pp, so inference no longer hangs on ten small caps, but the dose is 2-3x below the small-cap round, top-10 concentration persists (0.62-0.72), and SE_index/Nordic are placebo-strength. Realistic framing: SE_smallcap high dose, SE_active medium, SE_index sign-predictable low dose/placebo; power for executed rounds alone is weak unless redemption days are obtained and rounds pooled.

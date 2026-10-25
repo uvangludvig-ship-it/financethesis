@@ -1,79 +1,61 @@
 # STEPS.md: gates, steps and dates
 
-Companion to `PLAN.md`. Aggressive schedule: **full draft to Klug Mon 2 Nov, submission-ready Fri 20 Nov**, then a buffer up to the hard deadline (Mon 7 Dec, 10:00). The headline needs no new data, so nothing on the critical path waits for a request.
+Companion to `PLAN.md`. Written 25 October 2026. Six weeks to the hard deadline (Mon 7 Dec, 10:00). The schedule puts the full draft at Fri 20 Nov, which leaves two weeks for Klug's comments, an outside read, the number audit and the package.
 
-**Two tracks.** The person who builds the panel does not write the introduction.
-- **Alexander:** data, code, exhibits, replication package.
-- **Ludvig:** literature, institutional background, writing, references.
-
-Swap and review every Friday.
+Two tracks (`PLAN.md`, section 6): **A** = Alexander (data, code, exhibits, package), **L** = Ludvig (correspondence, text, literature, AI log). Each step has an owner. "Both" means a call or a sitting together.
 
 ---
 
-## The nine gates
-
-Each gate must be passed before the work behind it counts. Gates 1, 3 and 4 decide the thesis; the rest is execution.
+## The seven gates
 
 | # | Gate | Passed when | Target |
 |---|---|---|---|
-| 1 | **Klug says yes to A** and to the D&M framing | Written answer | Fri 9 Oct (if he prefers B, stop and re-plan) |
-| 2 | **Data passes identity checks** | Flows reconcile with fund sizes (gap about 0.015-0.030%); placeholder rows dropped; mergers flagged; bid file and panel rebuilt with code; Table 1 plausible next to SSZ | Wed 7 Oct |
-| 3 | **PAP frozen and timestamped** (incl. D&M rows and the −0.18 cross-check) | Emailed to Klug and yourselves, plus a git commit | Thu 8 Oct |
-| 4 | **Headline result** | Table 2 headline row run exactly as registered; one-sentence reading written the same day | Fri 9 Oct to Sun 11 Oct |
-| 5 | **FTN column** | Table 3 reported in perfect-selection units with randomisation inference | Fri 16 Oct |
-| 6 | **Data freeze** | Nothing new enters; D&M 2001-2008 data either in hand (cutoff Fri 30 Oct) or that appendix dropped | Sun 25 Oct |
-| 7 | **Full draft** | Every claim traces to a table cell or a cited page | Mon 2 Nov |
-| 8 | **Outside referee read** | Someone who has not seen the work lists unsupported claims; all fixed | Fri 13 Nov |
-| 9 | **Klug's sign-off and submission** | Canvas plus replication zip to Anneli Sandbladh | Ready Fri 20 Nov; deadline Mon 7 Dec 10:00 |
+| 1 | **Repo clean and shared** | Repo private; cleanup pushed; L has a clone and the licensed folders by hand; both can run `python3 thesis2/code/eventstudy.py` (self-test) | Mon 26 Oct |
+| 2 | **Panel in the code's format** | `stocks_daily.csv`, `stocks_static.csv`, `indices_daily.csv`, `factors_daily.csv` exist; all 394 OMXSB events map to a series with prices around their dates; FI zips on disk | Fri 30 Oct |
+| 3 | **Table 2 run** (first unblinded result, no FTN date) | `replication_omxsb.py` runs end to end; one-sentence reading written; dose and MDE recomputed on actual ADV | Sun 1 Nov |
+| 4 | **Klug sign-off, unblinding** | Written yes on the specifications and the five open decisions; date written in `thesis2/03_DATA.md` E; `UNBLIND = True` in the same commit | Fri 6 Nov |
+| 5 | **Data freeze and all main results** | SHoF refresh to 31 Oct in; small-cap tranches dated; Tables 3, 4, 5 run as registered | Fri 13 Nov |
+| 6 | **Full draft to Klug** | Every claim traces to a table cell or a cited page; clean-machine run from raw data; 33 pages or fewer | Fri 20 Nov |
+| 7 | **Submission** | Outside read done and fixed; number audit; AI appendix; replication zip; two proofreads, one on paper | Ready Fri 4 Dec; submit Mon 7 Dec 10:00 |
 
 ---
 
 ## Steps, in order
 
-### Week 1 (Tue 6 to Sun 11 Oct): design locked, headline run
-- [ ] **Tue 6 (both):** send all requests (`PLAN.md` §5.3) and the Klug message (§7). Start the AI log.
-- [ ] **Tue 6 to Wed 7 (Alexander):**
-  - rebuild the panel and bid file from raw data with saved code (§5.2);
-  - drop placeholders, flag mergers, unify flow definitions (SSZ eqs. 1-2);
-  - build the quarterly PPM flow for the D&M rows;
-  - rank on SHoF returns;
-  - code FTN covariates at bid deadlines and strategy-level identity. **Gate 2.**
-- [ ] **Tue 6 to Wed 7 (Ludvig):**
-  - read Fricke-Jank-Wilke, Keim-Mitchell and Evans-Fahlenbrach (one page of notes each);
-  - ~~DiVA search and Riksrevisionen audit status~~ done 6 Oct (`research/literature/anchor_sweep_final_2026-10-06.md`); re-check the Riksrevisionen page in November;
-  - verify the Table IX unit on SSZ p. 833.
-- [ ] **Wed 7 (both):** recompute the power table under the frozen spec (standard errors and MDEs only). Write the PAP.
-- [ ] **Thu 8:** freeze and timestamp the PAP; send to Klug. **Gate 3.**
-- [ ] **Fri 9 to Sun 11 (Alexander):** Table 1, Figure 1, then the **Table 2 headline row**. Write its sentence the same day. **Gate 4.**
-- [ ] **Fri 9 to Sun 11 (Ludvig):** draft the institutional background (PPM, reforms 2019-2022, FTN, every fact sourced).
+### Week 1 (Mon 26 Oct to Sun 1 Nov): panel and Table 2
+- [ ] **Mon 26 [A]:** make the GitHub repo private; `git push`; empty `~/Documents/_to_delete/` after a glance. **Gate 1.**
+- [ ] **Mon 26 [L]:** clone; get `data/Valuations`, `data/Reinvestments`, `thesis2/data/prices/raw` from A by hand; run the `eventstudy.py` self-test. Read `00_VALIDATION.md`, `01_DESIGN.md`, `thesis2_method.pdf`, the outline.
+- [ ] **Mon 26 [L]:** email Klug: the method note as PDF, one paragraph on what changed since the synopsis, a meeting request for the week of 2 Nov with the five decisions. Email Pensionsmyndigheten (draft in `03_DATA.md` C, in your own words). Open `thesis2/AI_LOG.md` and add the entries you know of.
+- [ ] **Mon 26 to Wed 28 [A]:** build the panel. Re-run the Datastream list with a code row (RIC or ISIN), `MV`, `NOSH`, and pull the five index series. Write `thesis2/code/build_prices.py`: wide to long, `volume_sek = VO x 1000 x P`, static table (id, name, ticker, isin, first and last date), drop the 30 `#ERROR` series and list them. Match the 394 events; hand-resolve the unmatched file. **Gate 2.**
+- [ ] **Tue 27 [A]:** download the 13 FI zips (`03_DATA.md` B); `parse_fi.py`; check the nine foreign losers without holdings.
+- [ ] **Tue 27 to Thu 29 [L]:** institutional background (2.5 pages) and the data section (3 pages) in `thesis2/text/sections/`, every fact sourced to `data/facts/` or a document. Figure 1 and Table 1 contents listed for A.
+- [ ] **Thu 29 to Sun 1 [A]:** `replication_omxsb.py` to the end; Table 2 and Figure 2 as `.tex` and `.pdf` in `thesis2/output/`; one sentence in `output/tables/NOTES.md`. `pressure.py`, then `power.py --dose`. **Gate 3.**
+- [ ] **Fri 30 [both]:** Friday swap (one afternoon). Three lines to Klug.
 
-### Week 2 (12 to 18 Oct): all main results
-- [ ] Table 2 complete: piecewise rows, tail contrast, all robustness rows including D&M and the funds-of-funds exclusion.
-- [ ] Table 3: two stages, randomisation inference within round. **Gate 5.**
-- [ ] Meet Klug with the headline number.
-- [ ] Ludvig: related literature (under one page) and the data section.
+### Week 2 (2 to 8 Nov): sign-off and unblinding
+- [ ] **[L]** Klug meeting with Table 2 in hand; minutes with the five decisions in `thesis2/03_DATA.md` E, dated. **Gate 4.**
+- [ ] **[L]** Request the SHoF refresh (Valuations and Reinvestments to 31 Oct, same request as before).
+- [ ] **[A]** After the sign-off commit: `ftn_eventstudy.py` for Table 3 and Figure 3 on the rounds with dated tranches (European 2024, Swedish active, Nordic active).
+- [ ] **[L]** Theory section (3 pages, four equations, derivations cited); related literature (under one page); methodology (2.5 pages) from `01_DESIGN.md` 4 and 5.
+- [ ] **[both]** Friday swap; three lines to Klug.
 
-### Week 3 (19 to 25 Oct): finish the analysis
-- [ ] Table 4 and the descriptive appendix.
-- [ ] One script per exhibit; full run from raw data on a clean machine.
-- [ ] Ludvig: method section with a deviations table (from SSZ and from D&M).
-- [ ] **Sun 25 Oct: data freeze. Gate 6.** (D&M 2001-2008 data has its own cutoff, Fri 30 Oct.)
+### Week 3 (9 to 15 Nov): all main results, data freeze
+- [ ] **[A]** SHoF refresh in; `detect_exit_days.py` again; small-cap tranches added to the dose. Table 4 (anticipation), Table 5 and Figure 4 (incidence), Table 6 (cost-benefit) and Table 7 (robustness). One script per exhibit; `thesis2/code/run_all.sh`.
+- [ ] **[L]** Results sections 6.1 to 6.5 from the NOTES sentences; introduction (3 pages, numbers previewed); conclusion last, calibrated with `research/reference/conclusions_winners_vs_nonwinners.md`.
+- [ ] **Fri 13 Nov: data freeze. Gate 5.** Nothing new enters after this except FI 2026Q3 if it lands, as an appendix check.
 
-### Week 4 (26 Oct to 1 Nov): write everything
-- [ ] Results: every paragraph opens with our number, the benchmark and the bound.
-- [ ] Introduction (2-4 pages, numbers previewed); conclusion last, calibrated with `research/reference/conclusions_winners_vs_nonwinners.md`.
-- [ ] D&M appendix if its data arrived.
-- [ ] **Mon 2 Nov: full draft to Klug. Gate 7.**
+### Week 4 (16 to 22 Nov): the draft
+- [ ] **[A]** Clean-machine run from raw data; captions by the caption rule (equation, variables, sample, standard errors); appendix A1 to A3.
+- [ ] **[L]** Abstract; related literature trimmed; references 25-30, each cross-checked; page count.
+- [ ] **[both]** Mid-term meeting with Klug if his date falls here: bring Tables 2, 3 and 5, nothing else.
+- [ ] **Fri 20 Nov: full draft to Klug. Gate 6.**
 
-### Weeks 5-6 (2 to 20 Nov): attack the draft, then finish
-- [ ] Outside referee read; fix every unsupported claim. **Gate 8.**
-- [ ] Number audit: every figure in the text traced to a table cell or a cited page.
-- [ ] Mid-term meeting (Klug's date): bring Tables 2 and 3, nothing else.
-- [ ] Klug's comments; 20-30 references, all cross-checked (D&M: EFM 21(1), 1-19).
-- [ ] AI appendix from the log; replication package (raw data, code per exhibit, data dictionary, README with run order).
-- [ ] Format: English, official front page, no table of contents, 12 pt single spacing, at most 40 pages of main text. Two proofreads, one on paper.
-- [ ] **Fri 20 Nov: submission-ready.**
+### Week 5 (23 to 29 Nov): attack the draft
+- [ ] **[L]** Outside referee read (someone who has not seen the work lists unsupported claims); fix every one.
+- [ ] **[A]** Number audit: every figure in the text traced to a script output; replication package (code, derived tables, data dictionary, README with run order, licensed inputs named, not shipped).
+- [ ] **[L]** AI appendix from the log; format checklist (front page, no table of contents, 12 pt, single spacing).
 
-### Buffer (21 Nov to 7 Dec)
-- [ ] Second Klug round if needed; prepare the presentation and opposition.
-- [ ] **Submit by Mon 7 Dec, 10:00 (Gate 9).** Presentation and opposition before 12 Dec; Publish Thesis by 18 Dec, 18:00.
+### Week 6 (30 Nov to 6 Dec): finish
+- [ ] Klug's comments in; second proofread on paper; replication zip tested from scratch.
+- [ ] **Fri 4 Dec: submission-ready. Gate 7.** Submit **Mon 7 Dec, 10:00**: Canvas plus the zip to Anneli Sandbladh.
+- [ ] Presentation and opposition before 12 Dec; Publish Thesis by 18 Dec, 18:00.
