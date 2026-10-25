@@ -1,0 +1,23 @@
+# Frontier scan: JF/JFE/RFS 2023–2026 (OpenAlex, 1,222 records, 1,055 substantive articles title-screened, 65 abstracts)
+Top-20 (score /10):
+1. Sanati & Beyhaghi 2025 RFS advance "How does removing the tax benefits of debt affect firms? Evidence from the 2017 US tax reform" — RDD at $25M exemption; debt and investment fall. → DIRECT ANCHOR for candidate I (Swedish 5 MSEK simplification threshold per group, 2019). (9)
+2. Hvide & Nielsen 2026 JFE 181, 104282 "Flying below the radar: insider trading by executives below the top" (Norwegian registers) → FI insider register (public since MAR Jul 2016), top vs non-top PDMR, closed periods. (9)
+3. Greenwood & Sammon 2025 JF 80(2) 657–698 "The disappearing index effect" + Sammon & Shim 2026 RFS "Who clears the market when passive investors trade?" → OMXS30 turnover-rank rule + Holdings monthly ownership shows who sells. (9) [overlaps Klug tutor topic]
+4. Acharya, Crosignani, Eisert & Eufinger 2024 JF 79(3) 1883–1929 zombie credit → Serrano local market zombie shares, negative rates 2015–19, hikes 2022–23. (9)
+5. Ewens, Xiao & Xu 2024 JFE 153, 103775 regulatory costs via bunching → ÅRL size thresholds raised 2025 (+25%); audit thresholds. (8)
+6. Kontoghiorghes 2024 JFE 162, 103927 "Do personal taxes affect investment decisions and stock returns?" (AIM shares allowed in tax-free ISAs 2013 → returns fell by effective tax; payouts/investment up) → ISK 2012, allowance 150k/300k 2025/26. DIRECT ANCHOR for D. (8)
+7. Hackethal, Hanspal, Hartzmark & Bräuer 2025 RFS advance "Educating investors about dividends" → Swedish annual dividend season + Holdings household share around ex-day. (8)
+8. Albuquerque, Cardoso-Costa & Faias 2024 RFS 37(10) sovereign auctions elasticity → Riksgälden auctions, QE 2015/QT 2023. (8)
+9. Li, Sokolinski & Tamoni 2026 JFE 179, 104257 which investors drive anomalies → Holdings monthly ownership by type. (8)
+10. Larrain, Phillips, Sertsios & Urzúa 2025 RFS 38(8) 2467–2514 going public (completed vs withdrawn IPOs, 16 EU countries) → First North boom 2020–21 / bust 2022 with Serrano. (8)
+11. Vandeweyer, Yang & Yannelis 2025 JFE 175 dual-listed stocks & monetary policy → Stockholm/Helsinki dual listings + Riksbank surprises. (8)
+12. Ozdagli & Weber 2026 RFS 39(5) monetary policy via production networks → SCB IO tables. (8)
+13. Naaraayanan & Wolfenzon 2024 RFS 37(1) business group spillovers + Ying 2024 JFE 156 → Swedish ownership spheres. (8)
+14. Muravyev, Pearson & Pollet 2025 JF 80(6) anomalies & short-sale costs → FI short register; no Swedish ban 2020 vs EU bans. (8)
+15. Liu, Parker & Ramcharan 2023 RFS 36(9) refinancing channel & small business survival → floating-rate Sweden. (7)
+16. Huang & Sacchetto 2026 JFE 181 corporate savings in risky assets → negative rates. (7)
+17. Giannetti & Jotikasthira 2024 RFS 37(7) bond fund concentration & fragility → March 2020 Swedish bond fund closures. (7)
+18. Acharya et al 2025 JFE 170 QE & fallen angels → Riksbank eligibility ratings. (7)
+19. Chinco & Sammon 2024 JFE 157 passive share → OMXS30 rebalancing volume vs Holdings. (7)
+20. Guiso, Schivardi & Zaccaria 2026 JFE 183 horizontal spillovers of gender quotas → EU directive Jun 2026. (7)
+Excluded: Bäckman, Moran & van Santen 2025 RFS (Swedish amortisation, needs FI microdata); Calvet et al 2025 JF (registers); Gargano & Giacoletti 2026 RFS (Hemnet data).
