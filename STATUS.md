@@ -6,7 +6,7 @@
 
 - **Thesis 2 is the thesis.** Working title: "Pre-announced, uninformed, and large: the price of moving the premium pension". Anchor: Greenwood and Sammon (2025, JF). Part 1 replicates their index-effect result on OMXSB (394 events, 2013-2026). Part 2 measures the price pressure of Pensionsmyndigheten's forced sales after Fondtorgsnämnden's rounds (2024-2026). Part 3 asks who paid (dilution of the stayers, swing pricing). Pre-analysis plan: `thesis2/01_DESIGN.md`. Method note with equations, data table and work plan: `thesis2/thesis2_method.tex` (14 Oct).
 - **Thesis 1 (the SSZ replication) is dropped.** Its plan is archived in `research/_archive/thesis1_ssz_2026-10-06/`. Nothing in it was executed.
-- **25 Oct, evening: the map is `thesis2/THESIS_IN_PLAIN_WORDS.md` (and `.docx`), version 2.1, Parts A to G.** Read it before anything else in `thesis2/`.
+- **25 Oct, evening: the map is `thesis2/THESIS_IN_PLAIN_WORDS.md` (and `.docx`), version 2.3, Parts A to H.** Read it before anything else in `thesis2/`.
 - **25 Oct: folders merged.** `financethesis_fresh` and `financethesis_revised` were folded into this repo (`thesis2/`, `data/`, `research/_archive/revised_2026-10-11/`). The empty shells and byte-identical duplicates sit in `~/Documents/_to_delete/`; Alexander empties it by hand after checking.
 - **No FTN return has been computed.** `UNBLIND = False` in `thesis2/code/ftn_eventstudy.py` and `dilution.py` stays until Klug has signed off the specifications and the date is written in `thesis2/03_DATA.md`, section E.
 - **The GitHub repo is public.** It holds SHoF/Morningstar-derived data (`data/derived/`, `thesis2/data/exit_days/`), course slides and the SSE thesis corpus. Make it private before the next push (GitHub: Settings, Danger zone, Change visibility).
@@ -23,9 +23,10 @@
 3. [A] Stock panel into the code's format: `stocks_daily.csv`, `stocks_static.csv`, `factors_daily.csv`, `indices_daily.csv` (see `thesis2/data/prices/README.md`). Re-run the same Datastream list for `MV`, `NOSH` and a code row. Then `python3 thesis2/code/replication_omxsb.py`: Table 2, the first unblinded result, and not an FTN result.
 4. [A] Download the 8 FI zips for 2024Q3-2026Q1 and the 5 for 2018Q4-2019Q4 (links in `thesis2/03_DATA.md`, B). Run `parse_fi.py`, `pressure.py`, `power.py --dose`.
 5. [L] Send the Pensionsmyndigheten request for sale orders under offentlighetsprincipen (draft in `thesis2/03_DATA.md`, C; rewrite it in your own words). Answers take one to three weeks.
-6. [L] Keep `thesis2/AI_LOG.md` current (course requirement). Fill the section files in `thesis2/text/sections/` starting with institutional background and data.
-7. [A+L] Before the sign-off meeting: write the four maths additions from `thesis2/THESIS_IN_PLAIN_WORDS.md` Part E (impact exponent with EIV-IV, reversal half-life, optimal-execution counterfactual, implied elasticity) into `thesis2/01_DESIGN.md` section 8 and the method note, so they are pre-committed and land inside Tables 3 and 6 and the Figure 3 caption. Nothing else is added.
-8. [L] First week of November: request the SHoF refresh of Valuations and Reinvestments to 31 Oct. [A] Re-run `thesis2/data/exit_days/detect_exit_days.py` for the small-cap tranches.
+6. [L] Three data items only L can do this week: `thesis2/data/omxsb/tracker_aum.csv` (yearly OMXSB tracker assets 2013-2026, by hand from `omxsb_notes.md` section 5; the replication script reads it and it is missing), Appendix Table A1 (the procurement calendar with a source per date), and the 29 UNKNOWN swing-pricing rows. Then `literature/cards.md`.
+7. [L] Keep `thesis2/AI_LOG.md` current (course requirement). Fill the section files in `thesis2/text/sections/` starting with institutional background and data.
+8. [A+L] Before the sign-off meeting: write the four maths additions from `thesis2/THESIS_IN_PLAIN_WORDS.md` Part E (impact exponent with EIV-IV, reversal half-life, optimal-execution counterfactual, implied elasticity) into `thesis2/01_DESIGN.md` section 8 and the method note, so they are pre-committed and land inside Tables 3 and 6 and the Figure 3 caption. Nothing else is added.
+9. [L] First week of November: request the SHoF refresh of Valuations and Reinvestments to 31 Oct. [A] Re-run `thesis2/data/exit_days/detect_exit_days.py` for the small-cap tranches.
 
 ## Open decisions (for Klug; `thesis2_method.tex`, section 7)
 

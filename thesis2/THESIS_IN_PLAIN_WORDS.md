@@ -2,11 +2,11 @@
 
 *Working title: Pre-announced, uninformed, and large: the price of moving the premium pension*
 
-*Planning document, 25 October 2026, version 2.2. It replaces the 12 October version. For every part of the thesis it says what to write, what the prize winners did there, what the non-winners did that we must not do, and who writes it. No results exist yet; where a result of ours is mentioned, it is what we expect, not what we found. The thesis text is written by the two of us; this document is a map.*
+*Planning document, 25 October 2026, version 2.3. It replaces the 12 October version. For every part of the thesis it says what to write, what the prize winners did there, what the non-winners did that we must not do, and who writes it. No results exist yet; where a result of ours is mentioned, it is what we expect, not what we found. The thesis text is written by the two of us; this document is a map.*
 
 *Sources for "what winners did" and "what losers did": the full text of all 660 bachelor theses in finance in the SSE catalogue 2009-2026, the 25 awarded ones read in full and a sample of 33 non-winners read against the same rubric (`research/reference/winners_vs_nonwinners_analysis.md`, `research/reference/conclusions_winners_vs_nonwinners.md`), and the five winners closest to our design read section by section (`outline/winners_structure.md`). The course rules are from Professor Sabbatucci's slides (`outline/requirements_checklist.md`).*
 
-**Contents.** Part A: what the thesis is (question, anchor, what winners do). Part B: the three empirical parts, one card each. Part C: the thesis section by section, with what the winners did and what the losers did. Part D: the literature, strand by strand. Part E: the method in plain words and the harder maths. Part F: exhibits and data. Part G: outcomes, work plan, checklists.
+**Contents.** Part A: what the thesis is (question, anchor, what winners do). Part B: the three empirical parts, one card each. Part C: the thesis section by section, with what the winners did and what the losers did. Part D: the literature, strand by strand. Part E: the method in plain words. Part F: the maths, in three tiers. Part G: exhibits and data. Part H: outcomes, work plan, checklists.
 
 ```{=openxml}
 <w:p><w:r><w:br w:type="page"/></w:r></w:p>
@@ -341,7 +341,7 @@ Cronqvist and Thaler (2004, AER P&P) and Cronqvist, Thaler and Yu (2018, AEA P&P
 <w:p><w:r><w:br w:type="page"/></w:r></w:p>
 ```
 
-# Part E. Method and maths
+# Part E. The method in plain words
 
 ## The method in plain words
 
@@ -359,6 +359,13 @@ Cronqvist and Thaler (2004, AER P&P) and Cronqvist, Thaler and Yu (2018, AEA P&P
 
 **Unblinding.** `replication_omxsb.py` runs now and touches no FTN date. `ftn_eventstudy.py` and `dilution.py` stay switched off until Klug has agreed the specifications and the date is written into `03_DATA.md`, section E. Anything run afterwards that is not in `01_DESIGN.md` is labelled exploratory.
 
+
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
+# Part F. The maths
 
 ## Harder maths that fit inside the existing tables
 
@@ -389,7 +396,7 @@ Order of work: Table 2 and Table 3 first (Alexander). Then 1 and 2 the same week
 <w:p><w:r><w:br w:type="page"/></w:r></w:p>
 ```
 
-# Part F. Exhibits and data
+# Part G. Exhibits and data
 
 ## The tables and figures: how each is built
 
@@ -431,7 +438,7 @@ Holdings gap to state in the text: only Swedish-domiciled funds report to FI; ni
 <w:p><w:r><w:br w:type="page"/></w:r></w:p>
 ```
 
-# Part G. Outcomes, work plan, checklists
+# Part H. Outcomes, work plan, checklists
 
 ## What we expect, and how the conclusion reads in each case
 
