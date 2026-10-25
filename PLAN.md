@@ -95,16 +95,16 @@ Data rules: raw files untouched, with download dates; every transformation in co
 
 ## 6. Division of labour
 
-Two tracks, one repo, one branch. Each person owns folders; the other asks before touching them.
+Two tracks, one repo, one branch. Ludvig: code and data. Alexander: text, literature, correspondence. Each person owns folders; the other asks before touching them.
 
-| | Alexander (A) | Ludvig (L) |
+| | Ludvig (L) | Alexander (A) |
 |---|---|---|
 | Owns | `thesis2/code/`, `thesis2/data/`, `thesis2/output/`, `data/` | `thesis2/text/`, `thesis2/literature/`, `thesis2/AI_LOG.md`, `thesis2/research/` |
-| Does | Stock panel, FI holdings, dose, every table and figure, power, robustness, clean-machine run, replication package | Klug and Pensionsmyndigheten correspondence, institutional background, data and method prose, theory section (four of the eight equations), literature cut to 25-30, introduction and conclusion, AI appendix, format checklist |
+| Does | Stock panel, FI holdings, tracker assets, procurement calendar data, swing-pricing gaps, dose, every table and figure, power, robustness, SHoF refresh request, clean-machine run, replication package | Klug and Pensionsmyndigheten correspondence, institutional background, data and method prose, theory section (four of the eight equations), literature cards and the related-literature paragraph, introduction and conclusion, AI log and appendix, format checklist, the seminar deck |
 | Writes | The one-sentence reading of each table the day it is finished, in `thesis2/output/tables/NOTES.md` | Everything in `thesis2/text/`, from those sentences and the design files |
 | Reviews | L's data and method sections against the code | A's tables against `01_DESIGN.md` and the captions rule |
 
-Swap roles for one afternoon each Friday: A reads the text for claims without a table cell; L reads the code for a choice not in the PAP.
+Swap roles for one afternoon each Friday: L reads the text for claims without a table cell; A reads the code for a choice not in the PAP.
 
 ---
 
