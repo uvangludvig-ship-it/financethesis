@@ -35,6 +35,8 @@ Two folders are **not** in git because they are several GB and licensed to SHoF:
 | File | What | Built by |
 |---|---|---|
 | `omxsb/omxsb_changes_2013_2026.csv` | 394 OMXSB index changes with announcement and effective dates, 325 verified | `code/build/omxsb_build.py`, sources in `omxsb_notes.md` |
+| `omxsb/omxsb_changes_2005_2012.csv` | 142 OMXSB index changes 2007-2012 (12 of the 17 reviews with effective dates in 2005-2012; the five reviews Jan 2005 to Jan 2007 not found), all verified from OMX/Nasdaq OMX release text; January/July schedule until Jan 2009 (cycle `2009JAN`), June/December from Jun 2009 | `code/build/omxsb_build_2005_2012.py`, sources in `omxsb_notes_2005_2012.md` |
+| `omxsb/omxsb_notes_2005_2012.md` | Sources, schedule correction, the five missing reviews and what was tried, caveats (Nokia chain gap, reversed Sigma/Stora Enso A, ticker spellings) for the 2005-2012 list | agent run 27 Oct 2026 |
 | `omxsb/omxsb_events_with_ric.csv` | The same 394 events matched to LSEG RICs | LSEG pull v4 |
 | `omxsb/omxs30_changes_2005_2026.csv` | 48 OMXS30 changes | `code/build/omxs30_build_csv.py`, `omxs30_notes.md` |
 | `swing/swing_status_ftn_losers.csv`, `swing_status_2019_purge.csv` | Swing-pricing status at exit for the 78 FTN losers and the 60 largest 2019 exits | `code/build/swing_build_outputs.py`, `swing_notes.md` |
