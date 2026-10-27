@@ -1,11 +1,12 @@
 # Exhibits manifest
 
-All exhibits are produced by code.ipynb in this folder from omxsb_events_with_ric.csv, stocks_daily.csv.gz, stocks_static.csv, indices_daily.csv and the 31 Fondinnehav zip files (2018Q4 to 2026Q2). Tables are saved as .tex (booktabs fragment), .docx and .csv in output/tables; figures as .pdf and .png (300 dpi) with their plotted data as .csv in output/figures.
+All exhibits are produced by code/notebooks/replication_omxsb.ipynb from stocks_daily.csv.gz, stocks_static.csv, indices_daily.csv, omxsb_events_with_ric.csv and the 31 Fondinnehav zip files (2018Q4 to 2026Q2). Tables are saved as .tex (booktabs fragment), .docx and .csv in output/tables; figures as .pdf and .png (300 dpi) with their plotted data as .csv in output/figures.
 
 | Exhibit | Files | Description |
 |---|---|---|
 | tab_01_sample | tex, docx, csv | Event counts by period before and after the listing/delisting filter |
 | tab_02_car | tex, docx, csv | Abnormal returns around OMXSB changes by period (anchor Table 2) |
+| tabA_07_car_robustness | tex, docx, csv | Table 2 under three alternative conventions: excluding the 2020-11-10 review, all announcements after close, all pre-open |
 | tab_03_determinants | tex, docx, csv | Determinants of the index effect with period dummies (anchor Table 3) |
 | tabA_02_isin_matches | tex, docx, csv | ISIN name matches used to bridge ISIN changes in FI holdings |
 | tabA_03_index_funds | tex, docx, csv | Funds classified as OMXSB index trackers from their trades |
