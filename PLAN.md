@@ -1,12 +1,12 @@
 # PLAN.md: thesis 2 in one document
 
-**Single source of truth.** Written 25 October 2026 when the three thesis folders were merged. It replaces the SSZ plan (archived in `research/_archive/thesis1_ssz_2026-10-06/`). If anything here conflicts with an older file, this file wins. Dates and gates are in `STEPS.md`; the day-to-day state is in `STATUS.md`.
+**Single source of truth.** Written 25 October 2026 when the three thesis folders were merged. It replaces the SSZ plan (archived in `archive/research_archive/thesis1_ssz_2026-10-06/`). If anything here conflicts with an older file, this file wins. Dates and gates are in `STEPS.md`; the day-to-day state is in `STATUS.md`.
 
-The detailed design is not repeated here. Read, in this order: `thesis2/00_VALIDATION.md` (why this design), `thesis2/01_DESIGN.md` (the pre-analysis plan), `thesis2/thesis2_method.tex` (equations, data table, honest assessment), `thesis2/outline/thesis2_outline.md` (section by section, page budget 33 of 40).
+The detailed design is not repeated here. Read, in this order: `thesis/design/00_VALIDATION.md` (why this design), `thesis/design/01_DESIGN.md` (the pre-analysis plan), `thesis/design/thesis2_method.tex` (equations, data table, honest assessment), `thesis/outline/thesis2_outline.md` (section by section, page budget 33 of 40).
 
 Authors: Alexander Fox and Ludvig Pauli Uväng. Tutor: Michael Klug. Examiner: Riccardo Sabbatucci. Course: BE451, autumn 2026.
 
-> Course rule: AI may not write thesis text. Every use of an AI tool goes into `thesis2/AI_LOG.md` the same day (tool, date, purpose, what changed).
+> Course rule: AI may not write thesis text. Every use of an AI tool goes into `thesis/AI_LOG.md` the same day (tool, date, purpose, what changed).
 
 ---
 
@@ -19,7 +19,7 @@ Authors: Alexander Fox and Ludvig Pauli Uväng. Tutor: Michael Klug. Examiner: R
 | Presentation and opposition | Before 12 December |
 | Final version in Publish Thesis | 18 December, 18:00 |
 
-Format: English; official front page; no table of contents; at most 40 pages single-spaced including tables, references and appendix; introduction 2-4 pages that previews the numbers; related literature under one page; self-contained captions; no textbook exposition of standard methods; every in-text source in the references and vice versa; AI appendix. Checklist: `thesis2/outline/requirements_checklist.md`.
+Format: English; official front page; no table of contents; at most 40 pages single-spaced including tables, references and appendix; introduction 2-4 pages that previews the numbers; related literature under one page; self-contained captions; no textbook exposition of standard methods; every in-text source in the references and vice versa; AI appendix. Checklist: `thesis/outline/requirements_checklist.md`.
 
 What the examiner grades: useful, correct, relevant, contribution, independence. Do not chase significance; state the power of every test.
 
@@ -31,7 +31,7 @@ What the examiner grades: useful, correct, relevant, contribution, independence.
 
 **Working title.** "Pre-announced, uninformed, and large: the price of moving the premium pension"
 
-**Three parts, four hypotheses, one table each** (`thesis2/01_DESIGN.md`, 3.5):
+**Three parts, four hypotheses, one table each** (`thesis/design/01_DESIGN.md`, 3.5):
 
 | Part | Hypothesis | Exhibit |
 |---|---|---|
@@ -59,17 +59,17 @@ Table 1 is summary statistics (rounds, money moved, fees before and after). Tabl
 | Dahlquist and Martinez (2015, EFM); Hagen, Malisa and Post (2023); Engström and Westerberg (2004) | PPM background and the Swedish flow literature |
 | FI (2025); RiR 2018:32; SOU 2019:44; Lag (2022:759) and (2022:760); the 2026 Riksrevisionen audit | Institutional chain and novelty |
 
-Full list with verification status and magnitudes: `thesis2/literature/literature_verified.md` (66 references, 52 verified) and `references.bib`. Target in the thesis: 25-30 references.
+Full list with verification status and magnitudes: `thesis/literature/literature_verified.md` (66 references, 52 verified) and `references.bib`. Target in the thesis: 25-30 references.
 
 ---
 
 ## 4. Specification: pre-committed and open
 
-Pre-committed in `thesis2/01_DESIGN.md` (section 8): the windows, the dose definitions (gross and net, equation 6), Y = 0.7 in the square-root benchmark, the factor model, the clustering unit, the four hypotheses with their tables, the 20-day reversal window for the small-cap round, and the index round reported as a low-dose treated group. Power is in `01_DESIGN.md` 5.4 and is recomputed from the actual ADV by `code/power.py --dose` before unblinding.
+Pre-committed in `thesis/design/01_DESIGN.md` (section 8): the windows, the dose definitions (gross and net, equation 6), Y = 0.7 in the square-root benchmark, the factor model, the clustering unit, the four hypotheses with their tables, the 20-day reversal window for the small-cap round, and the index round reported as a low-dose treated group. Power is in `01_DESIGN.md` 5.4 and is recomputed from the actual ADV by `code/power.py --dose` before unblinding.
 
 Open, to be settled with Klug before unblinding: OMXSB alone or with OMXS30; the 2019 purge in Table 5 or the appendix; market-adjusted or four-factor as the main measure; cost-benefit as table or paragraph.
 
-**The unblinding rule.** `code/replication_omxsb.py` runs now; it touches no FTN date. `ftn_eventstudy.py` and `dilution.py` carry `UNBLIND = False`. The switch is flipped only after the sign-off meeting, and the date goes into `thesis2/03_DATA.md`, section E, in the same commit.
+**The unblinding rule.** `code/replication_omxsb.py` runs now; it touches no FTN date. `ftn_eventstudy.py` and `dilution.py` carry `UNBLIND = False`. The switch is flipped only after the sign-off meeting, and the date goes into `thesis/design/03_DATA.md`, section E, in the same commit.
 
 ---
 
@@ -77,17 +77,17 @@ Open, to be settled with Klug before unblinding: OMXSB alone or with OMXS30; the
 
 | Variable | Used in | Source and file | Status 25 Oct |
 |---|---|---|---|
-| Daily close, total return, volume | AR, CAR, ADV, dose | Datastream pull of 15 Oct, `thesis2/data/prices/raw/` (gitignored) | On disk, wide, names only. Needs the long format, a code row, MV and NOSH (`thesis2/data/prices/README.md`) |
+| Daily close, total return, volume | AR, CAR, ADV, dose | Datastream pull of 15 Oct, `data/raw/lseg/datastream/` (gitignored) | On disk, wide, names only. Needs the long format, a code row, MV and NOSH (`data/raw/lseg/panel_2012_2026/README.md`) |
 | Index levels (OMXSPI, OMXSGI, OMXSB, OMXSBGI, OMXS30) | Market return, figures | Datastream, `indices_daily.csv` | Not pulled |
 | Swedish factors | Four-factor robustness | SHoF Fama-French page | Not pulled; not on the critical path |
-| OMXSB additions and deletions | Part 1 events | Nasdaq releases, `thesis2/data/omxsb/` | Done: 394 events, mapped to LSEG codes |
-| Tranche days, redeemed share, fund assets | Dose, Table 5 | Morningstar daily via SHoF, `thesis2/data/exit_days/` | Done for about 30 losers to 30 Sep; refresh to 31 Oct in week 2 |
+| OMXSB additions and deletions | Part 1 events | Nasdaq releases, `data/input/omxsb/` | Done: 394 events, mapped to LSEG codes |
+| Tranche days, redeemed share, fund assets | Dose, Table 5 | Morningstar daily via SHoF, `data/derived/exit_days/` | Done for about 30 losers to 30 Sep; refresh to 31 Oct in week 2 |
 | Sale orders for the largest Swedish losers | Dose, Swedish rounds | Pensionsmyndigheten, offentlighetsprincipen | Request not sent |
 | Fund holdings | Dose, staleness check | FI quarterly holdings, `data/extra/fi_YYYYqN.zip` | 4 of 12 quarters; 8 plus 5 to download |
-| Winners' inflows, fee savings | Table 1, Table 6 | `data/panel/ppm_panel_2018_2026.csv` | Done |
-| Award and letter dates, winners, losers, bids | Rounds, windows | `data/derived/ftn_2026-10-11/bids_long.csv` | Done, 11 rounds |
-| Swing-pricing status | Table 5 | `thesis2/data/swing/` | Done: 11 yes, 38 no, 29 unknown |
-| Fund NAV and benchmark | Table 5 | `data/Reinvestments/` (not in git), `data/fundmaster.xlsx` | Done; opened only after unblinding |
+| Winners' inflows, fee savings | Table 1, Table 6 | `data/derived/ppm/ppm_panel_2018_2026.csv` | Done |
+| Award and letter dates, winners, losers, bids | Rounds, windows | `data/derived/ftn/bids_long.csv` | Done, 11 rounds |
+| Swing-pricing status | Table 5 | `data/input/swing/` | Done: 11 yes, 38 no, 29 unknown |
+| Fund NAV and benchmark | Table 5 | `data/raw/shof/Reinvestments/` (not in git), `data/fundmaster.xlsx` | Done; opened only after unblinding |
 
 Data rules: raw files untouched, with download dates; every transformation in code; one script per exhibit; the whole chain runs from raw data on a clean machine before the draft goes to Klug. Licensed data (LSEG, Morningstar) never enters git; the replication package for the course ships the code and the derived tables, and names the licensed inputs.
 
@@ -99,9 +99,9 @@ Two tracks, one repo, one branch. Each person owns folders; the other asks befor
 
 | | Alexander (A) | Ludvig (L) |
 |---|---|---|
-| Owns | `thesis2/code/`, `thesis2/data/`, `thesis2/output/`, `data/` | `thesis2/text/`, `thesis2/literature/`, `thesis2/AI_LOG.md`, `thesis2/research/` |
+| Owns | `code/`, `data/`, `output/`, `data/` | `thesis/text/`, `thesis/literature/`, `thesis/AI_LOG.md`, `thesis/research_2026-10-11/` |
 | Does | Stock panel, FI holdings, dose, every table and figure, power, robustness, clean-machine run, replication package | Klug and Pensionsmyndigheten correspondence, institutional background, data and method prose, theory section (four of the eight equations), literature cut to 25-30, introduction and conclusion, AI appendix, format checklist |
-| Writes | The one-sentence reading of each table the day it is finished, in `thesis2/output/tables/NOTES.md` | Everything in `thesis2/text/`, from those sentences and the design files |
+| Writes | The one-sentence reading of each table the day it is finished, in `output/tables/NOTES.md` | Everything in `thesis/text/`, from those sentences and the design files |
 | Reviews | L's data and method sections against the code | A's tables against `01_DESIGN.md` and the captions rule |
 
 Swap roles for one afternoon each Friday: A reads the text for claims without a table cell; L reads the code for a choice not in the PAP.
@@ -111,12 +111,12 @@ Swap roles for one afternoon each Friday: A reads the text for claims without a 
 ## 7. Working rules
 
 1. **Git.** `git pull` before you start, `git push` when you stop, and at the latest every evening. Small commits with messages that say what changed ("Table 2: first run, 394 events"). Both work on `main`; folder ownership prevents conflicts. Shared root files (`STATUS.md`, `README.md`) are edited in one sitting: pull, edit, commit, push within minutes.
-2. **Never in git:** `data/Valuations/`, `data/Reinvestments/`, `thesis2/data/prices/` (licensed), build files. They are in `.gitignore`; if git refuses a file over 100 MB, ignore it, never force it. Share those folders by AirDrop or Drive.
-3. **Numbers.** Every table in the text is `\input` from a `.tex` fragment that the script writes to `thesis2/output/tables/`. No number is typed by hand; the number audit before submission then checks scripts, not sentences.
-4. **Text.** One file per section in `thesis2/text/sections/`; `thesis2/text/main.tex` includes them. Two people never edit the same section file on the same day.
+2. **Never in git:** `data/raw/shof/Valuations/`, `data/raw/shof/Reinvestments/`, `data/raw/lseg/panel_2012_2026/` (licensed), build files. They are in `.gitignore`; if git refuses a file over 100 MB, ignore it, never force it. Share those folders by AirDrop or Drive.
+3. **Numbers.** Every table in the text is `\input` from a `.tex` fragment that the script writes to `output/tables/`. No number is typed by hand; the number audit before submission then checks scripts, not sentences.
+4. **Text.** One file per section in `thesis/text/sections/`; `thesis/text/main.tex` includes them. Two people never edit the same section file on the same day.
 5. **Claims.** One sentence per claim: our estimate, the benchmark (the anchor's number or the square-root prediction), the bound. "Associated with", never "caused", unless the design earns it.
 6. **Unblinding.** See section 4. Anything run after the sign-off that is not in `01_DESIGN.md` is labelled exploratory.
-7. **AI.** No AI-written thesis text. Log every use in `thesis2/AI_LOG.md` the same day.
+7. **AI.** No AI-written thesis text. Log every use in `thesis/AI_LOG.md` the same day.
 8. **Status.** Three lines each evening in `STATUS.md` (done, next, blocked). Three lines to Klug every Friday.
 
 ---
@@ -132,6 +132,6 @@ Swap roles for one afternoon each Friday: A reads the text for claims without a 
 | S5 | Nine foreign-domiciled losers have no FI holdings | Semi-annual reports or Morningstar holdings via SHoF; otherwise state the downward bias in the dose |
 | 6 | Square-root law fails for a fund that must deliver cash | beta not equal to one is the finding, with the MDE |
 | 7 | Fan-out | Seven tables, four figures, eight equations; Table 4 and Table 6 are the first to cut |
-| 8 | Over-claiming | Rule 5 above; `research/reference/conclusions_winners_vs_nonwinners.md` when writing the conclusion |
+| 8 | Over-claiming | Rule 5 above; `reference/winners_analysis/conclusions_winners_vs_nonwinners.md` when writing the conclusion |
 | 9 | Licensed data on a public repo | Repo goes private before the next push |
 | 10 | AI-text rule | Rule 7; AI appendix from the log |
