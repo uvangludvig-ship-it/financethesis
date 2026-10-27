@@ -40,6 +40,8 @@ Two folders are **not** in git because they are several GB and licensed to SHoF:
 | `swing/swing_status_ftn_losers.csv`, `swing_status_2019_purge.csv` | Swing-pricing status at exit for the 78 FTN losers and the 60 largest 2019 exits | `code/build/swing_build_outputs.py`, `swing_notes.md` |
 | `lseg/funds_input.csv` | 205 funds (winners and losers) with round, award and exit dates: input to the 26 Oct NAV pull | by hand from round membership |
 | `lseg/lseg_input.csv`, `isin_list_lseg.csv`, `isin_list_lseg_v2.csv` | Request lists for the LSEG and Datastream pulls | |
+| `swing/swing_status_fill_2026-10-27.csv` | Swing-pricing status at exit for the 47 funds that were unverified in the two files above (29 losers, 18 from the 2019 purge), with verbatim quote, document date and url. yes 19, partial 10, levy 1, no 17. Three inference cases flagged in document_title (Monyx x7, CB European Quality, East Capital). | agent run 27 Oct 2026 from fondbestämmelser and prospectuses |
+| `holdings_external/holdings_external.csv` (+ `README.md`) | Full portfolio holdings for the 11 losers that do not report to FI, at the month-end before award and before the move (753 rows, 22 fund-dates). Full on both dates for 9 funds (4 of them from one document before both dates), Holberg top 20 on the second date, SEB Sweden Equity top 25 only from a distributor page. No instrument ISINs in any source. Per-fund sources and gaps in the README. | agent run 27 Oct 2026 from annual, semi-annual and monthly reports |
 
 ## data/derived: what scripts produced
 
