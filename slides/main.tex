@@ -1,0 +1,311 @@
+% Seminar deck. Compile: cd slides && latexmk   (settings in .latexmkrc, output in build/)
+\documentclass[aspectratio=169]{beamer}
+% Plain Beamer look, as in the BE452 lecture slides but red instead of blue, with one red box in the footer
+\usetheme{default}
+\setbeamercolor{structure}{fg=red!75!black}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize items}[triangle]
+\setbeamerfont{subtitle}{shape=\itshape,size=\large}
+% Footer bar: authors | short title | date and page, only the middle box is filled (red)
+\setbeamercolor{author in head/foot}{fg=black}
+\setbeamercolor{title in head/foot}{fg=white,bg=red!75!black}
+\setbeamercolor{date in head/foot}{fg=black}
+\setbeamerfont{author in head/foot}{size=\scriptsize}
+\setbeamerfont{title in head/foot}{size=\scriptsize}
+\setbeamerfont{date in head/foot}{size=\scriptsize}
+\setbeamertemplate{footline}{%
+  \leavevmode\hbox{%
+  \begin{beamercolorbox}[wd=.3333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3334\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate\hspace*{4em}%
+    \insertframenumber\,/\,\inserttotalframenumber\hspace*{2ex}
+  \end{beamercolorbox}}%
+  \vskip0pt}
+\usepackage{appendixnumberbeamer}  % backup slides are not counted in the page total
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+% Exhibits come from the Python scripts. Until a file exists, a grey box shows its path.
+\newcommand{\placeholder}[1]{%
+  \begin{center}\fcolorbox{gray}{gray!10}{\parbox[c][0.45\textheight][c]{0.8\textwidth}{%
+    \centering\color{gray}Missing exhibit:\\\texttt{#1}}}\end{center}}
+\newcommand{\exhibittable}[1]{%
+  \IfFileExists{../output/tables/#1.tex}%
+    {\input{../output/tables/#1.tex}}%
+    {\placeholder{output/tables/#1.tex}}}
+\newcommand{\exhibitfigure}[1]{%
+  \IfFileExists{../output/figures/#1.pdf}%
+    {\begin{center}\includegraphics[width=0.85\textwidth]{../output/figures/#1.pdf}\end{center}}%
+    {\placeholder{output/figures/#1.pdf}}}
+
+\title[Finance Thesis Fall 26]{Pre-announced, uninformed, and large}
+\subtitle{The price of moving the premium pension}
+\author[Alexander Fox \& Ludvig P Uväng]{Alexander Fox \and Ludvig Pauli Uväng}
+\institute{Stockholm School of Economics}
+\date{December 2026}
+
+\begin{document}
+
+\maketitle
+
+% ---------------------------------------------------------------- Question
+\begin{frame}[label=question]{Research question}
+  Has the index effect disappeared in Sweden as it has in the US, and what
+  explains the difference? Does a new forced flow in the same market move
+  prices the same way?
+
+  \bigskip
+  Subquestions:
+  \begin{enumerate}
+    \item Has the OMXSB index effect changed from 2007 to 2026, and which of
+      Greenwood and Sammon's four explanations can account for that?
+    \item Do the stocks sold when the state moves pension money between funds
+      show the same price pattern?
+  \end{enumerate}
+\end{frame}
+
+% ---------------------------------------------------------------- Background
+\begin{frame}[label=setting]{Background: 2000--2018}
+  \begin{itemize}
+    \item \textbf{2000:} 2.5\% of wages go to the premium pensions system,
+      invested in picks from the platform; if not chosen $\rightarrow$ AP7
+    \item \textbf{2000--2018:} Initial choices from savers were untouched more than
+      a decade later (Cronqvist, Thaler and Yu 2018) and even letters from the PPM
+      about bad and expensive funds were ignored (Kinnerud and Lorentzon 2026)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Background: the open platform, 2016--2018}
+  \begin{itemize}
+    \item The open platform let many funds in. By 2016 there were 850 funds,
+      two of which were Falcon and Allra
+    \item Falcon (2 BSEK) put it into assets connected to its own owners
+    \item Allra charged savers for worthless derivative trades through a Dubai subsidiary
+    \item Both had marketed aggressively by phone to savers who did not understand
+      what they were buying
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Background: new law and the 2019 purge}
+  \begin{itemize}
+    \item \textbf{2018:} New law: a fund have to have three-year track record,
+      at least 500 MSEK AUM, no telefon sales, and a signed agreement with PPM
+      under new terms
+    \item \textbf{2019:} A purge that removed 313 funds, 84 BSEK moved, 97\% by default
+    \item No fund could use swing pricing: the investors that stayed paid
+    \item Platform was still open
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Background: Fondtorgsnämnden and the procurements}
+  \begin{itemize}
+    \item \textbf{2019--2022:} Fondtorgnämnden gets created and is responsible for
+      procurement. FTN procures, PPM handles all administrative
+    \item \textbf{2023:} Swing pricing becomes legal, lets a fund charge the trading
+      cost to the investor who leaves, not those who stay
+    \item \textbf{2024--2026:} Eleven awards: Europe, Global Index, Nordic Active,
+      Swedish Active, Swedish Index, Global Active (pending due to Indecap appeal),
+      Swedish Small Cap
+    \item So far 97 BSEK out of 69 funds have moved yet
+  \end{itemize}
+\end{frame}
+
+% ---------------------------------------------------------------- Anchor
+\begin{frame}[label=anchor]{Anchor: Greenwood and Sammon (2025, JF)}
+  \begin{itemize}
+    \item When a stock joins the S\&P 500, index funds must buy it on a known day
+    \item Additions rose 7.6\% from announcement to effective date in the 1990s,
+      0.8\% in the 2010s, not distinguishable from zero
+    \item Deletions fell 16.6\% in the 1990s and 0.6\% in the 2010s
+    \item Why did it disappear? They test four explanations
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[label=anchor-explanations]{Anchor: four explanations}
+  \begin{enumerate}
+    \item \textbf{Composition:} added firms are smaller relative to the index, more
+      liquid, more covered by analysts (Table II). Explains a little
+    \item \textbf{Migrations:} most additions now come from the MidCap, whose trackers
+      sell as S\&P 500 trackers buy, so net demand is smaller. From half of additions
+      to over 70\% (Table III). Explains part
+    \item \textbf{Front-running:} traders buy months ahead. Long pre-announcement
+      returns rose, but the 20-day window did not change (Table IV). Small role
+    \item \textbf{Liquidity:} the multiplier fell; other institutions supply the
+      stock on the day (Tables V--VII). The main story
+  \end{enumerate}
+  \bigskip
+  \textbf{Their verdict:} migrations plus the market's learned ability to supply liquidity
+\end{frame}
+
+\begin{frame}[label=replication]{Replication on OMXSB}
+  \begin{itemize}
+    \item We replicate their Table 1 on OMXSB: additions and deletions,
+      2007 to 2026
+    \item The same three windows (announcement day, effective day, announcement to
+      effective) and the same market-adjusted return
+    \item Four subperiods instead of four decades
+  \end{itemize}
+  \[
+    CAR_n = \alpha + \beta\, \frac{D_n}{V_n} + \sum_{k=1}^{4} \gamma_k\, Period_{k,n} + \varepsilon_n
+  \]
+\end{frame}
+
+% ---------------------------------------------------------------- Extension
+\begin{frame}[label=extension]{Extension}
+  \begin{itemize}
+    \item The anchor studied index funds buying a stock on a known day. We study the
+      state selling stocks on a known day, as it pulls pension money out of funds
+      that lost a procurement. Nobody has studied that
+    \item For each stock and selling day: the forced sale relative to the stock's
+      normal trading. A big number means a big forced sale in a small stock
+    \item The anchor could only ask whether the price moved. We also ask who lost when
+      the fund sold at a bad price: the savers being moved, or the investors who stayed
+  \end{itemize}
+  \bigskip
+  \[
+    S_{ie} = \frac{\sum_{f \in L_r} r_{fe}\, A_f\, w_{if}}{V_i}
+  \]
+\end{frame}
+
+\begin{frame}{Extension in common terms}
+  \begin{itemize}
+    \item The anchor studied forced buying by index funds
+    \item We study forced selling by the state, when it pulls pension money out of
+      funds that lost a procurement
+    \item Did the stocks fall, did they recover, and who ate the loss,
+      the savers being moved or the investors who stayed?
+    \item New application, data, method, question
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[label=open-question]{Extension: their open question}
+  \begin{itemize}
+    \item Open question: is the learned liquidity general, absorbing any uninformed
+      flow, or built for the index flow the market expects?
+    \item The FTN flow can separate the two:
+      \begin{itemize}
+        \item \textbf{Migrations:} switched off, no tracker sells on the other side
+        \item \textbf{Composition:} switched off, the dose comes from what the losing
+          funds held, not from news about the firm
+        \item \textbf{Front-running:} measured around the award, letter and tranche dates
+        \item \textbf{Liquidity:} same market, same years as the OMXSB replication
+      \end{itemize}
+    \item Index effect gone but FTN effect present $\Rightarrow$ the market learns
+      flows one at a time, not general liquidity
+  \end{itemize}
+\end{frame}
+
+% ---------------------------------------------------------------- Data
+\begin{frame}[label=data]{Data}
+  \centering\small
+  \begin{tabular}{ll}
+    \toprule
+    Source & Coverage \\
+    \midrule
+    Nasdaq OMXSB changes & 2007 to 2026 \\
+    FTN procurement reports & 11 reports \\
+    Pensionsmyndigheten monthly fund files & 53\,000 fund months, 2018--2026 \\
+    Morningstar daily fund data & 30 of 78 losers \\
+    FI quarterly holdings & each stock, 31 quarters \\
+    Fund rules & swing pricing yes or no, 78 losers \\
+    Datastream LSEG & 1467 series, 2005--2026 \\
+    Pensionsmyndigheten order log & requested \\
+    \bottomrule
+  \end{tabular}
+
+  \bigskip\raggedright\footnotesize
+  We have chosen, for optimized compute, to convert XLS and CSV to Parquet.
+\end{frame}
+
+\appendix
+\setbeamertemplate{footline}{}  % backup slides carry no page number
+\begin{frame}[plain]
+  \centering\LARGE APPENDIX
+\end{frame}
+
+% ---------------------------------------------------------------- Design
+\begin{frame}[label=design]{Design: event study on redemption days}
+  An event study on the days the state redeemed a losing fund.
+  \[
+    AR_{it} = R_{it} - R_{m,t}, \qquad CAR_i[\tau_1,\tau_2] = \sum_{t=\tau_1}^{\tau_2} AR_{it}
+  \]
+\end{frame}
+
+\begin{frame}{Design: the dose}
+  \begin{itemize}
+    \item Each stock that fund held gets a dose: the forced sale that day as a share
+      of the stock's normal trading
+  \end{itemize}
+  \[
+    S_{ie} = \frac{\sum_{f \in L_r} r_{fe}\, A_f\, w_{if}}{V_i}
+  \]
+  \begin{itemize}
+    \item Stocks with a large dose are treated, stocks the funds barely held are the
+      comparison, same day, same market
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Design: outcome and windows}
+  The outcome is the stock's return minus the market's, on the day, over the twenty
+  days after, and in the weeks before.
+  \begin{gather*}
+    \frac{CAR_{ie}[w]}{\sigma_i} = \alpha_w + \beta_w\, S_{ie} + \gamma' X_i + \varepsilon_{ie} \\
+    w \in \{[e-1,e+1],\,[e+2,e+20],\,[e+21,e+60],\,[\ell,e-1]\}
+  \end{gather*}
+\end{frame}
+
+\begin{frame}{Design: testing size, not just sign}
+  The square-root law says in advance how big the move should be,
+  so we test size, not just sign.
+  \begin{gather*}
+    \widehat{\Delta P}_{ie} = Y\, \sigma_i \sqrt{S_{ie}}, \qquad Y = 0.7 \\
+    \text{size test: } \frac{\hat{\beta}_w\, \sigma_i\, S_{ie}}{\widehat{\Delta P}_{ie}} = 1
+  \end{gather*}
+\end{frame}
+
+\begin{frame}{Design: who paid}
+  Then the same days at the fund level: a fund that trailed its benchmark when
+  redeemed was diluted, and the split between funds with and without swing pricing,
+  plus 2019 when none had it, shows who paid.
+  \begin{gather*}
+    R^{NAV}_{fe} - R^{bm}_{fe} = -\,c\,\frac{r_{fe}}{1 - r_{fe}} \\
+    Cost_r = \sum_{f \in L_r} \sum_{e} r_{fe}\, A_f\, c_{fe}
+  \end{gather*}
+\end{frame}
+
+\begin{frame}{Design: fixed in advance}
+  \begin{itemize}
+    \item Windows fixed in advance, errors clustered by day
+    \item Minimum detectable effect stated before the results
+    \item No return computed around a redemption date until the specification is agreed
+  \end{itemize}
+  \[
+    N_{eff} = \frac{n}{1 + (m-1)\rho}, \qquad
+    MDE = (1.96 + 0.84)\,\frac{\sigma_{CAR}}{\sqrt{N_{eff}}}
+  \]
+\end{frame}
+
+\begin{frame}[label=bk-calendar]{Procurement calendar}
+  \exhibittable{tableA1}
+\end{frame}
+
+\begin{frame}[label=bk-variables]{Variable definitions}
+  \exhibittable{tableA2}
+\end{frame}
+
+\begin{frame}[label=bk-figure3]{Main result as a figure}
+  \exhibitfigure{figure3}
+\end{frame}
+
+\begin{frame}[label=bk-checks]{Additional checks}
+  \exhibittable{tableA3}
+\end{frame}
+
+\end{document}
