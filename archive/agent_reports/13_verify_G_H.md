@@ -1,0 +1,14 @@
+# Verification G (roll-ups) and H (vinster i välfärden) — key takeaways
+## G
+- Konkurrenslagen 4 kap 6§: >1 bn SEK combined AND ≥2 parties >200m each (verified). **Lag (2026:580) in force 1 Aug 2026** (prop. 2025/26:203, 17 Mar 2026): KKV call-in below thresholds "när det är påkallat av särskilda skäl"; new 4 kap 10a§: KKV can order a firm to pre-notify all concentrations for up to 2 years (aimed at serial acquirers). Budget prop motivates with small/local markets. → 2015–Jul 2026 = pure no-review regime; huge policy hook.
+- Templates: Stiebale & Szücs 2022 RAND 53(4) (rivals' responses to mergers in Europe — not core, method template); Wollmann 2019 AER:Insights (not core); Aggarwal & Baxamusa 2025 JFQA "Stealth mergers and investment outcomes" (core? JFQA yes — verify); Kepler et al 2023 JF; Cunningham et al 2021 JPE; Eliason 2020 QJE; Gupta et al 2024 RFS.
+- No Swedish/European micro study of PE roll-ups in dental/vet/installation found (OpenAlex zero). SOU 2022:58 (vet), SOU 2021:8, SOU 2024:70 (dental) are policy inquiries. Konkurrensverket reports not fetched (403).
+- **Prices observable for dental**: TLV reference price list + Försäkringskassan clinic-level price data are public. Vet prices: Egenvall et al 2024.
+- Red team: local market def (use FA/LA regions, robustness); Serrano = registered office (single-establishment firms; SCB arbetsställe if possible); attrition via fusion (code separately; main outcome = remaining independents); reverse causality (stacked DiD matched municipalities; Callaway-Sant'Anna); CapIQ misses small add-ons (Serrano koncernmoder changes as main source).
+- Scores: originality 8, identification 6, feasibility 6, prize/news 9.
+## H
+- SOU 2016:78 published 8 Nov 2016; prop. 2017/18:159 decided 19 Mar 2018 (cap: EBIT ≤ (SLR+7pp) × operating capital; covered socialtjänst, assistans, skola — NOT healthcare SNI 86 → placebo); FiU44 debate 4 Jun 2018, all rejected (vote 7 Jun 2018 not independently confirmed); Dir. 2022:102 "En skola utan vinstintresse" 30 Jun 2022; tilläggsdir 2023:109, 2024:85; SOU 2025:37 (8 Apr 2025); **prop. 2025/26:292 Skärpta villkor för friskolesektorn (25 Jun 2026)**, in force 1 Jul 2027; election 13 Sep 2026; S motions demand profit caps.
+- Listed: Attendo 2015, Humana 2016, AcadeMedia 2016, Ambea 31 Mar 2017; Ambea bid for Humana 29 Jun 2026.
+- Prior: no firm-level empirical study of Reepalu episode (OpenAlex). Blix & Jordahl 2021 OUP book (descriptive); Bergman et al 2016 JHE (privatization quality).
+- Red team: structural differences (match; SNI 86 placebo); concurrent ägar- och ledningsprövning 1 Jan 2019 (separate SNI 85 vs 87-88); small listed sample (illustrative; bonds); dividends = sharpest test (cap → higher payouts/asset stripping 2016-18, reversal after Jun 2018); PE-owned vs not as mechanism; 2022-26 episode hits only SNI 85, coincides with rate shock.
+- Scores: originality 7, identification 7, feasibility 8, prize/news 8.
