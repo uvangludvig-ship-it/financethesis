@@ -38,6 +38,8 @@ Two folders are **not** in git because they are several GB and licensed to SHoF:
 | `omxsb/omxsb_changes_2005_2012.csv` | 142 OMXSB index changes 2007-2012 (12 of the 17 reviews with effective dates in 2005-2012; the five reviews Jan 2005 to Jan 2007 not found), all verified from OMX/Nasdaq OMX release text; January/July schedule until Jan 2009 (cycle `2009JAN`), June/December from Jun 2009 | `code/build/omxsb_build_2005_2012.py`, sources in `omxsb_notes_2005_2012.md` |
 | `omxsb/omxsb_notes_2005_2012.md` | Sources, schedule correction, the five missing reviews and what was tried, caveats (Nokia chain gap, reversed Sigma/Stora Enso A, ticker spellings) for the 2005-2012 list | agent run 27 Oct 2026 |
 | `omxsb/omxsb_events_with_ric.csv` | The same 394 events matched to LSEG RICs | LSEG pull v4 |
+| `omxsb/omxsb_changes_2007_2026.csv` | The two lists above concatenated: 536 events, 39 reviews, 2007-07 to 2026-06, sorted by effective date then event_id, nothing dropped | `code/build/omxsb_map_ric_2007_2012.py` |
+| `omxsb/omxsb_events_with_ric_2007_2026.csv` | The 536 events with RIC and days_with_price on `panel_2005_2026`: the 394 RICs of `omxsb_events_with_ric.csv` reused, the 2007-2012 tickers mapped with the CELL 3 logic of `lseg_pull_v4` (33 by ticker, 6 by name, 16 unmatched and left empty); 505 events pass the coverage check (111 of 142 in 2007-2012), the 31 failures are in `output/omxsb_replication_2007/coverage_failures.csv` | `code/build/omxsb_map_ric_2007_2012.py`, review in `output/omxsb_replication_2007/mapping_review.txt` |
 | `omxsb/omxs30_changes_2005_2026.csv` | 48 OMXS30 changes | `code/build/omxs30_build_csv.py`, `omxs30_notes.md` |
 | `swing/swing_status_ftn_losers.csv`, `swing_status_2019_purge.csv` | Swing-pricing status at exit for the 78 FTN losers and the 60 largest 2019 exits | `code/build/swing_build_outputs.py`, `swing_notes.md` |
 | `lseg/funds_input.csv` | 205 funds (winners and losers) with round, award and exit dates: input to the 26 Oct NAV pull | by hand from round membership |
@@ -62,6 +64,7 @@ Two folders are **not** in git because they are several GB and licensed to SHoF:
 | Folder | What | Script |
 |---|---|---|
 | `omxsb_replication/` | `events_car.csv` (380 events with CARs vs OMXSBGI and OMXSGI), `nettrading_omxsb.csv` (index-fund and all-fund net trading, 259 events after 2018Q4), `index_funds.csv` (14 OMXSB trackers), `holdings_price_check.csv`, `numbers.json`, `exhibits_manifest.md`, `tables/` (36), `figures/` (6 as csv, pdf, png) | `code/notebooks/replication_omxsb.ipynb`, 25 Oct |
+| `omxsb_replication_2007/` | The same replication extended to 2007-2026 (536 events in the list, 505 with prices, 487 in the sample, 39 reviews, five periods with 2007–2012 first) on `panel_2005_2026`: `mapping_review.txt` and `coverage_failures.csv` (RIC mapping of the 2007-2012 events, 31 events without prices), `CHECK.md` and `check_2013_2026_vs_original.csv` (2013-2026 reproduces the original run in 28 of 30 Table 2 cells; the two differences come from 136 stock-days missing in the 2005 pull), `table2_old_vs_new.md` (Table 2, F-test and trend test, 27 vs 39 reviews), `events_car.csv`, `nettrading_omxsb.csv`, `numbers.json`, `exhibits_manifest.md`, `tables/` (46 files incl. tab_07_spread, tab_02b_trend, tab_02c_ftest), `figures/` (18) | `code/notebooks/replication_omxsb_2007.ipynb`, 28 Oct |
 | `tables/NOTES.md` | One sentence per thesis table, written when the table is done | by hand |
 
 ---
@@ -279,7 +282,9 @@ Sizes, row counts and the first columns of every file. Regenerate with the snipp
 | `omxs30_changes_2005_2026.csv` | 19 kB | 48 rader, 13 kol: event_id, effective_date, announcement_date, company, ticker, isin, type, reason … |
 | `omxs30_notes.md` | 26 kB |  |
 | `omxsb_changes_2013_2026.csv` | 145 kB | 394 rader, 11 kol: event_id, effective_date, announcement_date, company, ticker, isin, type, review_cycle … |
+| `omxsb_changes_2007_2026.csv` | 223 kB | 536 rader, 11 kol: event_id, effective_date, announcement_date, company, ticker, isin, type, review_cycle … |
 | `omxsb_events_with_ric.csv` | 149 kB | 394 rader, 13 kol: event_id, effective_date, announcement_date, company, ticker, isin, type, review_cycle … |
+| `omxsb_events_with_ric_2007_2026.csv` | 229 kB | 536 rader, 13 kol: event_id, effective_date, announcement_date, company, ticker, isin, type, review_cycle … |
 | `omxsb_notes.md` | 16 kB |  |
 
 ### `data/input/swing/`
@@ -394,6 +399,30 @@ Sizes, row counts and the first columns of every file. Regenerate with the snipp
 ### `output/omxsb_replication/tables/`
 
 36 filer, 0 MB. Första: `tabA_01_car_omxsgi_long.csv`, sista: `tab_06_volume_share.tex`.
+
+### `output/omxsb_replication_2007/`
+
+| fil | storlek | innehåll |
+|---|---|---|
+| `CHECK.md` | 6 kB | reproduktionskontroll 2013-2026 mot originalkörningen |
+| `check_2013_2026_vs_original.csv` | 7 kB | 30 rader, 20 kol: type, window, period, mean_orig, mean_new, d_mean, se_hc1_orig, se_hc1_new … |
+| `coverage_failures.csv` | 2 kB | 31 rader, 6 kol: event_id, company, ticker, RIC, effective_date, days_with_price |
+| `events_car.csv` | 409 kB | 487 rader, 55 kol: event_id, effective_date, announcement_date, company, ticker, isin, type, review_cycle … |
+| `exhibits_manifest.md` | 3 kB |  |
+| `holdings_price_check.csv` | 48 kB | 259 rader, 20 kol |
+| `index_funds.csv` | 4 kB | 14 rader, 12 kol |
+| `mapping_review.txt` | 15 kB | RIC-mappning av 2007-2012-händelserna: återanvända, ticker, namn, omatchade, täckning |
+| `nettrading_omxsb.csv` | 76 kB | 259 rader, 25 kol |
+| `numbers.json` | 1 kB |  |
+| `table2_old_vs_new.md` | 7 kB | Tabell 2 ny (5 perioder) och original (4), F-test och trendtest |
+
+### `output/omxsb_replication_2007/figures/`
+
+18 filer, 1 MB. Första: `fig_01_nettrading.csv`, sista: `fig_11_volume.png`.
+
+### `output/omxsb_replication_2007/tables/`
+
+46 filer, 0 MB. Första: `tabA_01_car_omxsgi_long.csv`, sista: `tab_07_spread.tex`.
 
 ### `output/tables/`
 
