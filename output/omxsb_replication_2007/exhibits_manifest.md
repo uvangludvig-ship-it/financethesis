@@ -1,12 +1,16 @@
 # Exhibits manifest
 
-All exhibits are produced by code/notebooks/replication_omxsb_2007.ipynb from stocks_daily_2005.parquet, stocks_static_2005.csv, indices_daily (1).csv, omxsb_events_with_ric_2007_2026.csv, stocks_static.csv, tab_02_car_long.csv and the 31 Fondinnehav zip files (2018Q4 to 2026Q2). Tables are saved as .tex (booktabs fragment), .docx and .csv in output/tables; figures as .pdf and .png (300 dpi) with their plotted data as .csv in output/figures.
+All exhibits are produced by code/notebooks/replication_omxsb_2007.ipynb (Greenwood–Sammon conventions: missing stock-days kept as NaN, AD and ED moved to the next trading day, uncentred controls, Figure 8 normalised at AD+10) from stocks_daily_2005.parquet, stocks_static_2005.csv, indices_daily (1).csv, omxsb_events_with_ric_2007_2026.csv, stocks_static.csv, tab_02_car_long.csv, tab_02_car_long_phase1.csv and the 31 Fondinnehav zip files (2018Q4 to 2026Q2). Tables are saved as .tex (booktabs fragment), .docx and .csv in output/tables; figures as .pdf and .png (300 dpi) with their plotted data as .csv in output/figures.
 
 | Exhibit | Files | Description |
 |---|---|---|
 | tab_01_sample | tex, docx, csv | Event counts by period before and after the price-coverage and listing/delisting filters |
 | tab_02_car | tex, docx, csv | Abnormal returns around OMXSB changes by period (anchor Table 2) |
 | tabA_07_car_robustness | tex, docx, csv | Table 2 under three alternative conventions: excluding the 2020-11-10 review, all announcements after close, all pre-open |
+| tab_00_by_year | tex, docx, csv | Event counts and mean CARs by year of the effective date (anchor Table 1) |
+| fig_02_by_year | pdf, png, csv | Mean CAR by year of the effective date with a centred five-year moving average, total, announcement and effective windows (anchor Figure 2) |
+| tabA_08_sample_sensitivity | tex, docx, csv | Total-window CAR with and without the listing/delisting filter (anchor Table A2 analogue) |
+| tabA_09_sample_selection | tex, docx, csv | Sample selection by year (anchor Table A1 analogue) |
 | tab_03_determinants | tex, docx, csv | Determinants of the index effect with period dummies (anchor Table 3) |
 | tabA_02_isin_matches | tex, docx, csv | ISIN name matches used to bridge ISIN changes in FI holdings |
 | tabA_03_index_funds | tex, docx, csv | Funds classified as OMXSB index trackers from their trades |
@@ -15,7 +19,8 @@ All exhibits are produced by code/notebooks/replication_omxsb_2007.ipynb from st
 | fig_03_scatter | pdf, png, csv | Cumulative abnormal return against net trading by index funds, one point per event (anchor Figure 3) |
 | tab_04_institutions | tex, docx, csv | Median net trading by fund type and year (anchor institutions table) |
 | tab_05_elasticity | tex, docx, csv | Price elasticity from index-fund net trading and CAR by period (anchor elasticity table) |
-| fig_08_car_announcement | pdf, png, csv | Mean cumulative abnormal return from AD−100 to AD+10 by period (anchor Figure 8) |
+| fig_08_car_announcement | pdf, png, csv | Mean cumulative abnormal return from AD−100 to AD+10 by period, normalised to zero at AD+10 (anchor Figure 8) |
+| tab_08_preannouncement | tex, docx, csv | Cumulative pre-announcement abnormal returns by period (anchor pre-announcement table) |
 | fig_09_car_effective | pdf, png, csv | Mean cumulative abnormal return from ED−1 to ED+100 by period (anchor Figure 9) |
 | fig_10_size_rank | pdf, png, csv | Market-cap percentile rank of added stocks in the month before the announcement, by year (anchor Figure 10) |
 | fig_11_volume | pdf, png, csv | Share of volume traded on each day from ED−22 to ED+22 by period (anchor Figure 11) |

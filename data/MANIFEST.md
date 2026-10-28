@@ -64,7 +64,7 @@ Two folders are **not** in git because they are several GB and licensed to SHoF:
 | Folder | What | Script |
 |---|---|---|
 | `omxsb_replication/` | `events_car.csv` (380 events with CARs vs OMXSBGI and OMXSGI), `nettrading_omxsb.csv` (index-fund and all-fund net trading, 259 events after 2018Q4), `index_funds.csv` (14 OMXSB trackers), `holdings_price_check.csv`, `numbers.json`, `exhibits_manifest.md`, `tables/` (36), `figures/` (6 as csv, pdf, png) | `code/notebooks/replication_omxsb.ipynb`, 25 Oct |
-| `omxsb_replication_2007/` | The same replication extended to 2007-2026 (536 events in the list, 505 with prices, 487 in the sample, 39 reviews, five periods with 2007–2012 first) on `panel_2005_2026`: `mapping_review.txt` and `coverage_failures.csv` (RIC mapping of the 2007-2012 events, 31 events without prices), `CHECK.md` and `check_2013_2026_vs_original.csv` (2013-2026 reproduces the original run in 28 of 30 Table 2 cells; the two differences come from 136 stock-days missing in the 2005 pull), `table2_old_vs_new.md` (Table 2, F-test and trend test, 27 vs 39 reviews), `events_car.csv`, `nettrading_omxsb.csv`, `numbers.json`, `exhibits_manifest.md`, `tables/` (46 files incl. tab_07_spread, tab_02b_trend, tab_02c_ftest), `figures/` (18) | `code/notebooks/replication_omxsb_2007.ipynb`, 28 Oct |
+| `omxsb_replication_2007/` | The same replication extended to 2007-2026 (536 events in the list, 505 with prices, 487 in the sample, 39 reviews, five periods with 2007–2012 first) on `panel_2005_2026`: `mapping_review.txt` and `coverage_failures.csv` (RIC mapping of the 2007-2012 events, 31 events without prices), `CHECK.md` and `check_2013_2026_vs_original.csv` (2013-2026 reproduces the original run in 28 of 30 Table 2 cells; the two differences come from 136 stock-days missing in the 2005 pull), `table2_old_vs_new.md` (Table 2, F-test and trend test, 27 vs 39 reviews), `events_car.csv`, `nettrading_omxsb.csv`, `numbers.json`, `exhibits_manifest.md`, `table2_phase1_vs_gs.md` (zero-filled vs G&S missing-day convention), `tables/` (61 files: adds tab_00_by_year, tab_07_spread, tab_08_preannouncement, tab_02b_trend, tab_02c_ftest, tabA_08_sample_sensitivity, tabA_09_sample_selection, tab_02_car_long_phase1), `figures/` (21, adds fig_02_by_year). Phase 2 of the notebook follows Greenwood–Sammon exactly where their text is explicit: missing stock-days kept as NaN (event drops from the window), AD/ED moved to the next trading day, Table 3 with uncentred controls and daily-turnover excess turnover, Figure 8 normalised at AD+10, Table 5 marked as an extension | `code/notebooks/replication_omxsb_2007.ipynb`, 28 Oct |
 | `tables/NOTES.md` | One sentence per thesis table, written when the table is done | by hand |
 
 ---
@@ -415,14 +415,16 @@ Sizes, row counts and the first columns of every file. Regenerate with the snipp
 | `nettrading_omxsb.csv` | 76 kB | 259 rader, 25 kol |
 | `numbers.json` | 1 kB |  |
 | `table2_old_vs_new.md` | 7 kB | Tabell 2 ny (5 perioder) och original (4), F-test och trendtest |
+| `table2_phase1_vs_gs.md` | 10 kB | Tabell 2 fas 1 (nollfyllda saknade dagar) mot G&S-konventionen (NaN), och 2013-2026 mot originalet |
+| `table2_phase1_vs_gs.csv` | 4 kB | 36 rader, 11 kol: type, window, period, mean_phase1, mean_gs, d_mean, se_hc1_phase1, se_hc1_gs … |
 
 ### `output/omxsb_replication_2007/figures/`
 
-18 filer, 1 MB. Första: `fig_01_nettrading.csv`, sista: `fig_11_volume.png`.
+21 filer, 1 MB. Första: `fig_01_nettrading.csv`, sista: `fig_11_volume.png`.
 
 ### `output/omxsb_replication_2007/tables/`
 
-46 filer, 0 MB. Första: `tabA_01_car_omxsgi_long.csv`, sista: `tab_07_spread.tex`.
+61 filer, 0 MB. Första: `tabA_01_car_omxsgi_long.csv`, sista: `tab_08_preannouncement.tex`.
 
 ### `output/tables/`
 
