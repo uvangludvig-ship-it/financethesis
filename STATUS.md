@@ -1,13 +1,16 @@
 # STATUS: read this first
 
-**As of Tue 27 October 2026.** Newest change on top. Each evening, three lines per person (done / next / blocked), initialled A or L.
+**As of Thu 29 October 2026.** Newest change on top. Each evening, three lines per person (done / next / blocked), initialled A or L.
 
 ## Where things stand
 
+- **29 Oct: new structure.** The thesis is an OMXSB replication of Greenwood and Sammon (2025) in which we run their tests of the five explanations for the disappearing index effect. FTN is no longer a separate study: it is a new setting where the same test (equations (5) and (6) in `slides/main.tex`) is run, and because the award comes months before the sale it separates predictability from event liquidity, which the index setting cannot. **Struck:** who paid, the SEK cost, swing pricing as a result, and the square-root law as the main test. `slides/main.tex` was rewritten to this structure with the real formulas, Table 2 and two figures from the 2007-2026 run. `PLAN.md`, `01_DESIGN.md` and the method note still describe the old structure and must be rewritten before any FTN return is opened.
+- **29 Oct: Part 1 now runs 2007-2026** in `code/notebooks/replication_omxsb_2007.ipynb` (536 events, 39 reviews, 487 with prices, five periods, the anchor's conventions to the letter; 2013-2026 cells reproduce the 25 Oct run). The five explanations are run by `code/build/mechanisms_2007.py` into `output/omxsb_replication_2007/mechanisms/` (PLAN.md, RESULTS.md, numbers). The 225 deletions were checked for bids, bankruptcies, mergers and distressed issues (`data/input/omxsb/deletion_reasons_2007_2026.csv`, 20 flagged, no sign changes). The five reviews before July 2007 have no surviving release.
+- **No FTN return has been computed, and none will be until the rewritten `thesis/design/01_DESIGN.md` (equations (5) and (6), the A and E windows, clustering by sale day) is committed and signed off.**
 - **27 Oct: the repo was restructured.** Five folders by role: `thesis/`, `code/`, `data/` (raw, input, derived), `output/`, `reference/`, `archive/`. Map in `README.md`, every data file in `data/MANIFEST.md`. All 1,680 files were moved with `git mv`; hash-checked, nothing lost or changed. Nothing is deleted or gitignored any more; files over 50 MB go through Git LFS. Scripts were re-pointed to the new paths and compile; `eventstudy.py` self-test passes. **[A] after pulling: `brew install git-lfs && git lfs install`, then put Valuations and Reinvestments at `data/raw/shof/`, and re-run `code/build/detect_exit_days.py` once to confirm.**
 - **25 Oct, 19:50: roles swapped. Ludvig: all code and data. Alexander: all text, literature, correspondence, the seminar deck.** `PLAN.md` section 6 and `STEPS.md` carry the new owners.
 - **The map is `thesis/design/THESIS_IN_PLAIN_WORDS.md` (and `.docx`), version 2.4, Parts A to H.** Read it before anything else in `thesis/`.
-- **Thesis 2 is the thesis.** Working title: "Pre-announced, uninformed, and large: the price of moving the premium pension". Anchor: Greenwood and Sammon (2025, JF). Part 1 replicates their index-effect result on OMXSB (394 events, 2013-2026). Part 2 measures the price pressure of Pensionsmyndigheten's forced sales after Fondtorgsnämnden's rounds (2024-2026). Part 3 asks who paid (dilution of the stayers, swing pricing). Pre-analysis plan: `thesis/design/01_DESIGN.md`. Method note: `thesis/design/thesis2_method.tex` (14 Oct).
+- **Superseded 29 Oct (kept for the record):** the three-part structure (Part 1 replication 2013-2026, Part 2 FTN price pressure, Part 3 who paid) in `thesis/design/01_DESIGN.md` and `thesis/design/thesis2_method.tex` (14 Oct).
 - **Part 1 has been run.** The notebook `code/notebooks/replication_omxsb.ipynb` (25 Oct) produced CARs for 380 OMXSB events, index-fund net trading from FI holdings, 36 tables and 6 figures in `output/omxsb_replication/`. These are the first unblinded numbers and are not FTN results. Table 2 for the text is built from `tables/tab_02_car_long.csv`.
 - **No FTN return has been computed.** `UNBLIND = False` in `code/ftn_eventstudy.py` and `code/dilution.py` stays until Klug has signed off the specifications and the date is written in `thesis/design/03_DATA.md`, section E.
 - **Thesis 1 (the SSZ replication) is dropped.** Archived in `archive/research_archive/thesis1_ssz_2026-10-06/`.
@@ -29,16 +32,15 @@
 4. [L] Three data items the replication needs this week: `data/input/omxsb/tracker_aum.csv` (yearly OMXSB tracker assets 2013-2026, by hand from `omxsb_notes.md` section 5; the replication script reads it and it is missing), Appendix Table A1 (the procurement calendar with a source per date), and the 29 UNKNOWN swing-pricing rows. Decide with A whether `code/replication_omxsb.py` (script) should reproduce the notebook's Table 2 for the replication package. [A] `thesis/literature/cards.md` and the seminar deck (`slides/main.tex`).
 5. [A] Send the Pensionsmyndigheten request for sale orders under offentlighetsprincipen (draft in `thesis/design/03_DATA.md`, C; rewrite it in your own words). Answers take one to three weeks.
 6. [A] Keep `thesis/AI_LOG.md` current (course requirement). Fill the section files in `thesis/text/sections/` starting with institutional background and data.
-7. [A+L] Before the sign-off meeting: write the four maths additions from `thesis/design/THESIS_IN_PLAIN_WORDS.md` Part F (impact exponent with EIV-IV, reversal half-life, optimal-execution counterfactual, implied elasticity) into `thesis/design/01_DESIGN.md` section 8 and the method note, so they are pre-committed and land inside Tables 3 and 6 and the Figure 3 caption. Nothing else is added.
+7. [A+L] Before the sign-off meeting: rewrite `thesis/design/01_DESIGN.md` to the 29 Oct structure (Part 1 = the anchor's Table 2 and the five explanations on OMXSB 2007-2026; Part 2 = equations (5) and (6), the award window A and the sale window E, clustering by sale day, hypotheses H_A, H_E, H_0 as in the deck) and commit it. The four maths additions from `THESIS_IN_PLAIN_WORDS.md` Part F are struck with the old structure.
 8. [L] First week of November: request the SHoF refresh of Valuations and Reinvestments to 31 Oct and re-run `code/build/detect_exit_days.py` for the small-cap tranches.
 
 ## Open decisions (for Klug; `thesis2_method.tex`, section 7)
 
 1. Sign-off on the specifications in `01_DESIGN.md` and on the deviation from the synopsis.
 2. Replication on OMXSB alone, or OMXSB plus OMXS30 (48 events; the 2005 panel now exists).
-3. The 2019 purge in Table 5 as a pooled sample, or in the appendix.
-4. Market-adjusted returns as the main measure (as in the anchor) with the four-factor model as robustness, or the reverse.
-5. Cost-benefit as a table or a paragraph.
+3. Market-adjusted returns as the main measure (as in the anchor) with the four-factor model as robustness, or the reverse.
+4. Which FTN rounds enter the sale window E first (those with dated tranches).
 
 ## Watch list
 

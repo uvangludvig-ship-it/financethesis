@@ -1,6 +1,6 @@
 # Finance thesis (BE451, autumn 2026): Alexander Fox and Ludvig Pauli Uväng
 
-**Topic:** "Pre-announced, uninformed, and large: the price of moving the premium pension". The price pressure of Pensionsmyndigheten's forced sales after Fondtorgsnämnden's procurements, anchored on Greenwood and Sammon (2025, JF) and replicated on OMXSB. Tutor: Michael Klug. Examiner: Riccardo Sabbatucci.
+**Topic (restated 29 Oct 2026):** Has the index effect disappeared in Sweden? A replication of Greenwood and Sammon (2025, JF) on OMXSB 2007-2026 that runs their tests of the five explanations for the disappearing index effect, and then runs the same test in a new setting: the forced sales after Fondtorgsnämnden's procurements, where the decision comes months before the sale and so separates predictability from event liquidity. Working title: "Pre-announced, uninformed, and large". The seminar deck is `slides/main.tex`. Tutor: Michael Klug. Examiner: Riccardo Sabbatucci.
 
 ## Start here
 
