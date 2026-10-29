@@ -2,11 +2,19 @@
 
 *Working title: Pre-announced, uninformed, and large: the price of moving the premium pension*
 
-*Planning document, 25 October 2026, version 2. It replaces the 12 October version. For every part of the thesis it says what to write, what the prize winners did there, what the non-winners did that we must not do, and who writes it. No results exist yet; where a result of ours is mentioned, it is what we expect, not what we found. The thesis text is written by the two of us; this document is a map.*
+*Planning document, 25 October 2026, version 2.4. Roles from 25 October, 19:50: Ludvig does all code and data, Alexander all text, literature and correspondence. It replaces the 12 October version. For every part of the thesis it says what to write, what the prize winners did there, what the non-winners did that we must not do, and who writes it. No results exist yet; where a result of ours is mentioned, it is what we expect, not what we found. The thesis text is written by the two of us; this document is a map.*
 
 *Sources for "what winners did" and "what losers did": the full text of all 660 bachelor theses in finance in the SSE catalogue 2009-2026, the 25 awarded ones read in full and a sample of 33 non-winners read against the same rubric (`reference/winners_analysis/winners_vs_nonwinners_analysis.md`, `reference/winners_analysis/conclusions_winners_vs_nonwinners.md`), and the five winners closest to our design read section by section (`outline/winners_structure.md`). The course rules are from Professor Sabbatucci's slides (`outline/requirements_checklist.md`).*
 
-# What the thesis is about
+**Contents.** Part A: what the thesis is (question, anchor, what winners do). Part B: the three empirical parts, one card each. Part C: the thesis section by section, with what the winners did and what the losers did. Part D: the literature, strand by strand. Part E: the method in plain words. Part F: the maths, in three tiers. Part G: exhibits and data. Part H: outcomes, work plan, checklists.
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
+# Part A. What the thesis is
+
+## What the thesis is about
 
 Since 2024 a new agency, Fondtorgsnämnden (FTN), decides by procurement which funds are allowed on the premium-pension platform. When a fund loses, Pensionsmyndigheten takes the savers' money out of it and puts it into a winner. Savers rarely act (about 94 per cent of the money moves without a choice), so the move is mechanical.
 
@@ -24,7 +32,8 @@ The replication half measures the same thing on a flow the market has had years 
 
 **What the thesis does not do.** It does not judge whether FTN picks good funds. That needs years of returns after the awards and stays out of the hypotheses. Table 1 may describe what FTN chose (fee cut per round, winners' versus losers' trailing returns), labelled as descriptive.
 
-# Why these flows are a clean experiment, and what is new
+
+## Why these flows are a clean experiment, and what is new
 
 Three properties, each proven in section 2 of the thesis:
 
@@ -36,7 +45,8 @@ New: nobody has measured FTN's executions. The flow has three dated steps (award
 
 This matches what the winners did with Swedish data: they chose a setting because an institutional feature removes a confound, not because the data were nearby. KommunInvest bonds share credit risk and tax status with treasuries (2017); XACT is the only LETF issuer, so its flows are known exactly (2020); Sweden unbundled research costs before MiFID II (2017). Thirteen of the 25 winners use Swedish or Norwegian data for a reason like that. In the 33 non-winners read, Covid, Brexit, the EU Taxonomy, SFDR and the crises all appear as calendar dummies or before/after splits, so the "effect" is indistinguishable from a period effect. Our treatment is a dated administrative act with a dose that varies across stocks within the same day.
 
-# The anchor paper and how we copy it
+
+## The anchor paper and how we copy it
 
 **Greenwood and Sammon (2025), "The Disappearing Index Effect", Journal of Finance 80(2), 657-698.**
 
@@ -61,7 +71,8 @@ Why this anchor for an FTN thesis: their open question is whether the effect die
 
 How the winners used their anchors, which we imitate: the 2024 winner wrote "this paper employs a methodology akin to Ahern and Dittmar (2012)" on page 2 and quoted the anchor's 3.56 and 1.9 per cent next to its own numbers in the discussion; the 2020 winner put the anchor's specification in column 1 and its own in column 2 of the same table; the 2021 winner printed Kyle and Obizhaeva's fitted line beside its own. The comparison is a sentence in the text, not a column, and it comes before any extension. The non-winners also name anchors (two thirds of the 33), but use them for the variable list or the data cleaning rather than the design, or pick them from lower-tier journals, practitioner books, or working papers nobody cites; one discarded its anchor's method as "a flaw" and left the paper out of the reference list.
 
-# What winners do and losers do not: the pattern in numbers
+
+## What winners do and losers do not: the pattern in numbers
 
 On the page, winners look like everyone else. Median length 13,446 words against 13,024; 25 references against 30; 7 top-journal references against 8; the same share with DiD, IV or RD vocabulary (40 against 37 per cent). Nothing you can count separates them. What does:
 
@@ -83,11 +94,67 @@ The seven things a winner has: one question in one sentence; one top-journal anc
 
 The recurring faults a referee stops on in the non-winners, none of which may appear in ours: look-ahead bias (a 2019 ESG score sorting portfolios from 2004; 2018 labels applied to 2000-2016); survivorship bias acknowledged and left alone; iid t-tests on overlapping event windows with hundreds of subsamples and no multiple-testing correction; degrees of freedom taken from trading days instead of events; country-level regressors with unclustered firm-level standard errors; stars that do not match the standard errors; outcomes mismeasured by construction (underpricing as close over open); tautological tests; a headline that exists only after dropping one outlier; results tables pasted as images; 2,000 to 4,000 words of textbook (CAPM to FF5, the EMH, what a spin-off is, 2,500 words on logit and ROC curves); Bodie-Kane-Marcus and Wooldridge cited as sources of method; an anchor absent from the reference list; anchor authors misspelled throughout; 104 references of which 40 are web pages; Investopedia, Forbes, LinkedIn and blogs as sources.
 
-# Section by section
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
+# Part B. The three empirical parts
+
+## Part 1 of the thesis: the OMXSB replication (Greenwood and Sammon on Swedish data)
+
+| | |
+| --- | --- |
+| Question | Did the index effect on Nasdaq Stockholm's benchmark index shrink as tracker money grew, as it did in the US? |
+| Hypothesis | H1. Additions earn positive and deletions negative abnormal returns from announcement to effective date; the effect scales with expected tracker demand over ADV; whether it fell over 2013-2026 is the sub-question. |
+| Data | 394 OMXSB events 2013-2026 (done), daily prices and volume (Datastream, on disk, needs the long format), tracker assets by year (hand-built from fund reports), index levels (to pull). No FTN data. |
+| Method | Market-adjusted returns in the anchor's three windows; equation (4): CAR on expected demand over ADV and sub-period dummies. Cluster by review date. |
+| Exhibits | Table 2 (two panels), Figure 2. |
+| Benchmark | The anchor's decade numbers: additions 3.4, 7.6, 5.2, 0.8 per cent; deletions -4.6, -16.6, -12.3, -0.6. Quoted in a sentence beside ours. |
+| Expected | A small effect, weaker in recent sub-periods, with a volume spike on the effective day. If it did not fall, that is the abstract's first sentence. |
+| Runs | Now. `code/replication_omxsb.py`. No unblinding needed. Gate 3, Sun 1 Nov. Owner: Ludvig. |
+| Role in the thesis | Proof of competence and the calibration for Part 2: what a learned flow does in this market. Two pages of results. |
+
+## Part 2 of the thesis: FTN forced sales, price pressure and anticipation (the contribution)
+
+| | |
+| --- | --- |
+| Question | When Pensionsmyndigheten redeems 5 to 11 per cent of a losing fund on a known day, do the fund's stocks fall, by how much per unit of forced sale, how much of the move comes before the day, and how fast does it reverse? |
+| Hypotheses | H2. On tranche days abnormal returns fall in the forced net sale over ADV, with beta on the square-root prediction of order one, and reverse within 20 trading days. H3. Part of the move happens between award, letter and first tranche; the pattern separates predation, slow capital and sunshine trading. |
+| Data | Tranche days and redeemed shares from daily fund units (done for about 30 losers; refresh in week 2; sale orders for the largest Swedish funds requested from Pensionsmyndigheten); fund holdings from FI (4 of 12 quarters, 13 zips to download); winners' monthly inflows (done); prices and volume (Datastream). |
+| Method | The dose, equation (3), built before any price is seen. Equation (5): window CAR scaled by the stock's volatility on the dose, windows fixed in advance (award, anticipation, execution per tranche, reversal 2 to 20 and 21 to 60). Cluster by tranche day, wild-cluster bootstrap, randomisation within round, Kolari-Pynnönen. MDE printed before the result. |
+| Exhibits | Table 3, Figure 3 (H2); Table 4 (H3). |
+| Benchmarks | The square-root prediction (Y = 0.7); Da et al.'s 1.06 per cent on day 1 and full reversal within 15 days; the index-effect magnitude from Table 2 at equal dose. |
+| Expected | Little in large caps (doses of 0.5 to 2 per cent of ADV are below the MDE); a visible drop and recovery in small caps; some early selling by the managers between letter and tranche. |
+| Runs | Only after Klug's sign-off is dated in `03_DATA.md` E and `UNBLIND = True` is committed. Gate 4, Fri 6 Nov. Owner: Ludvig. |
+| Role in the thesis | The headline. Five pages of results, the abstract's numbers, the cost figure's input. |
+
+## Part 3 of the thesis: who paid, and what it cost (incidence and cost-benefit)
+
+| | |
+| --- | --- |
+| Question | Did the savers who were moved pay the impact cost, or the investors who stayed in the losing fund; and how many months of fee saving did a round's transition consume? |
+| Hypothesis | H4. On tranche days, losing funds without swing pricing show NAV returns below benchmark by about c times r over (1 minus r); funds with swing pricing do not. Table 6 is arithmetic on H2 and H4. |
+| Data | Fund NAV total return (Morningstar reinvested prices, on disk, opened only after unblinding), benchmark from the fund master, swing-pricing status (11 yes, 38 no, 29 unknown), redeemed share per tranche, the 2019 purge as a no-swing pooled sample (open decision). |
+| Method | Equation (6): NAV minus benchmark on r over (1 minus r), split by swing status; the coefficient for funds without swing pricing is the realised dilution rate, compared with the stock-level cost applied to the fund's sold portfolio. Equation (8): cost per round, predicted (Y = 0.5 and 1) and realised, against the fee saving. |
+| Exhibits | Table 5, Figure 4 (H4); Table 6 (cost-benefit). |
+| Benchmarks | Jin et al.'s 33 bp swing adjustment; SEK 178m a year of fee saving. |
+| Expected | A few basis points lost per tranche day in funds without swing pricing, none in funds with it; the worked example is SEB Sverige Expanderad against Öhman, Lannebo and Prior & Nilsson in January 2026. A round's price cost in months of fee saving. |
+| Runs | After sign-off, `code/dilution.py`. Gate 5, Fri 13 Nov. Owner: Ludvig. |
+| Role in the thesis | The second result that stands on its own and the policy sentence (staggering, swing pricing, in-kind transfers). Three and a half pages of results. |
+
+How the three parts talk to each other: Part 1 says what a learned flow does; Part 2 says what an unlearned flow of the same kind does in the same market; Part 3 says who carried the difference and what it was worth. The abstract's last sentence is the contrast between Part 1 and Part 2.
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
+# Part C. The thesis section by section
+
+## Section by section
 
 Page budget 33 of 40; everything after the title page counts. The five closest winners run 17 to 38 pages of main text with 5 to 13 tables; the two most recent are 17 and 27 pages. We aim at 26 pages of main text, 7 tables, 4 figures, 8 numbered equations.
 
-## 0. Title and abstract (1 page). Owner: Ludvig, written last
+### 0. Title and abstract (1 page). Owner: Alexander, written last
 
 **What to write.** The title with a subtitle naming the two settings ("Index reconstitutions and Fondtorgsnämnden's fund procurements on Nasdaq Stockholm"). An abstract of at most 180 words with five numbers: the OMXSB effect by sub-period, the FTN pressure coefficient in basis points and the share reversed, the incidence result, the cost of a round in months of fee saving. Last sentence: the calibration.
 
@@ -97,7 +164,7 @@ Page budget 33 of 40; everything after the title page counts. The five closest w
 
 **Our rule.** If a number cannot go in the abstract, the thesis is not finished.
 
-## 1. Introduction (3 pages) plus related literature (under 1 page). Owner: Ludvig, week 3
+### 1. Introduction (3 pages) plus related literature (under 1 page). Owner: Alexander, week 3
 
 **What to write, paragraph by paragraph.** (1) The fact: a state agency redeems a fifth to almost half of each losing fund on dates it announced months earlier, for reasons unrelated to the stocks the funds hold. Total money moved, the largest single redemption as a share of the fund and as days of volume in the most exposed stock. (2) The anchor and the replication in two sentences, with our number. (3) Why the extension is not "the same thing in Sweden": larger relative to holdings than any reconstitution, three dated steps, a fund-level incidence side. (4) Results with numbers: the pressure coefficient, the share of the move before execution, the reversal horizon, the dilution estimate for funds without swing pricing, the cost against SEK 178m a year. (5) What we do not claim, one sentence each: causality for anticipatory trading; welfare (price pressure is partly a transfer to liquidity providers); generalisation to larger procurements. (6) Contribution in three numbered points, then the roadmap. Then the run-in paragraph "Related literature", three strands, one sentence per strand on how we differ (section 6 below).
 
@@ -107,7 +174,7 @@ Page budget 33 of 40; everything after the title page counts. The five closest w
 
 **Our rule.** One question in one sentence, set off. Numbers by page 3. The FTN part is the contribution and the replication is the proof of competence; the intro says so in that order.
 
-## 2. Institutional background (2.5 pages). Owner: Ludvig, week 1
+### 2. Institutional background (2.5 pages). Owner: Alexander, week 1
 
 **What to write.** 2.1 OMXSB: the review cycle, the announcement notice, the effective date, which funds track it and their assets over time, one sentence on what a tracker must do on the effective day. 2.2 FTN step by step, with a date source for each step: the procurement notice; bids and evaluation; the award (tilldelningsbeslut), its standstill and appeals (record delays; the global active round is frozen by the Indecap appeal, Förvaltningsrätten i Stockholm 4909-26, one sentence); fund agreements; the saver letter and the choice deadline; what happens to non-choosers (name the destination fund or the default, with the source); execution by Pensionsmyndigheten in tranches, cash or in kind; the fee saving as the authority reports it. 2.3 Why the flow is uninformed, pre-announced and large, one paragraph each, with the award criteria, the award-to-execution lag in days with its range, and the redeemed shares with the implied days of volume in the most exposed stocks. Figure 1: one round (Swedish active: award 27 August 2025, tranches in January 2026) with one losing fund's capital dropping on its tranche days. Appendix Table A1: every round with category, award date, letter date, execution dates, number of losers, money moved, destination, and the source document for each date.
 
@@ -117,7 +184,7 @@ Page budget 33 of 40; everything after the title page counts. The five closest w
 
 **Our rule.** The reader must finish this section convinced that the flow is decided by a regulator, dated to the day, and large relative to the holdings it hits. Without the destination of the money the net dose is wrong by construction.
 
-## 3. Theory and hypotheses (3 pages). Owner: Ludvig, week 2, equations from `01_DESIGN.md`
+### 3. Theory and hypotheses (3 pages). Owner: Alexander, week 2, equations from `01_DESIGN.md`
 
 **What to write.** 3.1 A pre-announced uninformed flow with risk-averse liquidity providers (Greenwood 2005; Duffie 2010), stated as a reduced form, equation (1): the price concedes when the flow is announced, again when it executes because capital is slow, and recovers as more capital arrives. Three predictions: announcement effect, execution effect, reversal. 3.2 Predatory trading (Brunnermeier and Pedersen 2005), one paragraph: traders who know the date and size sell ahead and buy back after, so the price overshoots on the day and the recovery exceeds the day's move. Sunshine trading (Admati and Pfleiderer 1991) in one sentence: a pre-announced uninformed trade attracts liquidity, so the day's move is smaller than an unannounced one. 3.3 The square-root benchmark, equation (2): expected impact equals Y times daily volatility times the square root of order size over daily volume, Y about 0.5 to 1 (Kyle and Obizhaeva 2016; Toth et al. 2011; Bouchaud et al. 2018). Used twice: before the data, to say what size of effect to expect for a typical dose, and after, as the benchmark in the cost-benefit table. 3.4 Four hypotheses as indented numbered blocks, each with the sign, the test and the table:
 
@@ -134,7 +201,7 @@ Table 6 (cost-benefit) is arithmetic on H2 and H4, not a hypothesis.
 
 **Our rule.** One equation per idea, intuition in plain sentences, derivation cited. If a hypothesis needs two tables, split it or drop it. Eight numbered equations in the whole thesis.
 
-## 4. Data (3 pages). Owner: Ludvig writes, Alexander supplies every count
+### 4. Data (3 pages). Owner: Alexander writes, Ludvig supplies every count
 
 **What to write.** Source by source with period and N inside the paragraph: OMXSB events (Nasdaq notices); FTN rounds and losers (procurement reports, award decisions, appeal rulings); PPM capital and savers by fund-month (Pensionsmyndigheten); tranche days from daily fund units (Morningstar via SHoF); holdings of each losing fund (FI quarterly holdings, the last report before the letter and the first after execution); swing-pricing status with adoption date (fund rules, "justerat fondandelsvärde"); fund NAV and benchmark (Morningstar, prospectus); prices, total return and volume (Datastream). State every filter with counts and every known defect (month-end-only data for the largest Swedish funds; nine foreign-domiciled losers without FI holdings; the 30 unresolved Datastream series). 4.3 The dose, equation (3): minus the sum over losers of redeemed share times fund assets times portfolio weight, plus the money arriving in destination funds times their weights, scaled by the stock's average daily volume, in days of volume. Report its distribution and the top ten stock-events; build the gross (sales only) version for robustness. Table 1 in three panels: A rounds; B the dose (mean, median, p90, max, share above 0.1 days of ADV); C stock characteristics by dose tercile. Figure 2: tracker assets and the yearly OMXSB effect ("the disappearing picture"), and the dose distribution.
 
@@ -144,7 +211,7 @@ Table 6 (cost-benefit) is arithmetic on H2 and H4, not a hypothesis.
 
 **Our rule.** Every number has a source and a date. Holdings are measured twice (before the letter, after execution) and the difference is evidence on H3, not noise. An OMXSB review within 30 days of a tranche contaminates both samples: flag it, exclude it in robustness.
 
-## 5. Methodology (2.5 pages). Owner: Ludvig writes, Alexander checks every line against the code
+### 5. Methodology (2.5 pages). Owner: Alexander writes, Ludvig checks every line against the code
 
 **What to write.** 5.1 The replication regression, equation (4): announcement-to-effective abnormal return on expected tracker demand over ADV and sub-period dummies; copy the anchor's layout and say so. 5.2 The FTN windows, fixed here and used nowhere else: award [a-1, a+1]; anticipation [letter, exec-1]; execution [exec-1, exec+1] per tranche; reversal [exec+2, exec+20] and [exec+21, exec+60]. The pressure regression, equation (5): the window CAR scaled by the stock's own daily volatility on the dose, with and without controls, gross and net dose; the coefficient reads as volatility units per day of ADV and is converted to basis points for the median stock in every paragraph. 5.3 The incidence regression, equation (6): fund NAV return minus benchmark on r over (1 minus r), separately for funds with and without swing pricing; the coefficient for funds without is the realised dilution rate, to be compared with the stock-level cost applied to the fund's sold portfolio. 5.4 Inference, once in the text and once in each caption: the shock is by date, so cluster by tranche day, not by stock; with few dates, wild-cluster bootstrap p-values beside the clustered t-statistics, a randomisation test that reshuffles doses within a round, and the Kolari-Pynnönen correction for many stocks reacting on the same day. 5.5 Power, equation (7): the minimum detectable effect at 5 per cent size and 80 per cent power from the spread of window CARs among unexposed stocks and the effective number of independent observations after clustering, printed next to the square-root prediction for the median and the p90 dose; if the MDE exceeds the median prediction, say so and make the headline test the high-dose stock-events. 5.6 The cost arithmetic, equation (8).
 
@@ -154,7 +221,7 @@ Table 6 (cost-benefit) is arithmetic on H2 and H4, not a hypothesis.
 
 **Our rule.** Windows fixed in section 3, used in section 5, never a fifth one in section 6. Clustering by tranche day; with 200 stock-events on five dates, clustering by stock would make the t-statistics two to three times too large.
 
-## 6. Results (9 pages). Owner: Alexander runs each table and writes its one sentence in `output/tables/NOTES.md`; Ludvig writes the prose
+### 6. Results (9 pages). Owner: Ludvig runs each table and writes its one sentence in `output/tables/NOTES.md`; Alexander writes the prose
 
 **What to write.** One table per hypothesis, in the order of the hypotheses, each introduced by what it tests, read in two paragraphs in economic magnitudes, and benchmarked against the anchor's numbers in the text.
 
@@ -170,7 +237,7 @@ Table 6 (cost-benefit) is arithmetic on H2 and H4, not a hypothesis.
 
 **Our rule.** Every coefficient becomes basis points, SEK or days in the same sentence. If the Swedish index effect did not disappear, that is a finding for the abstract, not a footnote.
 
-## 7. Robustness (1.5 pages). Owner: Alexander
+### 7. Robustness (1.5 pages). Owner: Ludvig
 
 **What to write.** Table 7, one row per named threat, columns for the key coefficient from Table 3 and from Table 5: (1) placebo tranche dates, shifted one quarter and random; (2) exclusion of stock-events within 30 days of an OMXSB review; (3) dose from the pre-letter versus the post-execution holdings report; (4) ADV window 20, 60 and 120 days, and market-adjusted versus market-model versus four-factor returns; (5) drop the largest round, drop the largest stock-event, winsorise at 1 and 99 per cent. Everything else (gross versus net, clustering alternatives, index excluding the event stock) in one sentence pointing to Appendix Table A3.
 
@@ -180,7 +247,7 @@ Table 6 (cost-benefit) is arithmetic on H2 and H4, not a hypothesis.
 
 **Our rule.** Each row of Table 7 answers an objection that can be stated in one clause; otherwise the row goes.
 
-## 8. Conclusion (1.5 pages). Owner: Ludvig, last, with `conclusions_winners_vs_nonwinners.md` open
+### 8. Conclusion (1.5 pages). Owner: Alexander, last, with `conclusions_winners_vs_nonwinners.md` open
 
 **What to write.** Paragraph 1: the three numbers (index effect trend, FTN pressure and reversal, incidence) and the cost against the fee saving. Paragraph 2: what it says about pre-announced uninformed flows in a small market, against the anchor. Paragraph 3: the limits before the examiner writes them: anticipation cannot be attributed to a trader type; the concession is partly a transfer, so the cost-benefit is from the savers' side; the number of tranche dates is small, so clustered inference is the binding constraint; the result may not scale to the larger procurements to come. Paragraph 4, only if the stock-level result is null: the minimum detectable effect, what sizes of impact the data rule out, and what the fund-level and anticipation evidence still shows. Paragraph 5: two next steps (intraday execution data; the next rounds as an out-of-sample test).
 
@@ -190,13 +257,19 @@ Table 6 (cost-benefit) is arithmetic on H2 and H4, not a hypothesis.
 
 **Our rule.** A winning conclusion is the tables rewritten as prose; a losing conclusion is the introduction rewritten as if the tables had cooperated. "Associated with", never "caused", unless the design earns it. The recommendation stays with execution mechanics (staggering, in-kind transfers, swing pricing), where the evidence bears; the thesis does not evaluate the procurement regime.
 
-## Appendix (3 pages)
+### Appendix (3 pages)
 
 A1 the procurement calendar with a source per date (a contribution on its own). A2 variable definitions, one row per variable with source and construction. A3 the remaining checks. A4 the AI disclosure, two sentences as the 2024 winner wrote them, from `AI_LOG.md`. Trap: parking the main tables in the appendix, as the 2020 winner did (53 pages with the appendix; under today's rule it would not pass).
 
-# The literature: what we read, what we take, how we differ
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
 
-## How to do the literature work (Ludvig, weeks 1 to 2)
+# Part D. The literature
+
+## The literature: what we read, what we take, how we differ
+
+### How to do the literature work (Alexander, weeks 1 to 2)
 
 1. Read the anchor twice: once for the story, once with a pen for the windows, filters, table layout and the numbers to print beside ours.
 2. For each paper to be cited (25 to 30 of the 66 in `literature/literature_verified.md`), write a four-line card in `literature/cards.md`: the question; the data and identification; the one magnitude we may quote; how we use it or how we differ. No fourth line, no citation.
@@ -208,7 +281,7 @@ A1 the procurement calendar with a source per date (a contribution on its own). 
 
 **What the losers did with literature, and we will not:** anchors in lower-tier journals or practitioner books (*What Works on Wall Street*); anchors used for the variable list or the sample filters rather than the design; an anchor discarded as "a flaw" and dropped from the references; "Lowery" for Lowry, "Young" for Yung; listed papers never cited; 40 web pages among 104 references; Investopedia, Forbes, CNN, LinkedIn; a 5,000-word review (one older winner did this too; the recent winners never exceed a page).
 
-## Strand A: the index effect and its decline (the anchor strand)
+### Strand A: the index effect and its decline (the anchor strand)
 
 - **Shleifer (1986, JF)** and **Harris and Gurel (1986, JF)**: about +3 per cent at S&P 500 inclusion; Shleifer reads a permanent shift (demand curves slope down), Harris and Gurel temporary pressure reversing within about two weeks. These are the two readings Table 3 chooses between. Magnitudes [M]; check.
 - **Kaul, Mehrotra and Morck (2000, JF)**: the 1996 TSE 300 float redefinition, pre-announced, no information, no change in rights: +2.3 per cent in the event week, no reversal. The cleanest pre-announced pure demand shock in the literature and the closest analogue to FTN's flow.
@@ -217,7 +290,7 @@ A1 the procurement calendar with a source per date (a contribution on its own). 
 - **Greenwood and Sammon (2025, JF)**: the anchor.
 - We differ: a larger flow relative to holdings, three dated steps, a fund-level incidence side, and no learning yet.
 
-## Strand B: price pressure from fund flows (the method strand)
+### Strand B: price pressure from fund flows (the method strand)
 
 - **Coval and Stafford (2007, JFE)**: funds with extreme outflows sell their holdings; commonly held stocks drop and recover over 12 to 18 months; because flows are predictable, front-running is possible. Cite for the pressure-and-reversal template and the front-running idea behind H3.
 - **Lou (2012, RFS)**: flow-induced trading built as fund flow times portfolio weight, aggregated to the stock. Our dose is this construction with the agency's redemption as the flow.
@@ -226,7 +299,7 @@ A1 the procurement calendar with a source per date (a contribution on its own). 
 - **Hartzmark and Solomon (2025, AER)**: predictable dividend cash flows move the whole market; multiplier about 1.9. Motivation and benchmark.
 - **Sabbatucci, Tamoni and Xiao (2023, SSRN 4322784)**: the examiner's working paper on 401(k) shifts moving stock prices through fund holdings. Cite in the motivation; read the current version before quoting anything.
 
-## Strand C: theory, four ideas
+### Strand C: theory, four ideas
 
 - **Duffie (2010, JF)**: slow-moving capital; equation (1) with Greenwood (2005).
 - **Brunnermeier and Pedersen (2005, JF)**: predatory trading; the competing story in H3.
@@ -234,7 +307,7 @@ A1 the procurement calendar with a source per date (a contribution on its own). 
 - **Wurgler and Zhuravskaya (2002, J. Business)**: larger drops for stocks without close substitutes; one cross-sectional check (dose effect rising in idiosyncratic volatility), in Table 7 or the controls, not a hypothesis.
 - Koijen and Yogo (2019) and Gabaix and Koijen (2021) on inelastic markets: one sentence of motivation if space allows, otherwise out.
 
-## Strand D: how big the drop should be (the square-root law)
+### Strand D: how big the drop should be (the square-root law)
 
 - **Kyle and Obizhaeva (2016, Econometrica)**, **Toth et al. (2011, Physical Review X)**, **Bouchaud et al. (2018, CUP textbook)**: impact equals Y times daily volatility times the square root of order over daily volume, Y about 0.5 to 1. Equation (2), our pre-committed Y = 0.7, a predicted drop for every stock and tranche day before any price is seen.
 - **Zarinelli et al. (2015)**: for very large orders impact flattens below the square root; our biggest doses sit there, so the square-root prediction is an upper bound.
@@ -242,7 +315,7 @@ A1 the procurement calendar with a source per date (a contribution on its own). 
 - Almgren et al. (2005) and Frazzini, Israel and Moskowitz (2018): [M], cite only after checking.
 - Use: beta in Table 3 is the realised drop over the square-root prediction. Near 1, the market treated the state's sale like any other big order; near 0, it absorbed the sale at no price cost; above 1, something extra. Beta not equal to 1 is a finding, with the MDE stated.
 
-## Strand E: who pays (incidence)
+### Strand E: who pays (incidence)
 
 - **Edelen (1999, JFE)**: flow-driven trading costs a fund about 1.5 to 2 per cent of assets a year [M], paid by all holders. The baseline "stayers pay".
 - **Greene and Hodges (2002, JFE)**: the NAV-dilution accounting; equation (6) on one day.
@@ -252,19 +325,80 @@ A1 the procurement calendar with a source per date (a contribution on its own). 
 - **Dahlquist, Martinez and Söderlind (2017, RFS)**: PPM daily data; flows hitting fund NAVs. Method for Table 5 and the Swedish strand.
 - We differ: a dated, state-executed redemption of a known share; swing pricing legal in Sweden only from July 2023, so a before-and-after inside one country (the 2019 purge had none by law).
 
-## Strand F: the statistics we lean on
+### Strand F: the statistics we lean on
 
 Boehmer, Musumeci and Poulsen (1991) for the standardised event test; Kolari and Pynnönen (2010, RFS) for many stocks reacting on the same day; Petersen (2009, RFS) for clustering by date; Young (2019, QJE) for randomisation inference with few clusters; Kothari and Warner (2007) and MacKinlay (1997) as references. One sentence in the method and one line in each caption. No paragraph explaining OLS.
 
-## Strand G: the Swedish premium pension (context, short)
+### Strand G: the Swedish premium pension (context, short)
 
 Cronqvist and Thaler (2004, AER P&P) and Cronqvist, Thaler and Yu (2018, AEA P&P): the 2000 launch and the inertia since; the menu, not the saver, decides where money sits, which is why only the state can move these positions and why the move is uninformed. Dahlquist and Martinez (2015, EFM): PPM money responds less to performance than retail money in the same funds. Kinnerud and Lorentzon (2026, AEJ: Applied): letters do not move most savers even when search costs are removed; the state's rationale for procuring the menu. Sialm, Starks and Zhang (2015, JF), Pool, Sialm and Stefanescu (2016, JF), Keim and Mitchell (2018, JPEF): sponsors' menu changes, not participants, drive large flows; removals are not information about the stocks. Institutional sources: SOU 2019:44, prop. 2021/22:179, lag (2022:759) and (2022:760), FTN's reports and award decisions, Pensionsmyndigheten's avslutsprocess document and fee figure, FI (2025), RiR 2018:32, the Riksrevisionen audit opened June 2026 (check in November). Every date in the thesis has one of these as its source.
 
-## The related-literature paragraph itself
+### The related-literature paragraph itself
 
 (i) The index effect and its decline: Shleifer; Harris and Gurel; Chang, Hong and Liskovich; Greenwood and Sammon. We differ by a new, larger, three-step flow in the same market. (ii) Flow-induced pressure and slow capital: Coval and Stafford; Lou; Da et al.; Greenwood; Duffie; Brunnermeier and Pedersen. We differ by administrative dates and a dose built before any price is seen. (iii) The premium pension and who pays: Cronqvist and Thaler; Dahlquist, Martinez and Söderlind; Jin et al. We differ by the first measurement of the reform's executions and their incidence.
 
-# The tables and figures: how each is built
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
+# Part E. The method in plain words
+
+## The method in plain words
+
+**Abnormal return.** The stock's return minus the market's (OMXSPI or OMXSGI) that day, as the anchor does. A four-factor version with Swedish factors is one robustness row.
+
+**The dose.** For each stock and tranche day: how much the losing funds had to sell in that stock (redeemed share times fund assets times the fund's weight in the stock) minus what the winners bought (spread over the month's trading days), divided by the stock's average daily volume. A dose of 0.5 means the forced net sale equals half a normal day's trading. Built from holdings before the letter and prices before the event, so it is fixed before anything happens.
+
+**The main regression.** The tranche-day abnormal return, scaled by the stock's own volatility, on the dose. Read two ways: in basis points for the median and the p90 stock-event, and as beta, the realised move divided by the square-root prediction. Then the same for the reversal windows and for the award and anticipation windows.
+
+**Who paid.** On a tranche day the fund's NAV return minus its benchmark, on r over (1 minus r), separately for funds with and without swing pricing. The coefficient for funds without is the realised dilution rate and should match the stock-level cost applied to the fund's sold portfolio.
+
+**Inference.** The shock is by date, so we cluster by tranche day, not by stock. With few dates we also report wild-cluster bootstrap p-values and a randomisation test that reshuffles doses within a round. The Kolari-Pynnönen correction handles many stocks reacting on the same day. Stated once in the text and once in each caption.
+
+**Power.** Before any FTN result, the minimum detectable effect at the 5 per cent level and 80 per cent power, printed next to the square-root prediction for the median and p90 dose. If the MDE exceeds the median prediction, the headline test is on high-dose stock-events, and we say so.
+
+**Unblinding.** `replication_omxsb.py` runs now and touches no FTN date. `ftn_eventstudy.py` and `dilution.py` stay switched off until Klug has agreed the specifications and the date is written into `03_DATA.md`, section E. Anything run afterwards that is not in `01_DESIGN.md` is labelled exploratory.
+
+
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
+# Part F. The maths
+
+## Harder maths that fit inside the existing tables
+
+The rule for every addition: it is written into `01_DESIGN.md` section 8 and the method note before the sign-off, it lands in an existing table, figure or caption, its derivation goes to Appendix A3, and it produces a number with a benchmark. The main text keeps eight numbered equations. Nothing below runs before Table 2 and Table 3 exist; these are the reading of a result, not a substitute for one.
+
+**Tier 1: do these (cheap, high value, no new data beyond the NOSH pull).**
+
+1. **The price path as an Ornstein-Uhlenbeck process with a scheduled jump (replaces equation 1).** The deviation of price from fundamental is mean-reverting with noise, dX = -λ X dt + σ dW, and a tranche adds an impulse of -κ x, where x is the dose. Then E[CAR at event time τ] = -κ x e^(-λτ), the half-life is ln 2 / λ, and the total concession over the whole path is κ x / λ. This is Duffie (2010) and Greenwood (2005) written down; it ties Table 3 (κ) to Table 6 (κ/λ) through one parameter. Estimate κ and λ by nonlinear least squares on the average event-time CAR of the top dose tercile, bootstrap by tranche day. Lands in the Figure 3 caption and one paragraph of 6.2; benchmarks: the pre-committed 20-day window, Da et al.'s 15 days, the post-effective reversal in Table 2.
+2. **The stock-level price multiplier.** M = CAR / (Q / market cap), the abnormal return per unit of forced sale as a share of the stock's value; its inverse is the demand elasticity. The FTN sale is a demand shock fixed by a regulator, which identifies M more cleanly than flow-based measures. Report M for the median and the p90 stock-event, in a sentence of 6.2, beside Gabaix and Koijen's aggregate multiplier of about 5, Chang, Hong and Liskovich's and Koijen and Yogo's stock-level elasticities. This is the examiner's own question (Sabbatucci, Tamoni and Xiao). Needs shares outstanding (the NOSH pull). No new equation.
+3. **Kyle-Obizhaeva invariance as the calibrated benchmark.** Replace the literature value Y = 0.7 with the invariance prediction: the impact constant follows from the stock's trading activity W = P · V · σ, so the predicted move per stock-day is calibrated, not assumed. Test β = 1 against it (the 2021 winner's H0 format), and keep the Y = 0.5 and Y = 1 bounds as a second column. Lands in a footnote to equation (2) and one column of Table 3.
+
+**Tier 2: do these if Table 3 exists and says something by 13 November.**
+
+4. **The impact exponent.** Regress log |CAR/σ| on log dose for high-dose stock-events and Wald-test the exponent against 0.5 (square-root law, latent order book) and 1 (Kyle). Measurement error in the dose pulls the estimate toward zero; the pre-letter and post-execution holdings give two noisy measures of the same dose, so instrument one with the other (classical errors-in-variables) and report the IV estimate as a robustness row. One column in Table 3, one row in Table 7, derivation in A3. Expect wide bands with about 50 observations; say so.
+5. **The optimal-execution counterfactual.** With square-root impact, a sale of Q split into n equal tranches on separate days costs Y σ Q sqrt(Q/V) n^(-1/2), falling with the square root of n, while the variance of the execution price rises with n. That is Almgren and Chriss (2001) with concave impact, and it is the trade-off behind the agency's own staggering. For each round compute the predicted cost at the actual schedule, at ten and at twenty tranches, and the schedule that equates marginal cost and marginal variance for a stated risk aversion. Two columns in Table 6, derivation in A3, one paragraph in 6.5. This gives the policy sentence a number.
+
+**Tier 3: only if everything above is done, otherwise out.**
+
+6. **A scheduled-jump test on variance.** Tranche days are known in advance, so a jump model predicts a higher variance of abnormal returns on those days than on placebo days. Report the ratio of mean squared abnormal returns, tranche days to placebo days, with a randomisation p-value. With daily data it is weak; it is one row in Table 7 at most.
+
+What stays out: geometric Brownian motion as an assumption about returns, option-pricing machinery, a jump-diffusion model of returns that produces no number the tables need, a structural model of liquidity provision, a second anchor, any new table. The 2021 winner's fifteen equations over nine pages is the ceiling, and it also carried a glossary and an OLS paragraph that the slides forbid.
+
+Equation count after the additions: (1) OU path with jump, (2) square-root impact with the invariance footnote, (3) dose, (4) replication regression, (5) pressure regression, (6) incidence regression, (7) MDE, (8) cost. Eight. The multiplier and the exponent are transformations of (5); the counterfactual is derived from (2) in the appendix.
+
+Order of work: Table 2 and Table 3 first (Ludvig). Then 1 and 2 the same week. Then 3. Tier 2 only after the 13 November freeze shows there is a result to read. Alexander writes the two paragraphs of 3.1 (the OU path) and the appendix derivations, and checks them with Klug at the sign-off.
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
+# Part G. Exhibits and data
+
+## The tables and figures: how each is built
 
 | Exhibit | What it shows | Script | Expect | Benchmark in the text |
 | --- | --- | --- | --- | --- |
@@ -282,40 +416,31 @@ Cronqvist and Thaler (2004, AER P&P) and Cronqvist, Thaler and Yu (2018, AEA P&P
 
 Every table is written by its script as a `.tex` fragment into `output/tables/` and `\input` into the text. Nobody types a number. Every caption restates the estimated equation, defines each variable, names the sample and period, and states the standard-error treatment; the 2015 winner's Table 4 caption is longer than the table, and that is the standard. Table titles may state the finding, as the 2016 winner's did.
 
-# The data, item by item (status 25 October)
+
+## The data, item by item (status 25 October)
 
 | What | Source | Status | Who |
 | --- | --- | --- | --- |
-| 394 OMXSB events 2013-2026; 48 OMXS30 events 2005-2026 | Nasdaq releases, newswires | Done, verified against prices | A |
-| FTN rounds, dates, winners, losers, bids, fees | 11 FTN reports | Done (`data/derived/ftn/`) | A |
-| PPM capital, savers, net trade, fees per fund-month 2018-2026 | Pensionsmyndigheten monthly files | Done (`data/derived/ppm/`) | A |
-| Tranche days and redeemed share per losing fund | Morningstar daily units via SHoF | Done for about 30 of the 78 entries to 30 Sep (the method note counts 73 funds; reconcile); refresh to 31 Oct in week 2 | A; L requests the refresh |
-| Sale orders for the largest Swedish losers (Avanza Zero, Storebrand Sverige, LF Sverige Vision, Handelsbanken Sverige, Nordea Swedish Stars and others with month-end-only data) | Pensionsmyndigheten, offentlighetsprincipen | Request not sent | L |
-| Holdings of each losing fund | FI quarterly holdings | 4 of 12 quarters; 13 zips to download (links in `03_DATA.md` B) | A |
-| Swing-pricing status and adoption date | Fund rules, annual reports | 11 yes, 38 no, 29 unknown (mostly Luxembourg) | L fills gaps if time |
-| Daily price, total return, volume | Datastream pull of 15 Oct | On disk, wide, names only, 30 unresolved series; MV, NOSH, the index series and a code row to pull; then the long format (`data/prices/README.md`) | A |
-| Swedish factors | SHoF Fama-French page | Not pulled; robustness only | A |
-| Fund NAV and benchmark | Morningstar reinvested prices, fund master | Done; opened only after unblinding | A |
+| 394 OMXSB events 2013-2026; 48 OMXS30 events 2005-2026 | Nasdaq releases, newswires | Done, verified against prices | L |
+| FTN rounds, dates, winners, losers, bids, fees | 11 FTN reports | Done (`data/derived/ftn/`) | L |
+| PPM capital, savers, net trade, fees per fund-month 2018-2026 | Pensionsmyndigheten monthly files | Done (`data/derived/ppm/`) | L |
+| Tranche days and redeemed share per losing fund | Morningstar daily units via SHoF | Done for about 30 of the 78 entries to 30 Sep (the method note counts 73 funds; reconcile); refresh to 31 Oct in week 2 | L |
+| Sale orders for the largest Swedish losers (Avanza Zero, Storebrand Sverige, LF Sverige Vision, Handelsbanken Sverige, Nordea Swedish Stars and others with month-end-only data) | Pensionsmyndigheten, offentlighetsprincipen | Request not sent | A |
+| Holdings of each losing fund | FI quarterly holdings | 4 of 12 quarters; 13 zips to download (links in `03_DATA.md` B) | L |
+| Swing-pricing status and adoption date | Fund rules, annual reports | 11 yes, 38 no, 29 unknown (mostly Luxembourg) | L |
+| Daily price, total return, volume | Datastream pull of 15 Oct | On disk, wide, names only, 30 unresolved series; MV, NOSH, the index series and a code row to pull; then the long format (`data/prices/README.md`) | L |
+| Swedish factors | SHoF Fama-French page | Not pulled; robustness only | L |
+| Fund NAV and benchmark | Morningstar reinvested prices, fund master | Done; opened only after unblinding | L |
 
 Holdings gap to state in the text: only Swedish-domiciled funds report to FI; nine foreign-domiciled losers need semi-annual reports or Morningstar holdings via SHoF; until then they are out of the dose, which biases it down, not up.
 
-# The method in plain words
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
 
-**Abnormal return.** The stock's return minus the market's (OMXSPI or OMXSGI) that day, as the anchor does. A four-factor version with Swedish factors is one robustness row.
+# Part H. Outcomes, work plan, checklists
 
-**The dose.** For each stock and tranche day: how much the losing funds had to sell in that stock (redeemed share times fund assets times the fund's weight in the stock) minus what the winners bought (spread over the month's trading days), divided by the stock's average daily volume. A dose of 0.5 means the forced net sale equals half a normal day's trading. Built from holdings before the letter and prices before the event, so it is fixed before anything happens.
-
-**The main regression.** The tranche-day abnormal return, scaled by the stock's own volatility, on the dose. Read two ways: in basis points for the median and the p90 stock-event, and as beta, the realised move divided by the square-root prediction. Then the same for the reversal windows and for the award and anticipation windows.
-
-**Who paid.** On a tranche day the fund's NAV return minus its benchmark, on r over (1 minus r), separately for funds with and without swing pricing. The coefficient for funds without is the realised dilution rate and should match the stock-level cost applied to the fund's sold portfolio.
-
-**Inference.** The shock is by date, so we cluster by tranche day, not by stock. With few dates we also report wild-cluster bootstrap p-values and a randomisation test that reshuffles doses within a round. The Kolari-Pynnönen correction handles many stocks reacting on the same day. Stated once in the text and once in each caption.
-
-**Power.** Before any FTN result, the minimum detectable effect at the 5 per cent level and 80 per cent power, printed next to the square-root prediction for the median and p90 dose. If the MDE exceeds the median prediction, the headline test is on high-dose stock-events, and we say so.
-
-**Unblinding.** `replication_omxsb.py` runs now and touches no FTN date. `ftn_eventstudy.py` and `dilution.py` stay switched off until Klug has agreed the specifications and the date is written into `03_DATA.md`, section E. Anything run afterwards that is not in `01_DESIGN.md` is labelled exploratory.
-
-# What we expect, and how the conclusion reads in each case
+## What we expect, and how the conclusion reads in each case
 
 1. **Most likely.** Prices drop and recover in small caps; large caps show nothing visible because their doses are tiny; stayers in funds without swing pricing pay a few basis points per tranche day; the OMXSB effect is small and has fallen. The conclusion gives the SEK cost per round against the fee saving and recommends execution mechanics: staggering, swing pricing, in-kind transfers.
 2. **Effect only in small caps.** The same, with the large-cap null stated with its MDE.
@@ -323,19 +448,21 @@ Holdings gap to state in the text: only Swedish-domiciled funds report to FI; ni
 
 In all three: one sentence per claim with our number, the benchmark and the bound.
 
-# Order of work and who does what
+
+## Order of work and who does what
 
 Dates and gates in `STEPS.md`; division of labour and working rules in `PLAN.md`, sections 6 and 7.
 
-- **Alexander:** repo private and pushed; the stock panel into the code's format; Table 2; the FI zips, the dose, the power calculation; after sign-off Tables 3 to 7 and the figures; one script per exhibit; the clean-machine run; the replication package.
-- **Ludvig:** Klug (method note, sign-off meeting in the week of 2 November, three lines every Friday); the Pensionsmyndigheten request; the SHoF refresh request; literature cards and the related-literature paragraph; sections 2, 3, 4 and 5 in that order, then 6 from Alexander's table sentences, then 1, 8 and the abstract; the AI log and appendix; references and format.
-- **Both:** the Friday swap (Alexander reads the text for claims without a table cell; Ludvig reads the code for a choice not in the design file); three lines in `STATUS.md` each evening.
+- **Ludvig:** the stock panel into the code's format; `tracker_aum.csv`, the procurement calendar data, the swing-pricing gaps; Table 2; the FI zips, the dose, the power calculation; the SHoF refresh; after sign-off Tables 3 to 7 and the figures; one script per exhibit; the clean-machine run; the replication package.
+- **Alexander:** repo private and pushed; Klug (method note, sign-off meeting in the week of 2 November, three lines every Friday); the Pensionsmyndigheten request; literature cards and the related-literature paragraph; the seminar deck; sections 2, 3, 4 and 5 in that order, then 6 from Ludvig's table sentences, then 1, 8 and the abstract; the AI log and appendix; references and format.
+- **Both:** the Friday swap (Ludvig reads the text for claims without a table cell; Alexander reads the code for a choice not in the design file); three lines in `STATUS.md` each evening.
 
 Full draft to Klug Friday 20 November. Submission-ready Friday 4 December. Hard deadline Monday 7 December, 10:00.
 
-# Two checklists
 
-## Must have (what the winners have)
+## Two checklists
+
+### Must have (what the winners have)
 
 - [ ] One research question in one sentence, set off in the introduction.
 - [ ] The anchor named on page 1 or 2 with "we follow" or "akin to", its specification reproduced, its numbers quoted beside ours in a sentence.
@@ -352,7 +479,7 @@ Full draft to Klug Friday 20 November. Submission-ready Friday 4 December. Hard 
 - [ ] An AI appendix of two sentences, from the log.
 - [ ] 33 pages or fewer, no table of contents, official front page.
 
-## Must not have (what the losers have)
+### Must not have (what the losers have)
 
 - [ ] A fan of hypotheses or hundreds of reported tests.
 - [ ] Textbook exposition of OLS, event studies, the CAPM or the EMH.
@@ -368,3 +495,4 @@ Full draft to Klug Friday 20 November. Submission-ready Friday 4 December. Hard 
 - [ ] Results tables pasted as images; numbers typed by hand.
 - [ ] Web pages, blogs or news sites as sources of method or fact where a document exists.
 - [ ] Licensed data in a public repository.
+

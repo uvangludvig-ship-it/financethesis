@@ -5,6 +5,8 @@
 ## Where things stand
 
 - **27 Oct: the repo was restructured.** Five folders by role: `thesis/`, `code/`, `data/` (raw, input, derived), `output/`, `reference/`, `archive/`. Map in `README.md`, every data file in `data/MANIFEST.md`. All 1,680 files were moved with `git mv`; hash-checked, nothing lost or changed. Nothing is deleted or gitignored any more; files over 50 MB go through Git LFS. Scripts were re-pointed to the new paths and compile; `eventstudy.py` self-test passes. **[A] after pulling: `brew install git-lfs && git lfs install`, then put Valuations and Reinvestments at `data/raw/shof/`, and re-run `code/build/detect_exit_days.py` once to confirm.**
+- **25 Oct, 19:50: roles swapped. Ludvig: all code and data. Alexander: all text, literature, correspondence, the seminar deck.** `PLAN.md` section 6 and `STEPS.md` carry the new owners.
+- **The map is `thesis/design/THESIS_IN_PLAIN_WORDS.md` (and `.docx`), version 2.4, Parts A to H.** Read it before anything else in `thesis/`.
 - **Thesis 2 is the thesis.** Working title: "Pre-announced, uninformed, and large: the price of moving the premium pension". Anchor: Greenwood and Sammon (2025, JF). Part 1 replicates their index-effect result on OMXSB (394 events, 2013-2026). Part 2 measures the price pressure of Pensionsmyndigheten's forced sales after Fondtorgsnämnden's rounds (2024-2026). Part 3 asks who paid (dilution of the stayers, swing pricing). Pre-analysis plan: `thesis/design/01_DESIGN.md`. Method note: `thesis/design/thesis2_method.tex` (14 Oct).
 - **Part 1 has been run.** The notebook `code/notebooks/replication_omxsb.ipynb` (25 Oct) produced CARs for 380 OMXSB events, index-fund net trading from FI holdings, 36 tables and 6 figures in `output/omxsb_replication/`. These are the first unblinded numbers and are not FTN results. Table 2 for the text is built from `tables/tab_02_car_long.csv`.
 - **No FTN return has been computed.** `UNBLIND = False` in `code/ftn_eventstudy.py` and `code/dilution.py` stays until Klug has signed off the specifications and the date is written in `thesis/design/03_DATA.md`, section E.
@@ -21,13 +23,14 @@
 
 ## Next actions, in order
 
-1. [A] Pull the restructuring commit, install Git LFS, place Valuations and Reinvestments, run `python3 code/build/detect_exit_days.py` and confirm the two csv files in `data/derived/exit_days/` are reproduced. [L] Get Valuations and Reinvestments from Alexander by AirDrop or Drive.
-2. [L] Klug. Nothing documents a meeting after 11 Oct. Confirm he has the method note and knows the synopsis question changed; book the sign-off meeting for the week of 2 Nov with the five decisions below on the agenda. Send `thesis/design/thesis2_method.pdf`.
-3. [A] Part 2 inputs: `code/parse_fi.py` per quarter into `data/derived/measurements/fi_holdings_<q>.csv`, then `code/pressure.py`, then `code/power.py --dose output/dose_stock_tranche.csv`.
-4. [A] Decide with L whether `code/replication_omxsb.py` (script) should reproduce the notebook's Table 2 for the replication package, and build `data/input/omxsb/tracker_aum.csv` by hand from `omxsb_notes.md`.
-5. [L] Send the Pensionsmyndigheten request for sale orders under offentlighetsprincipen (draft in `thesis/design/03_DATA.md`, C; rewrite it in your own words). Answers take one to three weeks.
-6. [L] Keep `thesis/AI_LOG.md` current (course requirement). Fill the section files in `thesis/text/sections/` starting with institutional background and data.
-7. [L] First week of November: request the SHoF refresh of Valuations and Reinvestments to 31 Oct. [A] Re-run `detect_exit_days.py` for the small-cap tranches.
+1. [A] Pull the restructuring commit, install Git LFS, place Valuations and Reinvestments at `data/raw/shof/`, and give them to Ludvig by AirDrop or Drive. [L] The same setup, then run `python3 code/build/detect_exit_days.py` and confirm the two csv files in `data/derived/exit_days/` are reproduced.
+2. [A] Klug. Nothing documents a meeting after 11 Oct. Confirm he has the method note and knows the synopsis question changed; book the sign-off meeting for the week of 2 Nov with the five decisions below on the agenda. Send `thesis/design/thesis2_method.pdf`.
+3. [L] Part 2 inputs: `code/parse_fi.py` per quarter into `data/derived/measurements/fi_holdings_<q>.csv`, then `code/pressure.py`, then `code/power.py --dose output/dose_stock_tranche.csv`.
+4. [L] Three data items the replication needs this week: `data/input/omxsb/tracker_aum.csv` (yearly OMXSB tracker assets 2013-2026, by hand from `omxsb_notes.md` section 5; the replication script reads it and it is missing), Appendix Table A1 (the procurement calendar with a source per date), and the 29 UNKNOWN swing-pricing rows. Decide with A whether `code/replication_omxsb.py` (script) should reproduce the notebook's Table 2 for the replication package. [A] `thesis/literature/cards.md` and the seminar deck (`slides/main.tex`).
+5. [A] Send the Pensionsmyndigheten request for sale orders under offentlighetsprincipen (draft in `thesis/design/03_DATA.md`, C; rewrite it in your own words). Answers take one to three weeks.
+6. [A] Keep `thesis/AI_LOG.md` current (course requirement). Fill the section files in `thesis/text/sections/` starting with institutional background and data.
+7. [A+L] Before the sign-off meeting: write the four maths additions from `thesis/design/THESIS_IN_PLAIN_WORDS.md` Part F (impact exponent with EIV-IV, reversal half-life, optimal-execution counterfactual, implied elasticity) into `thesis/design/01_DESIGN.md` section 8 and the method note, so they are pre-committed and land inside Tables 3 and 6 and the Figure 3 caption. Nothing else is added.
+8. [L] First week of November: request the SHoF refresh of Valuations and Reinvestments to 31 Oct and re-run `code/build/detect_exit_days.py` for the small-cap tranches.
 
 ## Open decisions (for Klug; `thesis2_method.tex`, section 7)
 
