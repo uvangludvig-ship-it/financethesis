@@ -77,17 +77,17 @@ Open, to be settled with Klug before unblinding: OMXSB alone or with OMXS30; the
 
 | Variable | Used in | Source and file | Status 25 Oct |
 |---|---|---|---|
-| Daily close, total return, volume | AR, CAR, ADV, dose | Datastream pull of 15 Oct, `data/raw/lseg/datastream/` (gitignored) | On disk, wide, names only. Needs the long format, a code row, MV and NOSH (`data/raw/lseg/panel_2012_2026/README.md`) |
+| Daily close, total return, volume | AR, CAR, ADV, dose | Datastream pull of 15 Oct, `data/raw/lseg/datastream/` (in git via LFS) | On disk, wide, names only. Needs the long format, a code row, MV and NOSH (`data/MANIFEST.md`) |
 | Index levels (OMXSPI, OMXSGI, OMXSB, OMXSBGI, OMXS30) | Market return, figures | Datastream, `indices_daily.csv` | Not pulled |
 | Swedish factors | Four-factor robustness | SHoF Fama-French page | Not pulled; not on the critical path |
 | OMXSB additions and deletions | Part 1 events | Nasdaq releases, `data/input/omxsb/` | Done: 394 events, mapped to LSEG codes |
 | Tranche days, redeemed share, fund assets | Dose, Table 5 | Morningstar daily via SHoF, `data/derived/exit_days/` | Done for about 30 losers to 30 Sep; refresh to 31 Oct in week 2 |
 | Sale orders for the largest Swedish losers | Dose, Swedish rounds | Pensionsmyndigheten, offentlighetsprincipen | Request not sent |
-| Fund holdings | Dose, staleness check | FI quarterly holdings, `data/extra/fi_YYYYqN.zip` | 4 of 12 quarters; 8 plus 5 to download |
+| Fund holdings | Dose, staleness check | FI quarterly holdings, `data/raw/fi/` | 4 of 12 quarters; 8 plus 5 to download |
 | Winners' inflows, fee savings | Table 1, Table 6 | `data/derived/ppm/ppm_panel_2018_2026.csv` | Done |
 | Award and letter dates, winners, losers, bids | Rounds, windows | `data/derived/ftn/bids_long.csv` | Done, 11 rounds |
 | Swing-pricing status | Table 5 | `data/input/swing/` | Done: 11 yes, 38 no, 29 unknown |
-| Fund NAV and benchmark | Table 5 | `data/raw/shof/Reinvestments/` (not in git), `data/fundmaster.xlsx` | Done; opened only after unblinding |
+| Fund NAV and benchmark | Table 5 | `data/raw/shof/Reinvestments/` (not in git), `data/raw/shof/fundmaster.xlsx` | Done; opened only after unblinding |
 
 Data rules: raw files untouched, with download dates; every transformation in code; one script per exhibit; the whole chain runs from raw data on a clean machine before the draft goes to Klug. Licensed data (LSEG, Morningstar) never enters git; the replication package for the course ships the code and the derived tables, and names the licensed inputs.
 
