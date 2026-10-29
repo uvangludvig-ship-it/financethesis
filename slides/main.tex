@@ -1,12 +1,12 @@
 % Seminar deck. Compile: cd slides && latexmk   (settings in .latexmkrc, output in build/)
-% Detailed version with results up front: main_results.tex.
-% tab02_total.tex is written by code/build/slides_tables.py; figures from output/omxsb_replication_2007/.
 \documentclass[aspectratio=169]{beamer}
+% Plain Beamer look, as in the BE452 lecture slides but red instead of blue, with one red box in the footer
 \usetheme{default}
 \setbeamercolor{structure}{fg=red!75!black}
 \setbeamertemplate{navigation symbols}{}
 \setbeamertemplate{itemize items}[triangle]
 \setbeamerfont{subtitle}{shape=\itshape,size=\large}
+% Footer bar: authors | short title | date and page, only the middle box is filled (red)
 \setbeamercolor{author in head/foot}{fg=black}
 \setbeamercolor{title in head/foot}{fg=white,bg=red!75!black}
 \setbeamercolor{date in head/foot}{fg=black}
@@ -26,16 +26,28 @@
     \insertframenumber\,/\,\inserttotalframenumber\hspace*{2ex}
   \end{beamercolorbox}}%
   \vskip0pt}
-\usepackage{appendixnumberbeamer}
+\usepackage{appendixnumberbeamer}  % backup slides are not counted in the page total
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{hyperref}
 \graphicspath{{../output/omxsb_replication_2007/figures/}}
-\newcommand{\src}[1]{{\scriptsize\color{gray}#1\par}}
+
+% Exhibits come from the Python scripts. Until a file exists, a grey box shows its path.
+\newcommand{\placeholder}[1]{%
+  \begin{center}\fcolorbox{gray}{gray!10}{\parbox[c][0.45\textheight][c]{0.8\textwidth}{%
+    \centering\color{gray}Missing exhibit:\\\texttt{#1}}}\end{center}}
+\newcommand{\exhibittable}[1]{%
+  \IfFileExists{../output/tables/#1.tex}%
+    {\input{../output/tables/#1.tex}}%
+    {\placeholder{output/tables/#1.tex}}}
+\newcommand{\exhibitfigure}[1]{%
+  \IfFileExists{../output/figures/#1.pdf}%
+    {\begin{center}\includegraphics[width=0.85\textwidth]{../output/figures/#1.pdf}\end{center}}%
+    {\placeholder{output/figures/#1.pdf}}}
 
 \title[Finance Thesis Fall 26]{Pre-announced, uninformed, and large}
-\subtitle{Has the index effect disappeared in Sweden?}
+\subtitle{The price of moving the premium pension}
 \author[Alexander Fox \& Ludvig P Uväng]{Alexander Fox \and Ludvig Pauli Uväng}
 \institute{Stockholm School of Economics}
 \date{December 2026}
@@ -45,27 +57,29 @@
 \maketitle
 
 % ---------------------------------------------------------------- Question
-\begin{frame}{Research question}
-  Has the index effect disappeared in Sweden as it has in the US, and why?
+\begin{frame}[label=question]{Research question}
+  Has the index effect disappeared in Sweden as it has in the US, and what
+  explains the difference? Does a new forced flow in the same market move
+  prices the same way?
 
   \bigskip
   Subquestions:
   \begin{enumerate}
     \item Has the OMXSB index effect changed from 2007 to 2026, and which of
-      Greenwood and Sammon's five explanations fit?
-    \item When the state moves pension money out of a fund, the decision comes
-      months before the sale. Does the price move at the decision or at the sale?
+      Greenwood and Sammon's four explanations can account for that?
+    \item Do the stocks sold when the state moves pension money between funds
+      show the same price pattern?
   \end{enumerate}
 \end{frame}
 
 % ---------------------------------------------------------------- Background
-\begin{frame}{Background: 2000--2018}
+\begin{frame}[label=setting]{Background: 2000--2018}
   \begin{itemize}
-    \item \textbf{2000:} 2.5\% of wages go to the premium pension system,
+    \item \textbf{2000:} 2.5\% of wages go to the premium pensions system,
       invested in picks from the platform; if not chosen $\rightarrow$ AP7
-    \item \textbf{2000--2018:} initial choices were untouched more than a decade
-      later (Cronqvist, Thaler and Yu 2018); letters from the PPM about bad and
-      expensive funds were ignored (Kinnerud and Lorentzon 2026)
+    \item \textbf{2000--2018:} Initial choices from savers were untouched more than
+      a decade later (Cronqvist, Thaler and Yu 2018) and even letters from the PPM
+      about bad and expensive funds were ignored (Kinnerud and Lorentzon 2026)
   \end{itemize}
 \end{frame}
 
@@ -82,152 +96,176 @@
 
 \begin{frame}{Background: new law and the 2019 purge}
   \begin{itemize}
-    \item \textbf{2018:} new law: three-year track record, at least 500 MSEK AUM,
-      no phone sales, a signed agreement with PPM under new terms
-    \item \textbf{2019:} a purge that removed 313 funds, 84 BSEK moved, 97\% by default
+    \item \textbf{2018:} New law: a fund have to have three-year track record,
+      at least 500 MSEK AUM, no telefon sales, and a signed agreement with PPM
+      under new terms
+    \item \textbf{2019:} A purge that removed 313 funds, 84 BSEK moved, 97\% by default
+    \item No fund could use swing pricing: the investors that stayed paid
     \item Platform was still open
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Background: Fondtorgsnämnden and the procurements}
   \begin{itemize}
-    \item \textbf{2019--2022:} Fondtorgsnämnden is created and procures the funds;
-      PPM handles all administration
-    \item \textbf{2024--2026:} eleven awards: Europe, Global Index, Nordic Active,
-      Swedish Active, Swedish Index, Global Active (pending due to the Indecap
-      appeal), Swedish Small Cap
-    \item A fund that loses is emptied on set days; the award is public months
-      before
+    \item \textbf{2019--2022:} Fondtorgnämnden gets created and is responsible for
+      procurement. FTN procures, PPM handles all administrative
+    \item \textbf{2023:} Swing pricing becomes legal, lets a fund charge the trading
+      cost to the investor who leaves, not those who stay
+    \item \textbf{2024--2026:} Eleven awards: Europe, Global Index, Nordic Active,
+      Swedish Active, Swedish Index, Global Active (pending due to Indecap appeal),
+      Swedish Small Cap
+    \item So far 97 BSEK out of 69 funds have moved yet
   \end{itemize}
 \end{frame}
 
 % ---------------------------------------------------------------- Anchor
-\begin{frame}{Anchor: Greenwood and Sammon (2025, JF)}
+\begin{frame}[label=anchor]{Anchor: Greenwood and Sammon (2025, JF)}
   \begin{itemize}
     \item When a stock joins the S\&P 500, index funds must buy it on a known day
-    \item Additions rose 7.4\% from announcement to effective date in the 1990s,
-      0.3\% in the 2010s, not distinguishable from zero
-    \item Deletions fell 16\% in the 1990s and 0.1\% in the 2010s
-    \item Why did it disappear? They test five explanations
+    \item Additions rose 7.6\% from announcement to effective date in the 1990s,
+      0.8\% in the 2010s, not distinguishable from zero
+    \item Deletions fell 16.6\% in the 1990s and 0.6\% in the 2010s
+    \item Why did it disappear? They test four explanations
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Anchor: five explanations}
+\begin{frame}[label=anchor-explanations]{Anchor: four explanations}
   \begin{enumerate}
     \item \textbf{Composition:} added firms are smaller relative to the index, more
-      liquid. Explains a little
-    \item \textbf{Migrations:} additions come from the MidCap, whose trackers sell
-      as S\&P 500 trackers buy. Explains part
-    \item \textbf{Predictability:} traders buy months ahead. Long pre-announcement
-      returns rose, the 20-day window did not. Small role
-    \item \textbf{General liquidity:} spreads fell. Some role
-    \item \textbf{Event liquidity:} other institutions supply the stock on the day.
-      The main story
+      liquid, more covered by analysts (Table II). Explains a little
+    \item \textbf{Migrations:} most additions now come from the MidCap, whose trackers
+      sell as S\&P 500 trackers buy, so net demand is smaller. From half of additions
+      to over 70\% (Table III). Explains part
+    \item \textbf{Front-running:} traders buy months ahead. Long pre-announcement
+      returns rose, but the 20-day window did not change (Table IV). Small role
+    \item \textbf{Liquidity:} the multiplier fell; other institutions supply the
+      stock on the day (Tables V--VII). The main story
   \end{enumerate}
   \bigskip
   \textbf{Their verdict:} migrations plus the market's learned ability to supply liquidity
 \end{frame}
 
-% ---------------------------------------------------------------- Replication
-\begin{frame}{Replication on OMXSB, 2007--2026}
+\begin{frame}[label=replication]{Replication on OMXSB}
   \begin{itemize}
-    \item Every addition and deletion, 39 reviews, 536 events
-    \item The same windows and the same market-adjusted return
-    \item Five subperiods instead of four decades; then their five tests
+    \item We replicate their Table 1 on OMXSB: additions and deletions,
+      2007 to 2026
+    \item The same three windows (announcement day, effective day, announcement to
+      effective) and the same market-adjusted return
+    \item Four subperiods instead of four decades
   \end{itemize}
-  \begin{align}
-    AR_{it} &= R_{it} - R_{m,t} \\
-    \text{Total Return}_i &= \sum_{t=AD_i-1}^{ED_i+1} AR_{it}
-  \end{align}
-  \src{(1) G\&S eq. 3, $R_m$ = the OMXSB index. (2) G\&S pp. 9--10, the day before the
-  announcement to the day after the change; summing is our choice.}
-\end{frame}
-
-\begin{frame}{Replication: demand and price}
-  \begin{align}
-    \text{Net Trading}_{i,t} &= 100 \times \frac{\text{Shares held}_{i,t+1} - \text{Shares held}_{i,t-1}}{\text{Shares outstanding}_{i,t+1}} \\
-    \text{Total Return}_i &= a + b\,\text{Net Trading}_i + e_i
-  \end{align}
-  \src{(3) G\&S eq. 2; shares held by index funds, from FI's quarterly holdings 2019--2026.
-  (4) G\&S Fig. 3; reporting $b$ with a standard error is our addition.}
+  \[
+    AR_{it} = R_{it} - R_{m,t}, \qquad
+    \text{Total Return}_i = \sum_{t=AD_i-1}^{ED_i+1} AR_{it}
+  \]
 \end{frame}
 
 % ---------------------------------------------------------------- Extension
-\begin{frame}{Extension: the same test on the FTN sales}
+\begin{frame}[label=extension]{Extension}
   \begin{itemize}
-    \item When a fund loses a procurement, the state redeems the savers' units on
-      days set in advance and the fund sells its stocks. Forced, uninformed and
-      pre-announced, like an index deletion
-    \item The award is months before the sale, so a move at the award is
-      predictability and a move at the sale is event liquidity
+    \item When a fund loses a procurement, the state sells the savers' units on days
+      set in advance and the fund has to sell the stocks it holds. Like an index
+      deletion it is forced, uninformed and pre-announced; only the seller is different
+    \item For each stock and selling day: the forced sale relative to the stock's
+      normal trading. A big number means a big forced sale in a small stock
+    \item We compare it with OMXSB deletions, same market, same years
   \end{itemize}
-  \begin{align}
-    \text{Net Trading}_{i,r} &= -100 \times \frac{\sum_{f \in L_r} \rho_{f,r}\, TNA_{f,r}\, w_{f,i}}{MCAP_{i,r}} \\
-    CAR^{j}_{i,r} &= a^{j} + b^{j}\,\text{Net Trading}_{i,r} + e_{i,r}, \qquad j \in \{A, E\}
-  \end{align}
-  \src{(5) ours, in the unit of (3): $L_r$ = losing funds in round $r$, $\rho$ = share redeemed,
-  $TNA$ = fund assets, $w$ = the stock's weight in the fund. (6) ours, the form of (4):
-  $A$ = award window, $E$ = sale window. $b^A$ and $b^E$ are compared with $b$ from (4) for deletions.}
+  \[
+    \text{Net Trading}_{i,r} = -100 \times \frac{\sum_{f \in L_r} \rho_{f,r}\, TNA_{f,r}\, w_{f,i}}{MCAP_{i,r}}
+  \]
+  {\scriptsize
+  $L_r$ = losing funds in round $r$; $\rho_{f,r}$ = share of fund $f$ redeemed;
+  $TNA_{f,r}$ = fund assets; $w_{f,i}$ = weight of stock $i$ in fund $f$;
+  $MCAP_{i,r}$ = market cap of stock $i$. Same unit as Greenwood and Sammon's net trading.\par}
 \end{frame}
 
 % ---------------------------------------------------------------- Data
-\begin{frame}{Data}
+\begin{frame}[label=data]{Data}
   \centering\small
   \begin{tabular}{ll}
     \toprule
     Source & Coverage \\
     \midrule
-    Nasdaq OMXSB changes & 39 reviews, 2007 to 2026 \\
-    LSEG daily stock panel & 2,117 series, 2005 to 2026 \\
-    FI quarterly holdings & 31 quarters, 2018 to 2026 \\
-    FTN procurement reports & 11 rounds \\
+    Nasdaq OMXSB changes & 2007 to 2026 \\
+    FTN procurement reports & 11 reports \\
     Pensionsmyndigheten monthly fund files & 53\,000 fund months, 2018--2026 \\
-    Morningstar daily fund data & 78 losers \\
+    Morningstar daily fund data & 30 of 78 losers \\
+    FI quarterly holdings & each stock, 31 quarters \\
+    Fund rules & swing pricing yes or no, 78 losers \\
+    Datastream LSEG & 1467 series, 2005--2026 \\
     Pensionsmyndigheten order log & requested \\
     \bottomrule
   \end{tabular}
+
+  \bigskip\raggedright\footnotesize
+  We have chosen, for optimized compute, to convert XLS and CSV to Parquet.
 \end{frame}
 
 % ---------------------------------------------------------------- Status
-\begin{frame}{Where we are}
+\begin{frame}[label=progress]{Where we are}
   \begin{itemize}
-    \item \textbf{Replication done:} Table 2 on 487 events over 39 reviews,
-      2007 to 2026, with the five tests (appendix)
-    \item \textbf{First result:} the effect was there in 2007--2012 and is weaker
-      since; no period after 2017 can be told from zero
-    \item \textbf{Event data built:} every OMXSB change with announcement and
-      effective dates; prices, FI holdings and fund files collected
-    \item \textbf{FTN mapped:} every round, award date and losing fund
-    \item \textbf{Order log} requested from Pensionsmyndigheten
+    \item \textbf{Replication done:} Greenwood and Sammon's Table I run on OMXSB,
+      394 additions and deletions over 27 reviews, 2013 to 2026
+    \item \textbf{First result:} the Swedish index effect is still there and
+      significant, unlike in the US
+    \item \textbf{Event data built:} every OMXSB change from Nasdaq notices and
+      newswires, with announcement and effective dates
+    \item \textbf{Prices collected:} daily prices, returns and volume from
+      Datastream, 2005 to 2026
+    \item \textbf{Fund data collected:} FI quarterly holdings (31 quarters),
+      Pensionsmyndigheten monthly fund files (53\,000 fund months), Morningstar daily data
+    \item \textbf{FTN mapped:} every procurement round, award date and losing fund
+    \item \textbf{Redemption log} requested from Pensionsmyndigheten
   \end{itemize}
 \end{frame}
 
-\begin{frame}{What is left}
+\begin{frame}[label=remaining]{What is left}
   \begin{itemize}
-    \item \textbf{Design file:} equations (5) and (6), the windows and the clustering,
-      committed and signed off before any FTN return is computed
-    \item \textbf{Extension:} build the dose per stock and round, run (6) once
-    \item \textbf{Writing} runs alongside: background and literature in progress
+    \item \textbf{Robustness on the replication:} clustering by review date, day 0
+      for evening announcements, sample filters
+    \item \textbf{Part 2:} test the four explanations on Swedish data
+    \item \textbf{Part 3:} run the FTN event study once the redemption dates arrive
+      from Pensionsmyndigheten
+    \item \textbf{Writing} runs alongside: background and literature are in progress
   \end{itemize}
 \end{frame}
 
 \appendix
-\setbeamertemplate{footline}{}
+\setbeamertemplate{footline}{}  % backup slides carry no page number
 \begin{frame}[plain]
   \centering\LARGE APPENDIX
 \end{frame}
 
-\begin{frame}{Hypotheses for the extension}
-  \begin{itemize}
-    \item $H_A$: $b^A \approx b$, $b^E \approx 0$. The price moves when the sale
-      becomes predictable
-    \item $H_E$: $b^A \approx 0$, $b^E \approx b$. The price moves when the stock
-      is sold; a flow nobody has learned to supply is not absorbed
-    \item $H_0$: $b^A \approx b^E \approx 0$. The market absorbs the flow
-  \end{itemize}
+% ---------------------------------------------------------------- Design
+\begin{frame}{Design: abnormal return and total return}
+  \begin{align}
+    AR_{it} &= R_{it} - R_{m,t} \\
+    \text{Total Return}_i &= \sum_{t=AD_i-1}^{ED_i+1} AR_{it}
+  \end{align}
+  {\scriptsize (1) G\&S eq. 3; $R_m$ = the OMXSB index, our adaptation.
+  (2) G\&S pp. 9--10, the day before the announcement to the day after the change; summing is our choice.\par}
 \end{frame}
 
-\begin{frame}{Table 2: total return by period}
+\begin{frame}{Design: net trading and the price}
+  \begin{align}
+    \text{Net Trading}_{i,t} &= 100 \times \frac{\text{Shares held}_{i,t+1} - \text{Shares held}_{i,t-1}}{\text{Shares outstanding}_{i,t+1}} \\
+    \text{Total Return}_i &= a + b\,\text{Net Trading}_i + e_i
+  \end{align}
+  {\scriptsize (3) G\&S eq. 2; we use FI holdings of Swedish index funds, 2019--2026.
+  (4) G\&S Fig. 3; reporting $b$ with a standard error is our addition.\par}
+\end{frame}
+
+\begin{frame}{Design: FTN, the same measure}
+  \begin{align}
+    \text{Net Trading}_{i,r} &= -100 \times \frac{\sum_{f \in L_r} \rho_{f,r}\, TNA_{f,r}\, w_{f,i}}{MCAP_{i,r}} \\
+    CAR^{j}_{i,r} &= a^{j} + b^{j}\,\text{Net Trading}_{i,r} + e_{i,r}, \qquad j \in \{A, E\}
+  \end{align}
+  {\scriptsize (5) ours, in the unit of (3). (6) ours, the form of (4). $A$ = the award window
+  ($A-1$ to $A+1$); $E$ = the sale window (last switching day to the last tranche plus two
+  settlement days). $b^A$ and $b^E$ are compared with $b$ from (4) for deletions.\par}
+\end{frame}
+
+% ---------------------------------------------------------------- Results
+\begin{frame}{Results: total return by period (anchor Table 2)}
   \centering\small
   \input{tab02_total.tex}
 
@@ -235,16 +273,16 @@
   Mean CAR in percent, HC1 standard error in parentheses, wild cluster bootstrap p-value in braces.
 \end{frame}
 
-\begin{frame}{Run-up before the announcement (anchor Figure 8)}
+\begin{frame}{Results: run-up before the announcement (anchor Figure 8)}
   \begin{center}\includegraphics[width=0.85\textwidth]{fig_08_car_announcement.pdf}\end{center}
 \end{frame}
 
-\begin{frame}{Demand and price (anchor Figure 3)}
+\begin{frame}{Results: demand and price (anchor Figure 3)}
   \begin{center}\includegraphics[width=0.78\textwidth]{fig_03_scatter.pdf}\end{center}
-  \src{2019--2026. Deletions: $b = 3.6$ (1.0). Additions: $b = 1.7$ (1.3).}
+  {\scriptsize 2019--2026. Deletions: $b = 3.6$ (1.0). Additions: $b = 1.7$ (1.3).\par}
 \end{frame}
 
-\begin{frame}{The five explanations on Swedish data}
+\begin{frame}{Results: the five explanations on Swedish data}
   \footnotesize
   \begin{tabular}{p{2.6cm}p{10.4cm}}
     \toprule
