@@ -1,6 +1,6 @@
 # Exhibits manifest
 
-All exhibits are produced by code/notebooks/replication_omxsb_2007.ipynb (Greenwood–Sammon conventions: missing stock-days kept as NaN, AD and ED moved to the next trading day, uncentred controls, Figure 8 normalised at AD+10) from stocks_daily_2005.parquet, stocks_static_2005.csv, indices_daily (1).csv, omxsb_events_with_ric_2007_2026.csv, stocks_static.csv, tab_02_car_long.csv, tab_02_car_long_phase1.csv and the 31 Fondinnehav zip files (2018Q4 to 2026Q2). Tables are saved as .tex (booktabs fragment), .docx and .csv in output/tables; figures as .pdf and .png (300 dpi) with their plotted data as .csv in output/figures.
+All exhibits are produced by code/notebooks/replication_omxsb_2007.ipynb (Greenwood–Sammon conventions: missing stock-days kept as NaN, AD and ED moved to the next trading day, uncentred controls, Figure 8 normalised at AD+10) from stocks_daily_2005.parquet, stocks_static_2005.csv, indices_daily (1).csv, omxsb_events_with_ric_2007_2026.csv, stocks_static.csv, tab_02_car_long.csv and the 31 Fondinnehav zip files (2018Q4 to 2026Q2). Tables are saved as .tex (booktabs fragment), .docx and .csv in output/tables; figures as .pdf and .png (300 dpi) with their plotted data as .csv in output/figures.
 
 | Exhibit | Files | Description |
 |---|---|---|

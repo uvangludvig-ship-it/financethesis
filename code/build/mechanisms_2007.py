@@ -21,8 +21,8 @@ OUT = os.path.join(OUT0, "mechanisms")
 D = os.path.join(REPO, "data", "raw", "lseg", "panel_2005_2026")
 EV = os.path.join(REPO, "data", "input", "omxsb")
 os.makedirs(OUT, exist_ok=True)
-PER = ["2007–2012", "2013–2017", "2018–2020", "2021–2023", "2024–2026"]
-BINS = [2006, 2012, 2017, 2020, 2023, 2026]
+PER = ["2007–2011", "2012–2016", "2017–2021", "2022–2026"]  # equal five-year periods, as in the notebook
+BINS = [2006, 2011, 2016, 2021, 2026]
 STYLE = {"font.family": "serif", "font.size": 10, "axes.spines.top": False, "axes.spines.right": False, "legend.frameon": False, "lines.linewidth": 1.4, "figure.dpi": 150, "savefig.bbox": "tight", "axes.unicode_minus": False}
 plt.rcParams.update(STYLE)
 PAL = ["#B0B0B0", "#000000", "#000000", "#6E6E6E", "#1F4E79"]
@@ -56,6 +56,7 @@ def add_row(expl, test, sample, stat, c, same, sentence, **kw):
 # ---------- data ----------
 ev = pd.read_csv(os.path.join(OUT0, "events_car.csv"), parse_dates=["AD", "ED", "announcement_date", "effective_date"])
 assert len(ev) == 487, len(ev)
+assert set(ev.period) == set(PER), ("period labels in events_car.csv differ from PER; re-run the notebook", sorted(set(ev.period)))
 px = pd.read_parquet(os.path.join(D, "stocks_daily_2005.parquet"))
 px["date"] = pd.to_datetime(px.date).astype("datetime64[ns]")
 ix = pd.read_csv(os.path.join(D, "indices_daily (1).csv"), parse_dates=["date"])
@@ -242,7 +243,7 @@ for typ in ["addition", "deletion"]:
             e1.append(t)
             if variant == "uncentred" or smp == "all":
                 for r in t.itertuples():
-                    add_row("E1 composition", f"Table 3 eq. (4), {typ}s, {variant}", smp, r.var, r._asdict(), "same spec; universe/era deviate" if variant == "uncentred" else "deviates (HBS/JF demean the controls)", f"Coefficient on {r.var} in the regression of the total return on turnover, size, volatility and five era dummies without a constant, {typ}s, {smp} sample.")
+                    add_row("E1 composition", f"Table 3 eq. (4), {typ}s, {variant}", smp, r.var, r._asdict(), "same spec; universe/era deviate" if variant == "uncentred" else "deviates (HBS/JF demean the controls)", f"Coefficient on {r.var} in the regression of the total return on turnover, size, volatility and {len(PER)} era dummies without a constant, {typ}s, {smp} sample.")
         if smp == "all" or typ == "deletion":
             pass
 e1 = pd.concat(e1)

@@ -6,7 +6,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", ".."))
 OUT = os.path.join(REPO, "output", "omxsb_replication_2007")
 TAB = os.path.join(OUT, "tables")
-PER = ["2007–2012", "2013–2017", "2018–2020", "2021–2023", "2024–2026"]
+PER = ["2007–2011", "2012–2016", "2017–2021", "2022–2026"]  # equal five-year periods, as in the notebook
 
 nb = json.load(open(os.path.join(REPO, "code", "notebooks", "replication_omxsb_2007.ipynb")))
 src = next(''.join(c["source"]) for c in nb["cells"] if c["cell_type"] == "code" and "def wcb(" in ''.join(c["source"]))
@@ -15,6 +15,7 @@ exec(src.split("rows = []")[0], ns)
 cell = ns["cell"]
 
 ev = pd.read_csv(os.path.join(OUT, "events_car.csv"))
+assert set(ev.period) == set(PER), ("period labels in events_car.csv differ from PER; re-run the notebook", sorted(set(ev.period)))
 rs = pd.read_csv(os.path.join(REPO, "data", "input", "omxsb", "deletion_reasons_2007_2026.csv"))
 d = ev[ev.type == "deletion"].merge(rs[["event_id", "deletion_reason"]], on="event_id", how="left")
 d["adx"] = d.AD.astype(str)

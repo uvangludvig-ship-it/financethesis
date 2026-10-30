@@ -1,47 +1,41 @@
 # Table 2: phase 1 (missing days filled with a zero return) versus the Greenwood–Sammon convention (missing days kept as NaN, event dropped from the window)
 
-Both columns are from code/notebooks/replication_omxsb_2007.ipynb on data/raw/lseg/panel_2005_2026: phase 1 is the committed first run (tab_02_car_long_phase1.csv), G&S is the current run. Means are CARs in percent against .OMXSBGI; diff is the last period minus the second-to-last. Besides the missing-day rule the two runs differ only in exhibits that do not enter Table 2 (Table 3 controls, Figure 8 normalisation, new tables).
+Both columns are from code/notebooks/replication_omxsb_2007.ipynb on data/raw/lseg/panel_2005_2026 and the same events and periods: phase 1 recomputes Table 2 from the zero-filled return series (saved as tab_02_car_long_phase1.csv), G&S is the current run with missing days kept as NaN. Means are CARs in percent against .OMXSBGI; diff is the last period minus the second-to-last. The two columns differ only in the missing-day rule.
 
 | type | window | period | mean_phase1 | mean_gs | d_mean | se_hc1_phase1 | se_hc1_gs | N_phase1 | N_gs | d_N |
 |---|---|---|---|---|---|---|---|---|---|---|
-| addition | ann | 2007–2012 | 1.324 | 1.278 | -0.046 | 0.517 | 0.526 | 49 | 48 | -1 |
-| addition | ann | 2013–2017 | 1.783 | 1.783 | 0 | 0.641 | 0.641 | 57 | 57 | 0 |
-| addition | ann | 2018–2020 | -1.353 | -1.353 | 0 | 0.887 | 0.887 | 51 | 51 | 0 |
-| addition | ann | 2021–2023 | 0.552 | 0.552 | 0 | 0.856 | 0.856 | 59 | 59 | 0 |
-| addition | ann | 2024–2026 | 2.236 | 2.236 | 0 | 1.089 | 1.089 | 45 | 45 | 0 |
-| addition | ann | diff | 1.684 | 1.684 | 0 | 1.384 | 1.384 | 104 | 104 | 0 |
-| addition | eff | 2007–2012 | 0.660 | 0.648 | -0.012 | 0.679 | 0.702 | 49 | 47 | -2 |
-| addition | eff | 2013–2017 | -0.929 | -0.929 | 0.000 | 0.716 | 0.716 | 57 | 57 | 0 |
-| addition | eff | 2018–2020 | 1.746 | 1.669 | -0.076 | 0.456 | 0.458 | 51 | 50 | -1 |
-| addition | eff | 2021–2023 | -0.599 | -0.599 | 0 | 0.725 | 0.725 | 59 | 59 | 0 |
-| addition | eff | 2024–2026 | -0.032 | -0.032 | -0.000 | 1.174 | 1.174 | 45 | 45 | 0 |
-| addition | eff | diff | 0.568 | 0.568 | 0 | 1.379 | 1.379 | 104 | 104 | 0 |
-| addition | tot | 2007–2012 | 6.180 | 5.796 | -0.385 | 1.336 | 1.351 | 49 | 45 | -4 |
-| addition | tot | 2013–2017 | 2.213 | 2.213 | 0 | 1.429 | 1.429 | 57 | 57 | 0 |
-| addition | tot | 2018–2020 | 2.354 | 2.432 | 0.078 | 1.560 | 1.589 | 51 | 50 | -1 |
-| addition | tot | 2021–2023 | 0.505 | 0.505 | 0 | 1.011 | 1.011 | 59 | 59 | 0 |
-| addition | tot | 2024–2026 | 2.670 | 2.670 | 0 | 1.877 | 1.877 | 45 | 45 | 0 |
-| addition | tot | diff | 2.165 | 2.165 | 0 | 2.130 | 2.130 | 104 | 104 | 0 |
-| deletion | ann | 2007–2012 | -0.312 | -0.312 | -0.000 | 0.706 | 0.706 | 58 | 58 | 0 |
-| deletion | ann | 2013–2017 | -1.880 | -1.880 | 0 | 0.543 | 0.543 | 36 | 36 | 0 |
-| deletion | ann | 2018–2020 | -1.845 | -1.845 | 0 | 0.726 | 0.726 | 39 | 39 | 0 |
-| deletion | ann | 2021–2023 | -1.668 | -1.668 | 0.000 | 0.614 | 0.614 | 54 | 54 | 0 |
-| deletion | ann | 2024–2026 | -0.191 | -0.191 | -0.000 | 0.471 | 0.471 | 39 | 39 | 0 |
-| deletion | ann | diff | 1.477 | 1.477 | 0 | 0.774 | 0.774 | 93 | 93 | 0 |
-| deletion | eff | 2007–2012 | 0.235 | 0.235 | 0.000 | 0.727 | 0.727 | 58 | 58 | 0 |
-| deletion | eff | 2013–2017 | -1.074 | -1.074 | 0 | 1.001 | 1.001 | 36 | 36 | 0 |
-| deletion | eff | 2018–2020 | 1.001 | 1.001 | 0 | 0.631 | 0.631 | 39 | 39 | 0 |
-| deletion | eff | 2021–2023 | -0.368 | -0.368 | -0.000 | 0.558 | 0.558 | 54 | 54 | 0 |
-| deletion | eff | 2024–2026 | -2.047 | -2.047 | 0 | 0.607 | 0.607 | 39 | 39 | 0 |
-| deletion | eff | diff | -1.680 | -1.680 | 0 | 0.824 | 0.824 | 93 | 93 | 0 |
-| deletion | tot | 2007–2012 | -3.012 | -3.012 | 0 | 1.349 | 1.349 | 58 | 58 | 0 |
-| deletion | tot | 2013–2017 | -5.485 | -5.485 | 0 | 1.795 | 1.795 | 36 | 36 | 0 |
-| deletion | tot | 2018–2020 | 1.075 | 0.884 | -0.191 | 1.510 | 1.538 | 39 | 38 | -1 |
-| deletion | tot | 2021–2023 | -1.454 | -1.454 | 0 | 0.807 | 0.807 | 54 | 54 | 0 |
-| deletion | tot | 2024–2026 | -2.691 | -2.691 | 0 | 0.905 | 0.905 | 39 | 39 | 0 |
-| deletion | tot | diff | -1.237 | -1.237 | 0 | 1.212 | 1.212 | 93 | 93 | 0 |
+| addition | ann | 2007–2011 | 1.030 | 0.960 | -0.070 | 0.644 | 0.658 | 37 | 36 | -1 |
+| addition | ann | 2012–2016 | 1.869 | 1.869 | 0 | 0.630 | 0.630 | 54 | 54 | 0 |
+| addition | ann | 2017–2021 | -0.159 | -0.159 | 0 | 0.626 | 0.626 | 83 | 83 | 0 |
+| addition | ann | 2022–2026 | 1.205 | 1.205 | 0 | 0.792 | 0.792 | 87 | 87 | 0 |
+| addition | ann | diff | 1.364 | 1.364 | 0 | 1.009 | 1.009 | 170 | 170 | 0 |
+| addition | eff | 2007–2011 | 1.148 | 1.159 | 0.011 | 0.843 | 0.882 | 37 | 35 | -2 |
+| addition | eff | 2012–2016 | -0.729 | -0.729 | 0 | 0.709 | 0.709 | 54 | 54 | 0 |
+| addition | eff | 2017–2021 | 0.441 | 0.379 | -0.062 | 0.421 | 0.422 | 83 | 82 | -1 |
+| addition | eff | 2022–2026 | -0.093 | -0.093 | 0 | 0.762 | 0.762 | 87 | 87 | 0 |
+| addition | eff | diff | -0.534 | -0.471 | 0.062 | 0.871 | 0.871 | 170 | 169 | -1 |
+| addition | tot | 2007–2011 | 8.737 | 8.523 | -0.215 | 1.460 | 1.484 | 37 | 33 | -4 |
+| addition | tot | 2012–2016 | 0.250 | 0.250 | 0 | 1.378 | 1.378 | 54 | 54 | 0 |
+| addition | tot | 2017–2021 | 2.794 | 2.847 | 0.053 | 1.081 | 1.093 | 83 | 82 | -1 |
+| addition | tot | 2022–2026 | 1.498 | 1.498 | 0 | 1.171 | 1.171 | 87 | 87 | 0 |
+| addition | tot | diff | -1.297 | -1.350 | -0.053 | 1.594 | 1.602 | 170 | 169 | -1 |
+| deletion | ann | 2007–2011 | 0.019 | 0.019 | 0 | 0.982 | 0.982 | 38 | 38 | 0 |
+| deletion | ann | 2012–2016 | -1.694 | -1.694 | 0 | 0.543 | 0.543 | 47 | 47 | 0 |
+| deletion | ann | 2017–2021 | -1.971 | -1.971 | 0 | 0.519 | 0.519 | 64 | 64 | 0 |
+| deletion | ann | 2022–2026 | -0.653 | -0.653 | 0 | 0.440 | 0.440 | 77 | 77 | 0 |
+| deletion | ann | diff | 1.318 | 1.318 | 0 | 0.680 | 0.680 | 141 | 141 | 0 |
+| deletion | eff | 2007–2011 | -0.171 | -0.171 | 0 | 1.057 | 1.057 | 38 | 38 | 0 |
+| deletion | eff | 2012–2016 | -0.787 | -0.787 | 0 | 0.802 | 0.802 | 47 | 47 | 0 |
+| deletion | eff | 2017–2021 | 0.860 | 0.860 | 0 | 0.477 | 0.477 | 64 | 64 | 0 |
+| deletion | eff | 2022–2026 | -1.263 | -1.263 | 0 | 0.455 | 0.455 | 77 | 77 | 0 |
+| deletion | eff | diff | -2.123 | -2.123 | 0 | 0.659 | 0.659 | 141 | 141 | 0 |
+| deletion | tot | 2007–2011 | -6.694 | -6.694 | 0 | 1.593 | 1.593 | 38 | 38 | 0 |
+| deletion | tot | 2012–2016 | -2.445 | -2.445 | 0 | 1.664 | 1.664 | 47 | 47 | 0 |
+| deletion | tot | 2017–2021 | -0.428 | -0.567 | -0.139 | 1.019 | 1.025 | 64 | 63 | -1 |
+| deletion | tot | 2022–2026 | -1.519 | -1.519 | 0 | 0.675 | 0.675 | 77 | 77 | 0 |
+| deletion | tot | diff | -1.091 | -0.952 | 0.139 | 1.222 | 1.227 | 141 | 140 | -1 |
 
-## 2013–2026 against the original run (2012 panel, zero-filled), G&S convention
+## 2013–2026 against the original run (2012 panel, zero-filled), G&S convention, on the original run's four periods 2013–2017, 2018–2020, 2021–2023, 2024–2026
 
 The original run filled missing stock-days with a zero return; under the G&S convention the two events whose window contains a stock-day missing in the 2005 pull (OMXSB-2018H1-07 Africa Oil, OMXSB-2018H2-10 Veoneer) drop out of the affected windows instead of entering with a zero return, so their cells now differ in N as well as in the mean. Every other cell should match.
 

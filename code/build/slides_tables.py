@@ -5,10 +5,10 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", ".."))
 OUT = os.path.join(REPO, "output", "omxsb_replication_2007")
 SL = os.path.join(REPO, "slides")
-PER = ["2007–2012", "2013–2017", "2018–2020", "2021–2023", "2024–2026"]
 WIN = {"ann": "Announcement [AD−1, AD+1]", "eff": "Effective [ED−1, ED+1]", "tot": "Total [AD−1, ED+1]"}
 
 t = pd.read_csv(os.path.join(OUT, "tables", "tab_02_car_long.csv"))
+PER = [p for p in t.period.drop_duplicates() if p not in ("diff", "F_equal")]  # the notebook's periods, in order
 t = t[t.period.isin(PER)]
 
 def stars(p):

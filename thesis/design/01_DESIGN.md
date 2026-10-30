@@ -92,7 +92,7 @@ Standardised $SCAR_i = CAR_i / \hat\sigma_i \sqrt{b - a + 1}$ for the BMP test. 
 
 $$CAR_i[\text{ann},\text{eff}] = a + b\, \text{Add}_i + \gamma\, \text{Add}_i \times \frac{\text{TrackerAUM}_t \, \hat w_i}{P_i \text{ADV}_i} + \delta_t + \varepsilon_i, \tag{8}$$
 
-by addition and deletion, by sub-period (2013-2017, 2018-2020, 2021-2023, 2024-2026, which also splits the announcement-lead regimes), and against tracker assets. Report mean CARs by sub-period beside Greenwood and Sammon's decade means (additions 3.4, 7.6, 5.2, 0.8 per cent; deletions -4.6, -16.6, -12.3, -0.6 per cent for the 1980s to 2010s, NBER WP Table 2) in one sentence of text, as the 2016 and 2024 winners did. Post-effective reversal $[\text{eff}+1, \text{eff}+20]$ in the same table.
+by addition and deletion, by sub-period (four equal five-year periods of effective dates, 2007-2011, 2012-2016, 2017-2021, 2022-2026, the analogue of the anchor's four decades; changed 30 Oct 2026 from the earlier unequal cut 2007-2012, 2013-2017, 2018-2020, 2021-2023, 2024-2026, whose bins had no common rationale and made the per-period trend slope ill-defined; the announcement-lead regimes, intraday to 2012, pre-open 2013-2020, after-close from May 2021, are handled per event by moving AD to the next trading day, not by the period cut), and against tracker assets. Report mean CARs by sub-period beside Greenwood and Sammon's decade means (additions 3.4, 7.6, 5.2, 0.8 per cent; deletions -4.6, -16.6, -12.3, -0.6 per cent for the 1980s to 2010s, NBER WP Table 2) in one sentence of text, as the 2016 and 2024 winners did. Post-effective reversal $[\text{eff}+1, \text{eff}+20]$ in the same table.
 
 ### 5.2 FTN pressure (Table 3, Figure 3)
 
