@@ -1,5 +1,5 @@
 """Twin-share feasibility: OMXSB events 2007-2026 for companies with >1 listed share class on Nasdaq Stockholm.
-Read-only on the repo; writes /home/claude/agent_scratch/twin_events.csv (+ summary prints).
+Read-only on the repo; writes twin_events.csv (+ summary prints).
 Usage: python3 -I twin_events.py <repo_root>
 """
 import re, sys
@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 R = sys.argv[1]
-OUT = "/home/claude/agent_scratch/"
+OUT = "./"
 s05 = pd.read_csv(R + "/data/raw/lseg/panel_2005_2026/stocks_static_2005.csv")
 s12 = pd.read_csv(R + "/data/raw/lseg/panel_2012_2026/stocks_static.csv")
 tu = pd.read_csv(R + "/data/raw/lseg/panel_2005_2026/td_universe.csv").rename(columns={"RIC": "ric"})

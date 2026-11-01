@@ -1,6 +1,6 @@
 import pandas as pd, re, zipfile, glob, os, xml.etree.ElementTree as ET, collections
-R='/home/claude/uvangludvig-ship-it/financethesis'
-tw=pd.read_csv('/home/claude/agent_scratch/twin_events.csv'); tw=tw[(tw.usable_pair==True)]
+R='../..'
+tw=pd.read_csv('twin_events.csv'); tw=tw[(tw.usable_pair==True)]
 tw['AD']=pd.to_datetime(tw.AD); tw=tw[tw.AD>='2019-01-01']
 st=pd.read_csv(f'{R}/data/raw/lseg/panel_2005_2026/stocks_static_2005.csv')
 isin=dict(zip(st.ric,st.IssueISIN))
@@ -15,7 +15,7 @@ import re as _re
 def _root(r): return _re.match(r'([A-Z]+?)[a-z]?\.ST',str(r)).group(1) if _re.match(r'([A-Z]+?)[a-z]?\.ST',str(r)) else ''
 tw['sister_isin']=[MAN.get((_root(r),c),i) for r,c,i in zip(tw.sister_ric,tw.sister_class,tw.sister_isin)]
 # tracker fund ids per quarter (same rule as split_others.py)
-f=pd.read_csv('/home/claude/fi_check/parsed/funds.csv')
+f=pd.read_csv('data/fi_check/funds.csv')
 f['ar']=pd.to_numeric(f.active_risk.astype(str).str.replace(',','.'),errors='coerce')
 comp=re.compile(r'msci|omrx|bond|world|acwi|ftse|bloomberg|t-bill|t-bond|stoxx|nordic|norden|vinx|europe|global',re.I)
 omx=re.compile(r'stockholm benchmark|omxsb',re.I); swe=re.compile(r'stockholm benchmark|omxsb|six|sweden|sverige|omx stockholm',re.I)
@@ -58,6 +58,6 @@ for _,r in tw.iterrows():
         sister_in_idx=bool(r.sister_member_before and r.sister_member_after),
         event_class_chg_pct=100*(e_a-e_b)/r.shares_qa if r.shares_qa==r.shares_qa else None,
         event_class_chg_mn=(e_a-e_b)/1e6, sister_chg_mn=(s_a-s_b)/1e6, sister_hold_before_mn=s_b/1e6))
-out=pd.DataFrame(rows); out.to_csv('/home/claude/scripts/twin_first_stage_output.csv',index=False)
+out=pd.DataFrame(rows); out.to_csv('twin_first_stage_output.csv',index=False)
 pd.set_option('display.width',200)
 print(out.round(3).to_string(index=False))
