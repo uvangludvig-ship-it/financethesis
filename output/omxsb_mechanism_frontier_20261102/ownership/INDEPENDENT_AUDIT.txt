@@ -1,0 +1,51 @@
+OBEROENDE H-AUDIT, 2026-11-02
+
+Aritmetisk dom: GODKÄND för de sparade indata och det definierade urvalet.
+Identitetsdom: en specifik fondidentitetsövergång behöver förklaras eller uteslutas innan resultatet beskrivs som fullt identitetskontrollerat. Inga utfall har ändrats av denna audit.
+
+Alla37916 sparade fond×event×roll-rader har byggts om från de fulla rapporternas exakta/validerade aktieslagsalias. Noll skillnader mot binärt ägande;inga negativa eller saknade kvantiteter i kvarvarande positionsrader. Samma fondmängd gäller alla fyra aktier per event,vid båda endpoints. Inga targetrader med noll Antal men positivt värde hittades.
+
+Samtliga eventkontraster,förnivåer och post/pre/accelerationsmått reproduceras inom7,2e−15. Alla8 inferensceller reproduceras separat:statsmodelsintercept på översynsmedel,SciPy-tintervall,full signflipenumeration och en egen viktad klustersandwichformel för issuer-känsligheten. Ingen produktionsfunktion importerades. Kontrollerna finns i independent_validation.json och reproduceras av independent_validation.py.
+
+Huvudutfall före den återstående identitetskontrollen:
+118 tillägg,14 översyner:matched post+0,20865pp,95%CI[−0,66490;1,08221],exakt signflip p0,60498.
+Gemensamt trekvartalsurval116 tillägg:post+0,49392,pre+0,08924,acceleration+0,40468pp,CI[−0,79810;1,60746]. Detta visar inte positiv relativ H-breddökning med tillräcklig precision,men är inte bevis att en sådan är noll. Förtrendens osäkerhet ska inte kallas ett bevis för parallella trender.
+Den rapporterade baselinebalansen,event17,84% mot kontroll17,37%,gör den tidigare farhågan om en stor enkel nivå-/takeffekt mindre framträdande i just detta urval. Den tar inte bort endogent indexurval eller okända tidsvarierande skillnader.
+
+Den konkreta fondidentitetsfrågan
+Fund-ID60159,Cicero Focus,2019H1:
+q0 2019-03-31:fond-ISINSE0006993838;
+q1 2019-06-30:fond-ISINSE0001932781.
+Namnet,förvaltaren och benchmarktexten SIX PRX är lika. Det kan vara en andelsklassändring,rapportfel eller verklig fondförändring;denna audit påstår inte vilket. Exakt konstant FI-ID räcker inte för att automatiskt avgöra detta. Dokumentera en giltig kontinuitet eller ta bort detta fond×review symmetriskt för alla4aktier/endpoints. Välj inte utifrån hur koefficienten ändras.
+
+Ordinarie-aktiegrinden
+Kodens nse räknar positiva svenska ISIN i ÖverlåtbartVärdepapper,som inte ensamt betyder ordinarie aktier. En separat konservativ kontroll mot exakt identifierade ordinarie Nasdaq-ISIN visar dock att samtliga317 behållna fond×review-rader har minst14 sådana positiva svenska aktier vidq0. Tröskeln≥10 påverkas alltså inte i detta urval. Kontrollfil:independent_H_ordinary_count_check.csv.
+
+Värdepappersidentitet/nollor
+Exakt daterat Nasdaq-instrument plus faktisk positiv ordinarie q0-position någonstans iFI kan stödja att en annan full rapport saknar positionen. Detta innebär ett uttryckligt urval av FI-föreobserverade aktier. Nasdaq-april/oktober ensam räcker inte för föregående kvartal;den faktiska q0-observationen är den nödvändiga extra länken. q1-motsvarigheten stöder fortsatta säkra nollor. Det konservativa exkluderandet av olösta relateradeISIN är bättre än positiva-only/implicit0.
+
+Den okända-ISIN-screen som använder första issuer-ordet är emellertid inte uttömmande:abbreviationer och historiska namn kan undgå screenen. Jag fann inget nytt materiellt fel som falsifierar de aktuella binära raderna,men kontrollen ska inte beskrivas som fullständigt belägg för varje möjlig alternativ historisk identifierare. Exact-other-issuer-resolutionerna som visas avser tydligt olika börsbolag,exempelvis BeijerAlma/BeijerRef,VolvoCars/Volvo och Electrolux/ElectroluxProfessional. Ingen namnlikhet har godkänts som nytt aktiealias.
+
+Populationen är NY
+NyaH-posturvalet är219event:118 tillägg,101 borttag. Det är inte samma216event som demandavsnittet. Deklarationen specificerar nya fasta rematch2019–25,så detta är förenligt med den nya specifikationen,men event-för-eventjämförelser med demand måste först låsa skärningen. Exakta tillkomna/bortfallnaID finns i independent_validation.json.
+
+Bedömning av ett ytterligare additivt allFI-steg
+
+JA,som separat fördeklarerad BESKRIVANDE bokföring är det motiverat. Det lokaliserar om en breddförändring finns på den nya säkra kedjan och vilka mätbara grupper den ligger i. Det är inte ett nytt kausalt mekanismtest och ska inte fortsätta tills någon grupp blir signifikant.
+
+Lås före utfallet:
+1.Exakt samma event/fasta3kontroller,tidsfönsterQ1→Q2/Q3→Q4,säkra aktieslagskedjor och kompletta balanserade fondrapporter. Samma giltiga fondpanel används för alla4aktier/båda endpoints per event. Ingen ommatchning för ägarutfall.
+2.Kontrollera först att total ägarbredd på denna kedja faktiskt har samma riktning som det gamlaT9. Om den saknar tydlig ökning finns inte samma empiriska företeelse att förklara här.
+3.Använd additiva ägarantal:förändring i antal ägare i varje ömsesidigt uteslutande grupp;event-minus-medelkontroll för varjegrupp. Dessa summerar exakt till motsvarande allFI-kontrast. Alternativt varjegrupps bidrag till EN GEMENSAM totalfondsandel. Separata gruppandelar med olika nämnare är inte additiva.
+4.Grupper kan låsas somH;namnmarkeradindexproxy;resterande/okända. Nordnet/Nordea kan särredovisas som de två kända serierna om det bestäms före utfallet. Kalla inte residualen aktiv och inte proxygruppen exaktOMXSB.
+5.Redovisa även initial ägarbredd,nyägare och lämnare. Förändringar i fondgrupper/fondnämnare och fondidentitet ska inte ge falskt nya aktieägare. Alla grupper ska visas,oavsett tecken.
+
+Varför det gamlaT9 inte är en direkt jämförelsesiffra
+T9 skattade log(1+antalägare) med breda kandidatregressioner och ofta3–6månadersintervall. NyaH använder andelsförändring i en smal stabil benchmarkgrupp,fasta daterade kontroller och ett kvartal. T9:s 'utanindexfonder' var namnfilter,inte verifierat aktiva fonder eller justH. Gamla ledgerns ofullständiga/obalanserade rapportstatus och statiskaISIN kan dessutom ändra ägarantalet. Därför kan log+0,38 och H+0,21pp båda förekomma utan paradox. Log(1+N) är heller inte additivt över grupper.
+Om den nya additiva analysen hittar breddökning i residualen har den lokaliserat ett observerat fondurval,inte bevisat uppmärksamhet eller oberoende icke-benchmarkefterfrågan. Om mycket ligger i namnmarkerade indexfonder kan man beskriva det utan att anta identiska mandat/konstituenter.
+
+SLUTLIGT TILLÄGG EFTER UNIFORM IDENTITETSRÄTTELSE
+
+Den tidigare specifika Cicero-frågan är hanterad genom samma regel för samtliga fonder:icke-saknat identiskt fond-ISIN krävs båda endpoints. Det osäkra60159-paret2019H1 ingår inte längre. nse-grinden är samtidigt uttryckligen begränsad till historiskt identifierade ordinarie Nasdaq-aktier. Tidigare körning är arkiverad i before_independent_identity_correction/ och inte raderad.
+Den korrigerade H-körningen har verifierats igen från råpositionsrader och egen inferenskod:37812fond×event×roll-rader,inga binärfel,inga kvarvarande fund-ISIN-byten,alla8celler godkända.
+Slutlig primärH:+0,22921pp,CI[−0,63142;1,08985],118tillägg/14översyner. Slutlig gemensam116-panel:post+0,52624,pre+0,12325,acceleration+0,40298pp,CI[−0,79998;1,60595]. De tidigare+.20865/.40468-talen ovan avser den bevarade förkorrigeringskörningen.

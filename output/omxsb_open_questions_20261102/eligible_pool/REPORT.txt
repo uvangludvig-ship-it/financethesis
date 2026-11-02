@@ -1,0 +1,21 @@
+STRIKT HISTORISK KONTROLLPOOL: IDENTIFIERING, INGA UTFALL
+1–2november2026. Läs review_RIC_control_pool.csv för ommatchning.
+
+5765 review×RIC-rader,19översyner2017H1–2026H1,457 olika RIC. Varje rad har exaktISIN-koppling till en daterad StockholmMainMarket-rad, via statisk LSEG-identifierare, tidigare granskad ordinarieISIN-kedja eller de två primärkällestyrkta namnaliasen. Ingen fuzzy-/namnmatchning. Endast Stock, kvar vid månadsslut, ej preferens-/inlösen/rättighetsflaggad. Tom Nasdaqcompany_code tillåts inte; inga sådana finns.
+
+Poolen omfattar225–347 RIC per översyn,224–344 distinkta instrument och220–341 Nasdaqcompany_code.1–3 instrument per översyn har mer än en RIC i panelen. Alla alternativ bevaras med same_instrument_RIC_alternatives. Inget alternativ har valts och inga pris-/avkastningskolumner har lästs. Root kan välja utifrån sin separat deklarerade förhandsdatagrind och får inte råka använda flera RIC för samma instrument eller flera aktieslag från samma Nasdaqcompany_code som olika bolag.
+
+NYFO/ALTRAF använder SE0011426428 och historiskt company_codeNYF; MAHA/KEOC använder SE0008374383 och company_codeMAHA. Även andra exaktaISIN-dubbletter markeras automatiskt. Dessa är retrospektiva identitetslänkar; inga framtida namn/tickers görs ex-ante kända.
+
+Täckning
+Råpanelen innehåller1928RIC varav1526Stockholm-RIC enligt .ST-suffix (inkl avlistningssuffix).1261 av dessa har någon exakt identifieringskälla;265 har ingen sådan och ligger separat som unresolved. Vid varje review saknar57–113 av Nasdaqs annars screenade instrument en säker länk till panelen. Det är en ofullständig men positivt verifierad historisk pool. Frånvaro från poolen betyder inte att instrumentet var onoterat/olämpligt; den kan bero på saknad historiskISIN, saknad panelserie eller den aktuella screeningen. Antal per review finns i coverage_by_review.csv.
+
+Gränser
+Detta verifierar daterad huvudlistetillhörighet och vald instrumenttyp, inte full OMXSB- eller OMXSPI-behörighet, float, buffertar eller medlemskap. Rapporternas publiceringstid måste hållas separat från referensmånad: oktober2020 publicerades efterrepoAD; april2021 efterAD−2. Historisk ommatchning är därför en retrospektiv kontrollvalidering, inte en påstått implementerbar förhandsprognos. Ingen ny 69-eventkänslighet eller annan äldre analys har ändrats.
+
+Schema
+review,ric,nasdaq_isin,company_code finns explicit; isin är samma identifierare med ursprungligt kolumnnamn. Därutöver issuer_key (review:company_code),ticker,instrument,reference_date,publication_timestamp,source_url,source_sheet,source_excel_row,evidence_type,evidence_source,same_instrument_RIC_count,same_instrument_RIC_alternatives.
+
+Reproducerbarhet
+/tmp/omxsb-audit-venv/bin/python work/open_questions_20261101/eligible_pool/build_pool.py
+Endast RIC-kolumnen läses ur prisparquet; inga priser, avkastningar, täckningsutfall eller framtida listningsfilter används för quoteval. source_hashes.json och RIC_ISIN_evidence.csv dokumenterar källor; all_exact_links_including_excluded.csv behåller avvisade matchningar och deras skäl. Repooriginal och gamla känslighetsfiler lämnas orörda.

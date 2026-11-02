@@ -1,3 +1,10 @@
+<!-- ANALYSIS_DELIVERY_20261102 -->
+> **2 november 2026, genomfört:** Rättelser, daterade kontroller, ägar- och mandatdekomposition, retention, köp/volym-normalisering, modelljämförelse, samma-aktie-kontroll och censurerad FI-blankningsprofil är sparade med kod och verifieringar.
+> **Nästa:** Samla försvarbara bidrag från resultaten; välj inte fler varianter efter signifikans.
+> **Öppet:** Kausal prisförklaring och varaktighet efter 20 dagar. FTN-utfall är fortsatt stängda. Senaste rapport: `output/omxsb_broadening_20261102/RESULTAT.txt`.
+
+> **1 november 2026: kontrollanalys rättad.** Se `output/omxsb_robusthet_20261101/RESULTAT.md`, `code/build/robusthet_hela.py` och `thesis/design/ROBUSTHET_RATTELSE_20261101.md`. T2 har konsekvent reviewviktning och matchning före utfallet. T5:s historiska medlemsidentifierare är ofullständiga och inga verifierade nästan-kandidater har skapats. A/B-förstastegets gamla nollor och 0,74 är inte validerade; den nya valideringsrapporten anger saknade led explicit. Påståendena om tredelning, noll köptryck och permanent effekt har dragits tillbaka. Äldre status nedan är historik.
+
 # STATUS: read this first
 
 **As of Thu 29 October 2026.** Newest change on top. Each evening, three lines per person (done / next / blocked), initialled A or L.

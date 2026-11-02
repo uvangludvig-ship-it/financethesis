@@ -1,0 +1,17 @@
+OBEROENDE SLUTKONTROLL – ELIGIBLE REMATCH
+Avslutad2nov2026. Endast deklarerad ommatchning och befintliga18resultat. Inga nya hypoteser, modeller, horisonter eller utfallsval.
+
+PASS: inga beräknings- eller kontrollvalsfel hittades i den avgränsade granskningen.
+
+1. Kontrollvalet reproducerades helt från råpanelens fördata med separat kod, utan import av robusthet_hela.py eller run.py. För287event återskapades samtliga3valda RIC i exakt samma ordning. Föravkastning beräknas AD−101 till AD−2; logbörsvärde tas vidAD−2 med samma högst10dagars historiska framåtfyllning. Inga efterhandsutfall används i detta reproduktionsblock.
+2. Standardisering, euklidiskt avstånd, stabil avstånd/RIC-sortering, en kontroll per daterad company_code och val av kanonisk RIC före utfall är reproducerade. Det kanoniska valet använder enbart förperiodens observationer och lexikografisk tie-break. Kravet på komplett förperiod gör i praktiken att de godkända kandidaternas räknare normalt är100; inget efterfönster väljer mellan alias.
+3. Samtliga861kontrollrader finns i rätt översyns daterade ISIN-pool. De matchar den officiella Nasdaq-ledgerns ISIN och är Stock, listade vid referensmånadens slut, utan preferensnamnflagga. Tre olika company_code per event och inget eget company_code. Kontrollerna använder de före utfallsberäkning valda kanoniska RIC:arna.
+4. Kodens eventexkludering avser aktuell och närmast föregående översyn (k och k−1). Framtida indexändringar utesluts inte. En extra identitetskontroll med den daterade Nasdaq-tickern mot hela eventcensus, inklusive rader med saknad RIC, fann inga valda kontroller från aktuell/föregående eventemittent. Detta är en kontroll av existerande urval, inget nytt avkastningstest.
+5. Alla frysta individnivåer bildar sina sparade event-minus-kontrollgenomsnitt exakt. common100 motsvarar precis samma event och3kontroller med fullständigt stöd förED+1,+20,+60,+100. En saknad kontroll ersätts inte. Differensen20→100 beräknas på detta gemensamma stöd.
+6. Alla18resultatrader reproducerades med separat statsmodels-intercept på översynsmedlen, rätt antal event/översyner, t-intervall samt egen explicit studentiserad null-bootstrap och teckenbyte med deklarerade seeds. Största skillnad i medel/intervall är6,22e−15pp. Exakta reproduktioner finns i validation_inference.csv, maskinstatus/checkar/hashar i validation.json.
+
+För det nya gemensamma tilläggsurvalet: N135,G19, förändringED+20→ED+100 −4,005479pp,95%KI[−8,471381;0,460422],wildp=.0759. Beräkningskontrollen ändrar inte den deklarerade tolkningen: negativ punktuppskattning med osäkerhet som inkluderar0. En utebliven5%-förkastning visar inte att relativ försvagning saknas. De äldre breda resultaten och den strikta valideringen av befintliga kontroller ska förbli synliga; dessa urval svarar inte på identiska frågor.
+
+Gränser: kontrollen godkänner mekanik och den givna huvudlistelänkningen, inte full OMXSB/OMXSPI-behörighet, alla historiska identitetskedjor, kausal behandling eller nominell inferens efter tidigare analyser. Senare publicerade källfiler kan retrospektivt belägga liststatus men är inte bevis för en då tillgänglig prognosfil. Företagsnyheter, riskobalans, bortfall och beroende över översyner finns kvar.
+
+Proveniensnot till root: lägg till SHA256 för importerade code/build/robusthet_hela.py och data/raw/lseg/panel_2005_2026/indices_daily (1).csv i huvudmetadata. De saknas i den initiala hashlistan men påverkar beräkningen. Detta kräver inte ny utfallsanalys.

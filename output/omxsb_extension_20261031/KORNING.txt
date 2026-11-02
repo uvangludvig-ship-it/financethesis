@@ -1,0 +1,49 @@
+REPRODUKTION AV OMXSB-UTVIDGNINGEN, 31 OKTOBER 2026
+
+Alla kommandon körs från /Users/ludviguvang/dev/financethesis.
+Den genomförda körningen använde /tmp/omxsb-audit-venv/bin/python.
+Runtime: pandas2.3.3, numpy2.5.4, scipy1.18.1, statsmodels0.15.0,
+pyarrow26.0.0, openpyxl3.1.5, xlrd2.0.2; dessutom tabulate för etikettabellen.
+Miljön i /tmp är tillfällig. Återskapa motsvarande Python-miljö om den har försvunnit.
+Inga nya nätanrop behövs för följande reproduktion. Originalkällorna är sparade.
+
+KÖRORDNING
+1. AP/FI-underlaget:
+/tmp/omxsb-audit-venv/bin/python code/build/omxsb_ap_prepare.py
+
+2. AP/FI-utfall och granskningsjournaler:
+/tmp/omxsb-audit-venv/bin/python code/build/omxsb_ap_ownership.py
+/tmp/omxsb-audit-venv/bin/python code/build/omxsb_ap_validate.py
+
+3. Separat etikettkorrigering av tidigare siffror:
+/tmp/omxsb-audit-venv/bin/python code/build/omxsb_relabel_results.py
+
+4. Kandidatdatapilot med sparade Nasdaq-original:
+/tmp/omxsb-audit-venv/bin/python code/build/omxsb_candidate_pilot.py --repo /Users/ludviguvang/dev/financethesis --out output/omxsb_extension_20261031/candidate --source-dir output/omxsb_extension_20261031/candidate/sources
+
+5. Avgränsad migrationsundersökning med sparade primärkällextrakt:
+/tmp/omxsb-audit-venv/bin/python code/build/omxsb_migration_screen.py --repo /Users/ludviguvang/dev/financethesis --source-dir output/omxsb_extension_20261031/migration/sources --output output/omxsb_extension_20261031/migration/results
+
+6. Oberoende kontroll av huvudresultat, mätning, summeringar och skyddade original:
+/tmp/omxsb-audit-venv/bin/python code/build/omxsb_extension_validate.py
+
+7. Uppdatera analysöversikt, leveranskopior, manifest och AI-logg:
+/tmp/omxsb-audit-venv/bin/python code/build/omxsb_extension_finalize.py --deliverables /Users/ludviguvang/Documents/Codex/2026-10-30/oke/outputs/omxsb_extension_20261031
+
+KONTROLLER OCH TOLKNING
+AP/FI-protokollet finns i ownership/PROTOKOLL.txt. Implementationens rättelser dokumenteras
+separat i ownership/IMPLEMENTATION_CORRECTIONS.txt. Oberoende validering använder
+statsmodels i stället för analyskodens egen formel för huvudtabellens klustrade intervall.
+Hela AP/FI-körningen har också upprepats i en separat outputmapp och Python-miljö.
+Elva tabeller överensstämmer; observerade skillnader mellan SciPy-versionernas intervall
+är högst cirka0,0000000000032 procentenheter. Observationer, innehavsmedel och urval
+är oförändrade. ownership/independent_rerun.json registrerar skillnaderna.
+
+Kandidatpiloten har körts med två pandas-versioner och gett byte-identiska CSV-filer;
+endast körningstid och runtimeversion i metadata skiljde. Migrationsanalysens beräknade
+resultat och kopierade original-XML stämde exakt vid omkörning; källsökvägar flyttades
+från staging till repot. Respektive independent_rerun.json dokumenterar jämförelsen.
+
+Rapporttexter är analysanteckningar. De ska uppdateras om beräkningsunderlaget senare
+ändras. Ingen av dessa körningar innebär att alla historiska källor, bolagshändelser eller
+kausala antaganden är slutverifierade. Inga nya FTN-avkastningar beräknas. Inga filer pushas.

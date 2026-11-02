@@ -7,6 +7,7 @@ Inference functions (ols, wcb, cell, diffcell) are taken from code/notebooks/rep
 No return is computed around an FTN date; only OMXSB events are used.
 """
 import os, re, json, warnings
+from omxsb_audit_helpers import yearly_median_inference
 import numpy as np, pandas as pd
 from scipy import stats
 import matplotlib
@@ -178,9 +179,10 @@ def alive(k, d):
 def total_mcap(members, d):
     rics = [k for k in members if alive(k, d)]
     v = mc.loc[d, rics].dropna()
+    n_with_cap = len(v)  # coverage is securities/securities, not companies/securities
     if DEDUP:
         v = v.groupby(v.index.map(stem)).max()
-    return v.sum(), len(rics), int(v.shape[0])
+    return v.sum(), len(rics), n_with_cap
 top100 = mc.apply(lambda r: r.nlargest(100).sum(), axis=1)
 cov, missing_members = [], []
 for c in cyc:
@@ -216,7 +218,7 @@ mon = mon[mon.turn <= TURN_CAP]
 mk = mon.dropna(subset=["mcap"]).groupby("ym").apply(lambda g: np.average(g.turn, weights=g.mcap)).rename("mturn")
 mon = mon.merge(mk, on="ym")
 mon["xturn"] = mon.turn - mon.mturn
-ev["ym_pre"] = (ev.AD - pd.offsets.MonthBegin(1)).dt.to_period("M")
+ev["ym_pre"] = ev.AD.dt.to_period("M") - 1
 ev = ev.drop(columns=[c for c in ["turn", "size", "vol"] if c in ev.columns])
 ev = ev.merge(mon[["ric", "ym", "xturn"]].rename(columns={"ric": "RIC", "ym": "ym_pre", "xturn": "turn"}), on=["RIC", "ym_pre"], how="left")
 ev["mcap_pre"] = [mc.at[cal[i - 1], r] for r, i in zip(ev.RIC, ev.iAD)]
@@ -224,7 +226,7 @@ ev["size"] = ev.mcap_pre / ev.cycle.map(TOT) * 100
 ev["size_top100"] = ev.mcap_pre / ev.cycle.map(TOP) * 100
 sqm = (AR ** 2).groupby(AR.index.to_period("M")).sum(min_count=1)
 def vol12(ric, ym):
-    s = sqm.loc[ym - 12:ym - 1, ric]
+    s = sqm.loc[ym - 11:ym, ric]
     return np.nan if s.isna().any() or len(s) < 12 else s.mean()
 ev["vol"] = [vol12(r, y) for r, y in zip(ev.RIC, ev.ym_pre)]
 NUM["e1_controls_missing"] = {c: int(ev[c].isna().sum()) for c in ["turn", "size", "vol"]}
@@ -278,7 +280,7 @@ for i, c in enumerate(cyc):
     rics = [k for k in after[c] if k in rsp.columns]
     m = (cal >= lo) & (cal < hi)
     vw_mem[m] = ((rsp.loc[m, rics] * w.loc[m, rics]).sum(axis=1) / w.loc[m, rics].sum(axis=1)).values
-e2 = pd.DataFrame({"vw_spread_omxsb_members": vw_mem.groupby(cal.year).mean(), "vw_spread_all_st_panel": vw_all.groupby(cal.year).mean(), "n_members_with_quote": rsp.notna().sum(axis=1).groupby(cal.year).mean()})
+e2 = pd.DataFrame({"vw_spread_omxsb_members": vw_mem.groupby(cal.year).mean(), "vw_spread_all_st_panel": vw_all.groupby(cal.year).mean(), "n_panel_stocks_with_quote": rsp.notna().sum(axis=1).groupby(cal.year).mean()})
 e2 = e2.loc[2007:2026]
 ya = ev[ev.type == "addition"].groupby("year").tot.agg(addition_effect_mean="mean", N_additions="count")
 yd = ev[ev.type == "deletion"].groupby("year").tot.agg(deletion_effect_mean="mean", N_deletions="count")
@@ -372,12 +374,12 @@ for smp, s0 in SMP().items():
             y = pd.Series([wsum(r, a + lo, a + hi) for r, a in zip(s.RIC, s.iAD)], index=s.index)
             for p in PER:
                 c = cell(y[s.period == p], s.adx[s.period == p])
-                add_row("E4 predictability", f"Fig. 8 / HBS Table 4: pre-announcement {lab}, {typ}s", smp, p, c, "same", f"Mean cumulative abnormal return of {typ}s over {lab} in {p}, {smp} sample.")
+                add_row("E4 predictability", f"Fig. 8 / HBS Table 4: pre-announcement {lab}, {typ}s", smp, p, c, "same", f"Mean cumulative market-adjusted return (beta=1) of {typ}s over {lab} in {p}, {smp} sample.")
                 NUM[f"e4a_{typ}_{smp}_{lab}_{p}"] = round(c["mean"], 3)
         y = pd.Series([wsum(r, e + 2, e + 100) for r, e in zip(s.RIC, s.iED)], index=s.index)
         for p in PER:
             c = cell(y[s.period == p], s.adx[s.period == p])
-            add_row("E4 predictability", f"Fig. 9: post-event CAR [ED+2, ED+100], {typ}s", smp, p, c, "deviates (anchored at ED, not AD)", f"Mean cumulative abnormal return of {typ}s from two days after the effective date to 100 days after it in {p}, {smp} sample.")
+            add_row("E4 predictability", f"Fig. 9: post-event CAR [ED+2, ED+100], {typ}s", smp, p, c, "deviates (anchored at ED, not AD)", f"Mean cumulative market-adjusted return (beta=1) of {typ}s from two days after the effective date to 100 days after it in {p}, {smp} sample.")
             NUM[f"e4b_post_{typ}_{smp}_{p}"] = round(c["mean"], 3)
 
 # E4c: rank of additions among non-constituents at the reference date
@@ -467,6 +469,7 @@ nt = nt.merge(ev[["event_id", "flagged", "adx"]], on="event_id", how="left")
 nt["year"] = nt.ED.dt.year
 t4 = []
 for smp, s0 in [("all", nt), ("clean", nt[~nt.flagged.fillna(False)])]:
+    s0 = s0.dropna(subset=["nt", "instbuy", "activebuy"])  # common event sample
     m = s0.groupby(["type", "year"])[["nt", "instbuy", "activebuy"]].median()
     m["N"] = s0.groupby(["type", "year"]).size()
     ew = m.groupby(level=0)[["nt", "instbuy", "activebuy"]].mean(); ew["N"] = m.groupby(level=0).N.sum()
@@ -477,8 +480,8 @@ for smp, s0 in [("all", nt), ("clean", nt[~nt.flagged.fillna(False)])]:
             continue
         s = s0[s0.type == typ]
         for v, lab in [("nt", "OMXSB trackers"), ("instbuy", "all FI funds"), ("activebuy", "non-tracker funds")]:
-            c = cell(s[v], s.adx); c["mean"] = float(ew.loc[(typ, "EW mean of yearly medians"), v])
-            add_row("E5 event liquidity", f"Table 4: net trading by {lab} (% of shares), {typ}s, 2019-2026", smp, "EW mean of yearly medians (SE from pooled mean)", c, "deviates (FI funds, not 13F; 2007-2018 missing)", f"Equal-weighted mean of the yearly medians of net trading by {lab} from the quarter before to the quarter after the {typ}, 2019-2026, {smp} sample; the standard errors refer to the pooled mean.")
+            c = yearly_median_inference(s, v)
+            add_row("E5 event liquidity", f"Table 4: net trading by {lab} (% of shares), {typ}s, 2019-2026", smp, "EW mean of yearly medians (review bootstrap within year)", c, "deviates (FI funds, not 13F; 2007-2018 missing)", f"Equal-weighted mean of the yearly medians of net trading by {lab} from the quarter before to the quarter after the {typ}, 2019-2026, {smp} sample; the interval resamples whole reviews within each year; group medians are not additive. Paired-reporting FI funds only; mandates and transfers are not fully verified.", ci_low=c["ci_low"], ci_high=c["ci_high"], ci_method=c["ci_method"], se_cluster_boot=c["se_cluster_boot"])
             NUM[f"e5b_{v}_{typ}_{smp}_ew_mean_of_medians"] = round(c["mean"], 3)
 pd.concat(t4).to_csv(os.path.join(OUT, "e5b_table4_medians_by_year.csv"))
 
@@ -566,7 +569,7 @@ print("rows", len(R)); print("done")
 def f(x, d=2):
     return "" if x is None or (isinstance(x, float) and not np.isfinite(x)) else f"{x:.{d}f}"
 def row_md(r):
-    return f"| {r.explanation} | {r.test} | {r['sample']} | {r.statistic} | {f(r.coef, 3)} | {f(r.se_hc1, 3)} | {f(r.se_cr1, 3)} | {f(r.p_hc1, 3)} | {f(r.p_cr1, 3)} | {f(r.p_wcb, 3)} | {int(r.N) if pd.notna(r.N) else ''} | {int(r.G) if pd.notna(r.G) else ''} | {r.same_as_gs} | {r.what_it_shows} |"
+    return f"| {r.explanation} | {r.test} | {r['sample']} | {r.statistic} | {f(r.coef, 3)} | {f(r.se_hc1, 3)} | {f(r.se_cr1, 3)} | {f(r.p_hc1, 3)} | {f(r.p_cr1, 3)} | {f(r.p_wcb, 3)} | {int(r.N) if pd.notna(r.N) else ''} | {int(r.G) if pd.notna(r.G) else ''} | {r.same_as_gs} | {r.what_it_shows} | {f(r.get('ci_low'), 3)} | {f(r.get('ci_high'), 3)} |"
 s1 = NUM["step1"]; mb = NUM["membership"]
 L = ["# Results: Greenwood & Sammon's five explanations on OMXSB 2007-2026", "",
      f"Produced by `code/build/mechanisms_2007.py` on {pd.Timestamp.today().date()} from `output/omxsb_replication_2007/events_car.csv` (487 events, `tot` = CAR in percent over [AD−1, ED+1] against .OMXSBGI), `nettrading_omxsb.csv`, the LSEG panel `data/raw/lseg/panel_2005_2026/`, the change lists, `data/input/omxsb/omxsb_constituents_2009_06_01.csv` and `data/input/omxsb/tracker_aum.csv`. Plan and source comparison: `PLAN.md`. All numbers in `numbers_mechanisms.json`; the long table in `results_table_long.csv`.", "",
@@ -575,17 +578,17 @@ L = ["# Results: Greenwood & Sammon's five explanations on OMXSB 2007-2026", "",
      f"Of {s1['deletions']} deletions in the sample: (i) delisted within 100 trading days after ED: {s1['flag_delist_100td']} (the listing/delisting filter of the notebook already removed stocks delisted within 100 calendar days); (ii) public offer, merger/acquirer or delisting application in `deletion_reasons_2007_2026.csv`: {s1['flag_offer']}; (iii) shares outstanding changed by more than 10% between ED and ED+100 trading days: {s1['flag_shares_10pct']} ({s1['flag_shares_increase']} increases, {s1['flag_shares_decrease']} decrease; `shares` missing for {s1['shares_missing']} deletions, which are not flagged). Flagged by any criterion: {s1['flagged_any']}, by period " + ", ".join(f"{k} {v}" for k, v in s1["flagged_by_period"].items()) + ". List: `step1_deletion_flags.csv`. One deletion in the sample is not in the reasons file (226 vs 225).", "",
      "## Constituent reconstruction", "",
      f"The 81-name table of the 2009-05-11 release (effective 2009-06-01) is chained forward and backward through the 39 reviews with the change lists. Keys are LSEG RICs where the event or constituent has one, otherwise the ticker. Inconsistencies found ({mb['n_inconsistencies']}): " + "; ".join(mb["inconsistencies"]) + ". These are stocks deleted at a review without a recorded addition: Nokia (the known chain gap), and CDON, EnQuest, Corem, Norion and Sampo, which entered the index through corporate actions (spin-offs, mergers, fast entry) that are not in the review lists. Members that stop trading (acquired or delisted) are treated as having left the index on their last price date; they are counted separately (`n_exited_delisted` in `membership_coverage_by_review.csv`).", "",
-     f"Coverage: {mb['n_members_range'][0]} to {mb['n_members_range'][1]} live members per review; the share of members with a market cap in the panel on AD−1 is {mb['share_found_min']:.2f} at worst (2007H2) and {mb['share_found_mean']:.2f} on average, rising from about 0.82 in 2007 to about 0.93 in 2026 (`membership_coverage_by_review.csv`; the missing names per review are in `membership_missing_mcap_by_review.csv`: Nordea, Tieto and TradeDoubler have no RIC in the panel, Millicom has no market cap, and Skanska B and Tele2 B have no `mcap` field and are filled with close × shares outstanding). The LSEG `mcap` is company-level (identical across share classes: median ratio across A/B pairs {NUM['mcap_dual_class_median_ratio_minus_1']:.3f}), so each company is counted once in the OMXSB total. The reconstructed total is {mb['total_mcap_over_top100_median']:.2f} of the top-100 .ST sum at the median review, so the notebook's top-100 proxy overstates the denominator (it also counts dual-class companies twice, since both share classes carry the company-level mcap); the E1 regression with the top-100 size is in `e1_table3_size_top100.csv`.", "",
+     f"Coverage: {mb['n_members_range'][0]} to {mb['n_members_range'][1]} live members per review; the share of members with a market cap in the panel on AD−1 is {mb['share_found_min']:.2f} at worst (2007H2) and {mb['share_found_mean']:.2f} on average, counting securities with market cap over live member securities (earlier export mixed deduplicated companies and securities) (`membership_coverage_by_review.csv`; the missing names per review are in `membership_missing_mcap_by_review.csv`: Nordea, Tieto and TradeDoubler have no RIC in the panel, Millicom has no market cap, and Skanska B and Tele2 B have no `mcap` field and are filled with close × shares outstanding). The LSEG `mcap` is company-level (identical across share classes: median ratio across A/B pairs {NUM['mcap_dual_class_median_ratio_minus_1']:.3f}), so each company is counted once in the OMXSB total. The reconstructed total is {mb['total_mcap_over_top100_median']:.2f} of the top-100 .ST sum at the median review, so the notebook's top-100 proxy overstates the denominator (it also counts dual-class companies twice, since both share classes carry the company-level mcap); the E1 regression with the top-100 size is in `e1_table3_size_top100.csv`.", "",
      "## E3 Migrations: not replicated", "",
      f"G&S's migration test needs a second index with dedicated passive money on the other side of the move (S&P MidCap 400 ↔ S&P 500). In Sweden the index funds tied to Nasdaq Stockholm indices track OMXS30 (XACT OMXS30, Avanza Zero) and OMXSB (section 5 of `omxsb_notes.md`); there is no Nasdaq mid- or small-cap index change list with dedicated trackers in the repo, and OMXS30 is by construction the 30 most traded stocks, which OMXSB (top 10% by turnover, 70-110 names) also contains. A move between the two therefore cannot generate offsetting selling or buying by the other index's trackers: an OMXSB addition of an OMXS30 member means OMXS30 trackers keep holding, not sell. Checking OMXS30 membership at the announcement date from `omxs30_changes_2005_2026.csv` (status only known for tickers that appear in that list): {NUM['e3']['n_additions_of_omxs30_members']} OMXSB addition of a current OMXS30 member ({', '.join(NUM['e3']['additions_of_omxs30_members'])}) and {NUM['e3']['n_deletions_of_omxs30_members']} OMXSB deletions of OMXS30 members ({', '.join(NUM['e3']['deletions_of_omxs30_members'])}); none is a migration in the G&S sense. No proxy was built (`e3_omxsb_events_vs_omxs30_membership.csv`).", "",
      "## E2: what is and is not available", "",
-     f"We have closing quoted bid and ask (relative quoted spread), not effective spreads from trade data, and no implementation-shortfall series (G&S Fig. 5 / HBS Fig. 9 green line): that part is not replicated. The value-weighted relative quoted spread of OMXSB constituents falls from {NUM['e2']['spread_members_2007']:.2f}% (2007) to {NUM['e2']['spread_members_2016']:.2f}% (2016) and {NUM['e2']['spread_members_2025']:.2f}% (2025); across all .ST stocks in the panel from {NUM['e2']['spread_all_2007']:.2f}% to {NUM['e2']['spread_all_2025']:.2f}% (`e2_spread_by_year.csv`, `fig_e2_spread_vs_addition_effect.png`). The correlation of the yearly spread with the yearly mean addition effect is {NUM['e2_corr_spread_addition_effect_by_year']:.2f} (20 years). Stock-days with a relative spread above 20% ({NUM['e2_spread_obs_dropped_above_20pct']}) are dropped as quote errors.", "",
+     f"We have closing quoted bid and ask (relative quoted spread), not effective spreads from trade data, and no implementation-shortfall series (G&S Fig. 5 / HBS Fig. 9 green line): that part is not replicated. The value-weighted relative quoted spread of OMXSB constituents falls from {NUM['e2']['spread_members_2007']:.2f}% (2007) to {NUM['e2']['spread_members_2016']:.2f}% (2016) and {NUM['e2']['spread_members_2025']:.2f}% (2025); across all .ST stocks in the panel from {NUM['e2']['spread_all_2007']:.2f}% to {NUM['e2']['spread_all_2025']:.2f}% (`e2_spread_by_year.csv`, `fig_e2_spread_vs_addition_effect.png`). The correlation of the yearly spread with the yearly mean addition effect is {NUM['e2_corr_spread_addition_effect_by_year']:.2f} (20 years). Stock-days with a relative spread above 20% ({NUM['e2_spread_obs_dropped_above_20pct']}) are excluded by the original quote filter; an error has not been independently established for every observation.", "",
      "## E4c: selection variable", "",
      f"Nasdaq's methodology (\"OMX Stockholm Benchmark Index Methodology\", © 2025, https://indexes.nasdaq.com/docs/Methodology_OMXSB.pdf, fetched) ranks the OMXSPI universe by 12-month SEK turnover, selects the top 10% (minimum 25), then adds by free-float market cap within ICB supersectors to 85% coverage and removes the bottom 30% by turnover; reference dates are the last trading day of April and October and the announcement is after the close on the sixth trading day before the effective date. G&S rank by market cap because S&P selects on it; we rank non-constituents by 6-month SEK turnover (price × volume) ending at the reference date (taken as the last trading day of the month before the announcement month) and, as a second version, by market cap. The universe is the panel, not all of Nasdaq Stockholm, and it grows from about 330 to 700 non-constituents over the window, so percentile ranks are reported next to raw ranks. {NUM['e4c_additions_without_rank']} of the 270 additions in the change lists have no rank (no price data in the window).", "",
      "## Demand measures", "",
      f"For 2019-2026 the realised net trading by OMXSB trackers (`nt`) is used as in G&S Fig. 3. For 2007-2018 (no FI holdings) the expected demand is tracker AUM × index weight / market cap, which with weight = mcap / total OMXSB mcap collapses to AUM / total OMXSB mcap and is identical for every stock in a review; and AUM × weight / ADV, with ADV the mean of close × volume over the 50 trading days ending 11 days before AD. Tracker AUM: {NUM['aum_construction']}; interpolated series in `tracker_aum_daily_interpolated.csv`; values at review dates: " + ", ".join(f"{k} SEK {v} bn" for k, v in NUM["aum"].items()) + ". Mean expected demand in % of market cap by period: " + ", ".join(f"{k} {v:.2f}%" for k, v in NUM["demand_mcap_pct_by_period_mean"].items()) + ". The Nov 2010 Nasdaq OMX release's 'about SEK 160 bn tracking the index' is a different concept (benchmarked assets) and is not used.", "",
-     "## Table", "",
-     "| Explanation | Test | Sample | Statistic | Coef. | SE HC1 | SE CR1 | p HC1 | p CR1 | p WCB | N | Clusters | Same as G&S / deviates | What it shows |", "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+     "## E5b inference correction", "", "The EW mean of yearly medians has a 95% pairs-bootstrap interval resampling entire announcement-date clusters within each observed year (9,999 draws, fixed years). With only one or two reviews per year these intervals have limited support. No pooled-mean SE or p-value is attached to these medians. Ownership accounting is additive per event and for common-sample means, not for group medians. Only nonempty fund reports present at both endpoints enter holdings differences. The tracker label remains a full-history trading proxy; mandates, transfers and historical security links are not fully verified.", "", "## Table", "",
+     "| Explanation | Test | Sample | Statistic | Coef. | SE HC1 | SE CR1 | p HC1 | p CR1 | p WCB | N | Clusters | Same as G&S / deviates | What it shows | CI low (median bootstrap) | CI high (median bootstrap) |", "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
 L += [row_md(r) for _, r in R.iterrows()]
 L += ["", "Units: `tot` and all CARs in percent; turnover in percent of shares outstanding traded in the month (stock minus cap-weighted panel average); size in percent of total OMXSB market cap; volatility in percent² (12-month mean of the monthly sum of squared daily abnormal returns); net trading in percent of shares outstanding; expected demand in percent of market cap or in days of ADV; ranks with 1 = highest.", "",
       "## Figures and data files", "",
@@ -606,17 +609,17 @@ L += ["", "Units: `tot` and all CARs in percent; turnover in percent of shares o
 tcap = NUM["e1_turn_stock_months_dropped_above_cap"]
 P = [
     f"Universe: the LSEG panel holds OMXSB constituents 2013-2026, the FTN losers' holdings and the mapped 2007-2012 constituents (about 330 to 800 .ST stocks with prices per year), not all of Nasdaq Stockholm. Everything that requires 'all non-constituents' or 'all listed shares' (E1 market turnover, E2 panel spread, E4c ranks) uses this panel.",
-    f"Membership chain: six deletions without a recorded addition (Nokia plus five corporate-action entries), the five reviews Jan 2005 to Jan 2007 are missing so the backward chain stops at the July 2007 review, and corporate-action exits are detected only through the last price date. Coverage of the OMXSB market-cap total is 82% to 93% of members.",
-    f"`shares` is sparse before 2009 (2% of stock-days 2004-2006, 70% in 2007), so turnover is missing for {NUM['e1_controls_missing']['turn']} events and the step-1 share-jump flag cannot be evaluated for {s1['shares_missing']} deletions. {tcap['n_dropped']} of {tcap['n_total']} stock-months with monthly turnover above {tcap['cap_pct_per_month']:.0f}% of shares outstanding (a unit mismatch between LSEG-adjusted volume and shares, e.g. Cloetta 2008-12) are dropped before the cap-weighted market average; without this cap the market average is dominated by one stock in 2008-11.",
+    f"Membership chain: six deletions without a recorded addition (Nokia plus five corporate-action entries), the five reviews Jan 2005 to Jan 2007 are missing so the backward chain stops at the July 2007 review, and corporate-action exits are detected only through the last price date. Coverage of member securities is reported in membership_coverage_by_review.csv; this is a count ratio, not the share of true index capitalisation observed.",
+    f"`shares` is sparse before 2009 (2% of stock-days 2004-2006, 70% in 2007), so turnover is missing for {NUM['e1_controls_missing']['turn']} events and the step-1 share-jump flag cannot be evaluated for {s1['shares_missing']} deletions. {tcap['n_dropped']} of {tcap['n_total']} stock-months with monthly turnover above {tcap['cap_pct_per_month']:.0f}% of shares outstanding (a pre-existing measurement filter, not independently verified as an error for every stock-month) are dropped before the cap-weighted market average; without this cap the market average is dominated by one stock in 2008-11.",
     f"E1 N: {NUM['e1']['addition_all_uncentred_turn']['N']} of 261 additions and {NUM['e1']['deletion_all_uncentred_turn']['N']} of 226 deletions have all three controls.",
     "E2: closing quoted spreads, not effective spreads; no implementation shortfall. G&S's figure is descriptive; the regression row is ours.",
-    "E3: no migration test is possible (see above).",
+    "E3: no migration test has been implemented with these inputs; availability of other index pairs and trackers is unverified.",
     "E4b is anchored at ED−1 rather than at AD−1 as in G&S Fig. 9 (the notebook's convention).",
     "E4c: OMXSB selects on turnover, G&S on market cap; the reference date before 2025 is assumed to be the last trading day of the month before the announcement month; 14 additions have no rank.",
     "E5b and Fig. 3: FI fund holdings exist only from 2018Q4, so 2007-2018 has no realised net trading and no 13F-type institutional ownership; FI covers Swedish mutual funds, not all institutions.",
     "Expected demand 2007-2018 rests on a hand-built AUM series: fund points only from 2016 (Nordnet) and 2018 (Robur), the notes' 'roughly SEK 15 bn in 2016' before that, and a flat SEK 15 bn assumption for 2007-2016; XACT OMXSB's AUM was not retrieved. The %-of-mcap measure varies only across reviews (23 clusters in 2007-2018), so its slope is a time-series regression with few effective observations.",
-    "The JF version could not be fetched (HTTP 403); the HBS working paper was used for the later conventions (demeaned controls, extra controls WZ and analyst coverage, which we cannot build).",
-    "One deletion in the events file (226) is not in `deletion_reasons_2007_2026.csv` (225); it is treated as review_only.",
+    "The JF version could not be fetched (HTTP 403); the HBS working paper was used for the later conventions (demeaned controls, extra controls WZ and analyst coverage; a CAPM-residual WZ proxy can be constructed from the existing panel, while historical analyst coverage requires external data).",
+    "One deletion in the events file (226) is not in `deletion_reasons_2007_2026.csv` (225); it has no verified reason and is retained in the all-event sample; lack of a flag does not verify review_only.",
 ]
 L += [f"- {p}" for p in P]
 open(os.path.join(OUT, "RESULTS.md"), "w").write("\n".join(L) + "\n")

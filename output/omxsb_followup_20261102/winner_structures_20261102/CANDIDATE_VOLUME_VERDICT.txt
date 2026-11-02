@@ -1,0 +1,77 @@
+KANDIDATBEDÖMNING: VOLYM, KVARTALSINNEHAV OCH PASSIVITETSMÅTT
+2 november 2026. Separat från vinnargranskningen. Inga nya regressioner eller avkastningsanalyser.
+
+DOM
+
+Ja, detta kan bli en ekonomiskt meningsfull mätutvidgning till en OMXSB-replikation. Men det nuvarande resultatet är en kandidatanalys av känslighet för fondtäckning, inte en validerad skattning av passivt kapital eller dess prispåverkan. Den lovande observationen är att ett stort skenbart volymgap beror kraftigt på vilka redan identifierbara fonder som ingår. Det är inte samma sak som att gapet därmed är fiktivt eller att nästan all dagens omsättning kan hänföras till dessa fonder.
+
+Den skarpa frågan är: Hur mycket av ett uppmätt volym–innehavsgap kan härledas till täckningen av observerbara benchmarkfonder, och hur mycket förblir oavstämt efter att måtten gjorts jämförbara? Den är intressant därför att ett stort gap annars lätt tolkas som kapital från oobserverade passiva investerare. Det krävs inte ett kausalt prisinstrument för att undersöka denna mätfråga. Det krävs däremot en trovärdig avstämning av vad de två kvantiteterna faktiskt omfattar.
+
+NÄRMASTE PUBLICERADE ARBETE OCH LÄSNING
+
+Chinco & Sammon (2024), The passive ownership share is double what you think it is, Journal of Financial Economics 157, 103860.
+Primär fulltext: https://www.alexchinco.com/double-what-you-think-it-is-jfe2024.pdf
+DOI: https://doi.org/10.1016/j.jfineco.2024.103860
+
+Deras skattning omvandlar handelsvolym till indexföljande kapital med historisk indexvikt och omviktningspris (s.5–7, ekvation 4). Dagshandel jämförs med flera snävare volymmått; normala handelsvolymer, slutauktion och handel efter stängning särredovisas (s.8–9, tabell 4). Valideringen granskar samstämmighet mellan indexhändelser och hur mätfel samvarierar med aktieegenskaper (s.9–10, tabell 5–6), samt handelns tidpunkt (s.11–12). De jämför redan med kvartalsinnehav: benchmarkanknytning utifrån riktningen på tidigare innehavsförändringar i Appendix A, och namnklassade indexfonders kapital i Appendix B (s.16–17). Att passivitet sträcker sig utanför tydligt namngivna indexfonder är alltså redan deras centrala resultat. FI:s ytterligare möjlighet här är daterade mandat och individuellt observerade positionsförändringar, inte denna allmänna upptäckt.
+
+Ny läsning: publicerad originalversion, s.1–3 via webbverktygets originalutdrag; metod och validering s.5–12 samt Appendix A/B s.16–17 ur lokal fulltext CS2024.txt. Tabell 1–2 och 4–6 lästa i text; figurernas bildinnehåll inte nygranskat, endast bildtexter och resultattext. S.6–7 återlästes separat efter ett avklippt första utdrag. Ingen heltextläsning av samtliga 22 sidor påstås i denna omgång.
+
+Närmaste svenska uppsats är Lukas Floding & Alexandra Jonason (2024), Passive Investing in the Nordics Is More Prevalent Than You Think. Den tillämpar volymbaserad mätning på sex nordiska index, inte OMXSB. OMXS30 har endast 17 observationer med vikter (tabell 2, tryckt s.18). Ny läsning: titelblad, tryckt s.15,18,48–49. Original lokalt: work/round2/theses_sources/FJ2024.pdf. Detta blockerar påståendet att en nordisk volymreplikation i sig är ny; den direkta fondavstämningen behöver bära tillägget.
+
+VAD DEN NYA KÖRNINGEN FAKTISKT VISAR
+
+Jag har läst DECISIONS.txt, hela run.py, båda resultatfilerna och relevanta rader i gate_and_volume.csv/joined_all.csv. Skattningarna har inte körts om. Huvudurvalet går från 216 händelser till 172: 95 tillägg och 77 utträden, 14 översyner. 41 händelser faller på pris-/enhetskontrollen och tre på känd split/konvertering. Baslinjen är 50 handelsdagar AD−61 till AD−12, med minst 40 giltiga volymobservationer. Omviktningsdagen är ED−1. Negativa överskottsvolymer behålls.
+
+Lika vikt per översyn, procent av bolagets aktiemarknadsvärde med gemensam efterkvartalsvärdering:
+• Tillägg: överskottsvolym 1,1784, dokumenterad grupp 0,3629, bredare kandidatgrupp 1,0447. Kvoten faller från 3,247 till 1,128; bredkvotens Fiellerintervall är 0,898–1,456.
+• Utträden: överskottsvolym 1,1971, dokumenterad grupp 0,3655, bredare kandidatgrupp 0,9312. Kvoten faller från 3,275 till 1,286; bredkvotens intervall är 1,091–1,559.
+• De förhandsangivna baslinjekontrollerade associationslutningarna är 0,818 för tillägg och 0,623 för utträden. Deras positiva tecken är inte i sig en mätvalidering.
+
+Dessa är kvoter mellan två review-viktade medel, inte genomsnittliga händelsekvoter, inte kronor i ett representativt fonds faktiskt genomförda handel och inte andelen av all handel som kan tilldelas en investerartyp. Att tilläggens intervall omfattar ett är inte ett ekvivalenstest. Utträdenas bredkvot ligger fortfarande över ett under den befintliga konventionen. Intervallen beskriver samvariation över 14 översyner, inte osäkerheten i fondklassning, volymtäckning eller tidsmatchning.
+
+TEKNISKA INVÄNDNINGAR SOM ÄNDRAR TOLKNINGEN
+
+1. Dagsomsättning och kvartalsnetto är olika ekonomiska objekt.
+Ett kvartalsnetto summerar köp och försäljningar över en längre period; en handelsdag mäter bruttoomsättning. Köp före ED−1, fondflöden, egna aktiva omviktningar, nyemissioner, överföringar och senare avyttringar påverkar nettoinnehavet. Intermediär omsättning och andra investerares affärer påverkar dagsvolymen. Därför kan kvoten bli nära ett även med stora motverkande mätfel. Den kan bli större än ett utan oobserverade passiva investerare och mindre än ett utan fel i registrerade innehav. Aktieköp och aktieförsäljning är samma transaktion i marknadens volym; ingen generell division med två löser detta.
+
+2. Det absoluta nettot kan gå i fel indexriktning.
+Koden använder abs(net_company_pp). I den dokumenterade gruppen är SkiStar-utträdet OMXSB-2020H2-23 ett NETTOKÖP på +0,8443 procentenheter och Cloetta-utträdet OMXSB-2020H2-24 ett NETTOKÖP på +0,7017. Båda blir positiva jämförelsekvantiteter mot volymen. I bredgruppen är Cloetta fortfarande ett litet nettoköp, +0,0147; SkiStar blir ett nettoutflöde. Detta följer den låsta definitionen och är inget dolt programmeringsfel, men hindrar att måttet kallas indexriktad försäljningsvolym. Tecken och absolutbelopp måste redovisas öppet; felriktade händelser får inte tas bort för att göra passningen bättre.
+
+3. Den gemensamma nämnaren kan skapa associationspassning.
+Båda axlarna innehåller samma s_i = 100 × P_efter/Mcap_efter. Även oberoende positiva V och Q kan få positiv kovarians mellan sV och sQ när s varierar. Revieweffekter tar inte bort variationen mellan aktier inom en översyn. Baslinjeomsättning i samma enhet är inte ett bevis för att problemet eliminerats. Detta gör inte medelkvoterna ogiltiga som redovisade beskrivningar; det gör slopes till svagare stöd för en gemensam ekonomisk kanal. En eventuell framtida validering måste förhandsange hur storlek/gemensam skalning skiljs från faktisk efterfrågevariation. Ingen ytterligare regression kördes här.
+
+4. Prisens likhet validerar inte handelsvolymens universum.
+Efterkvartalets LSEG-kurs inom två procent från FI-kurs är en nyttig identitets-/enhetsgrind. Den bevisar inte att volymfältet har samma splitjustering, täcker samtliga handelsplatser, inkluderar efterrapporterade blockaffärer eller räknar affärer en gång. Ett svenskt primärnoterings-RIC kan inte utan fältdokumentation likställas med global eller ens konsoliderad europeisk volym. Om FI-fonder handlar på flera platser jämförs hela deras nettoexponering med endast en del av handeln. Justeringar efter händelsen kan också påverka vilka aktier som klarar prisgrinden. Bortfallsgruppen på 44 behöver därför beskrivas, inte bara nämnas som bortfall.
+
+5. Fondbreddning och evidensbreddning sker samtidigt.
+Den stora kvantiteten 1,04/0,93 avser 13 kandidater, inte 13 genomgående verifierade rena trackers. Efterfrågerapporten anger ofullständig äldre strategihistorik för en stor del av fond×händelserna. Dokumenterad delgrupp har exempelvis bara en giltig fond under 2022H1. Skillnaden mellan 0,36 och 1,04 är därför inte en ren jämförelse mellan felaktiga namn och korrekta mandat med samma dokumentationsnivå. Historiskt indexnära förvaltning, aktiv benchmarkförvaltning, blandfondsandel och ESG-/capvarianter måste behålla olika etiketter. Kända fusioner är hanterade, men fullständig historik för alla kandidater saknas. Grupputökningen efter tidigare utfallet är öppet loggad; den nya volymjämförelsen gör inte klassningen förhandsregistrerad från projektstart.
+
+VILKET EXTRA TEST FI FAKTISKT KAN GE
+
+Den svenska möjligheten är en spårbar avstämning på fond×instrument×översyn: vilka namngivna, datumgiltiga mandat bidrar till det observerade nettot, vilka fler tillkommer när täckningen förbättras, och hur mycket förändras den ekonomiska tolkningen av ett volymgap? Detta kan skilja ett problem med observatörens fondurval från ett behov att hänvisa till helt oobserverat kapital. Det går längre än att enbart dividera volym med indexvikter och kalla residualen dold passivitet.
+
+Möjliga informativa utfall är flera. Om historiskt verifierade fonder står för nästan hela den jämförbara kvantiteten minskar stödet för att just volymgapet kräver oobserverade investerare. Om ett stort gap kvarstår även med god täckning återstår en faktiskt dokumenterad mätavvikelse, vars källa måste skiljas från vanlig omsättning och tidsförskjutning. Om passningen försvinner när enhets-/täckningsproblem löses underkänns den föreslagna avstämningen. Inget av dessa utfall kräver ett signifikant prisresultat för att vara informativt.
+
+Ägarbreddens cirka 86 procent OMXSB-familj kan komplettera detta genom att visa hur mycket av antalsökningen som finns inom närliggande mandat. Men det är inte oberoende validering av handelskvantitet: samma innehavsregister och delvis samma klassning återanvänds, antalsmått är inte kapitalmått, och familjen kan innehålla aktiva fonder. Fondbolagsmätningen kan klargöra enheten ytterligare men bevisar inte oberoende beslut. Ingen ny kontroll av själva 86-procentsskattningen ingår här.
+
+FÖRE UPPSATSKÄRNA: FYRA AVGRÄNSADE GRINDAR
+
+A. Klassningsgrind: verifiera åtminstone de fond×perioder som står för skillnaden mellan dokumenterad och bred kvantitet. Dokumentationen måste dateras oberoende av utfallet. Om stora bidrag fortsatt bara är kandidater får den breda siffran förbli känslighet, inte huvudskattning av mekanisk efterfrågan. Bevara samtliga klassningar och nollor med korrekt rapporteringsstöd.
+
+B. Handelsgrind: säkra LSEG-fältets handelsplats-/rapporterings- och justeringsdefinition. Minst ett oberoende stickprov mot officiell Nasdaq-volym behövs för att styrka enheten. För en påstådd passivitetsavstämning behövs dessutom faktisk slutauktions-/handelsperiodsinformation, alternativt en mycket tydlig begränsning till förenlighet mellan dagsvolym och kvartalsnetto. En oförändrad dagsvolymdefinition kan räcka för en beskrivande mätkänslighet, men inte för att identifiera marknadens passiva andel.
+
+C. Kvantitetsgrind: behåll tecken, fondflöden/kapitalhändelser och överföringar separat, och ange vilka antaganden som kopplar kvartalsnetto till indexhändelsen. För en prognos av mekaniskt köp behövs förhandsposition och verklig fondspecifik målregel/vikt; observerat efterinnehav får inte definiera behandlingen. Den nuvarande nettopanelen ger ett bokföringsmått, inte denna prognos.
+
+D. Slutsatsgrind: fastställ frågan som mätning och avstämning innan fler modeller väljs. Positiva lutningar med gemensam skala är inte huvudbelägget. Redovisa samma stöd, förhandsbestämda baslinjer, osäkerhet och de kvarvarande skillnaderna; låt tillägg och utträden förbli separata. Om resultaten fortfarande endast blir 'fler fonder ger mer fondkapital' är bidraget för tunt för kärnan.
+
+SLUTLIG REKOMMENDATION
+
+Prioritera en avgränsad validering av denna kandidat framför ytterligare prisfönster. Den kan ge en sammanhängande ekonomisk utvidgning: vilka slutsatser om indexrelaterad efterfrågan överlever när observerad fondtäckning och mått förbättras? Den har ett tydligt starkare argument än en ny deskriptiv nettoköpssiffra ensam, eftersom den ställer två datakällor mot varandra. Men dagens närhet till ett är inte det avgörande bidraget och får inte bli ett mål för senare fondurval.
+
+Rubriken 'vad mäter passivt indexkapital och dess prispåverkan?' lovar ännu för mycket. Efterfrågans mätning kan vara kärnfrågan; G&S-prisreplikationen kan visa varför frågan är viktig. En relation till CAR eller frånvaron av en sådan kan inte ensam omvandla denna volymavstämning till identifierad prispåverkan. Om handels- och klassningsgrindarna inte kan klaras bör analysen stanna som en transparent känslighets-/datatäckningsutvidgning, med mindre anspråk men fortfarande möjlig saklig nytta.
+
+LÄSTA LOKALA KÄLLOR
+work/volume_measurement_20261102/{DECISIONS.txt,run.py,volume_quantity_ratios.csv,diagnostic_slopes.csv,gate_and_volume.csv,joined_all.csv}.
+Repo output/omxsb_mechanism_frontier_20261102/demand/{REPORT.txt,README.txt,fund_review_mandate_manifest.csv: inledande rader}.
+Den ursprungliga vinnarrapporten är oförändrad. Endast denna separata bedömning skapades. De enkla räknade kontrollerna av exklusionsorsaker och felriktade befintliga nettovärden är datarevision, inte nya utfallstester.

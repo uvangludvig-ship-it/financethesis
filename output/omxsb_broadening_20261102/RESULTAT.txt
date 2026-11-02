@@ -1,0 +1,88 @@
+OMXSB — AVGRÄNSAD BREDDNING, 2 NOVEMBER 2026
+Teknisk forsknings- och beslutssammanställning. Inte uppsatstext.
+
+VAD SOM FORTFARANDE ÄR ÖPPET
+Först: hur mycket av den relativa prisrörelsen orsakas av indexinträdet, snarare
+än av att Nasdaq väljer aktier med andra framtidsutsikter? Sedan: vilka kanaler
+förmedlar en eventuell kausal effekt — exempelvis mandatstyrda köp eller ökad
+uppmärksamhet? Kanalerna kan verka tillsammans. Separat är varaktigheten efter
+20 dagar fortfarande osäkert skattad. Inget av testen nedan stänger dessa frågor.
+
+DENNA RUNDA: TRE NYA UTFALLSANALYSER OCH EN NY DATAGRANSKNING
+Tidigare ägardecomposition, retention, prisfönster, AP, volym och mandatgranskning
+räknas inte som nya resultat här. Ingen uttömmande lista över alla tänkbara
+ekonomiska hypoteser påstås. Samtliga försök och osäkra resultat bevaras.
+
+1. SAMMA AKTIER VID TILLÄGG OCH BORTTAG — GENOMFÖRT
+244 händelser, 75 aktieslag, 74 bolag, 19 översyner.
+Samma tidigare matchningar/fönster, aktie- och översynseffekter, kontroll för
+föravkastnings- och storleksobalans. Tillägg-minus-borttag: 2.379
+procentenheter. Reviewklustrat 95%-intervall [-0.071; 4.830],
+tvåvägs bolag/review [-0.486; 5.245]. Wild-p 0.0433
+gäller reviewproceduren och ersätter inte de bredare osäkerhetsmåtten.
+Beslut: kompletterande robusthetskontroll som tar bort stabila aktieskillnader,
+men har stor osäkerhet och kvarstående tidsvarierande urval. Ingen ny
+kausal mekanism. Två fasta modeller, inga nya fönster eller periodgrids.
+Källa: switchers/REPORT.txt, results.csv, validation.json, REPLAY_VALIDATION.json.
+
+2. PRIS OCH TVÅ MÅTT PÅ FONDKÖP — GENOMFÖRT
+Gemensamt urval: 194 händelser, 14 översyner. En hel översyn
+utelämnas i taget. Modellerna använder samma förhandskarakteristika och antingen
+inget mängdmått, förhandsvärderat kvartalsnetto, eller en kvadratrotsproxy skalad
+med volatilitet och normal handelsvolym. RMSE i procentenheter:
+  M0_pre_characteristics: 7.372
+  ML_linear_prevalued_demand: 7.404
+  MS_sqrt_volume_demand: 7.435
+Punktskattningarna visar ingen förbättring av att lägga till dessa köp-proxies.
+Alla tre jämförelseintervall omfattar noll; materiella förbättringar ryms också.
+Det är inte ett strukturellt test av enskilda order: kvartalsnetto är endogent,
+tidpunkten saknas och modellerna skiljer både normalisering och funktionsform.
+Beslut: ingen påvisad extra information om priserna från just dessa proxies.
+Detta utesluter inte att faktiska indexorder påverkar priset.
+Källa: models/REPORT.txt, formal_model_comparisons.csv, VALIDATION.json.
+
+3. SYNLIGA BLANKNINGSPOSITIONER — GENOMFÖRT MED NYA FI-EXPORTER
+28 tilläggshändelser, 23 bolag, 13 översyner,
+47 innehavare×händelser i den frysta offentliga baslinjekohorten.
+Aktuell och historisk FI-export hämtades tillsammans. Den gamla historikfilen
+ensam saknade vissa aktuella slutpositioner. Båda äldre datagrindar bevaras.
+Måttet är icke-negativ nettokortexponering; en undertrösklig eller nettolång
+position är inte en observerad nolla. Konservativa intervall används.
+Lika översynsviktat intervall för förändring före genomförandet:
+[-0.176; 0.210] procentenheter emitterat kapital.
+Efterförändring: [-0.463; 0.146].
+Tillfällig topp säkert positiv i 2 av
+28 händelser, strikt positiv topp utesluten i
+5, oavgjord i
+21.
+Detta är identifieringsintervall från censurerade rapporter, INTE 95%-intervall.
+Beslut: en smal positionsbeskrivning, ingen marknadsomfattande motpartsanalys.
+Långt innehav som köps före och säljs vid bytet kräver ingen nettokortposition;
+testet kan därför inte utesluta arbitrage eller fastställa prisorsaken.
+Källa: short_positions/REPORT.txt, RESULTS.json och verifieringsfiler.
+
+4. ANDRA VINNARSTRUKTURER OCH OUTNYTTJAD DATA — GENOMFÖRBARHET
+Ny förkvartalskontroll visar 336–365
+emittentdistinkta kandidater, 274–334 fonder och
+40–45 fondbolag per översyn.
+Men 91.5–99.2% av aktieparen delar redan någon fond.
+En enkel gemensam-ägare-indikator är nästan mättad. Viktade benchmarknätverk
+kan ge en separat riskfråga, men varken nyhetsurvalet eller tidigare svensk
+samvariationsforskning försvinner. INGA nätverksavkastningar har räknats.
+Kassa/derivat: relevanta XML-fält finns, men exponerings- och flödeskedjan är
+inte komplett. Vanlig omviktning av oförändrade medlemmar: historiska indexvikter,
+float och indexaktier saknas; ett nytt kausalt prisexperiment är inte klart.
+Beslut: behåll som dokumenterade datagränser/idéer, inte genomförda resultat.
+Källa: frontier/decision_register.txt och network_feasibility.json.
+
+TOLKNING OCH LEVERANS
+De tidigare selektivt lästa vinnarna visar flera möjliga strukturer; de visar
+inte vad som orsakar ett prisbeslut. Att en mekanism förblir öppen gör inte alla
+resultat värdelösa, men dessa nya körningar ger inget stöd för att lova ett pris.
+Fler ospecificerade regressionsvarianter gör inte kausaliteten säkrare.
+
+Alla nya ekonomiska utfallsanalyser är explorativa efter omfattande tidigare
+analys. Deklarationer före respektive körning är inte blind preregistrering.
+Kod: code/build/omxsb_broadening_20261102. Data och beslut: motsvarande output/.
+Original och felrättelser är bevarade. Inga FTN-utfall, ingen uppsatstext.
+Ändringarna är lokala; inga commits eller pushar gjordes i denna runda.

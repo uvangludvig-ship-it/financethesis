@@ -1,0 +1,37 @@
+OBEROENDE SLUTKONTROLL: FONDER OCH RAPPORTERADE FONDBOLAG
+2026-11-02
+
+Dom: numeriken och den avsedda nettobokföringen är godkända. Kontrollens bidrag är en precisering av vad ägarbredd betyder, inte en identifierad priskanal eller ett nytt oberoende kausaltest.
+
+Reproduktion
+Samtliga 446 048 fond×event×roll-rader används. Jag har separat rekonstruerat mängden bolagsnamn före och efter, nya namn, fondnettot och uppdelningen efter om bolagsnamnet redan hade minst en ägande fond. Jag importerade inga produktionsfunktioner. Alla 438 event×versionsrader och alla 20 resultatceller reproduceras med oberoende statsmodels-intercept på översynsmedel; största eventavvikelsen är 2,7e−15. Fondkomponenterna summerar till fondnettot, och grundversionens fondnetto överensstämmer med ALL i huvuduppdelningen inom 1,1e−14. Det finns inga saknade förhandsbolagsnamn bland kvarvarande fonder. Inputhasharna är oförändrade och matchar den slutliga ledgern.
+
+Urvalet är exakt 219 händelser: 118 tillägg, 101 borttag och 14 översyner. Det finns totalt 69 distinkta normaliserade förhandsnamn. Detta är inte antalet oberoende investeringsbeslut. Den fasta versionen följer fondens rapporterade bolagsnamn före händelsen; den strikta versionen utesluter 94 fond×review-par där den normaliserade bolagsetiketten ändras, symmetriskt över samtliga fyra aktieroller.
+
+Huvudsiffror
+Alla tal nedan är förändringen för eventaktien minus medelförändringen för dess tre redan fixerade kontrollaktier, med lika vikter för de 14 översynerna. Intervallen är nominella 95-procentiga t-intervall.
+
+Tillägg, fasta förhandsnamn:
+Ägande fondbolagsnamn, netto: +2,092 [1,617; 2,567].
+Nyinträdda fondbolagsnamn: +1,967 [1,524; 2,411].
+Ägande fonder, netto: +9,944 [6,912; 12,977].
+Fondnetto inom redan ägande fondbolagsnamn: +4,849 [3,522; 6,175].
+Fondnetto inom tidigare icke ägande fondbolagsnamn: +5,096 [2,961; 7,231].
+
+Borttag, fasta förhandsnamn:
+Ägande fondbolagsnamn, netto: −1,778 [−2,130; −1,426].
+Ägande fonder, netto: −8,479 [−11,062; −5,896].
+Fondnetto inom redan ägande fondbolagsnamn: −8,180 [−10,709; −5,650].
+Fondnetto inom tidigare icke ägande fondbolagsnamn: −0,299 [−0,732; 0,134].
+
+Stabila namn ger samma materiella beskrivning: tilläggens fondbolagsnetto +2,072 [1,603; 2,542], fondnetto +9,907, med +4,817 respektive +5,091 i de två fondkomponenterna. Borttagens fondbolagsnetto är −1,785 [−2,131; −1,438]. Båda versionernas samtliga resultat, inklusive nyinträdda bolagsnamn vid borttag, finns i independent_manager_validation.json och manager_results.csv. Ingen version väljs efter dess intervall.
+
+Nödvändig tolkning
+Cirka tio extra ägande fonder är inte samma sak som tio nya oberoende investerare. Ökningen motsvarar ungefär två extra ägande rapporterade bolagsnamn. Däremot är det fel att säga att hela ökningen endast kommer från fler produkter inom bolag som redan ägde aktien: punktestimaten för fondnettot delas ungefär mellan redan ägande namn och tidigare icke ägande namn. Även efter bolagsaggregering finns en positiv relativ förändring.
+
+De två fondkomponenterna är NETTOFÖRÄNDRINGAR, inte bruttoantal nya fondinträden. Deklarationens ord 'fundentrycounts' bör därför inte användas om dessa outputmått. Själva genomförandet följer den preciserade uppgiften att dela fondnettot. 'Tidigare icke ägande' avser den balanserade och kvalitetsgodkända fondpanelen, inte bolagets alla globala fonder eller depåer. Bolagsnamn är FI:s juridiska rapporteringsetiketter, inte verifierade koncerner, förvaltningsteam eller enheter för uppmärksamhet. Gemensam etikett kan rymma flera beslutsteam; olika etiketter kan vara närstående.
+
+Detta är en efterföljande, öppet explorativ mätkontroll efter att fondresultatet var känt. Den kan korrigera en överdriven berättelse om antalet nya investerare och avgränsa den extrema beskrivningen att all ökning enbart ligger inom redan ägande etiketter. Den identifierar inte uppmärksamhet, tvingande benchmarkhandel eller en effekt på priser. Den tillför inga nya aktier, avkastningshorisonter eller utfallsregressioner. Kontrollaktierna är inte genomgående indexfria; den redan dokumenterade kontrollsammansättningen och de 14 översynernas begränsade inferens gäller även här.
+
+Reproducerbarhet
+Kör independent_manager_validation.py från denna katalog med /tmp/omxsb-audit-venv/bin/python. Fulla oberoende beräkningar, samtliga 20 celler och filhashar sparas i independent_manager_validation.json. Den omkörda independent_decomp_validation.json verifierar samtidigt båda East Capital-ID:s uteslutning och den aktuella källledgern.

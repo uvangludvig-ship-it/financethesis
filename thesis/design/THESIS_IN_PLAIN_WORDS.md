@@ -1,3 +1,5 @@
+> **Historisk plan från oktober 2026.** Detta är inte den aktuella OMXSB-strukturen. Se `OMXSB_struktur.md`, `ROBUSTHET_RATTELSE_20261101.md` och `../../output/omxsb_robusthet_20261101/RESULTAT.md`. FTN-, datatillgångs- och kausalitetsanspråk i den äldre planen är inte verifierade resultat. Författarna skriver själva uppsatstexten.
+
 # The thesis in plain words
 
 *Working title: Pre-announced, uninformed, and large: the price of moving the premium pension*

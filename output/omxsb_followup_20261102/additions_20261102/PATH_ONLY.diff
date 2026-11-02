@@ -1,0 +1,164 @@
+--- original/mandate_upgrade_20261102/aggregate.py
++++ portable/mandate_upgrade_20261102/aggregate.py
+@@ -3,11 +3,12 @@
+ import numpy as np
+ import pandas as pd
+ 
+-O=Path(__file__).resolve().parent
+-R=Path('/Users/ludviguvang/dev/financethesis')
++import sys as _sys
++_sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'additions_20261102'))
++from portable_paths import analysis_paths, first_output, comparison_function, repository_source, verify_original_lock
++R,O=analysis_paths('mandate_upgrade_20261102')
+ D=R/'output/omxsb_mechanism_frontier_20261102/demand'
+-sys.path.insert(0,str(O.parent/'comparison_rebuild_20261102'))
+-from run import fieller
++fieller=comparison_function(R,'run','fieller')
+ 
+ p=pd.read_csv(D/'fund_event_demand_panel.csv.gz')
+ ev=pd.read_csv(R/'output/omxsb_open_questions_20261102/demand_quarter/events_locked.csv')
+@@ -46,7 +47,7 @@
+ pd.DataFrame(summ).to_csv(O/'quantity_summary.csv',index=False)
+ 
+ # Previously known outcome definitions; no new windows or controls.
+-v=pd.read_csv(O.parent/'volume_measurement_20261102/gate_and_volume.csv')
++v=pd.read_csv(first_output(R)/'volume_measurement_20261102/gate_and_volume.csv')
+ prices=pd.read_csv(R/'output/omxsb_open_questions_20261102/eligible_rematch/event_paths.csv')
+ ratios=[]
+ for name,g in e.groupby('definition'):
+--- original/mandate_upgrade_20261102/independent_audit.py
++++ portable/mandate_upgrade_20261102/independent_audit.py
+@@ -1,8 +1,10 @@
+ from pathlib import Path
+ import pandas as pd,numpy as np,json,hashlib,sys
+-O=Path(__file__).resolve().parent;R=Path('/Users/ludviguvang/dev/financethesis')
+-sys.path.insert(0,str(O.parent/'comparison_rebuild_20261102'))
+-from independent_audit import independent_ratio
++import sys as _sys
++_sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'additions_20261102'))
++from portable_paths import analysis_paths, first_output, comparison_function, repository_source, verify_original_lock
++R,O=analysis_paths('mandate_upgrade_20261102')
++independent_ratio=comparison_function(R,'independent_audit','independent_ratio')
+ D=R/'output/omxsb_mechanism_frontier_20261102/demand'
+ P=pd.read_csv(D/'fund_event_demand_panel.csv.gz');U=pd.read_csv(O/'upgraded_fund_review_evidence.csv');S=pd.read_csv(O/'classified_fund_event_panel.csv.gz');E=pd.read_csv(R/'output/omxsb_open_questions_20261102/demand_quarter/events_locked.csv')
+ assert not P.duplicated(['event_id','fund_id']).any();assert not U.duplicated(['fund_id','review_cycle']).any();assert set(U.fund_id)=={51482,60310,60824}
+@@ -41,7 +43,7 @@
+ for x in pd.read_csv(O/'quantity_summary.csv').itertuples():
+     a=A[(A.definition==x.definition)&(A.type==x.type)];m=a.groupby('review_cycle')[['net_company_pp','n_funds','excluded_fund_pairs']].mean().mean();assert len(a)==x.N and a.review_cycle.nunique()==x.G
+     assert all(abs(m[k]-getattr(x,k))<1e-10 for k in m.index);summ.append(dict(definition=x.definition,type=x.type,N=len(a),G=a.review_cycle.nunique(),**m.to_dict()))
+-V=pd.read_csv(O.parent/'volume_measurement_20261102/gate_and_volume.csv');B=pd.read_csv(R/'output/omxsb_open_questions_20261102/eligible_rematch/event_paths.csv');cells=[]
++V=pd.read_csv(first_output(R)/'volume_measurement_20261102/gate_and_volume.csv');B=pd.read_csv(R/'output/omxsb_open_questions_20261102/eligible_rematch/event_paths.csv');cells=[]
+ for x in pd.read_csv(O/'fixed_definition_ratios.csv').itertuples():
+     a=A[(A.definition==x.definition)&(A.type==x.type)].copy()
+     if x.measure in ['excess_pp','short_excess_pp']:
+@@ -52,13 +54,13 @@
+     cells.append(dict(definition=x.definition,type=x.type,measure=x.measure,independent=ans,differences=diff,covariance=cov,same_events_both_sides=True))
+ assert len(cells)==24
+ # Verify exact 2018 PPM number/ISIN rows from actual original workbook, no name approximation.
+-proof=json.loads((O/'PPM2018_identity.json').read_text())+json.loads((O.parent/'mandate_catalog_20261102/Access_Sverige_PPM2018_identity_raw.json').read_text());identity=[]
++proof=json.loads((O/'PPM2018_identity.json').read_text())+json.loads((first_output(R)/'mandate_catalog_20261102/Access_Sverige_PPM2018_identity_raw.json').read_text());identity=[]
+ for z in proof:
+-    f=Path(z.get('file',z.get('source_file')));book=pd.read_excel(f,sheet_name=z['sheet'],header=None,dtype=str);row=book.iloc[z['excel_row']-1]
++    f=repository_source(R,z.get('file',z.get('source_file')));book=pd.read_excel(f,sheet_name=z['sheet'],header=None,dtype=str);row=book.iloc[z['excel_row']-1]
+     assert str(row.iloc[0])==z['cells']['0'];assert str(row.iloc[17])==z['cells']['17'];assert str(row.iloc[1])==z['cells']['1']
+     if 'sha256'in z:assert hashlib.sha256(f.read_bytes()).hexdigest()==z['sha256']
+     identity.append(dict(PPM_number=str(row.iloc[0]),name=str(row.iloc[1]),ISIN=str(row.iloc[17]),excel_row=z['excel_row'],source=str(f),source_sha256=hashlib.sha256(f.read_bytes()).hexdigest()))
+ assert {z['ISIN']for z in identity}==set(ids.values())
+ counts=U.groupby('fund_id')[['upgrade_eligible','documented_stable_family']].sum().reset_index().to_dict('records')
+-newreviews=added[['fund_id','review_cycle']].drop_duplicates();out=dict(all648_event_definition_rows_pass=True,all6_quantity_summary_rows_pass=True,all24_ratio_cells_pass=True,exact_PPM2018_identities=identity,upgraded_review_counts=counts,incremental_fund_reviews=len(newreviews),incremental_fund_event_rows=len(added),invalid_selected_rows=int((selected.valid_for_market_acquisition_description==False).sum()),new_selected_identity_failures=0,old_documented_preserved=True,source_join_uses_exact_fund_id_review=True,aggregation_max_errors=err,quantity_summary=summ,ratio_cells=cells,legacy_continuity_false_on_new_rows=int((~added.continuity_assumption).sum()),new_evidence_fields_explicit_and_valid=True,legacy_evidence_preserved_exactly=True,interpretation='Historical index-near evidence plus explicit continuity assumption, not full replication, complete passive demand or causal instrument; original legacy evidence columns retained unchanged.',input_hashes={str(f):hashlib.sha256(f.read_bytes()).hexdigest()for f in [D/'fund_event_demand_panel.csv.gz',O/'upgraded_fund_review_evidence.csv',O/'classified_fund_event_panel.csv.gz',O/'event_demand_updated.csv',O/'fixed_definition_ratios.csv',O/'PRIMARY_READING.txt',O/'aggregate.py',O/'PPM2018_identity.json']})
++newreviews=added[['fund_id','review_cycle']].drop_duplicates();out=dict(all648_event_definition_rows_pass=True,all6_quantity_summary_rows_pass=True,all24_ratio_cells_pass=True,exact_PPM2018_identities=identity,upgraded_review_counts=counts,incremental_fund_reviews=len(newreviews),incremental_fund_event_rows=len(added),invalid_selected_rows=int((selected.valid_for_market_acquisition_description==False).sum()),new_selected_identity_failures=0,old_documented_preserved=True,source_join_uses_exact_fund_id_review=True,aggregation_max_errors=err,quantity_summary=summ,ratio_cells=cells,legacy_continuity_false_on_new_rows=int((~added.continuity_assumption).sum()),new_evidence_fields_explicit_and_valid=True,legacy_evidence_preserved_exactly=True,interpretation='Historical index-near evidence plus explicit continuity assumption, not full replication, complete passive demand or causal instrument; original legacy evidence columns retained unchanged.',input_hashes={str(f):hashlib.sha256(f.read_bytes()).hexdigest()for f in [D/'fund_event_demand_panel.csv.gz',O/'upgraded_fund_review_evidence.csv',O/'classified_fund_event_panel.csv.gz',O/'event_demand_updated.csv',O/'fixed_definition_ratios.csv',O/'PRIMARY_READING.txt',Path(__file__).with_name('aggregate.py'),O/'PPM2018_identity.json']})
+ (O/'independent_audit.json').write_text(json.dumps(out,indent=2));print(json.dumps({k:v for k,v in out.items()if k not in ['ratio_cells','input_hashes','exact_PPM2018_identities']},indent=2))
+--- original/owner_concentration_stability_20261102/run.py
++++ portable/owner_concentration_stability_20261102/run.py
+@@ -2,8 +2,11 @@
+ import re, json, hashlib
+ import pandas as pd
+ import numpy as np
+-O=Path(__file__).resolve().parent
+-D=Path('/Users/ludviguvang/dev/financethesis/output/omxsb_mechanism_frontier_20261102/ownership')
++import sys as _sys
++_sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'additions_20261102'))
++from portable_paths import analysis_paths, first_output, comparison_function, repository_source, verify_original_lock
++R,O=analysis_paths('owner_concentration_stability_20261102')
++D=R/'output/omxsb_mechanism_frontier_20261102/ownership'
+ f=pd.read_csv(D/'decomp_fund_roles.csv.gz',dtype={'fund_id':str})
+ m=pd.read_csv(D/'decomp_fund_groups.csv',dtype={'fund_id':str})
+ m['manager']=m.company.map(lambda v:re.sub(r'\s+',' ',str(v).strip().lower()))
+--- original/owner_concentration_stability_20261102/independent_audit.py
++++ portable/owner_concentration_stability_20261102/independent_audit.py
+@@ -6,9 +6,12 @@
+ import numpy as np
+ import pandas as pd
+ 
+-O = Path(__file__).resolve().parent
+-D = Path('/Users/ludviguvang/dev/financethesis/output/omxsb_mechanism_frontier_20261102/ownership')
+-M = O.parent / 'mechanism_frontier_20261102/ownership/fund_metadata_classification.csv'
++import sys as _sys
++_sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'additions_20261102'))
++from portable_paths import analysis_paths, first_output, comparison_function, repository_source, verify_original_lock
++R,O=analysis_paths('owner_concentration_stability_20261102')
++D=R/'output/omxsb_mechanism_frontier_20261102/ownership'
++M=R/'output/omxsb_mechanism_frontier_20261102/ownership/fund_metadata_classification.csv'
+ f = pd.read_csv(D / 'decomp_fund_roles.csv.gz', dtype={'fund_id': str})
+ g = pd.read_csv(D / 'decomp_fund_groups.csv', dtype={'fund_id': str})
+ metadata = pd.read_csv(M, dtype={'fund_id': str})
+@@ -108,7 +111,7 @@
+                         min_omitted=x.loc[x.ratio.idxmin(), 'omitted'],
+                         max_omitted=x.loc[x.ratio.idxmax(), 'omitted']))
+ inputs = [D / 'decomp_fund_roles.csv.gz', D / 'decomp_fund_groups.csv', M,
+-          O / 'run.py', O / 'DECISIONS.txt', O / 'all_omissions.csv',
++          Path(__file__).with_name('run.py'), O / 'DECISIONS.txt', O / 'all_omissions.csv',
+           O / 'company_additive_contributions.csv']
+ declared = json.loads((O / 'hashes.json').read_text())
+ assert all(hashlib.sha256(Path(k).read_bytes()).hexdigest() == v for k, v in declared.items())
+--- original/retention_scaling_feasibility_20261102/relative_retention.py
++++ portable/retention_scaling_feasibility_20261102/relative_retention.py
+@@ -1,8 +1,11 @@
+ from pathlib import Path
+ import pandas as pd,numpy as np,json,hashlib
+-O=Path(__file__).resolve().parent;W=O.parent
+-for p,h in json.load(open(O/'gate_freeze_hashes.json')).items():assert hashlib.sha256(Path(p).read_bytes()).hexdigest()==h
+-G=pd.read_csv(O/'core_gate_frozen.csv');S=pd.read_csv(O/'core_gate_summary.csv');T=pd.read_csv(W/'retention_followup_20261102/position_quantities.csv')
++import sys as _sys
++_sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'additions_20261102'))
++from portable_paths import analysis_paths, first_output, comparison_function, repository_source, verify_original_lock
++R,O=analysis_paths('retention_scaling_feasibility_20261102')
++verify_original_lock(O,'gate_freeze_hashes.json')
++G=pd.read_csv(O/'core_gate_frozen.csv');S=pd.read_csv(O/'core_gate_summary.csv');T=pd.read_csv(first_output(R)/'retention_followup_20261102/position_quantities.csv')
+ assert len(T)==238 and T.event_id.nunique()==119
+ G['core_quantity_ratio']=np.where(G.gate_pass,G.q1/(G.q0*G.splitfactor),np.nan)
+ factors=G[G.gate_pass].groupby(['fund_id','review']).agg(core_factor=('core_quantity_ratio','median'),core_zero_endpoints=('q1',lambda x:int(x.eq(0).sum()))).reset_index()
+--- original/retention_scaling_feasibility_20261102/validate.py
++++ portable/retention_scaling_feasibility_20261102/validate.py
+@@ -1,9 +1,12 @@
+ from pathlib import Path
+ from fractions import Fraction
+ import csv,json,statistics,hashlib,math
+-O=Path(__file__).resolve().parent;W=O.parent
++import sys as _sys
++_sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'additions_20261102'))
++from portable_paths import analysis_paths, first_output, comparison_function, repository_source, verify_original_lock
++R,O=analysis_paths('retention_scaling_feasibility_20261102')
+ read=lambda p:list(csv.DictReader(open(p)))
+-g=read(O/'core_gate_frozen.csv'); f=read(O/'fund_review_factors.csv'); z=read(O/'relative_retention_all.csv'); t=read(W/'retention_followup_20261102/position_quantities.csv')
++g=read(O/'core_gate_frozen.csv'); f=read(O/'fund_review_factors.csv'); z=read(O/'relative_retention_all.csv'); t=read(first_output(R)/'retention_followup_20261102/position_quantities.csv')
+ T={(x['event_id'],x['fund_id']):x for x in t}; factors={}; buckets={}
+ for x in g:
+  k=(x['fund_id'],x['review']);buckets.setdefault(k,[]).append(x)
+@@ -30,14 +33,14 @@
+ result=dict(target_rows=len(z),fund_review_factors=len(factors),core_rows=len(g),valid_core_rows=sum(x['gate_pass']=='True' for x in g),target_defined=sum(bool(x['relative_quantity_ratio']) for x in z),max_factor_error=maxfactor,max_relative_error=maxerr,exact_direction_mismatches=directions,pvalues_computed=False,new_price_outcomes_computed=False)
+ # Reproducible metadata-only selection audit and independent issuer exclusion check.
+ import pandas as pd
+-R=Path('/Users/ludviguvang/dev/financethesis')
++# R is the portable repository root defined above.
+ a=pd.read_csv(O/'baseline_candidate_ledger.csv');c=pd.read_csv(O/'core_frozen.csv');sel=set(zip(c.fund_id,c.review,c['isin']))
+ a['selected_core']=[(x.fund_id,x.review,x.isin) in sel for x in a.itertuples()]
+ a['selection_status']=a.baseline_reason.fillna('')
+ a.loc[a.selected_core,'selection_status']='selected_before_endpoints'
+ a.loc[a.selection_status.eq(''),'selection_status']='eligible_but_other_class_or_below_fixed_top20'
+ a.to_csv(O/'baseline_selection_audit.csv',index=False)
+-E=pd.read_csv(R/'data/input/omxsb/omxsb_events_with_ric_2007_2026.csv');RO=pd.read_csv(W/'open_questions_20261101/eligibility/dated_stockholm_instrument_roster.csv');AL=json.load(open(R/'output/omxsb_extension_20261031/ownership/validated_isin_aliases.json'))
++E=pd.read_csv(R/'data/input/omxsb/omxsb_events_with_ric_2007_2026.csv');RO=pd.read_csv(R/'output/omxsb_open_questions_20261102/eligibility/dated_stockholm_instrument_roster.csv');AL=json.load(open(R/'output/omxsb_extension_20261031/ownership/validated_isin_aliases.json'))
+ clash=[]
+ for rev,cc in c.groupby('review'):
+  ids=set(E.loc[E.review_cycle.eq(rev),'isin'].dropna())

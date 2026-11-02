@@ -1,0 +1,44 @@
+KVARTALSVERSION GENOMFÖRD PÅ SAMMA216EVENT
+1 november2026. Källrepo HEAD18155e622527d8cad99ef2ae7cef38663f09ed20. Repooriginal orörda.
+
+Huvudsvar
+Ja: samma innehavsdekomposition kan göras på Q1→Q2 och Q3→Q4 med försvarbara rapport-, identitets- och splitkontroller. Den tidigare slutsatsen kvarstår: ett positivt gruppnetto döljer omfattande negativa nettoförändringar i enskilda fondinnehav. Det är inte en slutsats som enbart uppstår genom AP-analysens längre halvårsfönster.
+
+Urval och grind
+Exakt216 låsta händelser,119 tillägg/97 borttag/14 översyner. Inga ytterligare event har valts bort. Samma målaktieslag/depåbevis och samma efterpris/bolagsnämnare som halvårsversionen. Föredatum är nu31mars respektive30september. Daterade splitfaktorer räknas om för det nya intervallet: Fortnox2022 får1 eftersom10:1-splitten skedde i januari, före31mars.
+
+Alla216 händelser har båda trackernas faktiska rårapporter och oförändrad fondidentitet i båda ändar. Totalpanelen består av132621 giltiga fond/event-par, med544–658 rapporterande fonder per event efter kvalitetskraven.24 osäkra fond/event-par exkluderas symmetriskt p.g.a. negativ/saknad kvantitet, nollvärderad positiv mängd eller enhetsfel. Inga Nordnet/Nordea-par exkluderas.
+
+Rapportnärvaro kräver minst ett identifierat faktiskt instrument i rårapporten; en tom/inaktiv statusrad räcker inte. Exempel: HandelsbankenRåvarufond61031/2020H2 finns som metadata i båda ändar men har ingen faktiskt identifierad efterposition. Det paret kan inte skapa nollor. Detaljer finns i empty_report_pair_exclusions.csv. Övriga frånvarande målpositioner blir0 endast inom faktiskt rapporterande fond och accepterad instrumentidentitet.123358 före-endpoints och122625 efter-endpoints är sådana logiska nollor; de allra flesta hör till fonder som aldrig äger målaktien.
+
+Fyra prisjusteringsflaggor löstes på oberoende bolagshändelsegrund: Tethys2019 och Betsson2021 inlösenaktier, Peab2020 Annehem-utdelning, Scandic2020 företrädesemission. Ordinarie antal har faktor1; rättighet/inlöseninstrument räknas inte som målaktien. Scandics tecknade nya aktier kan däremot ingå i mängdförändringen, vilket ytterligare visar varför måttet inte får kallas enbart sekundärmarknadsköp. Ursprungsflaggor och källresolutioner har bevarats.
+
+Historiska ISIN kontrollerades mot halvårsgranskad kedja och nya Q1/Q3-namn. På aktuella endpoints hittades fem främmande identifierare med överlappande namn: VolvoB, IndustrivärdenC, CoremA, CoremD och Sampofinska A-aktie. Dessa är inte okända gamla identifierare till målinstrumentet. För Sampo är det svenska depåbeviset ett separat1:1-instrument; byten mellan det och finska underliggande kan ändra målpositionen utan ändrad bolagsexponering. Vi mäter därför målaktieslagets/depåbevisets mängd som andel av bolagsvärde, inte fondens summerade innehav i alla bolagets instrument.
+
+RESULTAT
+Procentenheter av rapporterat bolagsbörsvärde, lika vikt över14 översyner.95%-intervall från översynsmedlen med t13. Dessa intervall eliminerar inte allt tidsberoende/återkommande bolag. Händelsemedel redovisas separat i CSV.
+
+                              TILLÄGG                    BORTTAG
+Nordnet netto                 +0,067[0,051;0,084]        −0,066[−0,083;−0,049]
+Nordea netto                  +0,074[0,053;0,095]        −0,082[−0,104;−0,059]
+Övriga FI, positiva netton     +2,130[1,777;2,484]        +1,264[0,939;1,590]
+Övriga FI, negativa netton     −1,030[−1,189;−0,871]      −2,015[−2,300;−1,730]
+Övriga FI, netto              +1,100[0,713;1,488]        −0,751[−1,225;−0,277]
+Alla observerade FI, netto    +1,242[0,851;1,633]        −0,899[−1,367;−0,430]
+
+På117 av119 tillägg och96 av97 borttag finns både positiva och negativa individuella fondnetton inom övriga FI. Det är det direkta svaret på frågan om aggregerat samköp kan dölja andra fonder som minskar. Nordnet och Nordea har0 vid Q1/Q3-basdagen för samtliga119 tillägg; det utesluter fortfarande inte köp mellan kvartalsskiftet och beskedet eller nettning i andra indexmandat.
+
+Grupperna har exakt samma definition som tidigare: dokumenterad Nordnet60320 med OMXSBGI→OMXSBESGGI2022; separat metadata-stödd Nordea60293 med OMXSB-cap; alla övriga balanserade FI-fonder i blandad grupp. Övriga FI är inte en aktiva-fonder-grupp och innehåller andra passiva fonder. Ursprungs14 handelsklassificerade trackers används inte som ny huvudklassificering.
+
+Tolkning och kvarvarande begränsning
+Positiva/negativa belopp är summor av enskilda fonders KVARTALSNETTON. De är inte transaktionsbaserad bruttohandel, inte köp enbart AD→ED och inte identifierade motparter. Fondflöden, omviktningar, teckning, överföringar och andra affärer under kvartalet ingår. Materialet säger att observerade fonder med minskningar finns; inte att deras order absorberade indexfondernas köp.
+
+216event är desamma som i halvårsversionen, men fond-ID-panelen balanseras separat för respektive intervall. Skillnaden mellan kvartals- och halvårsbeloppen är därför inte en ren skattning av köp under det föregående kvartalet. Ingen sådan differensmodell har körts.
+
+Grinden var före de nya utfallen. Samma bolagsnormalisering används:100*(q_efter−f*q_före)*FI_SEK_pris_efter/TR.CompanyMarketCap_efter. Bolagsvärdes-/aktieslagsbegränsningarna från halvårsrapporten kvarstår. Ingen ny pris-, kausal-, regressions- eller multiplikatoranalys har lagts till.
+
+Körning
+/tmp/omxsb-audit-venv/bin/python gate.py
+/tmp/omxsb-audit-venv/bin/python resolve_gate.py
+/tmp/omxsb-audit-venv/bin/python describe_quarter.py
+Varje script läser repot och skriver enbart till denna chatwork-mapp. Gate kräver rå FI-fil och prisparquet. ANALYSBESLUT och VARIANTLOGG finns; alla originalflaggor, fondpar, källhashar och bokföringsavstämningar finns. Gruppsumma, positiv+negativ=netto och oförändrat216-eventurval har kontrollerats.

@@ -1,3 +1,5 @@
+> **Uppdatering 1 november 2026, efter användarens senaste instruktioner:** Aktuellt arbete är rättelse och granskning av OMXSB-kontrollanalysen, enligt `thesis/design/ROBUSTHET_RATTELSE_20261101.md` och arbetsstrukturen `thesis/design/OMXSB_struktur.md`. Resultat: `output/omxsb_robusthet_20261101/RESULTAT.md`. Plantexten från 25 oktober nedan bevaras som historik; den belägger inte att de senare A/B-, migrations- eller kausalitetsanspråken är genomförda. FTN:s spärr och kursens regler kvarstår.
+
 # PLAN.md: thesis 2 in one document
 
 **Single source of truth.** Written 25 October 2026 when the three thesis folders were merged. It replaces the SSZ plan (archived in `archive/research_archive/thesis1_ssz_2026-10-06/`). If anything here conflicts with an older file, this file wins. Dates and gates are in `STEPS.md`; the day-to-day state is in `STATUS.md`.

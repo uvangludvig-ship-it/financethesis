@@ -1,0 +1,39 @@
+EXPLORATIV MODELLJÄMFÖRELSE — internt analysunderlag, inte uppsatstext
+2026-11-02
+
+Beslut och huvudresultat
+I punktskattningarna förbättrar de två fixerade mängdmåtten inte den reviewvis utvärderade passningen jämfört med samma modell utan mängd. Grundmodellens RMSE är7,372 procentenheter; linjär förhandsvärderad fondmängd ger7,404 och kvadratrotsproxy7,435. Osäkerheten är stor: samtliga tre fördeklarerade jämförelseintervall omfattar noll. Analysen visar ingen påvisad informationsvinst, men de breda intervallen tillåter också materiella förbättringar. Den ger inte stöd för att någon annan mekanism orsakar priserna.
+
+Exakt vad som prövades
+194 händelser:106 tillägg och88 borttag,14 halvårsreviews2019–2025. Samma urval och det tidigare frysta matchade CAR-fönstret AD−1:ED+1 används i alla modeller. Inga nya kontrollaktier eller framtidskrav läggs till.11 av de ursprungliga216 är fortfarande enhetsolösta och ytterligare11 saknar den historiska matchningens förhandsdata/identifiering. Ingen observation filtreras på tecken, storlek eller utfall.
+M0 innehåller eventriktning, förhands-CAR, logstorlek, förhandsvolatilitet, logförhandsvärderad normalvolym och beskedsfönstrets antal börsdagar. ML lägger till faktisk kvartalsnettoförändring värderad till FÖRE-kvartalets aktiekurs/bolagsvärde. MS lägger i stället till sigma gånger tecknad kvadratrot av kvartalsnetto/normal dagsvolym. ML och MS skiljer alltså i både normalisering OCH funktionsform; detta isolerar inte enbart en potens/exponent. Korrelationskoefficienten mellan mängdproxies är0,857.
+Båda mängderna är realiserade, endogena kvartalsuppgifter. Förhandsvärdering gör inte köpen förutbestämda. Median absolut Q/ADV är3,80 dagar och maximum24,79 dagar. Det understryker varför de inte får likställas med en känd, tidsavgränsad order.
+
+Utvärderingen lämnar en hel review ute i taget. Träningsnormalisering och koefficienter kommer endast från övriga reviews. De observerade mängderna för testreviewen används, vilket gör detta till villkorad passningsvalidering och INTE en verklig ex-ante prognos. Varje review får samma totalvikt. Modellernas egna koefficienter skattas; inga absoluta teoriparametrar såsom Y=0,7 eller impactmultiplikator1 påtvingas.
+
+Samtliga modellresultat
+                     model   N  G  parameters  in_sample_weighted_R2  leave_review_out_MSE  leave_review_out_RMSE  improvement_MSE_vs_M0_percent
+    M0_pre_characteristics 194 14           7               0.096228             54.353013               7.372450                       0.000000
+ML_linear_prevalued_demand 194 14           8               0.100331             54.821078               7.404126                      -0.861157
+     MS_sqrt_volume_demand 194 14           8               0.096990             55.277416               7.434878                      -1.700739
+
+Formell jämförelse av utelämnade reviews, MSE i procentenheter i kvadrat
+Negativ differens skulle gynna första modellen.1999 reviewbootstrapdrag med full omträning;1997 giltiga. Ett drag hade rangbrist och ett nollvariation i träningsregressor; båda loggades och ersattes inte.95%-intervall och fördeklarerade98,333%-intervall för tre jämförelser redovisas parallellt.
+                   model_a                    model_b  delta_MSE_pp_squared  bootstrap95_lo  bootstrap95_hi  bonferroni98_333_lo  bonferroni98_333_hi
+ML_linear_prevalued_demand     M0_pre_characteristics              0.468065       -1.995012        4.279792            -3.439386             6.294658
+     MS_sqrt_volume_demand     M0_pre_characteristics              0.924403       -3.445022        5.324844            -8.034439             7.916301
+     MS_sqrt_volume_demand ML_linear_prevalued_demand              0.456338       -5.999989        5.110670           -10.260155             7.132063
+
+Beskrivande koefficienter på hela samma urval, CR1-klustring på review
+                     model                        term  coefficient   SE_CR1        lo       hi    p_CR1   N  G
+ML_linear_prevalued_demand linear_prevalued_company_pp     0.956225 1.156902 -1.543110 3.455561 0.423409 194 14
+     MS_sqrt_volume_demand               sqrt_proxy_pp    -0.097118 0.322484 -0.793802 0.599567 0.768060 194 14
+
+Vad detta säger om den ursprungliga frågan
+Vi kan inte välja köptryck, uppmärksamhet eller urval utifrån dessa resultat. M0 är en uppsättning observerade karakteristika, inte en identifierad urvals- eller uppmärksamhetsmodell. Att mängdproxies inte förbättrar den utelämnade passningen kan bero på svagt samband, få oberoende händelsedatum, ofullständig fondtäckning, okänd exekveringstid, nettning eller mätfel. Det utesluter inte att verkliga indexorder påverkar priset.
+Det finns också ett konkret teorihinder: originalen gäller avgränsade order/bets; vårt observerade kvartalsnetto kan innehålla flera orelaterade köp och försäljningar samt prisreaktioner som föregår affärerna. Vi har därför inte genomfört ett avgörande test av marknadsmikrostruktur-invarians eller kvadratrotsimpact. Primärkällorna och läsgränserna finns i PRIMARY_READING.txt. En legitim fortsättning mot ett strukturellt test kräver tidsbestämda nettoorder/portföljövergångar med rätt marknadstäckning; detta saknas i nuvarande data. Ingen sådan datatillgång antas här.
+
+Osäkerhet och kvalitet
+Det finns93 emittenter;49 återkommer över flera reviews, som mest8. Reviewbootstrap och CR1 fångar inte all möjlig serial/emittentberoende mellan reviews. Intervallen kan därför inte kallas slutlig robusthet mot alla beroendestrukturer. Inga extra klustergrids eller alternativa specifikationer prövades.
+Den tidigare datalogikens sanitygräns för daglig föravkastning, under−100% eller över1000%, granskades uttryckligen: exakt0 värden maskades i alla216×50 fördagar. Tom värdelogg och full räknelogg finns. Ingen winsorisering gjordes.
+42 holdoutmodeller återskapades oberoende med statsmodels utan träningsstandardisering; största prediktionsavvikelse1,7e−13. Gemensamt sampel, enhetsalgebra, reviewvikter och oförändrad grindhash verifierades. Före utfallet sparades DECISIONS och DESIGN_LOCK. Alla194 observerade utfall/prediktioner,14 reviewförluster och1999 bootstrapdrag finns maskinläsbart. Inga nya fönster eller resultatstyrda varianter tillkom.

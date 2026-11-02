@@ -1,0 +1,16 @@
+Reproduktion från reporoten
+
+Python 3 med pandas, numpy, scipy, pyarrow samt pdftotext (Poppler) på PATH.
+Den verifierade körningen använde /opt/anaconda3/bin/python3. Versioner: runtime_versions.json.
+
+python3 code/build/omxsb_ap_prepare.py
+python3 code/build/omxsb_ap_ownership.py
+python3 code/build/omxsb_ap_validate.py
+
+Alla tre accepterar --repo /absolut/repo och --out /absolut/utdata. Samma --out ska användas i alla tre. Default är output/omxsb_extension_20261031/ownership. Kör inte parallellt mot samma outputmapp. Inga nätanrop görs. Originaldata och äldre exporter läses men skrivs inte.
+
+Väsentliga inputfiler: AP-innehav inklusive excluded_rows/source_checks/parse_rejections; FI fi_holdings_long.csv.gz; LSEG stocks_daily_2005.parquet (inte den skadade CSV-filen); OMXSB-eventfil; corrected/nettrading_omxsb.csv endast för låst population/ISIN-kandidater; corrected/index_funds.csv endast original14-känslighet; historical_isin_name_flags.csv för granskning. AP-PDF-original krävs för sista nollkontrollen. Exakt datahash och källfilhash finns i input_hashes.json och execution_source_hashes.json. Sökvägar i källjournaler är relativa till repot.
+
+PROTOKOLL.txt låstes före nya AP-utfall. IMPLEMENTATION_CORRECTIONS.txt dokumenterar datalogikfel som hittades vid efterföljande kodgranskning och rättades utan utfallsstyrt urval. Korrektioner för bolagshändelser, nämnare och mandat är explicita i koden och exporterade källjournaler. En komplett års-/halvårscensus av varje emittents bolagshändelser har inte erhållits; se rapportens begränsningar.
+
+Utdata kan återskapas deterministiskt med angivna indata. ownership_results.csv innehåller alla förutbestämda grupper/specifikationer, utan val efter p-värden. validate-körningen testar gruppbokföring, CR1-intervall, negativa FI-poster och frånvaro mot original-PDF:er. Standardkörningen ska avsluta med 0 konflikter och exitkod 0.

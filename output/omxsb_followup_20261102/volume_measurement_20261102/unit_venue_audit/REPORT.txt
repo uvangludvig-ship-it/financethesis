@@ -1,0 +1,44 @@
+Volymenheter och handelsplatstäckning – genomförd QA,2026-11-02
+
+SVAR
+Panelens TR.Volume är bakjusterat antal i de förvalda framtida splitfallen. Det är inte råantal från den historiska handelsdagen. TR.Turnover är däremot oförändrad nominell omsättning i kronor i de kontrollerade månaderna. Den tidigare price-unit-grinden får därför inte tas bort under antagandet att volume är råantal.
+
+FÖRUTVALDA KONTROLLER, ALLA REDOVISADE
+Aktie / år              Månader        Panelvolym / Nasdaqvolym       Panelkurs / NasdaqLatestPaid
+Saab B /2022            april,oktober   4,000000;4,000000               0,25;0,25
+Addnode B /2021         april,oktober   4,000000;4,000000               0,25;0,25
+Sinch /2020             april,oktober   9,999997;9,999996               0,10;0,10
+Bilia A /2019           april,oktober   1,000000;1,000000               1,00;1,00
+Loomis /2019            april,oktober   1,000000;1,000000               1,00;1,00
+
+Samtliga10månader hämtades före någon ny pris-/volymassociation enligt DECISIONS.txt. Exakta historiska ISIN, originalrad och kolumn finns i monthly_comparison.csv. Efter de redan angivna splitfaktorerna återstår högst2,2råaktier i skillnad för en månadsvolym påmiljontals aktier; Saab/Addnode/Bilia/Loomis stämmer exakt. Sinch visar avrundning i den dagliga justerade serien. Positiva paneldagar stämmer med Nasdaqs ListedDays för alla tio månader.
+TR.Turnover-summan dividerad med Nasdaqs TotalTurnover är1 i samtliga tio, med maximalt relativt avrundningsfel6,08e−8. Det är Nasdaqs huvudmått EXKLUSIVE den separat redovisade OTC-omsättningen som stämmer. I åtta månader redovisar Nasdaq även positiv separat OTC-omsättning; den ingår inte i den överensstämmande summan. Alla testade rader har panelkälla tr, alltså den TR-baserade insamlingsvägen.
+
+KOD OCH LEVERANTÖRSDOKUMENTATION
+code/lseg/lseg_pull_v4.py rader55–77 begär TR.PriceClose, TR.Volume och TR.Turnover; rader221–235 begär get_history utan särskild justeringsparameter och skiljer tr från pricing-fallback. Rader278–299 döper om fälten men gör ingen egen splitjustering.
+LSEG:s officiella get_history-dokumentation säger att argumentet adjustments gäller HistoricalPricing-fält utan TR-prefix och ignoreras för TR-fält. Man kan alltså inte lösa detta genom att bara lägga adjustments='unadjusted' på det befintliga TR-anropet. LSEG:s support beskriver dessutom TR.PriceClose som ett annat fält än TR.CLOSEPRICE, där det senare stöder Adjusted-parametern. Ett officiellt supportexempel använder ACVOL_UNS tillsammans med adjustments='unadjusted' för den historiska prisvägen. Detta är en möjlig nyhämtningsväg, inte något som nu har hämtats/testats på den svenska panelen.
+Ingen fullständig inloggad DataItemBrowser-definition av TR.Volume har hämtats. Slutsatsen om justerad antalsskala vilar på den direkta avstämningen av den faktiskt använda panelen mot oberoende historiska Nasdaq-antal, stödd av insamlingskod och API-dokumentationen. En allmän egenskap för varje möjlig RIC/leveransväg påstås inte.
+
+HANDELSPLATS OCH VAD VOLYMEN INTE ÄR
+Nasdaqs originalarbetsböcker definierar TotalNoofTradedShares som enkelräknat antal. MainMarketTradingDetails och CompanyTradingperExchange anger handel på respektive Nasdaq-börs, exklusiveOTC. Contents förklarar uttryckligen att off-exchange-affärer efterMiFID kan rapporteras på andra ställen. LSEG:s officiella RIC-support säger att ett börsspecifikt RIC avser den börsen; andra handelsplatser kräver andra eller konsoliderade RIC.
+Den praktiskt försvarbara etiketten här är därför: NasdaqStockholm-baserad, enkelräknad daglig handelsvolym, med historisk splitjustering i den använda TR-serien. Avstämningen visar inte en heltäckande summering av handel i aktien på Cboe, Turquoise, Aquis, systematiska internhandlare och OTC.
+Det är INTE ett mått på enbart stängningsauktionen. Det är inte heller verifierat som enbart kontinuerlig lit-orderbok. De kontrollerade månadssummorna skiljer inte auktions-, lit-, mörk- eller manuellt rapporterad on-exchange-handel åt. Nasdaqs market-modelmaterial beskriver också att exempelvis Nordic@Mid uppdaterar omsättning. Det sistnämnda är stöd för försiktig etikett, inte en full historisk omklassificering av panelens affärer.
+Månadsavstämningen verifierar inte varje enskild eventdags eventuella datakorrigering eller tidsstämpel. Den löser antalsskalan och ger starkt stöd för handelsplatsscope; den ersätter inte daglig trade-/auktionstaggning.
+
+KORREKT MÖJLIG RÄTTELSE, EJ GENOMFÖRD HÄR
+Låt V_adj vara panelvolym i leverantörens justerade aktieenheter, c_q antal aktier i FI:s efterkvartalsenhet per panelenhet. Då ska jämförbar mängd vara V_q=c_q*V_adj. Samma omräkning gäller eventdag och hela baslinjen. För enbart framtida splitar kan c_q verifieras som0,25(Saab/Addnode före respektive framtida split) eller0,10(Sinch2020).
+Om en split ligger INOM FI-kvartalet kan den bakjusterade historiska baslinjen redan vara i efterkvartalets aktieenhet. Då är det fel att reflexmässigt behandla den som råserie, eller skala bara eventdagen. Daterad splitkedja ska koppla officiell månadsenhet till efterkvartalets enhet; innehavsfaktorn mellan FI:s före/efter används bara på rätt tidsintervall.
+Viktigt: c_q får inte i allmänhet ersättas med close_adj/FI_nominal_price. Utbetalningar, inlösen, utdelningsjustering och andra prisjusteringar kan påverka pris men inte antalet på samma sätt. Pris- och volymfaktorer behöver särskiljas. Inte alla41price-mismatch-händelser har därmed godkänts av detta tiomånadersprov.
+En revisionsbar väg med befintliga data är att stämma av ytterligare exakta ISIN-månader mot officiellt antal, fastställa kapitalåtgärder mellan referensmånaden och FI-kvartalet, och spara en explicit omräkningsfaktor/felorsak per event. Endast därefter kan en på förhand deklarerad, separat enhetskorrigerad analys läggas till. Original172-urvalet och dess resultat ska bevaras.
+TR.Turnover verkar erbjuda ett direkt nominellt kronmått utan denna antalsskala. Att byta till kronomsättning skulle dock vara en annan mätdefinition: baslinjen blandar då antal och prisnivå, och FI-kvartalsnetto värderat vid kvartalets slut är inte exekverat dagsbelopp. Det är ingen automatisk drop-in-ersättning utan separat specifikation.
+
+KONSEKVENS FÖR EN CHINCO–SAMMON-LIKNANDE TOLKNING
+Efter korrekt enhetsomräkning kan man jämföra extraordinär handelsaktivitet på NasdaqStockholm kring omviktningsdagen med observerad FI-fondnettoförändring. Kvoten kan inte utan fler antaganden kallas hela marknadens indexdrivna andel eller hiddenindexing: täljaren avser en handelsplats och dag, nämnaren vissa fonder under ett kvartal; nettoköp är inte bruttoaffärer, och återhandel/arbitrage kan ge flera omsättningar av samma aktie. Det finns ingen verifierad konstant omräkning från Nasdaqvolym till allvenues-volym eller auktionsvolym.
+
+FILER OCH REPRODUKTION
+monthly_comparison.csv: alla tio originaljämförelser och källrader.
+original_workbook_notes.json: originaldefinitioner och headers, utan hela kalkylbladen.
+validation.json: enhets-/täckningskontroller, källa och hash.
+canonical216_RIC_source_provenance.csv: insamlingskälla för RIC i de216eventen.
+audit.py: kör med /tmp/omxsb-audit-venv/bin/python.
+Inga prisregressioner, nya volymregressioner, ändrade eventurval eller repoändringar utförda.

@@ -435,3 +435,475 @@ Sizes, row counts and the first columns of every file. Regenerate with the snipp
 | fil | storlek | innehåll |
 |---|---|---|
 | `NOTES.md` | 0 kB |  |
+
+<!-- OMXSB_AUDIT_20261031 -->
+
+## OMXSB verification audit 31 Oct 2026
+
+Base commit: `b886f5b744f797a6c1252f0e41fe2b740591c8c3`. Raw inputs unchanged. The original `omxsb_replication_2007/` exports remain frozen; corrected exports are in the separate audit folder. The full artifact registry includes SHA256, byte size and role for every artifact. Scientific conclusions and unresolved history are in `output/omxsb_audit_20261031/GRANSKNING.md`.
+
+| File | Role/source and generator | Bytes |
+|---|---|---|
+| `output/omxsb_audit_20261031/artifact_inventory.csv` | Per-file SHA256 registry; `code/build/audit_omxsb_finalize.py` | generated |
+| `output/omxsb_audit_20261031/baseline/check_2013_2026_vs_original.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 7204 |
+| `output/omxsb_audit_20261031/baseline/events_car.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 442285 |
+| `output/omxsb_audit_20261031/baseline/figures/fig_01_nettrading.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 257 |
+| `output/omxsb_audit_20261031/baseline/figures/fig_02_by_year.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 1868 |
+| `output/omxsb_audit_20261031/baseline/figures/fig_03_scatter.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 254 |
+| `output/omxsb_audit_20261031/baseline/figures/fig_08_car_announcement.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 17265 |
+| `output/omxsb_audit_20261031/baseline/figures/fig_09_car_effective.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 16167 |
+| `output/omxsb_audit_20261031/baseline/figures/fig_10_size_rank.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 1239 |
+| `output/omxsb_audit_20261031/baseline/figures/fig_11_volume.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 7018 |
+| `output/omxsb_audit_20261031/baseline/holdings_price_check.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 48310 |
+| `output/omxsb_audit_20261031/baseline/index_funds.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 3616 |
+| `output/omxsb_audit_20261031/baseline/mechanisms/e1_table3_long.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 9932 |
+| `output/omxsb_audit_20261031/baseline/mechanisms/e1_table3_size_top100.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 2329 |
+| `output/omxsb_audit_20261031/baseline/mechanisms/e2_spread_by_year.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 2613 |
+| `output/omxsb_audit_20261031/baseline/mechanisms/e3_omxsb_events_vs_omxs30_membership.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 3845 |
+| `output/omxsb_audit_20261031/baseline/mechanisms/e4c_rank_of_additions.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 33571 |
+| `output/omxsb_audit_20261031/baseline/mechanisms/e5b_table4_medians_by_year.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 3013 |
+| `output/omxsb_audit_20261031/baseline/mechanisms/events_mechanisms.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 126729 |
+| `output/omxsb_audit_20261031/baseline/mechanisms/fig_d_expected_demand_long.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 2290 |
+| `output/omxsb_audit_20261031/baseline/mechanisms/fig_d_fig3_nettrading.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 19065 |
+| `output/omxsb_audit_20261031/baseline/mechanisms/fig_e4a_car_announcement.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 34218 |
+| `output/omxsb_audit_20261031/baseline/mechanisms/fig_e4b_car_effective.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 32127 |
+| `output/omxsb_audit_20261031/baseline/mechanisms/fig_e4c_rank.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 2225 |
+| `output/omxsb_audit_20261031/baseline/mechanisms/fig_e5a_volume.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 13971 |
+| `output/omxsb_audit_20261031/baseline/mechanisms/membership_coverage_by_review.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 3983 |
+| `output/omxsb_audit_20261031/baseline/mechanisms/membership_inconsistencies.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 275 |
+| `output/omxsb_audit_20261031/baseline/mechanisms/membership_missing_mcap_by_review.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 5775 |
+| `output/omxsb_audit_20261031/baseline/mechanisms/numbers_mechanisms.json` | baseline rerun; audit_omxsb_run.py / preserved commit | 22952 |
+| `output/omxsb_audit_20261031/baseline/mechanisms/omxsb_membership_by_review.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 36674 |
+| `output/omxsb_audit_20261031/baseline/mechanisms/results_table_long.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 55736 |
+| `output/omxsb_audit_20261031/baseline/mechanisms/step1_deletion_flags.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 34975 |
+| `output/omxsb_audit_20261031/baseline/mechanisms/tracker_aum_daily_interpolated.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 122979 |
+| `output/omxsb_audit_20261031/baseline/nettrading_omxsb.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 75897 |
+| `output/omxsb_audit_20261031/baseline/numbers.json` | baseline rerun; audit_omxsb_run.py / preserved commit | 961 |
+| `output/omxsb_audit_20261031/baseline/period_sensitivity/table2_by_period_length_long.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 38382 |
+| `output/omxsb_audit_20261031/baseline/period_sensitivity/trend_by_period_length.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 3784 |
+| `output/omxsb_audit_20261031/baseline/period_sensitivity/trend_tests.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 19496 |
+| `output/omxsb_audit_20261031/baseline/run_complete.json` | baseline rerun; audit_omxsb_run.py / preserved commit | 601 |
+| `output/omxsb_audit_20261031/baseline/table2_phase1_vs_gs.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 3632 |
+| `output/omxsb_audit_20261031/baseline/tables/tabA_01_car_omxsgi_long.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 4525 |
+| `output/omxsb_audit_20261031/baseline/tables/tabA_02_isin_matches.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 11708 |
+| `output/omxsb_audit_20261031/baseline/tables/tabA_02_isin_matches_check.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 15258 |
+| `output/omxsb_audit_20261031/baseline/tables/tabA_03_index_funds.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 963 |
+| `output/omxsb_audit_20261031/baseline/tables/tabA_04_split_factors.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 431 |
+| `output/omxsb_audit_20261031/baseline/tables/tabA_05_dropped_events.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 2029 |
+| `output/omxsb_audit_20261031/baseline/tables/tabA_06_event_chain.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 319 |
+| `output/omxsb_audit_20261031/baseline/tables/tabA_07_car_robustness.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 4625 |
+| `output/omxsb_audit_20261031/baseline/tables/tabA_07_car_robustness_long.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 14874 |
+| `output/omxsb_audit_20261031/baseline/tables/tabA_08_sample_sensitivity.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 1172 |
+| `output/omxsb_audit_20261031/baseline/tables/tabA_08_sample_sensitivity_long.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 1591 |
+| `output/omxsb_audit_20261031/baseline/tables/tabA_09_sample_selection.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 472 |
+| `output/omxsb_audit_20261031/baseline/tables/tab_00_by_year.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 2765 |
+| `output/omxsb_audit_20261031/baseline/tables/tab_01_sample.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 311 |
+| `output/omxsb_audit_20261031/baseline/tables/tab_02_car.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 1598 |
+| `output/omxsb_audit_20261031/baseline/tables/tab_02_car_long.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 4848 |
+| `output/omxsb_audit_20261031/baseline/tables/tab_02_car_long_oldperiods.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 4438 |
+| `output/omxsb_audit_20261031/baseline/tables/tab_02_car_long_phase1.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 4423 |
+| `output/omxsb_audit_20261031/baseline/tables/tab_02b_trend_long.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 751 |
+| `output/omxsb_audit_20261031/baseline/tables/tab_02c_ftest_old_vs_new.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 957 |
+| `output/omxsb_audit_20261031/baseline/tables/tab_03_determinants_long.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 2607 |
+| `output/omxsb_audit_20261031/baseline/tables/tab_04_institutions.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 902 |
+| `output/omxsb_audit_20261031/baseline/tables/tab_05_elasticity.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 1557 |
+| `output/omxsb_audit_20261031/baseline/tables/tab_05_elasticity_long.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 2783 |
+| `output/omxsb_audit_20261031/baseline/tables/tab_06_volume_share.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 498 |
+| `output/omxsb_audit_20261031/baseline/tables/tab_07_spread.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 391 |
+| `output/omxsb_audit_20261031/baseline/tables/tab_08_preannouncement.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 5401 |
+| `output/omxsb_audit_20261031/baseline/tables/tab_08_preannouncement_long.csv` | baseline rerun; audit_omxsb_run.py / preserved commit | 5434 |
+| `output/omxsb_audit_20261031/baseline_comparison.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 3486 |
+| `output/omxsb_audit_20261031/baseline_comparison_details.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 11655 |
+| `output/omxsb_audit_20261031/candidate_pilot_targets.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 14222 |
+| `output/omxsb_audit_20261031/candidate_sample_summary.json` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 560 |
+| `output/omxsb_audit_20261031/composition_common_sample.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 408 |
+| `output/omxsb_audit_20261031/contrast_tests.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 514 |
+| `output/omxsb_audit_20261031/corrected/check_2013_2026_vs_original.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 7204 |
+| `output/omxsb_audit_20261031/corrected/events_car.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 442460 |
+| `output/omxsb_audit_20261031/corrected/figures/fig_01_nettrading.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 257 |
+| `output/omxsb_audit_20261031/corrected/figures/fig_02_by_year.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 1868 |
+| `output/omxsb_audit_20261031/corrected/figures/fig_03_scatter.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 254 |
+| `output/omxsb_audit_20261031/corrected/figures/fig_08_car_announcement.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 17265 |
+| `output/omxsb_audit_20261031/corrected/figures/fig_09_car_effective.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 16167 |
+| `output/omxsb_audit_20261031/corrected/figures/fig_10_size_rank.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 1247 |
+| `output/omxsb_audit_20261031/corrected/figures/fig_11_volume.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 7018 |
+| `output/omxsb_audit_20261031/corrected/holdings_price_check.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 48310 |
+| `output/omxsb_audit_20261031/corrected/index_funds.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 3616 |
+| `output/omxsb_audit_20261031/corrected/mechanisms/e1_table3_long.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 9949 |
+| `output/omxsb_audit_20261031/corrected/mechanisms/e1_table3_size_top100.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 2321 |
+| `output/omxsb_audit_20261031/corrected/mechanisms/e2_spread_by_year.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 2617 |
+| `output/omxsb_audit_20261031/corrected/mechanisms/e3_omxsb_events_vs_omxs30_membership.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 3845 |
+| `output/omxsb_audit_20261031/corrected/mechanisms/e4c_rank_of_additions.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 33571 |
+| `output/omxsb_audit_20261031/corrected/mechanisms/e5b_table4_medians_by_year.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 3011 |
+| `output/omxsb_audit_20261031/corrected/mechanisms/events_mechanisms.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 126817 |
+| `output/omxsb_audit_20261031/corrected/mechanisms/fig_d_expected_demand_long.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 2290 |
+| `output/omxsb_audit_20261031/corrected/mechanisms/fig_d_fig3_nettrading.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 19065 |
+| `output/omxsb_audit_20261031/corrected/mechanisms/fig_e4a_car_announcement.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 34218 |
+| `output/omxsb_audit_20261031/corrected/mechanisms/fig_e4b_car_effective.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 32127 |
+| `output/omxsb_audit_20261031/corrected/mechanisms/fig_e4c_rank.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 2225 |
+| `output/omxsb_audit_20261031/corrected/mechanisms/fig_e5a_volume.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 13971 |
+| `output/omxsb_audit_20261031/corrected/mechanisms/membership_coverage_by_review.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 3987 |
+| `output/omxsb_audit_20261031/corrected/mechanisms/membership_inconsistencies.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 275 |
+| `output/omxsb_audit_20261031/corrected/mechanisms/membership_missing_mcap_by_review.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 5775 |
+| `output/omxsb_audit_20261031/corrected/mechanisms/numbers_mechanisms.json` | corrected rerun; audit_omxsb_run.py / preserved commit | 22946 |
+| `output/omxsb_audit_20261031/corrected/mechanisms/omxsb_membership_by_review.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 36674 |
+| `output/omxsb_audit_20261031/corrected/mechanisms/results_table_long.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 58494 |
+| `output/omxsb_audit_20261031/corrected/mechanisms/step1_deletion_flags.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 34975 |
+| `output/omxsb_audit_20261031/corrected/mechanisms/tracker_aum_daily_interpolated.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 122979 |
+| `output/omxsb_audit_20261031/corrected/nettrading_omxsb.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 75906 |
+| `output/omxsb_audit_20261031/corrected/numbers.json` | corrected rerun; audit_omxsb_run.py / preserved commit | 961 |
+| `output/omxsb_audit_20261031/corrected/period_sensitivity/table2_by_period_length_long.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 38395 |
+| `output/omxsb_audit_20261031/corrected/period_sensitivity/trend_by_period_length.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 3784 |
+| `output/omxsb_audit_20261031/corrected/period_sensitivity/trend_tests.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 19496 |
+| `output/omxsb_audit_20261031/corrected/reporting_pair_diagnostics.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 22872 |
+| `output/omxsb_audit_20261031/corrected/run_complete.json` | corrected rerun; audit_omxsb_run.py / preserved commit | 601 |
+| `output/omxsb_audit_20261031/corrected/table2_phase1_vs_gs.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 3632 |
+| `output/omxsb_audit_20261031/corrected/tables/tabA_01_car_omxsgi_long.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 4526 |
+| `output/omxsb_audit_20261031/corrected/tables/tabA_02_isin_matches.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 11708 |
+| `output/omxsb_audit_20261031/corrected/tables/tabA_02_isin_matches_check.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 15258 |
+| `output/omxsb_audit_20261031/corrected/tables/tabA_03_index_funds.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 963 |
+| `output/omxsb_audit_20261031/corrected/tables/tabA_04_split_factors.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 431 |
+| `output/omxsb_audit_20261031/corrected/tables/tabA_05_dropped_events.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 2029 |
+| `output/omxsb_audit_20261031/corrected/tables/tabA_06_event_chain.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 319 |
+| `output/omxsb_audit_20261031/corrected/tables/tabA_07_car_robustness.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 4625 |
+| `output/omxsb_audit_20261031/corrected/tables/tabA_07_car_robustness_long.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 14875 |
+| `output/omxsb_audit_20261031/corrected/tables/tabA_08_sample_sensitivity.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 1172 |
+| `output/omxsb_audit_20261031/corrected/tables/tabA_08_sample_sensitivity_long.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 1591 |
+| `output/omxsb_audit_20261031/corrected/tables/tabA_09_sample_selection.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 472 |
+| `output/omxsb_audit_20261031/corrected/tables/tab_00_by_year.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 2765 |
+| `output/omxsb_audit_20261031/corrected/tables/tab_01_sample.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 311 |
+| `output/omxsb_audit_20261031/corrected/tables/tab_02_car.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 1598 |
+| `output/omxsb_audit_20261031/corrected/tables/tab_02_car_long.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 4848 |
+| `output/omxsb_audit_20261031/corrected/tables/tab_02_car_long_oldperiods.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 4438 |
+| `output/omxsb_audit_20261031/corrected/tables/tab_02_car_long_phase1.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 4423 |
+| `output/omxsb_audit_20261031/corrected/tables/tab_02b_trend_long.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 751 |
+| `output/omxsb_audit_20261031/corrected/tables/tab_02c_ftest_old_vs_new.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 957 |
+| `output/omxsb_audit_20261031/corrected/tables/tab_03_determinants_long.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 2602 |
+| `output/omxsb_audit_20261031/corrected/tables/tab_04_institutions.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 901 |
+| `output/omxsb_audit_20261031/corrected/tables/tab_05_elasticity.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 1557 |
+| `output/omxsb_audit_20261031/corrected/tables/tab_05_elasticity_long.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 2783 |
+| `output/omxsb_audit_20261031/corrected/tables/tab_06_volume_share.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 498 |
+| `output/omxsb_audit_20261031/corrected/tables/tab_07_spread.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 391 |
+| `output/omxsb_audit_20261031/corrected/tables/tab_08_preannouncement.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 5401 |
+| `output/omxsb_audit_20261031/corrected/tables/tab_08_preannouncement_long.csv` | corrected rerun; audit_omxsb_run.py / preserved commit | 5434 |
+| `output/omxsb_audit_20261031/correction_comparison.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 3868 |
+| `output/omxsb_audit_20261031/correction_comparison_details.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 207099 |
+| `output/omxsb_audit_20261031/data_gaps.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 10351 |
+| `output/omxsb_audit_20261031/deletion_flag_reconciliation.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 38905 |
+| `output/omxsb_audit_20261031/e5b_before_after.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 1856 |
+| `output/omxsb_audit_20261031/event_fund_reporting.csv.gz` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 184243 |
+| `output/omxsb_audit_20261031/fi_coverage_by_quarter.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 690 |
+| `output/omxsb_audit_20261031/fi_raw_derived_reconciliation.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 664026 |
+| `output/omxsb_audit_20261031/fi_raw_parse_errors.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 15 |
+| `output/omxsb_audit_20261031/fi_raw_report_inventory.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 5444657 |
+| `output/omxsb_audit_20261031/fi_raw_summary.json` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 261 |
+| `output/omxsb_audit_20261031/historical_isin_name_flags.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 15258 |
+| `output/omxsb_audit_20261031/holdings_audit_summary.json` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 379 |
+| `output/omxsb_audit_20261031/holdings_measurement_audit.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 75594 |
+| `output/omxsb_audit_20261031/input_inventory.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 10172 |
+| `output/omxsb_audit_20261031/nasdaq_202002.xls` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 1784832 |
+| `output/omxsb_audit_20261031/nasdaq_202002_instrument_sample.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 100619 |
+| `output/omxsb_audit_20261031/original/exports/check_2013_2026_vs_original.csv` | frozen original; audit_omxsb_run.py / preserved commit | 6814 |
+| `output/omxsb_audit_20261031/original/exports/coverage_failures.csv` | frozen original; audit_omxsb_run.py / preserved commit | 1822 |
+| `output/omxsb_audit_20261031/original/exports/events_car.csv` | frozen original; audit_omxsb_run.py / preserved commit | 442284 |
+| `output/omxsb_audit_20261031/original/exports/figures/fig_01_nettrading.csv` | frozen original; audit_omxsb_run.py / preserved commit | 257 |
+| `output/omxsb_audit_20261031/original/exports/figures/fig_02_by_year.csv` | frozen original; audit_omxsb_run.py / preserved commit | 1868 |
+| `output/omxsb_audit_20261031/original/exports/figures/fig_03_scatter.csv` | frozen original; audit_omxsb_run.py / preserved commit | 250 |
+| `output/omxsb_audit_20261031/original/exports/figures/fig_08_car_announcement.csv` | frozen original; audit_omxsb_run.py / preserved commit | 17265 |
+| `output/omxsb_audit_20261031/original/exports/figures/fig_09_car_effective.csv` | frozen original; audit_omxsb_run.py / preserved commit | 16167 |
+| `output/omxsb_audit_20261031/original/exports/figures/fig_10_size_rank.csv` | frozen original; audit_omxsb_run.py / preserved commit | 1239 |
+| `output/omxsb_audit_20261031/original/exports/figures/fig_11_volume.csv` | frozen original; audit_omxsb_run.py / preserved commit | 7018 |
+| `output/omxsb_audit_20261031/original/exports/holdings_price_check.csv` | frozen original; audit_omxsb_run.py / preserved commit | 48310 |
+| `output/omxsb_audit_20261031/original/exports/index_funds.csv` | frozen original; audit_omxsb_run.py / preserved commit | 3616 |
+| `output/omxsb_audit_20261031/original/exports/mechanisms/e1_table3_long.csv` | frozen original; audit_omxsb_run.py / preserved commit | 9929 |
+| `output/omxsb_audit_20261031/original/exports/mechanisms/e1_table3_size_top100.csv` | frozen original; audit_omxsb_run.py / preserved commit | 2320 |
+| `output/omxsb_audit_20261031/original/exports/mechanisms/e2_spread_by_year.csv` | frozen original; audit_omxsb_run.py / preserved commit | 2613 |
+| `output/omxsb_audit_20261031/original/exports/mechanisms/e3_omxsb_additions_in_omxs30_list.csv` | frozen original; audit_omxsb_run.py / preserved commit | 4723 |
+| `output/omxsb_audit_20261031/original/exports/mechanisms/e3_omxsb_events_vs_omxs30_membership.csv` | frozen original; audit_omxsb_run.py / preserved commit | 3845 |
+| `output/omxsb_audit_20261031/original/exports/mechanisms/e4c_rank_of_additions.csv` | frozen original; audit_omxsb_run.py / preserved commit | 33571 |
+| `output/omxsb_audit_20261031/original/exports/mechanisms/e5b_table4_medians_by_year.csv` | frozen original; audit_omxsb_run.py / preserved commit | 3013 |
+| `output/omxsb_audit_20261031/original/exports/mechanisms/events_mechanisms.csv` | frozen original; audit_omxsb_run.py / preserved commit | 126729 |
+| `output/omxsb_audit_20261031/original/exports/mechanisms/fig_d_expected_demand_long.csv` | frozen original; audit_omxsb_run.py / preserved commit | 2290 |
+| `output/omxsb_audit_20261031/original/exports/mechanisms/fig_d_fig3_nettrading.csv` | frozen original; audit_omxsb_run.py / preserved commit | 19065 |
+| `output/omxsb_audit_20261031/original/exports/mechanisms/fig_e4a_car_announcement.csv` | frozen original; audit_omxsb_run.py / preserved commit | 34218 |
+| `output/omxsb_audit_20261031/original/exports/mechanisms/fig_e4b_car_effective.csv` | frozen original; audit_omxsb_run.py / preserved commit | 32127 |
+| `output/omxsb_audit_20261031/original/exports/mechanisms/fig_e4c_rank.csv` | frozen original; audit_omxsb_run.py / preserved commit | 2225 |
+| `output/omxsb_audit_20261031/original/exports/mechanisms/fig_e5a_volume.csv` | frozen original; audit_omxsb_run.py / preserved commit | 13971 |
+| `output/omxsb_audit_20261031/original/exports/mechanisms/membership_coverage_by_review.csv` | frozen original; audit_omxsb_run.py / preserved commit | 3983 |
+| `output/omxsb_audit_20261031/original/exports/mechanisms/membership_inconsistencies.csv` | frozen original; audit_omxsb_run.py / preserved commit | 275 |
+| `output/omxsb_audit_20261031/original/exports/mechanisms/membership_missing_mcap_by_review.csv` | frozen original; audit_omxsb_run.py / preserved commit | 5775 |
+| `output/omxsb_audit_20261031/original/exports/mechanisms/numbers_mechanisms.json` | frozen original; audit_omxsb_run.py / preserved commit | 22952 |
+| `output/omxsb_audit_20261031/original/exports/mechanisms/omxsb_membership_by_review.csv` | frozen original; audit_omxsb_run.py / preserved commit | 36674 |
+| `output/omxsb_audit_20261031/original/exports/mechanisms/results_table_long.csv` | frozen original; audit_omxsb_run.py / preserved commit | 55749 |
+| `output/omxsb_audit_20261031/original/exports/mechanisms/step1_deletion_flags.csv` | frozen original; audit_omxsb_run.py / preserved commit | 34975 |
+| `output/omxsb_audit_20261031/original/exports/mechanisms/tracker_aum_daily_interpolated.csv` | frozen original; audit_omxsb_run.py / preserved commit | 123001 |
+| `output/omxsb_audit_20261031/original/exports/nettrading_omxsb.csv` | frozen original; audit_omxsb_run.py / preserved commit | 75897 |
+| `output/omxsb_audit_20261031/original/exports/numbers.json` | frozen original; audit_omxsb_run.py / preserved commit | 961 |
+| `output/omxsb_audit_20261031/original/exports/period_sensitivity/regimes.csv` | frozen original; audit_omxsb_run.py / preserved commit | 6210 |
+| `output/omxsb_audit_20261031/original/exports/period_sensitivity/table2_by_period_length_long.csv` | frozen original; audit_omxsb_run.py / preserved commit | 38423 |
+| `output/omxsb_audit_20261031/original/exports/period_sensitivity/tables_by_length.xlsx` | frozen original; audit_omxsb_run.py / preserved commit | 44777 |
+| `output/omxsb_audit_20261031/original/exports/period_sensitivity/trend_by_period_length.csv` | frozen original; audit_omxsb_run.py / preserved commit | 3801 |
+| `output/omxsb_audit_20261031/original/exports/period_sensitivity/trend_tests.csv` | frozen original; audit_omxsb_run.py / preserved commit | 19508 |
+| `output/omxsb_audit_20261031/original/exports/table2_phase1_vs_gs.csv` | frozen original; audit_omxsb_run.py / preserved commit | 3638 |
+| `output/omxsb_audit_20261031/original/exports/tables/tabA_01_car_omxsgi_long.csv` | frozen original; audit_omxsb_run.py / preserved commit | 4511 |
+| `output/omxsb_audit_20261031/original/exports/tables/tabA_02_isin_matches.csv` | frozen original; audit_omxsb_run.py / preserved commit | 11708 |
+| `output/omxsb_audit_20261031/original/exports/tables/tabA_02_isin_matches_check.csv` | frozen original; audit_omxsb_run.py / preserved commit | 15258 |
+| `output/omxsb_audit_20261031/original/exports/tables/tabA_03_index_funds.csv` | frozen original; audit_omxsb_run.py / preserved commit | 963 |
+| `output/omxsb_audit_20261031/original/exports/tables/tabA_04_split_factors.csv` | frozen original; audit_omxsb_run.py / preserved commit | 431 |
+| `output/omxsb_audit_20261031/original/exports/tables/tabA_05_dropped_events.csv` | frozen original; audit_omxsb_run.py / preserved commit | 2029 |
+| `output/omxsb_audit_20261031/original/exports/tables/tabA_06_event_chain.csv` | frozen original; audit_omxsb_run.py / preserved commit | 319 |
+| `output/omxsb_audit_20261031/original/exports/tables/tabA_07_car_robustness.csv` | frozen original; audit_omxsb_run.py / preserved commit | 4625 |
+| `output/omxsb_audit_20261031/original/exports/tables/tabA_07_car_robustness_long.csv` | frozen original; audit_omxsb_run.py / preserved commit | 14901 |
+| `output/omxsb_audit_20261031/original/exports/tables/tabA_08_sample_sensitivity.csv` | frozen original; audit_omxsb_run.py / preserved commit | 1172 |
+| `output/omxsb_audit_20261031/original/exports/tables/tabA_08_sample_sensitivity_long.csv` | frozen original; audit_omxsb_run.py / preserved commit | 1591 |
+| `output/omxsb_audit_20261031/original/exports/tables/tabA_09_sample_selection.csv` | frozen original; audit_omxsb_run.py / preserved commit | 472 |
+| `output/omxsb_audit_20261031/original/exports/tables/tabA_10_deletions_clean_long.csv` | frozen original; audit_omxsb_run.py / preserved commit | 3566 |
+| `output/omxsb_audit_20261031/original/exports/tables/tab_00_by_year.csv` | frozen original; audit_omxsb_run.py / preserved commit | 2765 |
+| `output/omxsb_audit_20261031/original/exports/tables/tab_01_sample.csv` | frozen original; audit_omxsb_run.py / preserved commit | 311 |
+| `output/omxsb_audit_20261031/original/exports/tables/tab_02_car.csv` | frozen original; audit_omxsb_run.py / preserved commit | 1598 |
+| `output/omxsb_audit_20261031/original/exports/tables/tab_02_car_long.csv` | frozen original; audit_omxsb_run.py / preserved commit | 4861 |
+| `output/omxsb_audit_20261031/original/exports/tables/tab_02_car_long_oldperiods.csv` | frozen original; audit_omxsb_run.py / preserved commit | 4433 |
+| `output/omxsb_audit_20261031/original/exports/tables/tab_02_car_long_phase1.csv` | frozen original; audit_omxsb_run.py / preserved commit | 4430 |
+| `output/omxsb_audit_20261031/original/exports/tables/tab_02b_trend_long.csv` | frozen original; audit_omxsb_run.py / preserved commit | 753 |
+| `output/omxsb_audit_20261031/original/exports/tables/tab_02c_ftest_old_vs_new.csv` | frozen original; audit_omxsb_run.py / preserved commit | 961 |
+| `output/omxsb_audit_20261031/original/exports/tables/tab_03_determinants_long.csv` | frozen original; audit_omxsb_run.py / preserved commit | 2608 |
+| `output/omxsb_audit_20261031/original/exports/tables/tab_04_institutions.csv` | frozen original; audit_omxsb_run.py / preserved commit | 902 |
+| `output/omxsb_audit_20261031/original/exports/tables/tab_05_elasticity.csv` | frozen original; audit_omxsb_run.py / preserved commit | 1557 |
+| `output/omxsb_audit_20261031/original/exports/tables/tab_05_elasticity_long.csv` | frozen original; audit_omxsb_run.py / preserved commit | 2783 |
+| `output/omxsb_audit_20261031/original/exports/tables/tab_06_volume_share.csv` | frozen original; audit_omxsb_run.py / preserved commit | 498 |
+| `output/omxsb_audit_20261031/original/exports/tables/tab_07_spread.csv` | frozen original; audit_omxsb_run.py / preserved commit | 391 |
+| `output/omxsb_audit_20261031/original/exports/tables/tab_08_preannouncement.csv` | frozen original; audit_omxsb_run.py / preserved commit | 5401 |
+| `output/omxsb_audit_20261031/original/exports/tables/tab_08_preannouncement_long.csv` | frozen original; audit_omxsb_run.py / preserved commit | 5434 |
+| `output/omxsb_audit_20261031/original_sha256.json` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 21652 |
+| `output/omxsb_audit_20261031/ownership_common_sample.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 882 |
+| `output/omxsb_audit_20261031/panel_coverage_by_year.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 1183 |
+| `output/omxsb_audit_20261031/possible_fund_id_transfers.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 3795 |
+| `output/omxsb_audit_20261031/result_summary.json` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 462 |
+| `output/omxsb_audit_20261031/result_table.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 39741 |
+| `output/omxsb_audit_20261031/sample_by_event.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 32265 |
+| `output/omxsb_audit_20261031/shareclass_denominator_diagnostics.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 175 |
+| `output/omxsb_audit_20261031/split_denominator_checks.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 51423 |
+| `output/omxsb_audit_20261031/split_source_verification.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 643 |
+| `output/omxsb_audit_20261031/starting_git.json` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 304 |
+| `output/omxsb_audit_20261031/tracker_quarter_metadata.csv` | audit support/report; code/build/audit_omxsb_*.py; external XLS/source-verification exceptions documented in KORNING.md | 95698 |
+<!-- END_OMXSB_AUDIT_20261031 -->
+
+<!-- OMXSB_EXTENSION_20261031 -->
+
+## OMXSB extension execution, 31 October 2026
+
+Local analysis only. Original sources and earlier numerical exports preserved. No FTN returns. Full file hashes: `output/omxsb_extension_20261031/artifact_manifest.json`.
+
+| Location | Provenance / purpose |
+|---|---|
+| `output/omxsb_extension_20261031/ownership/` | New AP2/AP3/AP4 and FI half-year ownership analysis; source/exclusion ledgers and report; code/build/omxsb_ap_prepare.py and omxsb_ap_ownership.py |
+| `output/omxsb_extension_20261031/candidate/` | Nasdaq October2019/2024 original files and notices; two-review data pilot; source_manifest.json and source_reading_notes.json; code/build/omxsb_candidate_pilot.py |
+| `output/omxsb_extension_20261031/migration/` | Saved cached primary Solactive extracts plus original FI XML; bounded transition screen; source_register.csv; code/build/omxsb_migration_screen.py |
+| `output/omxsb_extension_20261031/labels/` | Eight corrected labels; original numerical results unchanged; code/build/omxsb_relabel_results.py |
+| `data/raw/omxsb_extension_20261031/support/` | Four official original PDFs and layout text extracts: government AP2019/2024, Nordnet2022, contemporaneous ENF2019 mandate statement; source_ledger.json |
+| `output/omxsb_extension_20261031/independent_validation.json` | Independent numerical/accounting checks; code/build/omxsb_extension_validate.py |
+
+<!-- END_OMXSB_EXTENSION_20261031 -->
+
+<!-- OMXSB_ROBUSTHET_REPAIR_20261101 -->
+## OMXSB control-analysis repair, 1 November 2026
+
+Post-result code/method repair. Original exports archived, raw sources unchanged. Source hashes in output/omxsb_robusthet_20261101/input_sha256.json; artifact hashes in artifact_manifest.json. No FTN return calculations.
+
+| File | Provenance/status |
+|---|---|
+| `output/omxsb_robusthet_20261101/KORNING.md` | Repaired control analysis / validation; code/build/robusthet_hela.py and companion validation scripts. Blocked outputs are not economic estimates. |
+| `output/omxsb_robusthet_20261101/RESULTAT.md` | Repaired control analysis / validation; code/build/robusthet_hela.py and companion validation scripts. Blocked outputs are not economic estimates. |
+| `output/omxsb_robusthet_20261101/T2_matches.csv` | Repaired control analysis / validation; code/build/robusthet_hela.py and companion validation scripts. Blocked outputs are not economic estimates. |
+| `output/omxsb_robusthet_20261101/T5_analysis_samples.csv` | Repaired control analysis / validation; code/build/robusthet_hela.py and companion validation scripts. Blocked outputs are not economic estimates. |
+| `output/omxsb_robusthet_20261101/T5_proxy_preselected.csv` | Repaired control analysis / validation; code/build/robusthet_hela.py and companion validation scripts. Blocked outputs are not economic estimates. |
+| `output/omxsb_robusthet_20261101/artifact_manifest.json` | Repaired control analysis / validation; code/build/robusthet_hela.py and companion validation scripts. Blocked outputs are not economic estimates. |
+| `output/omxsb_robusthet_20261101/covariate_balance.csv` | Repaired control analysis / validation; code/build/robusthet_hela.py and companion validation scripts. Blocked outputs are not economic estimates. |
+| `output/omxsb_robusthet_20261101/event_coverage.csv` | Repaired control analysis / validation; code/build/robusthet_hela.py and companion validation scripts. Blocked outputs are not economic estimates. |
+| `output/omxsb_robusthet_20261101/first_stage_validation/first_stage_validation.csv` | Repaired control analysis / validation; code/build/robusthet_hela.py and companion validation scripts. Blocked outputs are not economic estimates. |
+| `output/omxsb_robusthet_20261101/first_stage_validation/first_stage_validation.json` | Repaired control analysis / validation; code/build/robusthet_hela.py and companion validation scripts. Blocked outputs are not economic estimates. |
+| `output/omxsb_robusthet_20261101/input_sha256.json` | Repaired control analysis / validation; code/build/robusthet_hela.py and companion validation scripts. Blocked outputs are not economic estimates. |
+| `output/omxsb_robusthet_20261101/membership_quality.csv` | Repaired control analysis / validation; code/build/robusthet_hela.py and companion validation scripts. Blocked outputs are not economic estimates. |
+| `output/omxsb_robusthet_20261101/requirements.lock` | Repaired control analysis / validation; code/build/robusthet_hela.py and companion validation scripts. Blocked outputs are not economic estimates. |
+| `output/omxsb_robusthet_20261101/results.csv` | Repaired control analysis / validation; code/build/robusthet_hela.py and companion validation scripts. Blocked outputs are not economic estimates. |
+| `output/omxsb_robusthet_20261101/run_metadata.json` | Repaired control analysis / validation; code/build/robusthet_hela.py and companion validation scripts. Blocked outputs are not economic estimates. |
+| `output/omxsb_robusthet_20261101/unresolved_event_identifiers.csv` | Repaired control analysis / validation; code/build/robusthet_hela.py and companion validation scripts. Blocked outputs are not economic estimates. |
+| `output/omxsb_robusthet_20261101/validation.json` | Repaired control analysis / validation; code/build/robusthet_hela.py and companion validation scripts. Blocked outputs are not economic estimates. |
+| `output/omxsb_robusthet_20261101/window_clock.csv` | Repaired control analysis / validation; code/build/robusthet_hela.py and companion validation scripts. Blocked outputs are not economic estimates. |
+| `robusthet_hela_resultat.zip` | Current code, specification, results, provenance and tests; supersedes archived original ZIP. |
+<!-- END_OMXSB_ROBUSTHET_REPAIR_20261101 -->
+
+<!-- OMXSB_OPEN_QUESTIONS_20261102 -->
+## OMXSB follow-up data, 1–2 November2026
+
+New local reproducibility bundle: `output/omxsb_open_questions_20261102/`. Dated Nasdaq sources, source URLs, publication timestamps, retrieval hashes and complete file manifest are stored inside the bundle.19 workbook/notice pairs cover April/October2017–2025 and April2026. These establish a retrospective Main Market Stock screen, not full OMXSB eligibility or availability for prediction. Strict exact-ISIN/reviewed-alias pool:5765 review×RIC rows; unresolved identities are retained separately. New quarterly FI decomposition:216 locked events,132621 valid fund/event pairs; observed changes are not actual gross transactions. Original data untouched. See `RESULTAT.txt`, `ANALYSIS_LEDGER.txt` and `MANIFEST_SHA256.json` for results, limitations, all variants and provenance.
+
+
+<!-- OMXSB_MECHANISM_FRONTIER_20261102 -->
+## OMXSB ownership/mandate follow-up, 2 November 2026
+
+New local bundle `output/omxsb_mechanism_frontier_20261102/`: exploratory owner-count decomposition on219 fixed matched event sets (118additions,101deletions),14reviews2019–25;446048fund/event/security-role rows with balanced full reports, stable fundISIN/benchmark and explicit ambiguity/collision exclusions. H-group, benchmark-group counts, management-company counts and joint Fieller ratios separately validated. Broader13-candidate quantity ledger has205price-overlap events and incomplete historical mandate/target-weight evidence; not all-market mechanical demand. Source URLs, read scopes, declarations, failed data gates, previous versions, source/file hashes and numerical replay validation are included. No new price regressions or FTN returns.
+
+
+<!-- OMXSB_MEASUREMENT_FOLLOWUP_20261102 -->
+## OMXSB measurement and ownership follow-up, 2 November 2026
+
+Eight additive, exploratory analysis modules; original data and prior results preserved. Code is in `code/build/omxsb_followup_20261102/`. Frozen gates, previous versions, exact source URLs/read scopes, failures and complete SHA256 manifest are included. Replay validates numeric outputs without reopening selection rules. Downloaded primary reports are unchanged; subset continuity assumptions remain explicit. See `output/omxsb_followup_20261102/START_HERE.txt` and `RESULTAT.txt`.
+
+| New file | Role / provenance |
+|---|---|
+| `output/omxsb_followup_20261102/INPUT_SHA256.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/PORTABILITY_LOG.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/additions_20261102/ARCHIVE_SHA256.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/additions_20261102/ENVIRONMENT.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/additions_20261102/EXISTING_ARCHIVE_CHECK.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/additions_20261102/INPUT_SHA256.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/additions_20261102/LOCK_SHA256.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/additions_20261102/PACKAGE_BUILD.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/additions_20261102/PATH_ONLY_CHANGES.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/additions_20261102/SECONDARY_PATH_EQUIVALENCE.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/additions_20261102/replay_comparison.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/additions_20261102/replay_execution.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/comparison_rebuild_20261102/US_reference.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/comparison_rebuild_20261102/hashes.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/comparison_rebuild_20261102/independent_audit.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/comparison_rebuild_20261102/ratios.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/comparison_rebuild_20261102/same_sample_events.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/deletion_exposure_20261102/ANALYSIS_LOCK.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/deletion_exposure_20261102/analysis_event_ledger.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/deletion_exposure_20261102/analysis_event_ledger_all_frozen_rows.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/deletion_exposure_20261102/exposure_residuals_NO_OUTCOMES.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/deletion_exposure_20261102/exposure_review_variation.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/deletion_exposure_20261102/gate_event_ledger.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/deletion_exposure_20261102/gate_summary.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/deletion_exposure_20261102/pre_covariate_correlations.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/deletion_exposure_20261102/primary_size_preCAR_official_liquidity_all_coefficients.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/deletion_exposure_20261102/quarter_liquidation_review_description.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/deletion_exposure_20261102/quarter_liquidation_summary.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/deletion_exposure_20261102/raw_position_reconciliation.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/deletion_exposure_20261102/raw_position_validation.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/deletion_exposure_20261102/results.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/deletion_exposure_20261102/review_exposure_information_share.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/deletion_exposure_20261102/sensitivity_reviewFE_only_all_coefficients.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/deletion_exposure_20261102/source_hashes_gate.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/deletion_exposure_20261102/source_ledger.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/deletion_exposure_20261102/validation.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/figures/OMXSB_tva_agarresultat_20261102.pdf` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/mandate_catalog_20261102/Access_Sverige_FI2019_2025_metadata.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/mandate_catalog_20261102/Access_Sverige_PPM2016_identity_raw.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/mandate_catalog_20261102/Access_Sverige_PPM2018_identity_raw.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/mandate_catalog_20261102/Access_Sverige_recommended_classification.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/mandate_catalog_20261102/Fondkatalog2016.pdf` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/mandate_catalog_20261102/source.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/mandate_upgrade_20261102/LF_2018.pdf` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/mandate_upgrade_20261102/LF_2019.pdf` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/mandate_upgrade_20261102/PPM2018_identity.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/mandate_upgrade_20261102/classified_fund_event_panel.csv.gz` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/mandate_upgrade_20261102/event_demand_updated.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/mandate_upgrade_20261102/fixed_definition_ratios.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/mandate_upgrade_20261102/hashes.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/mandate_upgrade_20261102/independent_audit.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/mandate_upgrade_20261102/quantity_summary.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/mandate_upgrade_20261102/source_manifest.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/mandate_upgrade_20261102/upgraded_fund_review_evidence.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/owner_concentration_stability_20261102/all_omissions.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/owner_concentration_stability_20261102/company_additive_contributions.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/owner_concentration_stability_20261102/descriptive_ranges.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/owner_concentration_stability_20261102/event_company_contributions.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/owner_concentration_stability_20261102/hashes.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/owner_concentration_stability_20261102/independent_audit.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/owner_concentration_stability_20261102/review_contributions.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/path_only_code_changes.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/replay_comparison.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/replay_execution.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_followup_20261102/before_BTA_correction_unit_gate_initial.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_followup_20261102/endpoint_source_gate.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_followup_20261102/existing_price_join.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_followup_20261102/final_file_hashes.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_followup_20261102/fund_flow_field_check.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_followup_20261102/gate_frozen_summary.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_followup_20261102/independent_quantity_validation.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_followup_20261102/input_hashes.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_followup_20261102/joint_existing_price_description.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_followup_20261102/membership_evidence.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_followup_20261102/position_quantities.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_followup_20261102/previous_stale_share_snapshots.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_followup_20261102/quantity_gate_frozen.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_followup_20261102/quantity_run_hashes.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_followup_20261102/quantity_summary.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_followup_20261102/source_ledger.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_followup_20261102/two_verified_class_denominator_cases.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_followup_20261102/unit_gate_initial.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_scaling_feasibility_20261102/baseline_candidate_ledger.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_scaling_feasibility_20261102/baseline_coverage.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_scaling_feasibility_20261102/baseline_selection_audit.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_scaling_feasibility_20261102/core_FI_evidence.csv.gz` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_scaling_feasibility_20261102/core_freeze_hashes.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_scaling_feasibility_20261102/core_frozen.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_scaling_feasibility_20261102/core_gate_frozen.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_scaling_feasibility_20261102/core_gate_summary.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_scaling_feasibility_20261102/core_ratios_all.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_scaling_feasibility_20261102/endpoint_evidence.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_scaling_feasibility_20261102/file_hashes.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_scaling_feasibility_20261102/fund_review_factors.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_scaling_feasibility_20261102/gate_freeze_hashes.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_scaling_feasibility_20261102/independent_validation.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_scaling_feasibility_20261102/input_source_hashes.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_scaling_feasibility_20261102/outcome_hashes.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_scaling_feasibility_20261102/relative_retention_all.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/retention_scaling_feasibility_20261102/relative_retention_summary.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_measurement_20261102/diagnostic_slopes.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_measurement_20261102/gate_and_volume.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_measurement_20261102/hashes.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_measurement_20261102/independent_audit.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_measurement_20261102/independent_shared_scale_diagnostic.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_measurement_20261102/independent_window_and_unit_checks.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_measurement_20261102/joined_all.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_measurement_20261102/unit_venue_audit/canonical216_RIC_source_provenance.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_measurement_20261102/unit_venue_audit/monthly_comparison.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_measurement_20261102/unit_venue_audit/original_workbook_notes.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_measurement_20261102/unit_venue_audit/validation.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_measurement_20261102/volume_quantity_ratios.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_units_full_20261102/ANALYSIS_RUN.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_units_full_20261102/INDEPENDENT_NUMERIC_VALIDATION.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_units_full_20261102/PORTABILITY_LOG.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_units_full_20261102/PORTABLE_CODE_SHA256.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_units_full_20261102/PORTABLE_INPUT_MANIFEST.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_units_full_20261102/PORTABLE_REPLAY_VALIDATION.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_units_full_20261102/UNIT_GATE_LOCK.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_units_full_20261102/all_available_exactISIN_month_anchors.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_units_full_20261102/anchor_event_bridge_diagnostics.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_units_full_20261102/coverage_by_review_direction.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_units_full_20261102/diagnostic_slopes.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_units_full_20261102/exclusions_by_reason.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_units_full_20261102/independent_audit.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_units_full_20261102/inputs/event_demand_updated.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_units_full_20261102/joined_quantities_volume_all216.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_units_full_20261102/primary_CA_evidence.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_units_full_20261102/review_level_means.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_units_full_20261102/unit_gate_all216.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_units_full_20261102/unit_measurement_all216.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_units_full_20261102/volume_input_all216.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_units_full_20261102/volume_quantity_ratios.csv` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/volume_units_full_20261102/workbook_columns_and_hashes.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+| `output/omxsb_followup_20261102/winner_structures_20261102/reading_ledger.json` | Audited follow-up artifact; source, estimand, coverage, limitations and code identified in its module report/README and SHA256 manifest. |
+
+Archived original duplicates and code snapshots are listed individually in module ARCHIVE_SHA256 manifests; they are preserved provenance, not additional independent data.
+
+
+<!-- OMXSB_BROADENING_20261102 -->
+
+## OMXSB bounded additional analyses, 2 November 2026
+
+Public FI snapshots were downloaded together from https://www.fi.se/sv/vara-register/blankningsregistret/. Exact source/download timestamps, actions and raw hashes are in output/omxsb_broadening_20261102/short_positions/download_log.csv, current_download.json and complete_sources.json. The 31 October source is preserved.
+
+| Artifact | Source / limitations |
+|---|---|
+| `data/raw/fi_short/AktuellaPositioner_2026-11-02.ods` | Official FI export; 599093 bytes; SHA256 `0423857cd62af91caae83595615938f2ca962d259f0765b659342e90dc6bed1f`. Original file added unchanged. |
+| `data/raw/fi_short/HistoriskaPositioner_2026-11-02.ods` | Official FI export; 1736665 bytes; SHA256 `0f42d256a02cd985243c6dc30d7d46a29b40e4db76e94050f815b2538796b597`. Original file added unchanged. |
+| `output/omxsb_broadening_20261102/switchers/` | Fixed existing matches, same-RIC/ review comparison; no new raw returns, no rematching. Exploratory directional association, not identified causality. All saved files listed and hashed in `PACKAGE_SHA256.json`; module reports and code record transformations. |
+| `output/omxsb_broadening_20261102/models/` | Frozen quantity/volume gate and existing matched CAR; three fixed functional-proxy models, common sample, held-out reviews. Realized quarterly positions are endogenous; no structural metaorder interpretation. All saved files listed and hashed in `PACKAGE_SHA256.json`; module reports and code record transformations. |
+| `output/omxsb_broadening_20261102/short_positions/` | Paired public FI source snapshots, identities, archived gate versions and final47 holder-event/28 issuer-event cohort. Positive part of net short exposure, censoring bounds; no price outcome, no representative whole-market claim. All saved files listed and hashed in `PACKAGE_SHA256.json`; module reports and code record transformations. |
+| `output/omxsb_broadening_20261102/frontier/` | Baseline-only positive-holding network coverage from existing FI/Nasdaq inputs; no return outcomes. Financing and incumbent designs remain data-gated. All saved files listed and hashed in `PACKAGE_SHA256.json`; module reports and code record transformations. |
+
+Code and original provenance snapshots are preserved separately from executed numerical outputs. Package checks do not mean all economic mechanisms have been identified, all literature exhausted, or results preregistered blindly.

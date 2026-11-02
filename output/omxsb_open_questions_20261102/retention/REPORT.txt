@@ -1,0 +1,67 @@
+RETENTION AV TILLAGDA AKTIER: NORDNET OCH NORDEA
+Avgränsad förhandsdeklarerad kontroll, 2026-11-01. Inga nya prisregressioner eller ändrade hypoteser. Repo oförändrat.
+
+Huvudresultat
+
+På det redan låsta urvalet 216 event (119 tillägg,97 borttag) går samtliga relevanta fond- och värdepappersendpoints att läsa. Bland tilläggen:
+- Nordea:117 av119 aktier har positiv position både vid indexkvartalets slut och vid nästa kvartalsslut. Två saknar rapporterad målposition vid båda datumen.
+- Nordnet:115 av119 har positiv position vid båda. Fyra saknar målposition vid båda.
+- INGA tillägg går från positiv position vid indexkvartalets slut till ingen rapporterad position vid nästa kvartalsslut i någon av de två fonderna.
+-113 tillägg har positiva positioner i BÅDA fonderna vid BÅDA datumen.
+
+Detta är positionsnärvaro, inte oförändrad positionstorlek. Jag har inte räknat en procentuell förändring i antal eller värde. Positiv→positiv kan inkludera en stor delvis försäljning och även en försäljning följd av återköp mellan rapportdatumen. Ingen slutsats om oavbrutet innehav eller samtliga indexfonder följer.
+
+Tidsgränsen är materiell
+
+Indexkvartalet är Q2/Q4. Nästa kvartal är Q3/nästaQ1. För samtliga119 tillägg infaller nästa rapportdatum mellan ED+79 och ED+86 handelsdagar, ALLTID före ED+100. Exakta datum/handelsdagsavstånd finns i timing.csv och eventtabellen. Retention har därmed INTE observerats hela vägen till dag100.
+
+Prisuppgiften är en matchning till redan beräknade utfall
+
+Av de113 tillägg som har positiv position i båda fonderna vid båda datumen finns88 i den redan identitetskorrigerade marknadsjusterade prispanelens urval med samma tre kontroller och kompletta20/100-horisonter. Dessa88 finns i14översyner.
+Deras befintliga relativa prisförändring från ED+20 till ED+100 är:
+- lika vikt per event:−3,94 procentenheter;
+- lika vikt per översyn:−4,83 procentenheter.
+Detta är en beskrivande omgruppering av den redan beräknade prispanelen, inte en ny prisregression, signifikanstest eller uppskattad effekt av retention.
+Alla enskilda fondstatusgrupper, även grupperna utan position, redovisas i retention_existing_price_descriptive.csv. Resultatet har inte valts genom att testa olika grupper.
+
+Minsta försvarbara slutsats
+
+De två fondernas målpositioner är inte helt borta vid följande kvartalsslut efter de tillägg där de först observerades som ägare. Den sena relativa prisförsvagningen finns även i ett överlappande urval med dessa kvarvarande positiva positioner. Därför stöder observationerna inte en berättelse där dessa två fonder regelmässigt stänger hela positionen igen redan före den följande kvartalsrapporten.
+
+Detta visar INTE att prisförsvagningen inträffade medan innehaven var konstanta. Hela eller delar av20→100-rörelsen kan ha inträffat efter rapportdatumet, och försäljningar mellan ED+79–86 och ED+100 syns inte här. Partiell försäljning, försäljning i andra fonder, hedgeförändringar och fondflöden är fortsatt öppna. Inga kausala mekanismer eller efterfrågeelasticiteter identifieras.
+
+Datagrind och verifiering
+
+Populationen:de216 event-ID som redan godkänts i demand/event_group_decomposition.csv, kopplade till ownership_observations.csv och denominator_audit.csv. Den sistnämnda auditfilen innehåller217 rader före sin ytterligare exklusion; jag tar inte tillbaka den uteslutna raden.
+Fonder:Nordnet60320/fond-ISINSE0002756973;Nordea60293/fond-ISINSE0002591016. Namnbyte byter inte fondidentitet. Detta är de två namngivna fonderna, inte en ny 'ren OMXSB'-klassifikation;Nordnet har det tidigare dokumenterade mandatbytet.
+Källa:senaste-källvaliderad FI-långfil och tidigare reviderad full rapportmetadata. Alla432 fond×event har riktiga,icke-tomma rapporter vid båda datumen och rätt fond-ISIN. Ingen missing/tom rapport har satts till noll.
+Instrument:tidigare validerade ordinarie aktieslagsalias återanvänds. Överlåtbara värdepapper filtreras separat. Positiv position kräver giltigt Antal/värde och relevant enhetskontroll;negativ/saknad kvantitet skulle ge okänd status. Värdepapprets alias ombekräftas av minst tre fonders samstämmiga implicita FI-pris vid varje endpoint. Detta är en identitets-/enhetskontroll, inte ny efterfrågeklassifikation.
+Ingen okänd endpoint återstår i det faktiska urvalet. En konservativ namnkontroll hittar ett nytt Sampo-ISINFI4000552500 i Nordnets rapport2026Q1. Det ligger UTANFÖR Sampoeventets faktiska mätintervall2023Q2→2023Q3, så det har inte lagts till som alias eller använts för att skapa noll. Raden finns separat i tracker_unknown_identifier_screen.csv.
+Alla432 indexkvartalspositioner är avstämda mot den oberoende tidigare ownership-ledgern:0 avvikelser i råa antal. Denna avstämning används endast för källkedjan; inga postkvartalsförändringar i antal rapporteras.
+
+Nollfallen bland tilläggen, öppet redovisade
+
+Nordea:IPCOR2021H1;Sampo svenska depåbevis2023H1. Det senare gäller uttryckligen det indexberörda svenska värdepappret, inte eventuell finsk underliggande aktie eller all ekonomisk bolagsexponering.
+Nordnet:OX2 2022H1;SaabB2022H2;Tethys2022H2;BetssonB2024H2.
+Dessa ligger inte i nämnaren när vi säger att alla initialt observerade positiva positioner fortfarande är positiva. De får inte tolkas som fullständiga utträden.
+Borttag, separat loggade men inte huvudfrågan:Nordnet97 utan målposition vid båda;Nordea96 utan vid båda och1 positiv→ingen vid nästa kvartal.
+
+Filer och reproduktion
+
+Kör endast:
+/tmp/omxsb-audit-venv/bin/python work/open_questions_20261101/retention/run.py
+
+ANALYSBESLUT.txt skrevs före nya utfall. Alla skript och utdata ligger endast i denna mapp. Huvudtabeller:retention_event_fund_status.csv,retention_endpoint_audit.csv,retention_summary.csv,timing.csv. Prisöverlagring:retention_existing_price_join.csv,retention_existing_price_descriptive.csv,both_trackers_retained_existing_price_match.csv. Källkontroll:index_quarter_old_ledger_reconciliation.csv,tracker_unknown_identifier_screen.csv,source_hashes.json. Raw-filer är lokala extracts av redan tillgänglig FI-data. Ingen extern datahämtning behövdes.
+
+TILLÄGG: ÄGARANDELENS DATAGRIND
+
+Efter presence-resultatet deklarerades en enda möjlig mängdkontroll:q_fond dividerat med aktieslagets utestående aktier vid vartdera kvartalsslutet. Ingen ägarandel eller förändring beräknades före grinden.
+LSEG-pipelinen hämtar TR.SharesOutstanding (code/lseg/lseg_pull_v4.py). På119 tillägg kontrollerades samtliga238 aktie×kvartal-snapshots.
+-117 av119 indexkvartalsvärden överensstämmer exakt med den tidigare validerade klassnämnaren.
+-Två gör det inte:SSAB A2024H1 rå297299003 mot validerad295966330;Betsson B2024H2 rå246073474 mot validerad122833491. Den senare avvikelsen är ungefär faktor2 och är materiell.
+-Sju efterkvartal klarar inte den föreskrivna gränsen högst2kalenderdagar gammal snapshot:Etrion2021H1 har13dagar gammal shares-snapshot vid30sept;de sex tilläggen2023H2 har tre dagar gammal snapshot vid31mars2024 på grund av påskhelgen. Helgorsaken redovisas men den deklarerade gränsen har inte ändrats efteråt.
+-De nya efterkvartalen har inte en separat genomförd validering av aktieslagets nämnare motsvarande den tidigare indexkvartalsgrinden. Samstämmiga FI-priser verifierar instrumentenheten i fondpositionen,inte antalet totalt utestående aktier. Det är särskilt viktigt när vi redan vet att råshares är fel i vissa serier.
+
+Därför stannar denna leverans vid presence. Inga kvoter eller medianer på en ännu blandad nämnarkedja presenteras som validerade ägarandelar. share_data_gate.csv och share_data_gate_summary.json innehåller hela119-urvalets status,inklusive alla avvikelser. Nästa arbete skulle vara daterade klassnämnare/bolagshändelser vid efterkvartalet och beslut om kalendergränsen,inte en ny regression.
+
+Den materiella begränsningen kvarstår uttryckligen:en kvarvarande liten position kan dölja nästan hela en försäljning. Presence-resultatet avvisar endast observerade FULLSTÄNDIGA utträden vid nästa kvartalsslut i dessa två fonder;det avgör inte om deras ägarandel eller efterfrågan minskade kraftigt.

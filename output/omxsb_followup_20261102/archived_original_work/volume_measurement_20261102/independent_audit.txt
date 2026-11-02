@@ -1,0 +1,31 @@
+OBEROENDE GRANSKNING: DAGSVOLYM OCH KVARTALSPOSITIONER
+2026-11-02
+
+Numerisk dom: GODKÄND för den deklarerade beskrivningen. Alla216 datumfönster och grindbeslut reproduceras från LSEG-råpanel, kalender och kvartalsledger. Alla12 Fiellerkvoter och12 WLS-regressionsceller reproduceras oberoende. Inga nya horisonter, fondgrupper eller prisutfall har prövats.
+
+Timing och urval
+AD och ED finns exakt i börskalendern för varje event; searchsorted behöver inte flytta något datum. Den använda indexkalendern är identisk med kalendern med icke-saknad index-close. ED−1 är därmed faktiskt föregående svensk indexhandelsdag. Baslinjen omfattar exakt AD−61 tillAD−12,50dagar; känsligheten ED−22 tillED−2,21dagar. Ingen off-by-one-avvikelse hittas. Såväl medelvolymer som saknade/negativa råvolymer hanteras enligt deklarationen.172event passerar:95tillägg och77borttag.41 faller på prisenhetsdiagnostiken och3på känd splitfaktor. Alla tre kända splitar som hittas mellan baslinjens början och efterkvartalet utesluts. Det här är inte en uttömmande extern corporate-action-kalender.
+Negativa excessvärden skulle ha behållits. I just de172 godkända eventen är inget excessvärde negativt. Alla172 har tillräcklig kortbaslinje, så den korta kvotens täljare och nämnare använder också samma event. I en framtida körning med saknade kortbaslinjer måste nämnarmedlet räknas på samma kortbaslinjeurval; produktionskodens nuvarande review-aggregation skulle annars kunna blanda event. Det problemet uppstår inte i aktuella data.
+
+Aritmetik och inferens
+Absolutvärdet tas efter nettoaggregeringen av fondpositionerna. Detta är |summan av kvartalsförändringar|, inte summan av absoluta köp/sälj. Samma faktor c=100×efterkvartalets FI-pris/bolagets marknadsvärde används för volym och fondnetto. Fiellerkvoterna är korrekt byggda av14översynsmedel med gemensam kovarians, inte oberoende täljare/nämnare.
+Regressionskontrollen använder egen viktad normalekvation och egen klustersandwich, utan statsmodels-fit eller produktionsfunktioner. Varje review får sammanlagd vikt1. Pooledmodellen har eventtypintercept; samtliga modeller har review-FE. Klusterpoängen är summerade viktade residualpoäng inom review; finiturvalsfaktorn G/(G−1)×(N−1)/(N−K) och t13 reproducerar samtliga intervall/p-värden. Med14kluster är detta nominell liten-klusterinferens, inte garanti om exakt teststorlek.
+
+Vad enhetsgrinden inte verifierar
+Matchande splitjusterad LSEG-close och FI:s råpris är en försiktig diagnostik. Den bevisar inte TR.Volume:s separata justeringskonvention eller att alla handelsplatser ingår. De41 exkluderade observationerna är INTE41konstaterade datafel: historiskt omräknade priser kan ge avvikelse mot samtidens FI-pris. Sådan exklusion kan även bero på senare bolagshändelser och gör urvalet selekterat.172ska därför kallas diagnostikens begränsade urval, inte en fullständigt verifierad marketwide-volympanel. Efterkvartalspris/mcap är en gemensam värderingsenhet, inte priset på samtliga ED−1-affärer eller en ex ante intensitet.
+
+Gemensam nämnare: efterföljande numerisk validering
+Algebraiskt är X=cQ och Y=cVexcess. En varierande gemensam c kan skapa association även utan strukturellt samband mellan råa Q och V. Review-FE tar inte bort variationen i c mellan aktier inom samma review. Baslinjekontrollen delar dessutom samma c och är ingen allmän lösning på problemet.
+Jag deklarerade därför en enda diagnos efter resultatet: håll observerad Y och c fast och beräkna exakt förväntad inomreview-kovarians om råa absoluta Q slumpmässigt permuteras mellan event inom samma review och eventtyp. Ingen slumpfrökörning, modellselektion eller nytt p-värde används. E[X_i]=c_i×medel(Q_g), vilket ger förväntad FE-kovarians direkt.
+Resultat, observerad kovarians respektive permutationsförväntad, i pp²:
+Bred grupp,tillägg:+0,168755 respektive−0,036711.
+Bred grupp,borttag:+0,161357 respektive−0,196923.
+Dokumenterad grupp,tillägg:+0,036668 respektive−0,006426.
+Dokumenterad grupp,borttag:+0,059546 respektive−0,055933.
+Så just denna enkla 'gemensam skala plus slumpmässiga råkvantiteter'-förklaring reproducerar INTE den positiva associationen. Det är ett begränsat diagnostiskt besked, inte bevis att all nämnar-/storlekskonfundering saknas. Råkvantiteter antas här utbytbara endast för illustration. Förväntad/observerad kovarians är inte en uppskattad kausal biasandel och bör inte presenteras som procent förklarad.
+
+Ekonomisk gräns
+Den breda gruppens huvudkvot excessvolym/observerat kvartalsnetto är1,1279 [0,8977;1,4564] för tillägg och1,2856 [1,0913;1,5585] för borttag. Den mindre dokumenterade gruppens motsvarigheter är3,2471 respektive3,2753. Inget av dessa tal är 'andel dold passiv efterfrågan'. En handelsvolym räknar genomförda affärer, kvartalsnettot endast två positionsstockars differens. Intermediär omsättning, aktiv handel, dagtiming, nettning inom gruppen, emissioner och ofullständiga handelsplatser kan skapa både gap och association. En positiv lutning kan därför vara förenlig med indexrelaterad omviktning utan att identifiera köparkategori, passivt ägande eller prispåverkan. Den gamla beskrivningen får stärkas till en observerad samvariation, inte en mekanismseparation.
+
+Reproduktion och filer
+independent_audit.py bygger om råfönster, join, alla12kvoter,12WLS-klusterresultat och den enda skalningsdiagnostiken. independent_audit.json lagrar alla resultatceller/avvikelser, kovarianser, kända splitfynd och råfilshashar. independent_window_and_unit_checks.csv visar alla216fönster. independent_shared_scale_diagnostic.csv är uttryckligt efterföljande validering. Produktionskod och originalfiler är oförändrade.

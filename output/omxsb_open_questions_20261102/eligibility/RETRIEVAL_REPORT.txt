@@ -1,0 +1,33 @@
+OFFENTLIGA HISTORISKA HUVUDLISTOR – AVGRÄNSAT ÅTKOMSTFÖRSÖK
+Avslutad2026-11-02 (arbetsmapp daterad20261101). Endast april/oktober2017–2025 samt april2026. Inga nya avkastningar, urvalsmatchningar eller repoändringar.
+
+RESULTAT
+Åtkomstluckan för de19 efterfrågade månadsrapporterna är löst:19/19 originalarbetsböcker och19/19 ursprungliga meddelandesidor är hämtade utan inloggning. Varje arbetsbok har öppnats och rapportmånad, fliken Instrument Trading Details, Main Market-noteringen, historiska instrumentfält och kopplingen till rätt bilaga/publiceringstid har validerats. SHA256 och filstorlek finns i download_manifest.json och source_validation.csv. Senare lokal återkontroll av38/38 filer finns i retrieval_recheck.json. Det är verifierad filåtkomst och källinnehåll, inte ett löfte om fullständig OMXSB-behörighet eller korrekt RIC-länk.
+
+VAD SOM FAKTISKT FINNS
+Daterad Stockholm-ledger: dated_stockholm_instrument_roster.csv. 7 723 instrument-månadsrader över19 månader. Instrumenttypen Stock och ej avnoterad vid månadens slut ger sammanlagt7 487 aktie-månadsrader (350–411 per rapport; aktieslag, inte antal bolag). Preferensaktier finns bland Stock och markeras separat med en namnflagga, vilken inte är fullständig juridisk typklassificering.
+Fält: instrumentnamn, bolagskod, historisk orderbook/ticker, ISIN, instrumenttyp, segment, industri/supersektor, handelsvaluta/plats, avnoteringsdatum, antal noterade aktier och börsvärde. Alla19 har även explicit rubrik för rätt rullande12-månadersperiod. Den aktuella ledgern extraherar inte omsättningstalen, eftersom uppgiften är huvudlisteverifiering. Inga avkastningar har beräknats.
+Inom varje månad är Stockholm-ISIN unika och syntaktiskt giltiga. Källnoteringen säger att rapporten omfattar instrument noterade vid månadens slut ELLER avnoterade under månaden; därför ska stock_type och listed_at_month_end kombineras när huvudlistans aktier vid månadsslut efterfrågas. Delisted-filtreringens underliggande uppgift bevaras.
+2026filen har en extra kolumn Issuer Country. Parsern använder verifierade rubriknamn, inte hårdkodade kolumnpositioner från2019. Originalfilerna lämnas orörda.
+
+TID – VIKTIG BEGRÄNSNING
+Månadens referensslut är inte rapportens publiceringsdag. Samtliga19 publiceras senare. source_validation.csv visar rapportens faktiska publiceringstid och motsvarande AD från befintlig repo-eventtabell (ingen ny oberoende AD-kontroll ingår här).
+• Oktober2020 publiceras12nov2020 10:27:13 CET. Repo-AD är10nov2020. Den hämtade rapporten var alltså inte en offentlig rapport före beskedet.
+• April2021 publiceras20maj2021 09:24:40 CEST. Repo-AD är21maj. Rapporten kommer efter den tidigare matchningsgränsen AD−2.
+• Övriga18 rapporter publiceras före AD-kalenderdagen, men inte nödvändigtvis före varje vald matchnings-/prognostidpunkt.
+Rapporten kan retroaktivt belägga ett äldre listtillstånd även om filen kom senare. Det innebär inte i sig att ett historiskt medlemskap mätt med senare källdokument är framtida information. Däremot får denna senare fil inte beskrivas som en då offentligt tillgänglig informationsmängd för en ex-ante prognos. Ett sådant påstående kräver kompletterande belägg för vad marknadsaktörerna faktiskt kunde observera vid prognostillfället.
+
+VAD SOM ÅTERSTÅR
+Ingen av19 instrumentrubriker innehåller free float. Noterade aktier och börsvärde är inte fritt tillgängligt aktieantal. Historisk huvudlisteposition är ett konkret delvillkor, inte en officiell OMXSPI-/OMXSB-konstituentlista eller en fullständig kontroll av regelverk, likviditetskrav, specialinstrument, dominansvillkor eller indexmedlemskedja. RIC-kopplingen kräver en separat daterad identitetskedja; dagens ISIN eller dagens MIC får inte automatiskt fylla historien. Den kontrollen hanteras separat av designagenten under eligibility_links/.
+Publicerad åtkomst etablerar inte en obegränsad återpubliceringslicens. Här används originalen för forskningsverifiering, och inga källfiler publiceras externt.
+
+REPRODUCERBAR ÅTKOMSTVÄG
+1. Öppna https://www.nasdaq.com/european-market-activity/news/statistics i fungerande Chrome.
+2. Skriv 'Equity Trading by Company and Instrument - April' i FreeText och välj Apply. Första sidan visade2026–2017, med10 rätta bilagor och meddelandelänkar.
+3. Byt text till 'Equity Trading by Company and Instrument - October'. Första sidan visade2025–2016; endast2025–2017 sparades enligt uppdraget.
+4. Bilagelänkar och meddelandelänkar lästes direkt från de synliga tabellradernas DOM. De är inte gissade URL:er. Alla19 finns i verified_archive_links.json/.tsv.
+5. Kör python fetch_verified_sources.py från denna mapp eller med absolut skriptväg. Skriptet hämtar endast dessa verifierade URL:er, bevarar redan befintliga filer och kontrollerar XLS/XLSX-filernas signaturer. Originalnedladdningen gjordes av root med fungerande nätverksåtkomst. Den här agentens vanliga curl saknade DNS, medan webbläsaren fungerade.
+6. Kör /tmp/omxsb-audit-venv/bin/python validate_sources.py. Bundlad Python saknar xlrd för de15 äldre XLS-filerna; den befintliga auditmiljön innehåller denna läsare. Skriptet gör endast käll-/schema-/datumkontroller och skriver ledger/loggar i den här arbetsmappen.
+
+API-NOTERING
+Frontendkomponenten använder api.news.eu.nasdaq.com/news/, action query.action och globalName=StatisticsAll samt freeText/fromDate/toDate/cnsCategory/notCnsCategory/market. Rå-API-roten ger därför inte automatiskt historik. Komponentkällorna statistics.js och statistics.core.js är bevarade. Exakt kompletterande importerad API-källa: https://www.nasdaq.com/sites/acquia.prod/files/mercury-assets/v26.25.1/assets/api/cnsapi.Bk-RQ7bu.js . Ingen gissad API-förfrågan behövdes eller användes för den verifierade19-månaderslistan.

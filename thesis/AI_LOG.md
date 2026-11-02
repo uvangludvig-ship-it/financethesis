@@ -11,3 +11,30 @@ One line per use, the same day. Tool, date, purpose, what changed in the project
 | 25 Oct 2026 | Claude (claude.ai desktop) | Version 2 of the plain-words map: per section what the winners did and what the non-winners did, from the 660-thesis study; exported to .docx with pandoc | `thesis/design/THESIS_IN_PLAIN_WORDS.md` and `.docx` | No |
 | 25 Oct 2026 | Claude (claude.ai desktop) | Plain-words map v2.1: reorganised into Parts A to G with a card per empirical part; added the harder-maths section (impact exponent, reversal half-life, optimal-execution counterfactual, implied elasticity), all inside existing exhibits and to be written into 01_DESIGN.md before sign-off | `thesis/design/THESIS_IN_PLAIN_WORDS.md` and `.docx` | No |
 | 25 Oct 2026 | Claude (claude.ai desktop) | Plain-words map v2.2: consolidated the maths additions into three tiers (OU path with jump, price multiplier, invariance calibration; exponent with EIV-IV, optimal-execution counterfactual; variance jump), eight equations kept | `thesis/design/THESIS_IN_PLAIN_WORDS.md` and `.docx` | No |
+| 31 Oct 2026 | Codex | Verify OMXSB replication and data availability before choosing extension | Preserved b886f5b exports; reran all 2007 notebook cells, mechanisms, periods and trends; verified LFS/parquet/FI XML; corrected pre-month, E5b inference, paired reporting, bootstrap ties and coverage labels; audit report, result/gap ledgers and run scripts in output/omxsb_audit_20261031; manifest updated; no FTN returns | No |
+| 31 Oct 2026 | Codex with parallel agents | Execute missing OMXSB mechanism checks using existing results and newly collected data | New AP/FI half-year analysis, bounded cross-index migration screen, Nasdaq candidate-data pilot, label-only correction, source ledgers and independent numerical checks in output/omxsb_extension_20261031; local only, no FTN returns | No |
+
+<!-- OMXSB_ROBUSTHET_REPAIR_20261101 -->
+| Date | Tool | Purpose | What changed | Thesis text? |
+|---|---|---|---|---|
+| 1 Nov 2026 | Codex with independent code/document reviews | Repair OMXSB control-analysis code and unsupported interpretations at user request | Fixed review weighting, nonoverlapping covariates, outcome-blind control selection, future-event filtering and export schemas; reran T2 on full available panel; T5 flagged unestimable with unresolved membership; historical first-stage false zeros replaced by explicit validation/NA status; corrected design notes, preserved originals, added14 tests and independent saved-output checks; no FTN returns | No; technical code, audit and planning notes only |
+<!-- END_OMXSB_ROBUSTHET_REPAIR_20261101 -->
+
+<!-- OMXSB_OPEN_QUESTIONS_20261102 -->
+| 1–2 Nov 2026 | Codex with three parallel audit/data agents | Execute bounded follow-ups on persistence and observed fund demand | Retrieved19 dated Nasdaq monthly originals and notices; built strict main-stock/RIC pool; repaired two self-controls; reran same-sample paths and dated-pool matching; decomposed216 events into quarterly fund-level increases/decreases; audited A/B joint uncertainty and H/retention data gates; all attempts, negative/inconclusive outcomes and independent checks saved in output/omxsb_open_questions_20261102; local only, no FTN returns | No; technical code/data/audit material only |
+
+
+<!-- OMXSB_MECHANISM_FRONTIER_20261102 -->
+| 2 Nov2026 | Codex with three parallel audit/research/data agents | Execute a bounded mechanism follow-up and assess feasible identification | New H ownership test, additive benchmark decomposition, fund-company measurement check, historical mandate/source audit, expanded13-candidate FI quantity panel, repeated-event inventory and whole-mandate-switch feasibility research; all current40ownership result cells independently reproduced and replayed from packaged code; sources/failed gates/old versions preserved in output/omxsb_mechanism_frontier_20261102; local only, no FTN returns | No; technical code, data, audit and decision notes only |
+
+
+<!-- OMXSB_MEASUREMENT_FOLLOWUP_20261102 -->
+| 2 Nov 2026 | Codex with three parallel analysis/audit/research agents | Execute bounded follow-ups on quantities, portfolio-relative retention, owner-count concentration, demand measurement and winner architectures | Eight additive analysis modules and selective original reread of six verified prizewinners; raw-FI retention and dated deletion inventory; historical mandate completion; all-company/review omission diagnostics;205-event volume-unit reconstruction using Nasdaq originals; matched demand/return ratio correction; independent arithmetic and portable replay from frozen gates. All unsuccessful/uncertain results and previous versions retained. Code in code/build/omxsb_followup_20261102, outputs in output/omxsb_followup_20261102. Local only; no FTN returns. | No; technical code, data, audit and decision notes only |
+
+
+<!-- OMXSB_BROADENING_20261102 -->
+| 2 Nov 2026 | Codex with three parallel analysis/research agents | Execute a bounded additional research round after the user requested broader tests | Same-security addition/deletion contrast; fixed three-model leave-review-out comparison; newly collected paired FI current/history exports and censored short-position profile; ownership-network and financing feasibility; source, arithmetic and portable replay checks. All exploratory results and failed/uncertain alternatives retained in output/omxsb_broadening_20261102, code in code/build/omxsb_broadening_20261102. Raw originals unchanged; two new FI snapshots added. No FTN returns, local only. | No; technical code/data/audit notes only |
+
+
+<!-- OMXSB_GIT_DELIVERY_20261102 -->
+| 2 Nov 2026 | Codex | Publish the completed OMXSB analysis work at the user’s explicit request | Verified origin and public visibility, selected analysis changes, excluded licensed raw extracts, scanned candidate text for credentials, ran audit/repair checks, documented public data scope and current entry points. | No; repository delivery notes only |

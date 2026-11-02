@@ -1,0 +1,54 @@
+OBEROENDE GRANSKNING: SEN PERSISTENS / ÅTERGÅNG
+2026-11-01. Inga repoändringar. Ursprunglig produktion fryst i original_inputs/ med SHA256.
+
+BEDÖMNING
+Ett explorativt tecken på sen relativ försvagning överlever den oberoende beräkningskontrollen och två nödvändiga identitetsrättelser. Det är för skört och designmässigt otillräckligt för slutsatsen att indexeffekten bevisligen är tillfällig eller att prispress kausalt återgår. Den försvarbara observationen gäller utvecklingen mot dessa valda kontroller, på det kompletta urvalet, med lika vikt per översyn. Negativ riktning återkommer i deklarerade känslighetsanalyser, men deras osäkerhet innefattar noll. Nya utfallsval, modeller, horisonter eller utfallsstyrd exkludering har inte lagts till.
+
+1. ARITMETIK, ENHET, FÖNSTER
+Oberoende kod läser stocks_daily_2005.parquet och indexkalendern direkt; ingen import av robusthet_hela eller persistence/run.py. Samtliga sparade marknadsjusterade individnivåer reproduceras, maxskillnad 1,57e-12 procentenheter; inga skillnader i bortfallsflaggor. Primärkontrasten reproduceras till 3,45e-13.
+Ursprunglig skattning: N141, 19 översyner, −4,503597 pp; t-intervall [−8,732117; −0,275078]; t-p=.03813; ursprunglig null-restricted studentiserad wild med samma seed=.0369; oberoende exakt beräkning av samtliga 2^19 teckenbyten=.0344887. Produktionens slumpmässiga signflip=.0371 är en Monte Carlo-approximation, ingen materiell motsägelse.
+CAR(AD−1,ED+100)−CAR(AD−1,ED+20) är exakt summan av ED+21 till ED+100, 80 handelsdagar. Det är INTE ett intervall som inkluderar ED+20. CAR summerar dagliga avkastningar i procentenheter; det är inte en sammansatt buy-and-hold-avkastning. Gemensam marknadsavkastning tar ut sig exakt mellan event och tre kontroller, eftersom datum och fullständigt stöd är samma. Detta gör inte kontrasten riskneutral.
+Ingen prisavkastningsfallback och ingen volym=0 finns i de fulla fönstren för de 141 kompletta eventen och deras kontroller. Noll fallback är en relevant datakvalitetskontroll, inte full bolagshändelsevalidering.
+
+2. TVÅ BEKRÄFTADE DATAFEL OCH KONSERVATIV RÄTTELSE
+Systematisk screen: alla 452 fasta event i båda perioderna/typerna och 6 rollpar per event = 2 712 par. Jämförelsen använder endast AD−101 till AD−2, den fasta 100-dagarsperioden före utfallen. Samma statiska ISIN samt identisk förhistoria granskades. Två flaggor:
+• OMXSB-2019H1-06: event NYFO.ST, kontroll1 ALTRAF.ST. Samma Nyfosa/Altra-aktie.
+• OMXSB-2026H1-07: event MAHAa.ST, kontroll1 KEOC.ST. Samma Maha/Keo-aktie.
+För båda finns 100/100 identiska tidigare dagar i kurs, totret, volym och antal aktier. Statisk ISIN saknas för de gamla RIC:arna; därför räckte en ren ISIN-kontroll inte. Primärkällor bekräftar namnbyten och oförändrade ISIN, se primary_source_checks.json. Nyfosa→Altra Nasdaq 2026-05-13: https://view.news.eu.nasdaq.com/view?id=bf5badbacea6190ca2736e6094e4251c6&lang=en&src=rss . Maha→Keo Nasdaq 2026-06-09: https://view.news.eu.nasdaq.com/view?id=b52a78d490c9dabac52116c623c7199fd&lang=en .
+Korrigering utan ommatchning: uteslut de två HELA eventen. Övriga kontroller, modell, horisont och vikter oförändrade. N139, G19: −4,706395 pp; t-intervall [−8,922842; −0,489948]; t-p=.030689; wild=.0297 med ursprunglig label/seed; exakt signflip=.0272102. Se identity_summary.json och identity_corrected_primary_events.csv. Filen identity_summary_one_alias_superseded.json är uttryckligen en mellanversion och får inte citeras som slutresultat.
+Ingen annan matchning flaggades av de angivna kriterierna. Det är inte bevis för att samtliga historiska emittenter eller kandidatbehörigheter är rätt. RIC-stammar är fortfarande en proxy. En robust generell lösning kräver en daterad, kanonisk identitetskedja i matchningens indata; efterhandsutfall får inte bestämma en ny kontroll.
+
+3. BORTFALL
+159 förvalda tillägg blir 141 kompletta: 18 försvinner (11,3 %). Fyra har bortfall i eventserien; 14 har enbart kontrollbortfall. Efter två identitetsfel återstår139. Alla fyra horisonter beräknas på samma huvudsample, vilket avhjälper skiftande horisonturval men INTE selektion in i detta sample.
+Bortfallet är inte bara överlevnad/avnotering. Nio valda event-/kontrollserier saknar originalrad den 28 juli2025 (AFRY, ALIFb, ANNEb, BIOGb, FNOVAb, FPARd, GENOb, INTEAd, SYNSAM). Flera har kurs/totret 29juli men saknar handelsfält den dagen. Se july_2025_source_gap.csv; specifika förlorade event och roller i attrition_detail.csv. Detta kan vara ett käll-/extraktionsproblem. Det ska inte fyllas med0 och nästa dags procentavkastning får inte behandlas som en verifierad flerdagarsbrygga. Återhämtning kräver verifierade originalobservationer. Ingen fyllning eller reparation av dessa rådata har gjorts.
+
+4. MARKNADSMODELL OCH VALDA KÄNSLIGHETSANALYSER
+Marknadsmodellen är även oberoende reproducerad: scipy.linregress direkt på råa dagliga avkastningar, AD−250 till AD−121 (130 dagar; minst100 giltiga), sedan summerade prediktionsresidualer. 2 544 jämförda celler, alla NA-flaggor lika, maxskillnad1,93e−12. Detta bekräftar implementeringen, inte att modellen är ekonomiskt tillräcklig.
+Ursprungliga sparade resultat före två identitetsrättelser:
+• MA, 3 kontroller: N141 G19, −4,504, CI[−8,732;−0,275], wild.0369.
+• MA, 1 kontroll: N148 G19, −3,189, CI[−7,199;0,820], wild.0997.
+• MM, 3 kontroller: N125 G19, −6,045, CI[−12,163;0,073], wild.0528.
+• MM, 1 kontroll: N138 G19, −5,051, CI[−10,621;0,519], wild.0686.
+MM3 tappar16 event utöver MA3. På samma125 är MA-skattningen−5,318 mot MM−6,045. Skillnaden mot−4,504 beror alltså på både stöd och avkastningsmodell. Dessa fyra gamla tabellrader måste uppdateras konsekvent i huvudkörningen efter identitetsrättelsen; inga känslighetsrader har valts bort för att deras intervall korsar noll. En deklarerad sensitivity kan inte ersätta huvudresultatet enbart efter p-värde.
+
+5. INFLYTANDE, BOLAGSHÄNDELSER OCH BEROENDE
+Ursprunglig leave-one-review-mean ligger mellan−5,414 och−3,265. Vår diagnostik tar bort emittentproxy i ALLA fyra roller, inte bara när bolaget är event: punktmedel mellan−5,309 och−3,770. Det är en koncentrationsdiagnostik, inte nya signifikanstester. Ingen enstaka översyn eller emittentproxy förklarar ensam riktningen. Kontroller återanvänds i flera matchningar (AQ10,HMSN9,NOLAb7,VITR7 användningar); den ursprungliga event-only leave-one-issuer fångar inte detta fullt ut.
+De sena fönstren för de19 olika översynerna överlappar inte i kalendern. Klustring/medelbildning på översyn hanterar delad kontroll och marknadschock INOM en översyn. Den garanterar inte oberoende mellan år när samma aktier återanvänds eller riskregimer består. 19 kluster, inte141 oberoende experiment, bär inferensen. Wild/signflip kräver antaganden om oberoende/symmetri; dessa skapar inte exogen behandling.
+27 absoluta dagsrörelser minst20pp flaggades före någon exkludering. Flaggarna sparas; inga observationsklipp eller winsoriseringar gjordes. Hela populationens bolagshändelser har inte primärverifierats.
+Etrion är en viktig konkret illustration: kapitalutbetalningen syns redan i totret 16aug2021 (kurs3,040→0,658 men totalavkastning+14,7214%). Nedgången−36,3787% 1sept2021 sammanfaller med offentlig avnoteringsansökan/intention efter avyttring av rörelsen. Primärmeddelandet: https://news.cision.com/etrion/r/etrion-has-applied-for-delisting-of-its-shares-from-tsx-and-intends-to-apply-for-delisting-of-its-sh%2Cc3408248 . Det är plausibel bolagsnyhet, inte ett verifierat datafel och inte skäl till utfallsstyrd exkludering. Det illustrerar varför långhorisont-CAR inte isolerar avveckling av indexprispress.
+
+6. VAD RESULTATET BETYDER
+På det identitetskorrigerade139-samplet är eventens lika-review-viktade råa summa av sena dagliga avkastningar−0,761pp, kontrollernas+3,946pp. Den relativa differensen−4,706pp drivs således också av kontrollernas utveckling. En enskild relativ försvagning kan uppstå även om eventaktien stiger; exempelvis ARISE2020H1 har positiv rå sen avkastningssumma men kraftigare uppgång i kontrollerna. Skriv därför inte att eventpriserna generellt fallit4,7%.
+Matchningen använder tidigare avkastning och börsvärde, inte full bransch/risk-/fondamentalbalans eller en verifierad historisk population av nästan invalda OMXSB-kandidater. Storleks-/momentummatchning kan lämna andra systematiska avkastningsskillnader. Att föruppgång delvis kan innehålla indexförväntningar är ytterligare en estimandbegränsning. Inga nya dekorativa kontrollregressioner är utförda för att söka ett gynnsamt utfall.
+Det direkta samma-sample-testet är metodiskt mer relevant för formförändringen än att jämföra ett signifikant kortfönster med ett icke-signifikant långfönster. Men dess beslut skrevs EFTER kännedom om tidigare kort/långresultat; det är en explorativ uppföljning, ingen blind bekräftelse. Flera redovisade kontraster och känslighetsanalyser gör inte det nominella p-värdet till en experimentell mekanismidentifiering. Ett ED100-intervall som inkluderar0 bevisar heller inte fullständig återgång till0.
+
+REKOMMENDERAD RAPPORTERINGSNIVÅ
+"I en explorativ jämförelse med de fasta storleks- och avkastningsmatchade kontrollerna minskar tilläggens relativa avkastningsförsprång mellan ED+20 och ED+100. Resultatet kvarstår efter att två felaktiga egenkontroller tagits bort, men skattningen är osäker och känslig för specifikation. Det identifierar inte vilken del som är återgående indexprispress."
+Detta är granskningsspråk, inte färdig uppsatstext. Stoppa vid rättad huvudkörning och transparent redovisning av förutbestämda känsligheter; gör inte en ny omatchning eller nya horisonter efter dessa utfall.
+
+REPRODUCERBARHET
+validate.py: oberoende råpris-/primärinferensreproduktion.
+identity_validation.py: 100-dagars PRE-screen och två primärverifierade aliasexkluderingar.
+market_model_validation.py: oberoende reproduktion av redan angiven marknadsmodell.
+original_inputs/: fryst ursprunglig kod, beslut och CSV:er med hash; granskningens skript läser denna snapshot.
+Ingen huvudkod eller rådata har ändrats av denna granskning.

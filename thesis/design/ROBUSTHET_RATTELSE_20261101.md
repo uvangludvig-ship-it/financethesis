@@ -1,0 +1,20 @@
+# Rättelsespecifikation: kontrollanalysen
+
+Fastställd 1 november 2026 cirka 19:51 CET, **efter** att äldre resultat har setts och före den korrigerade körningen. Detta är en öppen kod- och metodrättelse, inte en blind förregistrering eller uppsatstext.
+
+## Omfattning och beslut före omkörningen
+
+1. Behåll replikationens avkastningsmått och utfallsfönster `[AD−1, ED+1]`. AD är replikationens beskedsdatum; utfallet är inte ett nytt test med jämförbar ekonomisk längd mellan perioder. Utfallet börjar före beskedet. Ny analys av beskedstid eller fast fönster kräver separat specifikation.
+2. Matchnings-/regressionsuppgifter får inte överlappa utfallet. Tidigare avkastning mäts under 100 handelsdagar `[AD−101, AD−2]`; börsvärde senast AD−2. Volym för att välja en representant per emittent använder endast data till AD−2.
+3. Kontrollpoolen bygger på tillgängliga förhandsuppgifter. Kontrollens framtida avkastning används inte för att välja eller ersätta matchningen. Saknat utfall redovisas som bortfall. En analys med tre kontroller kräver tre skilda emittenter med observerat utfall; annars faller just den matchningen bort.
+4. Uteslut samma och föregående översyns händelser med den fullständiga händelselistan. Ta bort filtret mot nästa översyn. Redovisa olösta identifierare. Ingen statisk RIC-/tickerlänk görs till bevis för historisk behörighet.
+5. T2 jämför en respektive tre närmaste kontroller på standardiserad tidigare avkastning och logaritmerat börsvärde. Huvudmått, t-intervall, teckenbytestest och wild bootstrap använder **samma lika vikt per översyn**. Medel per händelse får visas separat utan att tillskrivas huvudmåttets p-värde. Samtliga kontroll-RIC, distanser, balans och bortfall sparas.
+6. T5 döps om till **explorativ storleks- och medlemsproxy**. Det tidigare urvalet rekonstruerar inte OMXSB:s faktiska urvalsgräns. Minsta/största observerade eventstorlek används fortfarande för denna beskrivande jämförelse och får inte kallas en ex ante-prognos. Historisk huvudlistestatus, free float och komplett medlemskedja är inte säkrade. Resultat från T5 får därför inte ensamma ges kausal eller kandidatbaserad tolkning.
+7. T5 visar både den befintliga linjära kontrollregressionen och en i förväg specificerad känslighetsanalys med gemensamt stöd: inom varje översyn behålls bara observationer i överlappet mellan eventens och kontrollernas min/max för både tidigare avkastning och logaritmerat börsvärde. Det är en grov stöddiagnostik, inte en garanti för balans. Båda grupper måste återstå i varje inkluderad översyn. För varje variant använder regression och översynsskillnad samma sparade observationer. Samtliga perioder och både tillägg/borttag redovisas; ingen variant väljs efter p-värde.
+8. Alla p-värden är tvåsidiga, nominella och explorativa. Monte Carlo-test använder positiv ändlig-simuleringskorrigering och tolerans för numeriska likheter. Bootstrapen testar samma skattning som tabellraden. T-intervall är inte inverterade bootstrapintervall.
+9. Ingen kvot mellan rå och justerad avkastning kallas andel orsakad av urval. A/B skattar en relativ aktieslagsrörelse och kan inte dela upp köptryck och gemensam bolagseffekt. Ej säkerställd återgång inom ett ändligt fönster betyder inte permanent effekt. Nollhypoteser som inte förkastas betyder inte bevisad noll.
+10. Bevara alla tidigare filer i `archive/robusthet_repair_20261101/`. Dokumentera återstående dataluckor och skriv en ny rapport från korrigerade tabeller. Ändra inga rådata, FTN-analyser eller författares uppsatstext. Slutsatsen får ändras om rättelserna kräver det.
+
+## Validering
+
+Kontrollera inferensen mot en oberoende OLS/klusterimplementation; testa ojämna gruppstorlekar, teckenbyteslikheter, framtida utfallsbortfall, syskon/emittentdeduplicering, tidsgränser och att framåtblickande event inte påverkar kontrollvalet. Återskapa ett referensresultat från den äldre sparade tabellen som kontroll av läsningen. Kör den korrigerade analysen en gång efter dessa kontroller och redovisa avvikelser och eventuella nödvändiga kodreparationer öppet.

@@ -1,0 +1,77 @@
+OBEROENDE MEKANISMGRANSKNING, 2026-11-01
+Granskad repo-HEAD:18155 e6. Inga repoändringar. Inga nya fönster eller modellvarianter valda efter utfallet.
+
+Det som faktiskt flyttar analysen
+
+1. T14 stoppade korrekt enligt sin egen deklaration, men det betyder inte att alla frågor om ägarbredd saknar precision. H-frågan (fonder med ett annat brett börsindex) klarade sin egen MDE-gräns. Däremot är dess datakedja ännu inte tillräckligt ren för ett nytt mekanismpåstående.
+2. A/B:s publicerade 'högst45%,minsthälften gemensamt' är ingen giltig gemensam konfidensgräns. En explicit beräkning med osäker täljare och nämnare och bolagsberoende tillåter över100%. Medelpriserna och medelskillnaden reproduceras, men mekanismgränsen håller inte robust.
+3. T16:s ESG-grupp är definierad av EFTER-innehav. Det är ett identifikationsproblem före precisionsfrågan. Kontinuerlig intensitet eller pooling reparerar inte detta.
+
+A. Stoppregler, MDE och vad de faktiskt säger
+
+T14 räknar MDE som [t(.975,G−1)+t(.8,G−1)]×SE. Publicerade SE återger talen exakt. En separat noncentral-t-approximation för80% tvåsidig styrka ger nästan identiska tal:
+- H:1,01782 pp; alternativapproximation1,01797; deklarerad gräns1,61435. GODKÄND.
+- B−H:5,01144 pp; alternativ5,01215; gräns3,22870. UNDERKÄND.
+- T16:10,70695 pp; alternativ10,75256; gräns1,5. UNDERKÄND.
+- T17:3,25679 pp; alternativ3,25646; gräns0,92. UNDERKÄND.
+Ingen numerisk MDE-korrigering ändrar något stopp. Detta är SE-baserad approximativ styrka, inte verifierad faktisk styrka för deras wild-bootstraptest och selekterade panel.
+
+T14:s AND-regel avvisar hela paketet för att B−H är oprecist. Men frågan 'kan ALL ökning bero enbart på att OMXSB kommer in i det egna jämförelseindexet?' har en egen observerbar implikation:H=0. Den kan prövas separat efter datarensning, även om jämförelsen B−H är oprecis. Det vore ett NYTT explorativt test; gamla T14 ska förbli stoppat och dess dolda koefficienter har inte öppnats i denna granskning.
+
+E_BH är en andelsförändring i poolen, inte summan av B- och H-gruppernas procentenheter. Att MDE_H≤0,5E_BH skulle motsvara 'H står för hälften av ökningen' är därför inte exakt:gruppernas olika nämnare måste viktas in. Även att jämföra MDE_D med hela E_BH är ett valt krav, inte ett ekonomiskt identifierbarhetsresultat. E_BH och SE beräknas dessutom på samma realiserade utfall; detta är ingen helt utfallsoberoende ex-ante styrkeanalys, även om H/B/D-koefficienterna inte skrivs ut.
+
+Pooling och kontinuerlig intensitet
+- Att signera borttag och poola dem med tillägg kan öka observationer men tillför inte fler än samma15 översyner och kräver en symmetri mellan inträde/utträde som inte är självklar för ägarandelar nära0 eller1. Det får inte göras bara för att B−H misslyckades.
+- T16 kastar bort22 mellanhändelser; en kontinuerlig efter-innehavsandel skulle behålla dem men fortfarande sortera efter den realiserade köpresponsen. Ingen kausal exponeringsvariation skapas.
+- T17:s verkliga väntedagar i stället för regimdummy kan ge en annan precision, men förändringen är fortfarande tids-/regimvariation. Likviditet, indexmandat, nyheter och fönsterlängd samvarierar. Proportionalitet riskersättning∝väntedagar är en speciell ekonomisk modell, inte en allmän förutsägelse om köptryck. Inget av dessa omformuleringar är en verifierad räddning; inga sådana utfallsregressioner har körts.
+
+B. A/B: själva estimandet och gemensam osäkerhet
+
+Granskade filer:ab_revision.py,ab_deklaration.md,runda5_t15.py,runda5_deklaration.md,deras event/resultattabeller,twin_core.py,twin_run.py.
+
+Jag deklarerade först exakt39 rena,18 utanförbådasidor,och9 utanförfrån2017. Samma eventvikter,fönster[AD−1,ED+1],tecken och källval som Claude. Både indexben och systerben räknades med samma pris/TR-serie som spreaden. Kontroll:alla rekonstruerade spreadar överensstämmer inom1 e−8. INGET observerat indexben ändrades mot den äldre tabellen. Källblandningsfarhågan är därför här numeriskt ofarlig, inte ett konstaterat resultatfel.
+
+Medel i procentenheter, signerat:
+-39:spread0,33060,indexben3,18056,systerben2,84995. Kvot10,39%.
+-18:spread0,69943,indexben5,24452,systerben4,54509. Kvot13,34%.
+-9 från2017:spread0,42075,indexben3,12395,systerben2,70319. Kvot13,47%.
+
+Fiellers95%-konfidensmängd för medel(spread)/medel(indexben), med gemensam kovarians och t(G−1):
+-39,bolagskluster13:−24,28%till75,12%;översynskluster25:−6,08%till50,47%.
+-18,bolagskluster8:−23,10%till128,23%;översynskluster17:−8,84%till46,94%.
+-9,bolagskluster5:−12,16%till231,84%;översynskluster9:−16,37%till317,45%.
+Alla resultat redovisas, inget klusterval har gjorts efterp-värde. Detta är småkluster-känsligheter, inte ett löfte om exakt95%-täckning. De visar att 45%-slutsatsen inte är robust för rimligt beroende inom återkommande bolag. På18 urvalet har systerbenets bolagsklustrade intervall även nedregräns−0,148 pp; den skattade stora gemensamma rörelsen är inte precist avskild från noll under denna inferens.
+
+Varför Claudes konstruktion inte räcker:
+-2,38/5,24 använder endast osäkerheten i skillnaden; nämnaren behandlas som känd.
+-Placebofönster dras självständigt för varje event, även fleraevent för samma bolag och samtidigaevent. Det är inte faktisk randomisering av indexbesked, och kräver stabil/exchangeabel placebohistorik. Den genererade fördelningen bevarar inte bolags-/översynsberoendet.
+-R4(stillastående) tillämpas på riktigaevent, inte individuella placebofönster, trots deklarationens 'båda'.R2/R3-tailscreening behöver datakällestöd för att inte censurera legitima stora relativa rörelser.
+-Även ett precist positivt systerben kan vara bolagsnyheter, gemensam risk eller spillover från indexköp. Spread=relativ aktieslagsspecifik rörelse. Indexben=observerad marknadsjusterad rörelse. Ingen av dem är den totala kausala indexeffekten. Därför går inte ratio/spreadgränsen att omtolka till 'högstx%köptryck' eller 'minstym%information'.
+-SysterutanförOMXSB är en bättre jämförelse än systerinne, men garanterar varken noll efterfrågan i andra mandat eller noll arbitragespillover. 'Fonderna köper bara indexslaget' kräver separat empiriskt/daterat belägg.
+
+Försvarbar formulering:På18 tidigare valda händelser är medelskillnaden mellan aktieslagen0,70 pp mot indexbenets5,24 pp. Det föreslår omfattande samtidig rörelse men är för osäkert och mekaniskt ofullständigt för en nedregräns på en gemensam kausal komponent. För periodenfrån2017 är stödet ännu svagare.
+
+C. Ny separat H-datagrind, inga nya ägarutfall öppnade
+
+Root godkände ett eventuellt explorativt H-test endast efter kontroll av historiskt mandat,fulla rapporter och säker aktieslagsidentitet. Jag sparade H_DATA_GATE_DECLARATION.txt före grinden. Resultat:
+-ExaktT14H-urval:593 fond×översyn,59 unika fonder,15 översyner,median40 fonder.
+-En efterrapport är TOM/Ej aktiv fond:Sensor Sverige Focus70562,2025H2. F-presence innebär alltså inte alltid komplett innehavsrapport. Den får inte ge en säker nollposition.
+-49 fond×översyn byter benchmarktext mellan endpoints. Det bevisar inte49 ekonomiska mandatbyten, men räcker för att inte kalla samtliga mandat stabilt verifierade.
+-245 rader har sammansatt/specialindextext, exempelvis SIXandel plus global/ränteexponering eller EXSkandia. Det är inte samma tydliga hela-börsen-jämförelse som deklarationens ekonomiska resonemang.
+-En enkel, ospecialiserad, oförändrad benchmarktext och icke-tom rapport båda endpoints lämnar331 fond×översyn,33 fonder,15–26 fonder/review(median23). Detta är verklig kvarvarande datapotential, INTE en skattad effekt och inte juridisk/prospektverifiering av aktiv förvaltning.
+-I exakt relevanta H-fond×värdepapper×endpoint-korsningar finns10 negativa kvantitetsrader,7 unika fond×värdepapper×översyn. Ingen saknad Antal i dessa korsningar. Positiv-only-koden ignorerar de negativa raderna; de ska granskas/uteslutas som tvetydiga i båda endpoints enligt samma tidigare FI-princip, inte omtolkas som säkra nollor. Den större totalsiffran108 negativa/12606 saknade avser allaH-instrument och ska INTE kallas antal aktiefel.
+-T14:s statiskaISIN+first_seen-filter återger1117 av1471 kandidat×översynrader,men tappar22 verkliga tillägg och332 kontroller. First_seen bevisar tidig ISIN-förekomst i någon fond,inte giltig historisk RIC/aktieslagskoppling. Filtret kan dessutom utesluta äkta tidigare nollinnehav, särskilt centralt när utfallet är nya ägare.
+
+Kvartalsklockan är viktig:10 av15 översyner går frånQ1 tillQ3 ellerQ3 tillnästaQ1;bara5 går överettkvartal. Exempel2019H1 mäts31 mars→30 sept;2024H2 mäts30 sept2024→31 mars2025. Detta är förändring i persistent kvartalsägande under3–6 månader,inte handel vid rebalanseringsdagen. Alla exakta datum finns i h_data_gate_summary.json/h_group_report_gate.csv.
+
+Varför ingen ny H-regression här
+De enkla rapport-/textfelen är reparerbara. Den återstående blockerande grinden för samma1117 kandidatpanel är en daterad värdepapperskedja,inklusive kontrollerna,och positioner från senaste fulla rapporten med säkra nollor. Den befintliga reviderade FI-ledgern är för2019–25 indexevent och andra halvårsdatum; den löser inte automatiskt hela T14-kandidatpanelen/Q1→Q3-klockan. Att köra nu skulle ge en exakt koefficient på ett ännu osäkert ägarbegrepp. Därför har jag inte öppnat en sådan koefficient.
+
+Minsta återstående arbete, utan ny hypotes:
+Lås331 metadatafallen eller annan deklarerad före utfallet enkel H-grupp;verifiera historiska index-/aktieslags-ISIN för den redan fastställda kandidatpanelen;använd senaste fulla rapport,uteslut tvetydiga fond×värdepapper båda endpoints;håll first_seen-selektionen explicit eller ersätt den med oberoende giltighetsdata;redovisa 15 reviews/3–6 månadershorisont och mandat/bolagskoncentration. Först därefter samma E_H-modell som redan motiverats,tydligt explorativ. Ett positivt resultat kan som mest tala emot att HELA den uppmätta breddökningen består enbart av fondernas direkta OMXSB-benchmarkmedlemskap. Det identifierar varken uppmärksamhet eller prisets mekanism.
+
+FILER / REPRODUKTION
+Kör från chatcwd med /tmp/omxsb-audit-venv/bin/python:
+work/open_questions_20261101/independent/audit_bounds.py
+work/open_questions_20261101/independent/h_data_gate.py
+Allt skrivs endast i denna work-mapp. audit_bounds.py läser definitioner före originalkodens utfallsloop och har bytecode-skrivning avslagen; inga originalskript med skrivsteg körs. Alla tabeller:ab_joint_event_ledger.csv,ab_joint_uncertainty.csv,mde_check.csv,h_group_report_gate.csv,h_security_gate.csv,h_exact_ambiguous_fund_security_endpoints.csv,h_data_gate_summary.json. Inputhashar för A/B/stoppkontroll i input_provenance.json.

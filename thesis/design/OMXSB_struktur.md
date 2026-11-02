@@ -1,181 +1,74 @@
-# Indexeffekten på OMXSB: struktur och förlängning
+# OMXSB: aktuell arbetsstruktur och evidensstatus
 
-Version 1 november 2026. Ersätter tidigare strukturdokument.
+Rättad 1 november 2026 efter kod- och tolkningsgranskning. Detta är en arbetsplan för författarna, inte uppsatstext. Föregående version är bevarad i `archive/robusthet_repair_20261101/thesis/design/OMXSB_struktur.md`.
 
-## Beslutet i korthet
+## Fråga och logiskt flöde
 
-- **Replikation:** G&S på OMXSB 2007–2026, inklusive deras fyra förklaringar. I stort sett klar.
-- **Förlängning, del 1 (huvudtest):** faller priset tillbaka efter indexfondernas handelsdag? Det motsvarar G&S figur 9, nu för Sverige, på alla cirka 490 händelser.
-- **Förlängning, del 2 (det nya):** tvillingaktier. När bara ett av ett bolags två aktieslag (A och B) byter indexstatus, används systeraktien som jämförelse. Den har samma bolag, samma utdelning och samma nyheter, men får inga indexköp.
-- **Struket:** förutsägbarhet före beskedet, regeländringen 2021 som bevis, slutauktionen, fonders indexbyten och blankning (motiv längst ned).
+Hur robust är den observerade prisreaktionen kring OMXSB-byten mot jämförelser med andra aktier, och hur tillfällig och aktieslagsspecifik är den?
 
-## Frågan
+1. **Replikation:** beskriv svenska prisreaktioner med G&S:s mått. Marknadsjusterad avkastning är ett uppmätt utfall, inte ensam identifiering av indexbytets kausala effekt.
+2. **Kontrolljämförelse:** jämför eventaktierna med andra aktier med liknande tidigare avkastning och storlek. Redovisa balans, täckning, vikter och osäkerhet. Detta är den aktuella huvudsakliga fördjupningen.
+3. **Tidsprofil:** undersök hur mycket av rörelsen som går tillbaka inom uttryckliga fönster. Ett osäkert kortsiktigt återgångstest bevisar inte permanent effekt.
+4. **A/B:** undersök relativ prisrörelse mellan eventaktien och en verifierad systeraktie. Redovisa båda prisbanorna. Systern kan påverkas av samma indexefterfrågan; den är inte automatiskt obehandlad.
+5. **Tolkning:** avgränsa vad dessa jämförelser kan stödja. Ingen additiv uppdelning i urval, köptryck och bolagseffekt och ingen slutsats att migration förklarar landskillnaden följer av testerna ensamma.
 
-Hur tillfällig och aktieslagsspecifik är den svenska indexeffekten?
+## Ankare och extra observation
 
-Frågan är formulerad efter vad testen faktiskt kan visa. De kan visa om prisrörelsen går tillbaka och om den är koncentrerad till det aktieslag som indexfonderna handlar. De kan inte visa vilka handlare som jämnar ut den.
+**X:** G&S dokumenterar en kraftigt minskad amerikansk prisreaktion och undersöker flera förklaringar, bland annat nettning genom migration och lägre prisrespons per efterfrågeförändring.
 
-## X, Y och Z
+**Y:** Den svenska studien jämför den vanliga eventavkastningen med andra aktier och, i ett separat mindre urval, med systeraktieslag. Extra jämförelser behöver inte vara unika för Sverige, men måste tillföra information relativt det första testet.
 
-**X (G&S):** Indexeffekten för S&P 500 har nästan försvunnit. G&S förklarar det främst med migration mellan index och med att marknaden bättre kan möta indexfondernas handel. Prismultiplikatorn för tillägg föll från 6,75 till 0,37. Aktier med nära substitut utsätts för mindre prispress, enligt Wurgler och Zhuravskaya som G&S citerar. På 1990- och 2000-talet föll priset delvis tillbaka efter inträdet, men på 2010-talet nästan inte alls.
+**Z:** Bedöm robustheten hos den uppmätta svenska reaktionen och begränsa dess relativa aktieslagskomponent. Det är inte ett test som säkert väljer mellan migration, uppmärksamhet och spridd indexefterfrågan.
 
-**Y (Sverige):**
-1. Effekten finns kvar (+2,5 % för tillägg 2017–2026), så det finns en prisrörelse att följa efter handelsdagen.
-2. Många bolag har två noterade aktieslag med samma kassaflöden. Nasdaq bedömer varje aktieslag för sig: alla slag är valbara, och ofta ingår bara det ena i OMXSB.
-3. FI:s fondinnehav per ISIN visar att indexfonderna i regel bara äger det aktieslag som ingår i indexet.
+## Vad som faktiskt är körbart och verifierat
 
-**Z:** Om effekten är tillfällig, och om den är koncentrerad till det aktieslag som indexfonderna handlar, jämfört med ett systerslag med samma rätt till utdelning. En ensam aktie kan stiga och falla av bolagsnyheter. Om det indexerade slaget rör sig relativt systerslaget och sedan går tillbaka blir förklaringen med tillfälligt efterfrågetryck mer trovärdig. Det kan prisreaktionen ensam inte visa.
-
-## Kapitel
-
-1. **Inledning.** G&S gåta, att effekten finns kvar i Sverige, frågan och svaret.
-2. **Institutionell bakgrund.** OMXSB:s regler, urval per aktieslag, svenska A- och B-aktier, indexfonder, översynskalendern och kortare väntetid från maj 2021.
-3. **Data.** LSEG-panelen, Nasdaqs ändringslistor och FI:s fondinnehav.
-4. **Replikation.** G&S tabeller för OMXSB, multiplikator och elasticitet. Därefter G&S fyra förklaringar: sammansättning, migration, förutsägbarhet och likviditet.
-5. **Priset efter handelsdagen** (del 1).
-6. **Tvillingaktier** (del 2).
-7. **Slutsats.** Siffrorna jämförs med G&S siffror i samma mening.
-
-## Del 1: priset efter handelsdagen
-
-- **Vad som mäts:** CAR från beskedet till 100 dagar efter, i samma form som G&S figur 9, och de förhandsspecificerade fönstren efter handelsdagen.
-- **Varför:** det är G&S eget mått på om effekten var tillfällig. Det går att göra på alla händelser, så styrkan är god.
-- **Tolkning:**
-  - Faller priset tillbaka var effekten ett tillfälligt prisryck, som i USA på 1990- och 2000-talet.
-  - Ligger det kvar är den bestående, som i USA på 2010-talet men på en högre nivå.
-
-**Förhandsspecifikation:**
-- **Urval:** alla 487 tillägg och borttag 2007–2026 (39 översyner).
-- **Primärt mått:** CAR [ED, ED+10].
-- **Sekundärt:** CAR [ED, ED+20] och andelen av uppgången [AD, ED−1] som går tillbaka.
-- **Test:** tvåsidigt teckenbytestest på översynsmedel och wild cluster bootstrap per översyn, α 0,05. Femårsperioder redovisas sekundärt.
-- **Öppen redovisning:** del 1 är en vidareutveckling av tidigare analyser, inte ett okört test.
-  - Repot har redan testat CAR [ED+2, ED+100] (`mechanisms/RESULTS.md`). Tillägg 2007–11: −3,27 %, 2012–16: −1,30 %, 2017–21: −1,52 % (alla inte signifikanta). 2022–26: −4,86 % (p cirka 0,055). Inga signifikanta värden för borttag.
-  - Även repots figur med medelvärden efter ED (`fig_09_car_effective.csv`) sågs innan specifikationen skrevs.
-  - Det nya är de kortare fönstren direkt efter handelsdagen och återgångsandelen.
-- **Styrka:** 487 händelser ger inte 487 oberoende observationer. Händelser i samma översyn sker samtidigt, därför klustras inferensen på översyn (39). Långa efterfönster tappar händelser genom avnoteringar.
-
-## Del 2: tvillingaktier
-
-### Hur det fungerar, med ett exempel
-
-SSAB har A- och B-aktier. Under 2023–2026 låg B i OMXSB hela tiden, medan A gick in och ut vartannat halvår.
-
-När A läggs till köper indexfonderna A men inte B. Det syns i FI-datan: 2025H1 köpte indexfonderna SSAB A för 0,67 % av A-aktierna.
-
-Man räknar skillnaden i avkastning mellan A och B, dag för dag:
-- **Före beskedet** ska skillnaden vara nära noll.
-- **Om indexköpen pressar upp A men inte B** öppnar sig en skillnad.
-- **Om skillnaden sedan krymper** var trycket tillfälligt. Det visar inte vilken handel som stängde den: A kan falla tillbaka, eller B kan stiga ikapp. Därför redovisas båda aktiernas prisbanor, inte bara skillnaden.
-- Måttet är förändringen i det normala prisgapet. Aktieslagen behöver inte kosta lika mycket, eftersom rösträtt, likviditet och omvandlingsrätt skiljer sig.
-
-### Första steget i FI-datan (2019–2026, 24 händelser)
-
-- Indexfondernas innehav i det aktieslag som byter status ändras i snitt med 0,74 % av aktieslagets aktier, i rätt riktning.
-- **Systeraktien utanför indexet:** indexfonderna äger ingenting eller nästan ingenting av den, före och efter (högst 0,23 miljoner aktier, i SSAB A). Indexköpen träffar bara det ena slaget.
-- **Systeraktien också i indexet** (SSAB, Volvo, Industrivärden): innehavet i systeraktien rör sig också. Det beror sannolikt på fondflöden under kvartalet. FI-datan är kvartalsvis.
-- Skript: `twin_first_stage.py`.
-
-### Urval
-
-- 58 användbara händelser (27 tillägg, 31 borttag) i 29 översyner och 17 bolag, enligt den nya genomgången.
-- Med kurser som redan finns i repot är det 39–42 händelser i 11–12 bolag. Resten kräver LSEG-hämtning av NCC A, Ratos A, Sweco A och Bonava A.
-- **Ska stämmas av:** Codex tidigare pilot hade 34 parhändelser i 8 bolag, varav 11 i 4 bolag där systeraktien låg utanför indexet. Skillnaden mot de 58 kan bero på olika krav på kursdata och noteringsdatum. Den låsta händelselistan ska förklara varje skillnad.
-- Efter planerade uteslutningar (Stora Enso 6 händelser, systeraktier med för lite handel, fönster kring bud och fusioner) återstår cirka 45–50.
-- Koncentrationen är hög: SSAB står för 12 händelser.
-- I 24 händelser ingår systeraktien i indexet både före och efter. I 34 står den utanför.
-
-### Vad varje utfall betyder
-
-| Utfall | Tolkning |
+| Del | Status |
 |---|---|
-| Skillnaden öppnar sig och stängs efter handelsdagen | Tillfälligt prisryck som handeln mellan tvillingarna inte genast tar bort. Gränser för arbitrage även mellan nästan identiska aktier |
-| Skillnaden öppnar sig och består | Prisryck eller likviditetspremie. Går inte att skilja åt, så förändringen i likviditet redovisas |
-| Ingen skillnad, båda aktierna rör sig lika | Antingen sprids efterfrågan helt till systeraktien, eller så är det bolagsnyheter. Går inte att avgöra, och det sägs i förväg |
-| Brus | Styrkan räckte inte. Redovisas som begränsning med den minsta effekt som datan kan upptäcka |
+| G&S-replikation | Tidigare körd; använd korrigerad audit och rätt tidsfönster/urval när resultat citeras. |
+| T2: bred panelmatchning | Rättad kod i `code/build/robusthet_hela.py`. Skattning, intervall och bootstrap väger samma översynsmedel. Matchning använder endast uppgifter före utfallsstart. Aktuella siffror genereras i `output/omxsb_robusthet_20261101/results.csv`. |
+| T5: storleks-/medlemsproxy | Tidigare +1,68 kan återskapas från sparade rader, men gruppen är inte verifierat nästan invalda. Den rättade koden använder en uttrycklig spärr vid olösta medlemsidentifierare; se körningsstatus. Ingen spärr eller saknad skattning får kallas ekonomisk noll. |
+| Kort återgång ED till ED+10/20 | Uppgifter finns i konversationen, men tillhörande aktuell kod, eventfil och full resultatkedja har inte följt med det granskade robusthetspaketet. Därför inte verifierat resultat här. Äldre ED+2 till ED+100 är ett annat test. |
+| Ny A/B-prisanalys och multiplikator 0,57 | Ingen tillhörande verifierad körning i robusthetspaketet. Äldre explorativ parpilot har redan lästs; den får inte presenteras som ny blind analys. |
+| A/B-förstasteg 0,74 | Summan finns i äldre importerad fil men beräkningskedjan är inte validerad. Nuvarande `twin_first_stage.py` skriver kontrollstatus och NA tills nödvändiga underlag är verifierade. |
+| Migration | Inte färdigreplikerad. |
 
-**Styrka:** granskarens uppskattning är att datan kan upptäcka en skillnad på cirka 1,4 procentenheter, med tillägg och borttag sammanslagna. Det ska räknas om på placebofönster innan några händelsefönster öppnas.
+Det aktuella resultatdokumentet är `output/omxsb_robusthet_20261101/RESULTAT.md`, med en kopia i repots `RESULTAT_2026-11-01.md`. Rättelsespecifikationen är `ROBUSTHET_RATTELSE_20261101.md`. Detaljerade tolkningsgränser finns i `OMXSB_TOLKNINGSREGLER.md`.
 
-### Förhandsspecifikation
+## Kontrollanalysen
 
-Dateras och skickas till handledaren innan någon avkastning räknas.
+- Utfallet behåller replikationens `[AD−1, ED+1]`. Matchningsuppgifterna slutar AD−2 och överlappar inte utfallet.
+- Tidigare avkastning omfattar 100 handelsdagar. Börsvärde hämtas senast AD−2.
+- T2 matchar på tidigare avkastning och logaritmerat börsvärde. En och tre kontroller redovisas, utan att välja efter p-värde.
+- Valda kontrollaktier ersätts inte för att deras senare utfall saknas. Bortfallet sparas.
+- Kontrollpoolen är den tillgängliga panelen, inte en verifierad historisk OMXSB-kandidatcensus. Huvudlistebehörighet och exakt Nasdaq-urval kräver mer än aktuell börskod, storlek eller en .ST-identifierare.
+- T5 är en beskrivande proxy och får inte användas som gränsexperiment eller som marknadens förhandsförväntan.
+- Förhandsuppgången kan själv innehålla väntade indexköp. Matchningen avgränsar därför ett senare fönster och behöver inte mäta hela effekten av kommande medlemskap.
+- Alla tester är explorativa rättelser efter att tidigare resultat setts. Specificerade känslighetsanalyser och nödvändiga rättelser får ändra slutsatsen.
 
-**Händelser:** ett ordinarie aktieslag (A, B, C eller R) byter OMXSB-status, och systerslaget är noterat och oförändrat i samma översyn. Preferensaktier och D-aktier räknas inte som tvillingar.
+## A/B: användbart men avgränsat
 
-**Uteslutningar:**
-- Stora Enso, eftersom huvudnoteringen är i Helsingfors.
-- Systerslag som handlas färre än 90 % av dagarna i [AD−60, ED+20].
-- Händelser inom ±60 dagar från bud, fusion, blockaffär eller återköp i ett av slagen, till exempel Klövern och Corem 2021.
-- Händelser där något av slagen samtidigt byter status i OMXS30.
+En positiv relativ rörelse kan vara förenlig med att efterfrågan påverkar aktieslagen olika. En liten, precist skattad skillnad kan begränsa den relativa komponenten. En osäker skillnad är inte bevisad noll.
 
-**Utfall:**
-- **Primärt:** skillnaden i avkastning över [AD−1, ED+1], med tecknet vänt för borttag, och tillägg och borttag sammanslagna.
-- **Medprimärt:** återgång över [ED, ED+20].
-- **Sekundärt:** [AD−1, AD+1], [AD+2, ED−2] och [ED−1, ED+1], med Holm-korrektion.
-- **Placebo:** [AD−60, AD−21] och [AD−20, AD−2].
+Om båda aktieslagen rör sig lika kan det bero på gemensamma nyheter eller att indexefterfrågan sprids mellan aktieslagen. Det visar inte att köptrycket är borta eller att uppmärksamhet är mekanismen. En relativ multiplikator kan inte ersätta G&S:s totala efterfrågemultiplikator.
 
-**Inferens:**
-- Randomisering mot placebofönster för varje par, med samma längd och årstid men utan händelse.
-- Både medel per händelse och medel per bolag (17 bolag).
-- Ett bolag i taget utelämnas.
+Den importerade listans 58 rader är **kandidater**. Vissa noteringsstarter och externa systermappningar är antagna. Slutligt urval måste styrkas med historisk notering, rättigheter, korrekta identifierare, likviditet, corporate actions och övriga indexbyten. Antal prisrader ersätter inte antal oberoende bolag och översyner.
 
-**Explorativt:**
-- Aktieslag som går att omvandla, till exempel Volvo, SCA och Stora Enso (A till B eller R), jämfört med slag utan omvandlingsrätt.
-- Resultat med och utan Volvo.
+FI:s kvartalsinnehav är inte order på indexdagen. En riktig nolla kräver rätt instrument och en fullständig rapport från samma daterade fondpopulation på båda sidor. Kinnevik A efter juni 2024 hade ett konkret gammalt ISIN i den importerade koden. Det korrigerade identifierarledet gör inte automatiskt resten av förstasteget giltigt.
 
-## Data
+## Tidsprofil och statistiska påståenden
 
-| Behövs | Läge |
-|---|---|
-| Dagskurser och volym för indexerade aktier och de flesta systeraktier | LSEG-panelen hos Ludvig |
-| Dagskurser för NCC A, Ratos A, Sweco A och Bonava A | Hämtas från LSEG. Ungefär 10 minuter |
-| FI-innehav per ISIN 2018Q4–2026Q2 | Finns, och första steget är kört |
-| Bolagsordningar: omvandlingsrätt per bolag och datum | Hämtas från bolagens webbplatser |
-| Bud, fusioner och blockaffärer | Nasdaqs bolagshändelser, pressmeddelanden och repots fil över skäl till borttag |
-| OMXS30-ändringar | Finns i repot |
+- Skilj indexets ikraftträdandedag från sista stängningen före ikraftträdandet och faktisk fondhandel. Kvartalsdata daterar inte en stängningsauktion.
+- Ange vilken version och vilket fönster av G&S som jämförs. Figurnummer skiljer mellan arbetsversioner.
+- Kort och långt återgångsfönster har olika tolkning och kan ha olika urval. Jämför samma event när en återgångsandel beräknas.
+- Skillnaden mellan en signifikant period och en insignifikant period är inte ett test av periodskillnaden.
+- Ett konfidensintervall, inte bara ett p-värde, behövs för att utesluta en ekonomiskt viktig återgång eller relativ prisskillnad.
 
-## Risker och hur de hanteras
+## Originalitet och genomförbarhet
 
-- **Litet urval och hög koncentration:** förhandsspecifikation, placebobaserad inferens, ett bolag i taget utelämnat och den minsta upptäckbara effekten redovisad.
-- **Indexet väljer det mest omsatta slaget**, ibland efter en händelse som påverkar röstpremien: placebofönster före beskedet och uteslutning kring bud och blockaffärer.
-- **Likviditetspremie kontra prisryck:** återgången efter handelsdagen är det rena måttet och är därför medprimär.
-- **Del 2 förklarar inte varför effekten försvann i USA.** Den testar mekanismen med substitut som G&S citerar och skrivs fram så.
-- **Tidsrisk:** är del 2 inte klar senast 20 november flyttas den till en bilaga.
+Inget påstående görs att A/B, indexprognoser eller innehavsdata bara finns i Sverige. Inget försthetsanspråk görs för systeraktier som indexjämförelse. Ett möjligt bidrag är en systematisk och transparent OMXSB-prövning med rätt identifierade begränsningar.
 
-## Nyhetsvärde
+Befintliga prisfiler för fler systeraktier behöver granskas per event; filernas existens innebär inte verifierad täckning. Datagap ersätts inte med antaganden om noteringsdatum, nollinnehav eller framtida datatillgång. FTN-spåret öppnas inte i denna rättelse.
 
-- Ingen tidigare studie har, så långt vi har sökt, använt systeraktien som jämförelse vid indexändringar.
-- De närmaste är:
-  - Betzer, van den Bongard och Goergen (2017): sammanslagning av aktieslag och indexmedlemskap i Tyskland.
-  - Froot och Dabora (1999): tvillingaktier som Royal Dutch/Shell.
-  - Neumann (2003) och Ødegaard (2007): prisskillnader mellan aktieslag i Danmark och Norge.
-- Svenska studier av OMXSB och OMXS30 har inte använt aktieslag.
-- Del 1 är beprövad metod. Det nya är svensk evidens där effekten finns kvar.
+## Föreslagen redovisningsordning för författarna
 
-## Struket och varför
-
-- **Förutsägbarhet före beskedet:** G&S ger den "only a limited role". Den kräver dessutom fritt handlat börsvärde, sektorer och historiska regelversioner som inte finns.
-- **Regeländringen 2021 som bevis:** resultatet håller inte för olika startår. Två av tretton startår ger p under 0,05.
-- **Slutauktionen:** SHoF:s orderboksdata finns men täckning och fält är obekräftade, och prisrörelsen i Sverige sker inte på handelsdagen.
-- **Fonders indexbyten:** få händelser, okända handelsdagar och ESG-uteslutningar som kan bära information.
-- **Blankning:** FI:s historik täcker bara positioner över 0,5 %. Samlade positioner finns bara som ögonblicksbild sedan 2022.
-
-## Tidsplan
-
-| Datum | Steg |
-|---|---|
-| Mån 2 nov | Förhandsspecifikationen till Klug. Ludvig börjar del 1. LSEG-hämtning av fyra systerslag |
-| Fre 6 nov | Del 1 klar. Händelselistan för del 2 låst |
-| Fre 20 nov | Del 2 klar, annars bilaga |
-| Från 3 nov | Replikationskapitlet skrivs parallellt |
-| Mån 7 dec 10:00 | Inlämning |
-
-## Källor
-
-- Greenwood, R. och Sammon, M. (2025). The Disappearing Index Effect. *Journal of Finance*. HBS Working Paper 23-025 för multiplikatorer och förklaringar. NBER Working Paper 30748, figur 9, för återgång per decennium.
-- Wurgler, J. och Zhuravskaya, E. (2002). Does Arbitrage Flatten Demand Curves for Stocks? *Journal of Business*.
-- Betzer, A., van den Bongard, I. och Goergen, M. (2017). *Journal of International Financial Markets, Institutions and Money* 49.
-- Froot, K. och Dabora, E. (1999). *Journal of Financial Economics*.
-- Neumann, R. (2003). *European Financial Management* 9(3). Ødegaard, B. A. (2007). *Journal of Banking and Finance* 31(12).
-- Nasdaq. OMX Stockholm Benchmark Index Methodology. Nordic All-Share Methodology.
-- Repo: `output/omxsb_replication_2007/`. Arbetsfiler: `twin_events.csv`, `twin_first_stage.py`, `analyser_claude.zip`.
+Replikation → kontrolljämförelse → tidsprofil → A/B med validerad täckning → samlad tolkning. Delar med otillräckligt underlag redovisas som begränsade eller ofullständiga. Resultaten avgör slutsatsen; ingen önskad berättelse väljs i förväg.

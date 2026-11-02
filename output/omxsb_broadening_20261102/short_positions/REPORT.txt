@@ -1,0 +1,39 @@
+FI:s offentliga blankningar: ett nytt avgränsat positionsprov
+2 november 2026
+
+Slutsats
+Ett försvarbart, men smalt, test har nu genomförts. Bland redan synliga stora nettokorta innehavare i tillagda emittenter kan den offentliga informationen inte avgöra om gruppens positiva nettokortexponering i genomsnitt byggs upp till implementeringen och sedan avvecklas. Detta är varken ett precist nollresultat eller stöd för en generell blankningsmekanism. Två individuella emittentevent har en säker tillfällig topp inom de använda rapporteringsgränserna. Ingen slutsats om aktieaffärer, motparter eller prisorsak följer.
+
+Vad som är nytt och vad som redan var gjort
+PLAN.md och tidigare kod/output lästes först. FI:s historikexport hade samlats in och dess tröskelproblem tidigare inventerats, men ingen lokal eventanalys av denna fil hittades i de sökta analysmapparna. Närliggande blankningsforskning och SSE-uppsats6778 finns redan; detta är inget försthetsanspråk. Nasdaq månadsvolym, nominell omsättning och flera split-/emissionsproblem har redan analyserats i volume_units_full_20261102, retention_followup_20261102 och tidigare nämnargranskningar. De redovisas inte här som nya tester. Ett separat test av bolagens nettoutbud skulle kräva en fullständig daterad kedja över emitterat kapital, återköp och aktieslag; de befintliga punktkontrollerna räcker inte. Den enda nya ekonomiska beräkningen i denna mapp gäller blankningsprofilen.
+
+Den upptäckta dataluckan och lösningen
+Den ursprungliga historikfilen innehåller39 061 rader och saknar åtminstone senaste öppna rapporter. På FI:s Oncopeptides-sida var Two Sigma0,60 procent den30oktober en aktuell position, medan historikexporten slutade på0,59 den29oktober. En gammal historikrad kunde alltså inte utan vidare bäras fram som terminal sanning.
+Två nya original hämtades via FI:s officiella exportknappar i samma Chrome-session: AktuellaPositioner_2026-11-02.ods (244 rader) och HistoriskaPositioner_2026-11-02.ods (39 078 rader). Jämfört med31oktober saknas ingen gammal unik historikrad. De17 nytillkomna historikraderna är alla daterade efter testets mätfönster. Aktuella rader läggs till med sitt positionsdatum, aldrig med hämtningsdatum. Källfiler, tidsstämplar och SHA-256 bevaras. Ursprungliga filer och båda tidigare datagrindar är kvar.
+
+Urval och enhet
+Utgångspunkten är119 tillägg i den redan låsta FI-populationen2019–2025. Matchningen sker med historisk Nasdaq-emittentkod och dess exakta Stock-ISIN, över aktieslag. Inga samtidiga emittent/review-dubletter finns i dessa119. Retrospektivt rapporterad position om minst0,5 procent vidAD−1 bestämmer innehavarkohorten. Publiceringstid saknas; detta är därför ingen prognos baserad på säkert då tillgänglig information.
+Den sammanslagna exporten ger79 kandidatpar mellan innehavare och event. Efter entydiga identiteter, konflikter/kommentarer och verifierad terminalstatus återstår47 par över28 emittentevent,23 emittenter och13 reviews. De övriga91 tilläggen är inte nollobservationer i testet. Av de47 analyserade paren har9 verifierad aktuell terminalrapport och38 en uttrycklig historisk undertröskelmarkör. Inget par behöver väljas för att det råkar ha senare offentlig aktivitet. Alla32 exkluderade kandidatpar med orsaker finns i cohort_gate.csv.
+Storheten är positiv nettokortexponering, max(nettokort,0), i procent av emittentens emitterade aktiekapital. FI:s mått netterar långa och korta exponeringar och kan inkludera derivat; det är inte antal blankade aktier. Under0,5 kan även betyda nettolång. Sådana positioner har värde noll i kortmåttets positiva del, men hela undertröskelintervallet[0;0,5) behålls eftersom den faktiska positionen är okänd. Intervallet gäller inte hela den signerade nettopositionen.
+
+Det låsta testet och samtliga huvudresultat
+Tre fasta datum används:AD−1, implementeringsdagenED−1 ochED+20. Senast rapporterad offentlig siffra vidareförs som ett0,1-procentsteg, eftersom ny anmälan krävs vid nästa steg. Undertröskel är[0;0,5), aldrig en antagen nolla. Samma förhandsvalda innehavare summeras vid alla tre datum. Nya innehavare efter baseline läggs inte till.
+Lika vikt per review ger följande gränser för kohortens genomsnittliga positiva nettokortexponering, i procentenheter av emitterat kapital:
+  AD−1:   [1,47885; 1,65000]
+  ED−1:   [1,47372; 1,68846]
+  ED+20:  [1,22564; 1,61987]
+UppbyggnadenAD−1→ED−1 ligger i[−0,17628; +0,20962]. FörändringenED−1→ED+20 ligger i[−0,46282; +0,14615]. Båda riktningarna är möjliga inom respektive intervall.
+Den fördeklarerade toppstorheten är exponeringen vidED−1 minus den högre av de två andra ändpunkterna. Dess reviewviktade genomsnittsintervall är[−0,24872; +0,13718]. På emittentnivå är toppen säkert positiv i2 av28 event, strikt positiv topp utesluts i5 och21 förblir oavgjorda. De två säkra fallen är Oncopeptides2020H1, topp[0,2;0,4], och BeijerRef2024H2, topp[0,1;0,3]. Alla28 rader redovisas, utan urval efter utfall. På innehavarnivå är motsvarande antal3 säkra,9 uteslutna och35 oavgjorda.
+Fyra par är under offentlighetströskeln vidED−1 och elva vidED+20. Baselinens senaste rapport är i median11 kalenderdagar gammal, maximalt1 024. Frånvaro av ny rapport innebär ett möjligt intervall under antagen korrekt rapportering, inte en exakt oförändrad position.
+
+Vad resultatet får säga
+Intervallen är konservativa identifieringsgränser, inte95-procentskonfidensintervall. Inga p-värden har räknats. Genomsnittet tillåter både en tillfällig ökning och en utebliven sådan; censureringen är materiell. De två enskilda profilerna belägger en tidsmässig förändring i ett begränsat offentligt kortmått under rapporteringsantagandena. De kan även påverkas av bolagsnyheter, riskändringar, derivat/långa positioner och förändrat emitterat kapital. Ingen kontrollgrupp eller kapitalutbudsjustering identifierar indexorsaken här.
+Många arbitrageörer kan köpa före indexköpen och sedan sälja ur långa innehav utan att nå en nettokort offentlig position. Osynliga småpositioner och nya offentliga innehavare efter baseline ingår inte. Därför kan denna undersökning inte avfärda arbitrage eller förklara den observerade prisrörelsen. Den ger en ny mätbar, begränsad profil och en konkret datarättelse, men bör inte beskrivas som en stark fristående huvudextension med nuvarande upplösning.
+
+Verifiering och reproduktion
+Kohorten låstes13:10:45 UTC och utfallet räknades13:11:21 UTC. verify.py har separat återläst141 råa ändpunktskontroller, kontrollerat intervall mot de ursprungliga ODS-cellerna, räknat toppgränser med alla hörnpunkter och verifierat summeringen till emittent och review. Alla kontroller passerar. En portabel omkörning med separat utmatningsmapp ger byteidentiska tre vetenskapliga tabeller; originalkod/resultat och samtliga grindversioner bevaras. README.txt beskriver vad som kan köras om utan ny datainsamling.
+
+Primärkällor lästa2november2026
+https://www.fi.se/sv/vara-register/blankningsregistret/ — offentlighetsgräns, exporternas olika innehåll och FI:s förbehåll om fullständighet.
+https://www.fi.se/sv/marknad/investerare/blankning/ — nettning, rapporteringssteg, positionsdatum och emitterat kapital.
+https://www.fi.se/sv/vara-register/blankningsregistret/Emittent?id=549300J9WWQ5CBYQ1M77 — oberoende kontroll av aktuell kontra historisk rapport.

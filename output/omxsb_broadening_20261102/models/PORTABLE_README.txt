@@ -1,0 +1,5 @@
+Kopiera code/build/omxsb_broadening_20261102/models och output/omxsb_broadening_20261102/models till repo med samma relativa paths.
+Kör python REPO/code/build/omxsb_broadening_20261102/models/compare.py --repo REPO [--out OUTPUTFOLDER]
+Kör sedan python REPO/code/build/omxsb_broadening_20261102/models/verify.py --repo REPO [--out OUTPUTFOLDER]
+Defaultoutput är REPO/output/omxsb_broadening_20261102/models. Med --out ska den sparade katalogens innehåll redan finnas där.
+Replay läser frysta feature_gate_all216 och frozen_outcome_input; ingen ny primärdatagrind eller råpanel behöver läsas. Tidigare raw-source sanitycheck bevaras som fryst räknelogg; portableverify räknar inte om råkällans värden. DESIGN_LOCK och DECISIONS är byteidentiska, gamla absoluta paths inne i proveniens-JSON är historiska och används inte för filåtkomst. Originalets prepare/compare/verify ligger i original_scripts. Inga ekonomiska specifikationer ändrades. Numpy,pandas,scipy,statsmodels behövs. Resultatjämförelse finns i PORTABLE_REPLAY_VALIDATION.json efter den verifierade stagingkörningen.

@@ -1,0 +1,1 @@
+import"../pagination-with-rows/pagination-with-rows.CeEKsX-6.js";import e from"./statistics.core.dc648Smz.js";[...document.querySelectorAll(`.statistics`)].forEach(t=>{new e(t).init()});

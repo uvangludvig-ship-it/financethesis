@@ -1,3 +1,8 @@
+<!-- ANALYSIS_DELIVERY_20261102 -->
+> **Senaste analyser, 2 november 2026:** Börja i `output/omxsb_broadening_20261102/RESULTAT.txt` för den senaste provningen, `output/omxsb_followup_20261102/RESULTAT.txt` för ägande/mängd/volym och `output/omxsb_open_questions_20261102/RESULTAT.txt` för daterade kontroller och prisförlopp. Prisets mekanism och långsiktiga varaktighet är fortfarande öppna. Se `PUBLICERING_20261102.txt` för licensierade råutdrag som stannar lokalt. Äldre struktur- och statusbeskrivningar nedan är historik.
+
+> **Aktuell analysstatus, 1 november 2026:** Kontrollanalysen är rättad och dokumenteras i `output/omxsb_robusthet_20261101/RESULTAT.md`. Gällande OMXSB-arbetsstruktur finns i `thesis/design/OMXSB_struktur.md`. Den äldre FTN-beskrivningen nedan är historik och ingen genomförd extension. Inga FTN-utfall öppnas.
+
 # Finance thesis (BE451, autumn 2026): Alexander Fox and Ludvig Pauli Uväng
 
 **Topic (restated 29 Oct 2026):** Has the index effect disappeared in Sweden? A replication of Greenwood and Sammon (2025, JF) on OMXSB 2007-2026 that runs their tests of the five explanations for the disappearing index effect, and then runs the same test in a new setting: the forced sales after Fondtorgsnämnden's procurements, where the decision comes months before the sale and so separates predictability from event liquidity. Working title: "Pre-announced, uninformed, and large". The seminar deck is `slides/main.tex`. Tutor: Michael Klug. Examiner: Riccardo Sabbatucci.
