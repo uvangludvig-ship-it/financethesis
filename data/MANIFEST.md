@@ -913,3 +913,18 @@ Code and original provenance snapshots are preserved separately from executed nu
 ### Public attention coverage probe, 2 November 2026
 
 Technical-only fixed January2019 Wikimedia pageview probe for six purposive company names, preserved in `output/omxsb_attention_dd_20261102/public_data_probe/`. Source URLs, access status, hashes and pre-probe specification are included. Four current pages yielded31 daily user-pageview rows; two current pages returned404 and require historical-title research. Missing is not zero. This is not population coverage or an event-effect estimate. Google Trends first browser attempt returned429; no series received. Current SSE catalogue reports Factiva discontinued2021 and an on-campus Nexis Uni trial19Oct–19Nov2026; no archive entitlement/export validated. Raw licensed inputs unchanged.
+
+
+<!-- OMXSB_EXECUTION_FOLLOWUP_20261102 -->
+### Exploratory execution, demand and accounting follow-up, 2 November2026
+
+All files and code are listed with SHA256 in output/omxsb_execution_followup_20261102/PACKAGE_SHA256.json. Original sources remain unchanged. Actual timing of outcome-dependent amendments is disclosed; these are not blind preregistrations. No FTN outcome was opened.
+
+| Artifact | Source, transformation and limits |
+|---|---|
+| output/omxsb_execution_followup_20261102/timing/ | Existing licensed total-return panel and OMXSBGI; raw2017–25 event list plus three known, original-text-verified cancellations. V1 legacy population retained; v2 removes irrelevant history/future-delisting filters. Seven missing total-return cases remain explicit. Fixed-control diagnostic uses the previously frozen3controls, never rematches. Equal-review uncertainty is exploratory; no actual execution/fund-cost claim. |
+| output/omxsb_execution_followup_20261102/demand/ | Existing audited FI quarterly raw/metadata chain,205common events and two fixed funds with historical index-near continuity assumptions. Same-row price/net-position ratios with Fieller sets. Old LSEG units and zero-imputation audited. Individual raw vendor-value diagnostics excluded from the public export and regenerable with licensed inputs. |
+| output/omxsb_execution_followup_20261102/cost_audit/ | Saved T29 derived event inputs, existing Nasdaq monthly originals and methodology, and SHoF-derived capital scenarios. Original arithmetic reproduced; ED-calendar and before-announcement-capital sensitivities. No complete official-weight series verified, hence no newly certified actual investor cost. |
+| output/omxsb_execution_followup_20261102/sources/ | Original Nasdaq announcement/correction texts, dated methodology, Petajisto2011 and Pegoraro/Sammon/Shim2026 working-paper reading ledger. Exact reading depth/access limits given; no copyright fulltexts copied. 2020H2_primary_update.json supersedes its earlier primary-text gap without a date change. Independent v1/v2/control arithmetic checks are separate from identification. |
+
+Entry point: output/omxsb_execution_followup_20261102/REPORT.txt. Code: code/build/omxsb_execution_{timing,announced,controls,demand}_20261102.py; additional portable accounting/verification scripts are in each additive module. The original authenticated vendor data remains a local prerequisite; the prepared LSEG field pilot was not executed.

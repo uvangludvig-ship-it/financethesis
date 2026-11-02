@@ -1,0 +1,74 @@
+T24: KÖP ÖVER TID – UTFÖRD MÄTGRANSKNING OCH AVGRÄNSAD FI-KONTROLL
+2 november2026. Explorativt arbete efter att tidigare resultat blivit kända.
+
+Slutsats
+Den befintliga T24-tabellen ger inte ett försvarbart belägg för att indexköpen ökade2007–2026 medan priset per köpt procent föll. Tre konkreta problem är dokumenterade: många tidiga saknade fondobservationer blir nollor, justerade LSEG-antal delas med historiska aktieantal, och kvotens viktning/osäkerhet skiljer sig från de redovisade medlen. Historisk klassificering med dagens fondnamn tillför ett fjärde problem. Den långa serien kan inte repareras säkert utan kompletterade ägarfält och rapporttäckning.
+
+En faktisk, smalare kontroll är däremot genomförd på FI2019–2025. Två fasta fonder har användbara fullrapporter och samma befintliga historiska indexnära evidensklass under samtliga14 översyner: SPP/Storebrand Sverige51482 och Swedbank Robur Access Sverige60824. Varje fond och deras fasta summa redovisas. Evidensklassen bygger uttryckligen på daterade dokument plus kontinuitetsantagande; fonderna är INTE därmed verifierade rena OMXSB-replikatorer hela perioden. Storebrands exakta gamla strategi är särskilt viktig: ett indexnära mandat kan innehålla aktiva avvikelser. Resultatet gäller deras observerade nettopositioner, inte alla indexfonders efterfrågan.
+
+För tillägg är tvåfondssummans normaliserade nettoökning0,4320 procentenheter2019–2021 och0,4292 år2022–2025. Skillnaden−0,0028 har95% Welch-intervall[−0,1581;0,1525]. Det är inte ett precist likvärdighetsresultat, men ger heller inget stöd för en klar ökning i just detta fasta delurval. Priskvoten är4,998 respektive4,847 med breda Fiellerintervall. Inget av detta identifierar lägre exekveringskostnad eller kan förklara prisförändringen före2017.
+
+Tid och lås
+INITIAL_SOURCE_LOCK.json: faktisk UTC2026-11-02T18:11:12.879004+00:00 före nya beräkningar. Därefter lästes schema, metod och metadata för att bestämma den genomförbara kontrollen. DECISIONS.txt och slutliga indata/kod låstes i ANALYSIS_LOCK.json2026-11-02T18:17:58.246579+00:00. Ekonomisk körning började18:18:16 och slutade18:18:25 UTC. Tidigare utfall var kända; detta kallas inte blind förregistrering. Separat numerisk verifiering slutfördes18:20:12 UTC. Inga gamla resultat skrevs över.
+
+Vad T24 faktiskt gör fel eller inte kan belägga
+
+1. Justerade antal och historiska aktier är olika enheter.
+Råutdragets enda fondkvantitet heter Fund Shares Held (Adjusted), TR.FundAdjShrsHeld. Runda9 dividerar dess förändring med historiska shares vid ED. I vår snäva jämförelse finns296 entydiga positiva FI-endpoints med exakt samma två fondnamn, värdepappers-RIC och rapportdatum i LSEG;27 avviker från FI-antal med mer än0,1%. Denna tolerans används bara för att beskriva avvikelse, inte välja det ekonomiska urvalet. För Sinch2020-12-31 är båda fondernas LSEG-antal exakt10 gånger FI-antalet: SPP1 394 040 mot139 404, Access1 875 790 mot187 579. Den gamla T24-nämnaren är samtidigt59 985 934 historiska aktier, samma rå-shares som det separata FI-denominatorunderlaget. För Addnode ses faktor4, Sweco3, AtriumLjungberg5, Nobia ungefär0,1 och Fingerprint ungefär0,0005. Alla avvikelser behöver inte bero på enbart split; exempelvis finns andra avvikelser också. De kan inte tyst ersättas med en prisjusteringsfaktor eller extrapoleras över2007–2016. Jämförelsen bygger på exakta namn snarare än LSEG-fond-ID och redovisas därför som mätkontroll, inte en komplett leverantörsrevision.
+
+2. Frånvaro i ett innehavarutdrag är inte en säker fondnolla.
+Runda9 låter en fond som har någon rad i någon hämtad aktie före och efter eventet bidra0 när den saknas i målaktien. Det bevisar inte att en fullständig fondrapport täcker målaktien, dess aktieslag och rätt datum. Dessutom fylls helt saknade event/grupper med0. I T24:s faktiska första-periodurval, efter samma pris-/shareskrav, blir11 av29 tillägg och12 av28 borttag noll eftersom ingen enligt programmets egen regel godkänd rapporterande indexfond återstår. För2012–2016 är motsvarande antal0 för båda riktningar. Detta är ett strukturellt täckningsbrott, inte observerat uteblivet köp. Tillkommande target-fund-endpoints fylls också med0; de exakta antalen finns i lseg_T24_scoped_coverage.csv.
+
+QA om tabellernas scope: första lseg_coverage_by_period.csv beskriver hela runda8-inputen, som även innehåller OMXS30. Den ska INTE citeras som T24-urval. coverage_scope.py gör en separat explicit OMXSB-avgränsning och reproducerar T24:s29/51/80/86 tillägg. Korrigeringen gäller metadataredovisning, inte ett ändrat ekonomiskt urval eller ändrade FI-resultat. Originaltabellen bevaras.
+
+3. Historiska strategier kan inte härledas från dagens namn.
+Storebrand Sverige förekommer i rå-LSEG med rapportdatum redan2006-06-30. Runda9 räknar namnet som ej passivt före2025-10-01. Därmed kan tidigare SPP-innehav falla bort därför att ett senare namn återges i historiken. Våra dokument stöder en äldre indexnära strategi med kontinuitetsantagande; de bevisar inte ren passiv replikation eller oförändrade undantag. Nordnet byter till ESG2022 och LF:s senare customindex är ytterligare skäl att behålla daterade mandat.
+Samma Storebrand-namn förekommer dessutom med88 olika Investor Parent name; Access med100. Parentfältet är alltså inte en säker förvaltaridentitet i utdraget. T24:s klassificerare använder inte detta fält, så denna avvikelse gör inte automatiskt alla fondkvantiteter fel, men fältet får inte återanvändas som fond-ID. Landfältet kan dessutom representera registrerad förvaltningsstruktur: Storebrand är här konsekvent Norway trots svensk FI-fond. Det är inte ett säkert mått på ägarnas nationalitet.
+
+4. Pris och köp jämförs inte med samma viktning/inferens i den gamla tabellen.
+Runda9 visar lika vikt per översyn för CAR och köp men beräknar kvoten från eventviktade medel. Dess bootstrap kastar dragningar där nämnaren≤0. Det ger en selektiv fördelning när köp är osäkra/nära noll. Vår nya kvot använder identiska event och reviewvikter i båda led samt full kovarians och Fieller. Negativa nämnare behålls.
+T24 använder dessutom events_car.tot_gi, appendixbenchmark OMXSGI, medan huvudreplikationen använder OMXSBGI. Denna nya kontroll håller OMXSBGI fast och använder redan beräknad event_1, inte en ny avkastningsberäkning. Vi jämför därför inte dess nivåer direkt med den gamla T24-tabellens andra benchmark.
+
+Exakt ny FI-mätning
+De två fonderna väljs av befintlig metadataregel: historisk indexnära dokumentation med kontinuitetsantagande, giltiga positioner för alla216 låsta FI-events,14reviews, inga flaggade benchmarkövergångar eller fondfusioner. Endast51482 och60824 klarar hela denna regel. Urvalet valdes inte efter den nya tidsskillnadens utfall. Befintliga fonder och deras tidigare samlade resultat var dock redan kända.
+
+Vi kontrollerade864 endpoints direkt mot quarter_raw_target_instruments.csv.gz: två fonder×216event×före/efter. Samtliga stämmer med rå-FI-extraktet. Fullrapportmetadata finns i båda endpoints. De tidigare granskade reglerna för accepterad instrumentidentitet, negativa/oklara kvantiteter och säkra frånvaronollor ärvs; inga nya nollor skapades från LSEG.
+
+delta_q = q_efter − splitfaktor*q_före.
+normaliserad förändring =100*delta_q*FI-kurs_efter/bolagets marknadsvärde_efter.
+Det är förändringen i nettoposition, värderad till en gemensam slutkurs, som procent av hela emittentens egetkapitalvärde. Det är INTE procent av ett visst A/B-aktieslags aktier. Antal från olika bolag summeras inte rakt av. Måttet är inte heller bruttoköp, daghandel eller flödesjusterad order. In-/utflöden i fonden, ordinarie portföljbeslut och hela kvartalets aktivitet ingår. Slutkursen/nämnaren kan själv vara endogen. Kvartalet är mycket längre än prisfönstret.
+
+Gemensamt urval:205 redan existerande pris/FI-event,112 tillägg och93 borttag,14reviews. Båda fonderna bidrar till exakt samma event. Pris är summan av daglig avvikelse mot OMXSBGI från AD−1 till ED+1 inklusive, hämtad ur befintlig eligible_rematch/event_paths.csv. Matchningar/hypotesfönster skattas inte om. Kontrollaktiernas avkastning subtraheras inte i denna beskrivning; deras tidigare kompletta urval behålls för jämförbarhet. Varje översyn väger lika; inom en översyn väger event lika. För borttag vänds tecknet i BÅDE köp och pris, så positivt riktat köp betyder nettoförsäljning. Oförvända variabler finns också i eventfilen.
+
+Alla fördeklarerade resultat, procentenheter
+Fond                    Tillägg2019–21  Tillägg2022–25  Borttag2019–21  Borttag2022–25
+SPP/Storebrand51482          0,050089        0,115050       −0,022372        0,064370
+AccessSverige60824           0,381918        0,314186        0,291942        0,381189
+Fast tvåfondssumma           0,432007        0,429236        0,269571        0,445559
+
+Tillägg:44event/6reviews tidigt,68event/8reviews sent. Borttag:35/6 respektive58/8.
+Tvåfondssummans senare−tidigare riktade nettopositionsförändring:
+- Tillägg−0,002771,95%CI[−0,158063;0,152522].
+- Borttag+0,175988,95%CI[−0,024273;0,376250].
+Intervallen antar oberoende översyner och är med bara6 respektive8datum osäkra; de är inte en kontroll för changing stock composition eller tidsserieberoende.
+
+Samma event/reviewviktade riktade CAR:
+- Tillägg2,159105 tidigt,2,080637 sent; skillnad−0,078468,95%CI[−3,276428;3,119492].
+- Borttag−1,111748 tidigt,+0,699523 sent; skillnad+1,811272,95%CI[−4,506634;8,129177].
+För borttag betyder den tidiga negativa riktade CAR att den oförvända CAR är positiv.
+
+Tvåfondssummans pris/nettopositionskvot, korrekt Fieller95%:
+- Tillägg2019–21:4,997846 [−2,167825;14,938169].
+- Tillägg2022–25:4,847297 [2,357095;9,132685].
+- Borttag2019–21:−4,124144 [−33,362612;18,075665].
+- Borttag2022–25:1,569989 [−2,393144;4,330013].
+Detta är ett beskrivande förhållande mellan två medel, inte en marginalpriseffekt, elasticitet eller kostnad per fondköp. Om man ändrar fondpoolen ändras kvoten även om samma totala marknadspris behålls. Den får därför inte jämföras som svensk marknadselasticitet med amerikansk total indexefterfrågan.
+
+Två centrala osäkerhetsutfall får inte gömmas: SPP:s tilläggskvot2019–21 har Fiellermängden(−∞;−7344,382]∪[−20,361;+∞), trots punktkvoten43,105. SPP:s samlade borttagskvot2019–25 tillåter hela reella linjen. Alla18 kombinationer(fond/summa×riktning×tidig/sen/hela) finns i fixed_fund_period_results.csv; inga ogynnsamma utfall eller negativa nämnare kastades. Ingen formell slutsats om en förändrad kvot dras genom att jämföra två överlappande intervall.
+
+Verifiering och nästa konkreta datasteg
+verify.py räknar separat från FI-ledgern och de befintliga prisobservationerna. Alla18 cellers medel/SE/CI samt kvadratisk Fiellerform,12 tidskontraster och gemensamma205event stämmer; största numeriska avvikelse9,1e−13. Råkontrollen864/864 passerar. Replay i separat katalog och versioner dokumenteras i REPLAY_COMPARISON.json och requirements_versions.json.
+
+LSEG:s officiella guide visar rätt kandidatfält TR.FdAdjPctOfShrsOutHeld och TR.FdAdjSharesHeldValue. Tidigare fälttest försökte andra namn och misslyckades. TR.FundAsRepShrsHeld och ett holdingsanknutet InvestorPermID-suffix är dessutom förberedda kandidatprover, inte verifierad åtkomst. lseg_complement_pilot.py innehåller endast ett begränsat fält-/identitetsprov i en redan autentiserad notebook, utan att öppna ny session eller läsa credentials. Lokala replaymiljön saknar lseg-paket; ingen autentiserad hämtning genomfördes. Primärkällor och exakta förbehåll finns i LSEG_SOURCE_NOTES.txt.
+
+Även om kompletteringen lyckas behövs bevis för full fondrapport/korrekt frånvaronolla, daterad fondidentitet och historiskt mandat innan den långa serien kan räknas om. Fram till dess är den genomförda tvåfondskontrollen ett verkligt avgränsat resultat; den gamla2007–2026-slutsatsen ska stå som ej belagd.

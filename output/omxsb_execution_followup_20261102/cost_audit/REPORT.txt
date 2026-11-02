@@ -1,0 +1,58 @@
+T29: genomförd kostnads- och viktaudit, 2 november 2026
+Explorativ analys efter kända resultat. Teknisk beslutsrapport, inte uppsatstext.
+
+BESLUT
+T29:s sparade aritmetik är reproducerbar, men 125 miljoner kronor per år är inte en verifierad faktisk kostnad för svenska indexsparare. Siffran kombinerar osäkra målvikter, en ofullständigt historiskt avgränsad kapitalgrupp och ett antagande att hela den uppmätta indexpremien är en undvikbar exekveringsnackdel. Den kan endast användas som tydligt villkorat räkneexempel. Ingen snäv, fullt verifierad kostnadsskattning kan skapas genom att bara välja bort osäkra event: samtliga eventvikter använder en gemensam nämnare vars medlemskap/värden behöver rättas.
+
+VAD SOM FAKTISKT KÖRTS
+- 468 sparade event, 39 reviews; primärmåttet har vikt och premie i 455 fall. Både primär och sekundär reviewaritmetik reproducerade till högst 8e-13 baspunkter. Alla eventvikter och deras saknatmönster reproducerade till 1.1e-16.
+- Inga nya aktieavkastningar eller regressioner. Premie är sparad, teckenvänd daglig marknadsjusterad CAR AD−1:ED−1. Sekundäranalysen reproduceras endast som aritmetik: den använder längre fönster/olika kontrollurval och är ingen automatiskt konservativ kostnad.
+- Kalenderår avser implementering ED. 2008H1 annonserades 2007 och 2009JAN annonserades 2008. År2007 börjar i juli; 2026 slutar i juni. Dessa år särredovisas. 2009 innehåller tre observerade implementeringar. 'Hela år' betyder hela år inom denna observerade översynskatalog, inte bevis för att alla off-cycle-förändringar omfattas.
+
+VILLKORAT RÄKNEEXEMPEL, INGA KOSTNADSGRÄNSER
+C_y(lambda) = lambda × sum_event w_saved × signed_CAR_percent ×100 bp.
+Lambda är förutbestämt 0,0.5,1. Det är en antagen andel av den observerade premien, inte en konfidensnivå eller statistiskt identifierad mekanismandel. Vi antar hela modellhandeln på omviktningshandelsdagen ED−1 och bortser från faktisk fondexekvering. Negativa eventbidrag behålls. Längre förhandsrörelser, annan kontrafaktisk portfölj och omviktningshandel i kvarvarande medlemmar omfattas inte. Därför är lambda=1 inte en bevisad övre gräns och lambda=0 inte en skattad lägre gräns.
+
+Period                    N    Reviews   lambda=1 bp/år*   SEK per100000*   mkr/år med kapital före besked*
+2008–2011                 54       9          16.559             165.59                   5.06
+2012–2016                 97      10           7.152              71.52                  22.58
+2017–2021                138      10           5.275              52.75                  33.27
+2022–2025                135       8          10.337             103.37                  89.27
+2008–2025 totalt         424      37           9.429              94.29                  36.48
+2026H1 ENDAST             23       1          11.717             117.17                 224.37
+*2026H1 är ett halvårsbelopp, inte årstakt. Övriga rader är historiska årsgenomsnitt. Samma gamla viktproxy och AUM-grupp används; kronbeloppen är även fortsatt beroende av deras fel. Vid lambda=.5 halveras samtliga belopp; vid0 blir de0. Alla21 scenariorader finns i conditional_scenarios.csv.
+
+Det gamla senaste periodresultatet är 10.613bp och125.187mkr, med nio reviews dividerat med fem kalenderår2022–26. För bara de fyra avslutade åren2022–25 är originalkapital-scenariot100.338mkr; med strikt föregående månads kapital89.271mkr. Skillnaden till125mkr är alltså inte en ny ekonomisk upptäckt: årsavgränsning och kapitaldatum har ändrats. Ingen ny statistisk signifikans har beräknats.
+
+VIKTER: KONKRETA STYRKOR OCH FELRISKER
+1. Daterad free-float finns för467/468 event; enda aktuella-floatfallback är Stora Enso2007H2. Det vore fel att beskriva alla eventvikter som byggda på dagens float. Bland faktiskt värderade medlems-/endpoint-rader finns6553 med historiskfloat,91 med antagen100% och5 med aktuellfallback. De96 senare står för5.50% av summerad nämnarmassa över de78 endpoints; detta är ett aggregerat diagnostiskt mått, inte ett kostnadsfelmått. Vendorfloat är heller inte automatiskt Nasdaqs indexspecifika floatfaktor.
+2. Ingen av de78 före/efter-nämnarna har värde på samtliga medlemmar i den sparade kedjan:3–21 luckor, median9. MEN detta får inte läsas som3–21 verkliga utelämnade nuvarande indexmedlemmar. Kedjan behåller bl.a. flera sedan länge avnoterade RIC. Vid2026H1 har18/126 rader ingen aktuell kurs, inklusive gamla Capio/MedA/Scania/SwedishMatch. Originaldiagnostiken ser endast saknade värden bland prisförsedda rader och döljer detta medlemsproblem. SKAb ochTEL2b är däremot två prisförsedda värdebortfall i samtliga78 nämnare; båda finns identifierade i officiella månadslistor.
+3. Bolagsmcap × klassaktier / summan av panelens noterade klasser är inte generellt ett aktieslagsvärde. Konstruktionen förutsätter tillräcklig klasskedja, likvärdiga klasspriser och att onoterade klasser inte påverkar. 43event har flera samtidigt prisförsedda RIC under samma strängrot. ABB-rooten inkluderar historiskt även ABBu-instrument; rootgruppering är inte en instrumentklassifikation. Nordea/Tieto-tilläggets mcap är dessutom konstruerat som pris×aktier med antagen månadsordning, inte verifierat oförändrat vendor-bolagsmcap.
+4. Officiell Nasdaq-månadskapitalisering kan verifieras mot exakt ISIN för1686 värderade medlems-/review-jämförelser.1490 ligger inom2% av samma-dagsproxy: konstruktionen fungerar väl i många vanliga fall. Men lokalt noterad kapitalisering och globalt bolagsvärde skiljer sig kraftigt för vissa gränsöverskridande bolag. Sampo-proxy/listat kapital är cirka183–255gånger2023–25, Stora Enso cirka6.8–11.7gånger2017–21. Detta är en kontroll av omfattning/enheter, inte automatiskt samma procentuella fel i hela indexvikten. Nasdaq2018 §3.1 anger lokalt CSD-registrerade aktier för utländska/sekundärnoterade bolag i lokala index. T29:s hela globala bolagsmcap måste därför verifieras mot faktisk tillämpad indexmängd; det kan inte presumeras korrekt. Exakt regelhistorik för alla år har inte kontrollerats.
+5. Månadskällorna har aktieslag/listade aktier/kapital, men inte fullständiga historiska OMXSB-indexvikter eller alla indexfaktorer. Den befintliga strikta RIC-mappningen täcker3157 medlems-endpoints; saknad mappning är inte bevis för saknat instrument i källan. Aktuell GIW-sida anger att ytterligare vikter kräver inloggning. Ingen full historisk viktfil har verifierats här. Vi fyller därför inte luckor med ett nytt godtyckligt totalsummemått.
+6. T29 mäter målviktsproxy dagen före besked, inte exakt effektiv omviktningsvikt. Den uncappade OMXSB-proxyn tillämpas dessutom på kapital i flera Cap-/ESG-/specialvarianter. Skillnader i målmedlemmar, capping och faktiska förinnehav kan inte ersättas med gemensam AUM.
+
+AUM OCH TID
+Originalet använder december samma år även för majbesked, eller sista filraden när december saknas. Den frysta känsligheten använder senaste redovisade månad strikt före beskedsmånaden; alla39reviews har en sådan tabellrad. Men noll i fondkolumn kan komma från saknad datakälla, och gruppen är inte bevisat historiskt komplett. Alla fonder kan inte behandlas som exakt OMXSB-tracking med samma vikt.
+Fem positiva Nordnet-poster2026 (maj,juni,augusti,september,oktober) är omkring0.0000013–0.0000014mdkr, alltså cirka1300–1400SEK, källa tnafund; mellanliggande juli är omkring15mdkr och använder andelsklasssumma. Detta är en konkret käll-/enhets-/identitetsvarning. Ingen automatisk faktor har antagits. 2026H1:s föregående månad april råkar ligga före dessa fem felriskposter, men det validerar inte hela kapitalserien. Kalender- och tidsrättelsen löser därför inte det historiska mandat-/AUM-problemet.
+
+PETAJISTO: VAD SOM BEHÖVS FÖR EN KOSTNAD
+Originalets §5, s281–284, mäter indexets nackdel relativt en explicit indexneutral portfölj. S&P-exemplet med permanent premie ger p[s(a−d)+d]/(1+p). Russell-exemplet bygger på en alternativ omviktningskalender och ger p(a+d)/2 med permanent premie respektive p(a+d) vid full reversal. Förutsättningarna och relevant kontrafaktisk portfölj skiljer sig alltså mellan index. T29:s summa av individuella vikter×CAR är inte en direkt replikation av dessa estimander. Petajisto använder också ett daterat kapitalbelopp för att illustrera historiska baspunkter; det gör inte beloppet till observerade historiska handelsförluster. För OMXSB behövs en uttrycklig kontrafaktisk strategi, korrekt viktdefinition och antaganden om orsak, varaktighet och exekvering. Vår egen osäkra reversalevidens ger inte dessa antaganden gratis.
+Primärkälla: https://www.petajisto.net/papers/petajisto%202011%20jef%20-%20hidden%20cost%20for%20index%20funds.pdf
+
+MINSTA VÄG TILL STARKARE RESULTAT
+A. Säkra verkliga daterade före/efter-vikter för EN exakt indexvariant och minst alla reviews2019–25; alternativt rekonstruera Nasdaq-indexaktier med verifierad komplett medlemskedja, lokala CSD-mängder, klasspriser, float och capfaktorer. Enbart dagens medlemmar eller månadslistans alla bolag räcker inte.
+B. Välj exakt vilket dokumenterat fondkapital som följer denna variant vid varje datum; rätta käll-/enhetsbyten i SHoF. Beräkna först per100000SEK och redovisa kapitalmultiplikationen separat.
+C. Kalla resultatet villkorad indexomsättningskostnad relativt en definierad strategi. Faktisk exekveringskostnad kräver faktiska handelstidpunkter/priser. Beskedspremie som också kan spegla nyheter/urval kan inte utan antaganden bli undvikbar förlust. Nuvarande bootstrap fångar inte dessa identifierings- och mätfel.
+D. Inget krav på att hitta positiv kostnad: negativa reviewbidrag och alla saknade event ska förbli synliga. Inga officiella-viktbaserade nya kostnadsutfall har skapats när datagrinden inte klarades.
+
+FILER OCH REPRODUKTION
+- audit_t29.py --repo REPO --out DENNA_KATALOG: läser original och återskapar hela audit, cirka sekunder. Ingen originalkod körs eller skrivs över. Licensdata krävs lokalt; inga råa LSEG/Morningstar-filer kopieras.
+- original_arithmetic_reproduced.csv, review_accounting.csv, calendar_year_accounting.csv, conditional_scenarios.csv: aritmetik, kapitaldatum och alla scenarier.
+- event_weight_audit.csv, membership_weight_coverage.csv, review_weight_coverage.csv: fullständig täcknings-/proveniensjournal; värden är inte certifierade indexvikter.
+- monthly_cap_scope_diagnostic.csv: exakt daterad offentlig kapitaljämförelse och kvotdiagnostik.
+- aum_source_scale_flags.csv: saknad källa och extrema små positiva poster, utan automatisk rättelse.
+- saved_event_accounting_inputs.csv: oförändrade härledda T29-eventmått medED-år, inte ny avkastningsanalys.
+- summary.json, validation.json, input_hashes.json, sources/source_ledger.json och ANALYSIS_DECISIONS.txt: kontroller, spårbarhet och faktisk fördeklaration.
+
+Agentmiljön nekade skrivning i användarrepot. Paketet ligger därför under chatwork/omxsb_execution_followup_20261102/cost_audit/ för roots kopiering till output/omxsb_execution_followup_20261102/cost_audit/. Ingen annan katalog i repot har ändrats av denna audit.

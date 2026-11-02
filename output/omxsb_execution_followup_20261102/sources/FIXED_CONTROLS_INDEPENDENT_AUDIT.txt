@@ -1,0 +1,42 @@
+OBEROENDE KONTROLL AV DEN FRYSTA KONTROLLJÄMFÖRELSEN
+2026-11-02. Avgränsning: ingen ny matchning, inga nya fönster, inga nya testval.
+
+Granskad kod: code/build/omxsb_execution_controls_20261102.py.
+Beslut: timing/ADDENDUM_FIXED_CONTROLS.json, registrerat efter att v1/v2:s marknadsjämförelser var kända. Detta är en efterföljande, öppet explorativ diagnos. Kontrollernas identiteter var redan frysta före denna diagnos.
+
+DOM
+Ingen aktie-, tecken-, ben- eller aritmetikmiss identifierad. Den separata omräkningen från råa dagliga totalavkastningar reproducerar samtliga 264 giltiga event och 1 056 aktie-/kontrollben. Maximal avvikelse är 1,11e−13 procentenheter. Samtliga åtta tabellradernas medel, t-intervall och exakta signflip-p matchar separat statsmodels-/kombinationsberäkning. Reproduktion är inte ny bekräftande evidens för den ekonomiska hypotesen.
+
+KONVENTIONER OCH IDENTITET
+* Daglig totret i procent delas med 100 före sammansättning.
+* Avkastning mellan tidig stängning och sen stängning: tidig dag exkluderas, sen dag inkluderas. Aktie och samtliga tre kontroller använder exakt samma indexhandelsdagar.
+* Tre kontroller har lika startkapital och hålls utan daglig ombalansering; deras tre terminalförmögenheter medelvärdesbildas.
+* Tillägg: aktiens terminalförmögenhet minus kontrollkorgens. Borttagning: kontrollkorgens minus aktiens. Marknadsjämförelsen räknas på exakt samma eventstöd.
+* Event-RIC och alla kontroll-RIC matchar den frysta filen. Inga egna kontroll-RIC/bolag och inga dubbla kontroll-RIC/bolag bland de tre. Inga återkallade ändringar finns i detta kontrollurval; cancellation-redovisningen från v2 används därför inte som ett felaktigt aktieben här.
+* 22 tillägg och 10 borttagningar saknar frysta tre kontroller; inga ersättare skapas. Giltigt stöd är 143 tillägg och 121 borttagningar. Alla återstående kontrollben har observerad totalavkastning och positiva observerade ändpunktspriser enligt samma gate.
+
+RESULTAT, ÖVERSYNSVIKTNING OCH 95-PROCENTIGA T-INTERVALL
+Tillägg 2017–25, 143 event / 18 översyner:
+  Mot OMXSBGI: +2,409689 pp [1,117510; 3,701869].
+  Mot frysta kontroller: +0,829981 pp [−0,413862; 2,073823], exakt signflip-p 0,178581.
+Tillägg 2021–25, 85 event / 10 översyner, tidigare angiven beskrivande period:
+  Mot OMXSBGI: +1,247033 pp [0,250892; 2,243174].
+  Mot frysta kontroller: +0,242464 pp [−1,006676; 1,491604], p 0,808594.
+Borttagning 2017–25, 121 event / 18 översyner:
+  Mot OMXSBGI: −1,093974 pp [−2,759272; 0,571324].
+  Mot frysta kontroller: +0,495310 pp [−0,764007; 1,754627], p 0,413971.
+Borttagning 2021–25, 75 event / 10 översyner:
+  Mot OMXSBGI: −0,171772 pp [−1,427585; 1,084040].
+  Mot frysta kontroller: +0,312072 pp [−1,440280; 2,064424], p 0,697266.
+
+VAD DET ÄNDRAR
+De tillagda aktiernas uppgång jämfört med marknadsindex är inte liktydig med en lika stor indexspecifik uppgång: de redan valda jämförelseaktierna steg också. På identiskt stöd faller punktestimatet från 2,410 till 0,830 pp, och i den senare perioden från 1,247 till 0,242 pp. Det begränsar en indexspecifik tolkning av den större marknadsrelativa siffran. Kontrollintervallet innehåller både noll och ekonomiskt märkbara positiva effekter; resultatet visar inte att indexeffekten saknas, att momentum förklarar allt eller att de två estimatorerna är kausalt identifierade. Ingen separat inferens om skillnaden mellan de två estimatorerna har lagts till här.
+
+Tolkning som faktisk fondvinst eller realiserbar handelsstrategi kräver fortfarande känd indexkorg, budget, avslutspriser, kostnader och prispåverkan. Kontrollkorgen är en vetenskaplig jämförelse; den är inte en antagen finansierings-/blankningsstrategi. Den frysta matchningens historiska datatäckning och urval ärvs, och fullständig initial beskedspopulation är inte bevisad. Översyner, inte de 143 enskilda aktierna, bär här inferensens oberoendeantagande. Återkommande bolag och beroende mellan översyner kan fortfarande begränsa denna approximation.
+
+MINDRE RAPPORTERINGSRISK
+summary.csv:s median_peak_absolute_path_pp och max_peak_absolute_path_pp är ärvda från den ursprungliga aktie–marknadsbanan även på rader märkta fixed_control_pp. De får inte presenteras som kontrolljusterad banrisk. Detta påverkar inte slutpunktsmedel, intervall eller signflip-p. Även holding_days/large_daily_return_events är ursprungliga eventdiagnoser, inte ett nytt separat kontrollriskmått.
+
+LÄSDJUP OCH REPRODUKTION
+Hela kontrollskriptet och dess beslut lästa. Rått prisunderlag återläst för varje giltigt aktie-/kontrollben; frysta identiteter, urval, ändpunkter, enheter och alla åtta summeringar kontrollerade. Ingen full ny extern källverifiering av varje historiskt RIC eller den tidigare matchningsmodellens alla indata gjordes i denna avgränsade audit.
+Detaljer: timing_controls_validation.json. Reproduktionskod: validate_timing_controls.py.
