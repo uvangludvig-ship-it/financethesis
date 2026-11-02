@@ -1,10 +1,11 @@
 # Indexfondernas nettoköp vid OMXSB-ändringar 2019-2026, per fondfamilj (beskrivande, för jämförelsen med G&S).
-# Samma kvartal och ISIN-regel som första steget v2 och T9. Inga avkastningar används.
+# Samma kvartal och ISIN-regel som första steget v2 och T9. Inga avkastningar används. Körs från code/claude_checks.
+# Ersatt 2 nov av nettokop_v2.py (OMXSB-indexfonder efter innehav).
 import os, re
 import numpy as np, pandas as pd
-R = os.environ.get('REPO', '/home/claude/uvangludvig-ship-it/financethesis')
-D = os.environ.get('DATA', '/home/claude/kodpaket/data')
-H = pd.read_pickle(os.environ.get('HOLD', '/home/claude/fi_all_holdings.pkl'))
+R = os.environ.get('REPO', '../..')
+D = os.environ.get('DATA', 'data')
+H = pd.read_pickle(os.environ.get('HOLD', 'data/fi_all_holdings.pkl'))
 H['antal'] = pd.to_numeric(H.antal.astype(str).str.replace(',', '.').str.replace(' ', ''), errors='coerce')
 H = H[H.antal > 0].copy(); H['fund_id'] = H.fund_id.astype(str); H['kv'] = pd.to_datetime(H.kvartal)
 F = pd.read_csv(os.path.join(D, 'fi_all_funds_klass.csv')); F['fund_id'] = F.fund_id.astype(str); F['kv'] = pd.to_datetime(F.kvartal)
