@@ -1,0 +1,86 @@
+LOKAL GENOMFÖRBARHET: ATTENTION OCH OMXS30
+2026-11-02. Oberoende metadata- och identitetsinventering, inte ett avkastningstest.
+
+Kort dom
+OMXS30-händelser finns lokalt, men är inte ett färdigt stort jämförelseurval. Under FI-perioden 2019–2025 finns 22 noterade aktieslagshändelser över 7 effektiva datum. Tolv är samma metodreform den 1 juli 2025. Före reformen återstår 9 ordinarie händelser över 5 datum samt ett uppköpsrelaterat borttag. En OMXS30–OMXSB-kontrast skulle därför ha få datum och blanda olika regelverk, selektion och fondmandat. Den kan inte på egen hand identifiera uppmärksamhet som prisorsak.
+
+Jag har inte funnit en lokal strukturerad attention-, nyhets-, sentiment-, sökintresse- eller analytikertäckningspanel i de granskade data-/LSEG-mapparna. Detta betyder inte att användaren saknar åtkomst eller att uppgifterna inte kan hämtas. Inget lokalt framgångsrikt eller misslyckat entitlementprov för sådana LSEG-fält hittades. Äldre loggar för priser, klassificering och free float besvarar inte den frågan. Parentens separata aktuella externa dataprover behandlas inte som redan existerande lokal data i denna rapport.
+
+1. Vad finns och vad är faktiskt räknat?
+
+Källa: data/input/omxsb/omxs30_changes_2005_2026.csv, omxs30_notes.md och code/build/omxs30_build_csv.py. CSV-källornas SHA256 finns i metadata_summary.json. Kalender- och identitetsräkningar kan upprepas med inventory.py och additional_coverage.py. Repot är oförändrat.
+
+Urval                            Rader   Tillägg  Borttag  ED-datum  AD-datum
+Hela listan                        48       24       24       20        19
+Med faktiskt ifyllt ED             46       23       23       20        19
+Ordinarie enligt reason-fält       42       22       20       16        15
+FI-period 2019–2025                 22       11       11        7         7
+Ordinarie före juli2025, FI-år       9        5        4        5         5
+Reformen juli2025                   12        6        6        1         1
+
+ED = första dagen med ny sammansättning; AD = källans tillkännagivandedatum. Antalen anger distinkta datum, inte bevisat statistiskt oberoende chocker. Alla 48 rader har 34 olika tickersträngar; FI-delurvalet har 19. Bolagsnamnssträngar är inte juridiska issuer-ID. Inga faktiska avkastningar, handelsvolymer eller innehavskvantiteter har lästs in för dessa beräkningar.
+
+Sex rader är andra typer än ordinarie översyn: Skandia/Old Mutual 2006 (två odaterade inferenser), Vostok Gas 2009, Scania 2014, Essity 2017 och Swedish Match 2022. Ordinarie tillägg/borttag är därför inte balanserade; bland annat fylls gamla vakanser vid senare datum. Summan min(tillägg,borttag) per ED är 19, men detta är en ren aritmetisk summering, inte 19 verifierade individuella replacementpar eller migrationer till/från ett annat index.
+
+FI-periodens sju datum:
+2021-01-04: Evolution in / SSAB A ut (2).
+2021-07-01: Sinch in / Securitas B ut (2).
+2022-07-01: SBB B in / Skanska B ut (2).
+2022-11-18: Swedish Match ut efter uppköp (1).
+2023-01-02: Nibe B in, fyller vakans (1).
+2024-07-01: Saab B in / Autoliv SDB ut (2).
+2025-07-01: sex in / sex ut vid reform (12).
+Inga ändringar 2019–2020 är noterade; flera äldre no-change-uppgifter bygger på inferens och kräver egna källor om fullständighet är viktig.
+
+2. Proveniens och fel som måste rättas innan ett utfallstest
+
+VERIFIED är en etikett från den ursprungliga insamlaren, inte resultatet av en ny oberoende genomläsning av alla pressmeddelanden här. Hela CSV: 27 VERIFIED, 19 SECONDARY och 2 UNVERIFIED. Av de 27 anges 23 som Nasdaq/primär pressdistribution och 4 som återgivningar av Nasdaqmeddelanden hos Mondo Visione. FI-perioden har 19 VERIFIED (17 direkt/pressdistribution, 2 återgivna) och 3 SECONDARY: två Sinch/Securitas-rader och Swedish Match. De två odaterade 2006-raderna är uttryckliga placeholders. Fyra ytterligare 2006-rader saknar AD. Elva av alla 48 rader saknar ISIN; två av FI-periodens 22 gör det.
+
+Omxs30_notes.md innehåller flera konkreta problem som inte får följa med till analysen:
+- Den säger 42 ordinarie =21+21 och reformen =12+12. CSV ger 22+20 respektive 6+6.
+- Essity-raden har ED 12 juni 2017 medan samma rads reason säger första notering 15 juni. Exakt indexmeddelande/teknisk behandling måste kontrolleras; en lokal motsägelse räcker inte för att gissa en ny dag.
+- Avanza Zero/SIX30 sägs fortfarande ha samma bestånd som OMXS30. Tidigare primärkällegranskning i work/pivot_20261101/environments/report.txt visar att SIX30 behöll de gamla reglerna när OMXS30 ändrades i juli2025. Avanza Zero får inte räknas som direkt följare av de nya OMXS30-reglerna.
+- FI-periodens käll-ISIN avviker från exakt ticker i daterad Nasdaq-originalroster i fyra fall: Swedish Match 2022 (SE0000310336 mot SE0015812219), Autoliv SDB 2024 (SE0000382335 mot SE0021309614), Industrivärden C 2025 (SE0000190126 mot SE0000107203) och Kinnevik B 2025 (SE0015810247 mot SE0022060521). Industrivärdens gamla kod är A-aktien: detta är inte bara ett datumalias. Ingen sådan union har godkänts.
+
+3. FI- och prisidentitet: stark bas, men ännu ingen godkänd innehavspanel
+
+Jag matchade alla 22 FI-periodrader till exakt ticker/ISIN i den senaste tillgängliga Nasdaq-roster med referensdag senast AD. Alla 22 har en unik sådan träff. Roster: output/omxsb_open_questions_20261102/eligibility/dated_stockholm_instrument_roster.csv. RIC-brygga: eligible_pool/review_RIC_control_pool.csv.
+
+19/22 får dessutom en redan existerande exakt ISIN→RIC-brygga till 2005-panelen. Samtliga dessa 19 har first_date/last_date som omsluter AD–ED. Detta kontrollerar panelens datumspann, inte varje dags giltighet, enhet, avkastning eller corporate-action-hantering. De tre återstående är Autoliv SDB, Industrivärden C och Atlas Copco B. Den äldre 2012-panelens statik innehåller kandidaterna ALIVsdb.ST, INDUc.ST och ATCOb.ST med datumspann 2012-01-02–2026-10-14, men tomma vendor-ISIN/bolagsnamn. De är alltså möjliga datakällor, inte färdigt godkända identiteter. Byt aldrig till Industrivärden A eller Atlas Copco A för att få bättre täckning.
+
+Enbart metadata ur fi_holdings_long.csv.gz lästes: fond-ID, instrument-ISIN, kvartal och tillgångsslag. 19/22 exakta referens-ISIN finns som överlåtbara värdepappersrader i båda relevanta kvartalen. För Sinch2021 och Saab2024 finns tidigare validerade split-/ISIN-kandidater som ger rapportförekomst även efter händelsen; de måste dateras och mängdjusteras i en eventuell ny analys. Det ger möjlig täckning för 21 av 22. Swedish Match har rapportförekomst före uppköpet men ingen efter med accepterad identitet. Detta är inte en observerad ren nolla eller ett vanligt indexutträde.
+
+Rapportförekomst betyder INTE positivt ägande, komplett rapport, säker frånvaronolla, balanserade fondpar, rätt antal eller en validerad bolags-/aktieslagsnämnare. Tabellen redovisar hur många fonder som har en instrumentrad utan att läsa Antal eller marknadsvärde. Tidigare FI-grindar för negativa/missing kvantiteter, dubblettrapporter, fondfusioner och okända relaterade instrument måste återanvändas innan ett ekonomiskt innehavstest.
+
+Timing är avgörande: gamla OMXS30 implementeras efter sista juni-/decemberstängningen. För juli1-händelser är Q1→Q2 den omedelbara före/efter-paret, inte Q2→Q3. För januarihändelser är det Q3→Q4 föregående år. Här beräknades genomförandedagen som ED−1 i OMXSBGI-datumkalendern; inga indexnivåer användes. Exakt dag/intraday-behandling måste därefter kontrolleras mot respektive meddelande, särskilt off-cyclehändelser. Q2/Q4 kan samtidigt innehålla OMXSB-omviktningar tidigare under samma kvartal.
+
+Två dokumenterade fondmetadatahistoriker finns redan: Avanza Zero60097, SE0001718388, och XACT51677, SE0000693293, vardera31 kvartal 2018Q4–2026Q2. XACT har OMXS30GI genom2021Q2 och OMX Stockholm30 ESG Responsible från2021Q3. Avanza har SIX30 Return Index genom serien. Dessa är två olika mandat, inte två oberoende identiska OMXS30-trackers. Historiska vikter, ESG-eligibilitet och faktiska flödesjusterade order är inte verifierade av metadataförekomsten.
+
+4. Överlapp med OMXSB och vad medlemskap betyder
+
+Direkt datumjoin av de två lokala eventlistorna ger tre samtidiga effektiva datum: 2 juli2007, 2 januari2008 och 2 januari2009. Dessa producerar54 eventpar eftersom varje OMXS30-rad korsas med alla OMXSB-rader samma datum. Bara två par har samma exakta ticker/ISIN: Stora Enso-borttaget2007 och Vostok-borttaget2009, båda borttag i båda indexen. Det är inte motriktad migrationsnettning. Inget gemensamt AD hittades.
+
+Inom FI2019–2025 finns inget exakt gemensamt AD eller ED i de noterade ändringarna och inget samma-ticker/dated-ISIN-par inom ±90 kalenderdagar. Detta är en metadata-kollisionskontroll, inte ett nytt valt utfallsfönster. Den utesluter inte samtidiga fondorder, viktförändringar i kvarvarande medlemmar, andra aktieslag eller ofullständigt noterade corporate actions. Kvartalsinnehav kan fortfarande blanda olika omviktningar. Från december2025 sammanfaller de ordinarie indexkalendrarna, men OMXS30-noterna anger inga ändringar december2025 eller juni2026.
+
+Den befintliga E3-koden i code/build/mechanisms_2007.py, cirka rad311–333, rekonstruerar OMXS30-status endast för tickers som någon gång förekommer i ändringslistan. Övriga är uttryckligen unknown. En första deletion används för att anta historiskt medlemskap före första registrerade eventet. Detta är ingen fullständig historisk 30-medlemssnapshot. Varken CSV eller dagens snapshot får göras till en komplett panel av historiska medlemmar/icke-medlemmar.
+
+2025-regimen måste separeras. De lokalt tidigare primärverifierade reglerna går från omsättningsurval av aktier med 15/45-buffert och full-marketcapvikter till bolagsrankning efter free float, likviditetsgräns, 20/35-buffert, viktstak och ett aktieslag per bolag. Atlas Copco B lämnar medan A kvarstår; detta är förlust av en indexerad aktieklass, inte att bolaget slutar synas i OMXS30. Alla sex in/sex ut inträffar samtidigt som flera regeländringar. Tolv rader kan inte göras till tolv oberoende reformer.
+
+5. Attention-/rapportdata och minsta kvarvarande hämtning
+
+Lokala LSEG-scheman som kontrollerats är handelsdata (ric,date,close,totret,volume,mcap,shares,turnover,bid,ask,source), statik (ISIN, namn, börs, datumspann), ICB/TRBC, free float och universumlistor. Datastream-zipens tabeller heter Codes,P,VO,RI. Inget av detta mäter hur många som sett en aktie, vilka nyheter som publicerats, sentiment, sökningar eller analytikertäckning. En fil som heter trend_tests.py är tidsutveckling i den befintliga eventstudien, inte Google Trends. FI-fondrapporter/AP-rapporter och Nasdaq-indexmeddelanden är verkliga rapporter men inte ett jämförbart bolagsnyhetsflöde.
+
+Det återstår ett faktiskt åtkomst- och täckningsprov för minst en direkt vald observation: exempelvis tidsstämplade artiklar med bolagsidentifierare och deduplicering, antal analytiker med daterade uppdateringar, eller reproducerbar sök-/sidvisningsserie med fast bolagsalias. För nyheter behövs publiceringstid/tidszon, källuniversum och om indexpressmeddelandet självt ska skiljas från annan rapportering. För sentiment krävs dessutom att måttet inte blandar ton med artikelmängd. För bolagsrapporter behövs ett daterat event-/rapportkalendermått; att själva årsredovisningar går att läsa ger inte ett komplett nyhetsmått. Ingen credential har sökts eller öppnats i detta arbete.
+
+Minsta försvarbara lokala slutsats är därför: en liten OMXS30-händelselista går att rätta och länka till befintlig FI-/prisdata, men direkt attention-mätning är ännu en separat datagrind. En eventuell OMXS30-kontrast kan ge ett institutionellt jämförelsefall; utan ett nytt direkt mätled kan den inte skilja uppmärksamhet från olika efterfrågan, storlek, likviditet och urvalsregler. Denna rapport jämför inga observerade priseffekter.
+
+Filer som följer denna inventering
+- inventory.py, additional_coverage.py: reproducerbara metadata-/täckningsräkningar.
+- all48_event_metadata.csv, changes_by_effective_date.csv: samtliga källrader och datumantal.
+- metadata_summary.json, additional_metadata_summary.json: maskinläsbara antal, källhashar och avgränsningar.
+- FI_period_identity_and_report_coverage.csv: första strikta RIC-grinden (19/22).
+- FI_period_expanded_metadata_coverage.csv: samtliga22 med exakt Nasdaq-identitet, FI-rapportförekomst samt tre separat märkta kandidat-RIC.
+- OMXSB_calendar_overlap.csv: alla54 samtidiga metadata-eventpar.
+- FI_period_same_security_nearby_dates.csv: tom tabell med explicit schema; ingen noterad samma-security-kollision inom90 dagar under FI-perioden.
+
+Läsomfång: lokala källfiler, relevant kod, metadatafält och tidigare källdokumentation. Sökresultat i gamla statusfiler kan återge gamla ekonomiska resultat; inget sådant resultat analyserades, räknades om eller användes för urvalet här. Inga nya avkastningar eller FTN-utfall kördes.

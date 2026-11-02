@@ -907,3 +907,9 @@ Public FI snapshots were downloaded together from https://www.fi.se/sv/vara-regi
 | `output/omxsb_broadening_20261102/frontier/` | Baseline-only positive-holding network coverage from existing FI/Nasdaq inputs; no return outcomes. Financing and incumbent designs remain data-gated. All saved files listed and hashed in `PACKAGE_SHA256.json`; module reports and code record transformations. |
 
 Code and original provenance snapshots are preserved separately from executed numerical outputs. Package checks do not mean all economic mechanisms have been identified, all literature exhausted, or results preregistered blindly.
+
+
+<!-- OMXSB_ATTENTION_COVERAGE_20261102 -->
+### Public attention coverage probe, 2 November 2026
+
+Technical-only fixed January2019 Wikimedia pageview probe for six purposive company names, preserved in `output/omxsb_attention_dd_20261102/public_data_probe/`. Source URLs, access status, hashes and pre-probe specification are included. Four current pages yielded31 daily user-pageview rows; two current pages returned404 and require historical-title research. Missing is not zero. This is not population coverage or an event-effect estimate. Google Trends first browser attempt returned429; no series received. Current SSE catalogue reports Factiva discontinued2021 and an on-campus Nexis Uni trial19Oct–19Nov2026; no archive entitlement/export validated. Raw licensed inputs unchanged.

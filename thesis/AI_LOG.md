@@ -42,3 +42,7 @@ One line per use, the same day. Tool, date, purpose, what changed in the project
 
 <!-- OMXSB_COMPLETE_OVERVIEW_20261102 -->
 | 2 Nov 2026 | Codex with independent numerical and contribution reviews | Summarize the completed repository research and identify defensible contributions and improvements at the user’s request | Added short/full decision summaries, tracked-file map and independent audit notes in output/omxsb_overview_20261102. Incorporated Claude runda6/runda7/MSCI with explicit read-only validation status; flagged missing covariance, calendar/weighting differences and MSCI missing-data/dependence issues. No new outcome estimates or FTN returns; no prior outputs overwritten. Updated README navigation. | No; technical research and decision notes only |
+
+
+<!-- OMXSB_ATTENTION_DD_20261102 -->
+| 2 Nov 2026 | Codex with three parallel literature/design/data audits | Assess attention, sentiment and OMXS30 as feasible OMXSB extensions | Primary-source reading ledger, bounded identification review, OMXS30 metadata/ISIN audit, fixed Wikimedia access probe, failed Google access probe and current SSE library catalogue check; technical decision package in output/omxsb_attention_dd_20261102. No new event-return or attention-effect estimates, no FTN outcomes, no licensed raw data or copyright fulltexts published | No; technical decision and audit notes only |
