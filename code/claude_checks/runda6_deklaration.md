@@ -87,3 +87,27 @@ Deklarerat efter att T19a stoppats för låg precision. Inga skattningar för T1
 - Förväntan förutsäger b < 0. Styrkevillkor: MDE ≤ 1,5, samma som T19a.
 - Tolkning som T19a.
 - Tillägg 10:48, före körning: borttag som Ludvigs steg 1 flaggar (`output/omxsb_replication_2007/mechanisms/step1_deletion_flags.csv`, flagged = True: avnotering, bud eller ändrat antal aktier, 19 av 226) utesluts. Annars blandas uppköpsborttag, med egen kursreaktion, in bland de oförutsägbara.
+
+## Utfall, hela panelen (2 nov 17:59 till 18:01)
+
+Data: `runda2_indata/panel_full.csv.gz`, det vill säga `stocks_daily_2005.parquet` sparad som csv av Ludvig 17:53. Gzip-kontrollen godkänd.
+
+- **Steg 0.** T13 återskapat exakt: +1,701 (0,657 till 2,746), N 985, G 19. Godkänt.
+- **Steg 1.** T19b: N 1 461 (855 valda av regeln), G 38, SE 0,196, MDE 0,565 > 0,5. **Stoppad.** T19e: N 417 (237 tillägg, 180 borttag; 230 förutsägbara), G 38, SE 0,505, MDE 1,45 ≤ 1,5. Godkänd. Villkoren ändras inte i efterhand.
+- **Steg 2.** T19e: −0,481 (−1,505 till +0,543), p 0,335.
+- **Läsning enligt förhandsregeln.** Intervallet innehåller 0 och MDE klarar villkoret. En skillnad i beskedsreaktion på mer än cirka 1,5 procentenheter mellan förutsägbara och oförutsägbara händelser går att utesluta. En mindre förväntan går inte att utesluta. Punktskattningen har det tecken som förväntan förutsäger.
+- T19b:s sekundära test skattas inte. Medel per grupp finns i `runda6_resultat/T19_medel.csv` (beskrivande, ingen inferens).
+
+## Rättelse 2 nov cirka 18:20: börsvärdet i Nasdaq-regeln (runda 2, 3 och 6)
+
+Panelens kurs är justerad för senare splittar och sammanläggningar, medan aktieantalet är historiskt. Regeln räknade börsvärdet som kurs × aktier och fick därför fel värde för alla bolag som senare ändrat antalet aktier (Investor 2018: en fjärdedel av rätt värde). Rättat i `runda2.py`, `runda3.py` och `runda6.py`: bolagets `mcap` (ojusterat) × aktieslagets andel av aktierna i bolagets noterade aktieslag. Den gamla raden står kvar som kommentar. Omkört på hela panelen till `runda2_resultat_v2/`, `runda3_resultat_v2/` och `runda6_resultat_v2/`; de gamla mapparna är orörda.
+
+- Regelns träffsäkerhet (T6) blir bättre: efter 2017 väljer den 61 % av tilläggen (förut 54 %), före 2017 44 % (förut 38 %).
+- T13 efter 2017: +1,30 (0,22 till 2,38), p 0,026, N 1 055 (förut +1,70, N 985).
+- T19b steg 1: N 1 571, SE 0,201, MDE 0,577 > 0,5. Fortfarande stoppad.
+- T19e steg 1: N 415, SE 0,460, MDE 1,32 ≤ 1,5. Godkänd. Steg 2: **−0,364 (−1,296 till +0,567), p 0,400**.
+- Läsningen står kvar: en skillnad över cirka 1,3 procentenheter mellan förutsägbara och oförutsägbara händelser kan uteslutas; en mindre kan inte uteslutas. Steg 0 i `runda6_resultat_v2/` säger STOPP eftersom jämförelsevärdet (+1,701) gäller den gamla regeln; det nya värdet stämmer med `runda3_resultat_v2`.
+
+## Rättelse av klockslag (2 nov 18:40)
+
+Klockslagen i den här filen skrev jag efter uppskattning, inte efter klockan, och flera ligger senare än filernas faktiska tider. Ordningen är rätt beskriven, men klockslagen bevisar den inte. Filtider: utdragets resultat sparades 10:42 och deklarationen ändrades senast 10:46, före kvällens tillägg. Hela panelen kördes 17:59 till 18:01 och den rättade regeln 18:22 till 18:25.

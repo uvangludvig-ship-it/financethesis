@@ -1,4 +1,4 @@
-# Runda 9 (deklarerad 17:45, tillägg 17:50): indexköp 2007-2026 ur LSEG, utländska fonder, migrationer, professionell bevakning.
+# Runda 9 (se runda9_deklaration.md; klockslagen där är uppskattade): indexköp 2007-2026 ur LSEG, utländska fonder, migrationer, professionell bevakning.
 # Körs från code/claude_checks: python3 runda9.py 0|1|2   (kräver data/runda8_fondagare.csv.gz, data/runda8_analytiker.csv.gz)
 import os, re, sys, json
 import numpy as np, pandas as pd
@@ -47,7 +47,7 @@ def netto(G, stabil=True, krav2=False):
     for (e, g), x in G.groupby(['event_id', 'grupp']):
         f0 = x[x.snap == 'fore'].groupby('fond').aktier.sum(); f1 = x[x.snap == 'efter'].groupby('fond').aktier.sum()
         k = f0.index.union(f1.index)
-        if stabil:   # rättelse 17:58: fonden ska rapportera före AD och efter ED (i någon aktie); saknat innehav = 0
+        if stabil:   # rättelse före omräkning: fonden ska rapportera före AD och efter ED (i någon aktie); saknat innehav = 0
             AD, ED = x.AD.iloc[0], x.ED.iloc[0]
             k = [f for f in k if rapporterar(f, AD - pd.Timedelta(days=120), AD - pd.Timedelta(days=1)) and rapporterar(f, ED, ED + pd.Timedelta(days=45))]
         out[(e, g)] = f1.reindex(k).fillna(0).sum() - f0.reindex(k).fillna(0).sum()

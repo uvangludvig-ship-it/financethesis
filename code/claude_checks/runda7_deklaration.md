@@ -67,3 +67,7 @@ Uppdelat, efter 2017:
 **T23, explorativt (komponenterna sedda i förväg):**
 - T23a, summan b_tillägg + b_borttag: [AD−1, ED+1] +0,11 (−1,63 till 1,85); [AD−1, ED+20] +1,54 (−0,79 till 3,86). Ingen säker asymmetri i priset.
 - T23b, fondägare utanför OMXSB-fonderna: +3,39 (1,06 till 5,71). Tillägg ger cirka tre nya ägare utanför OMXSB-fonderna; borttag tar inte bort några. Förenligt med uppmärksamhet, men litet och explorativt.
+
+## Rättelse av klockslag (2 nov 18:40)
+
+Klockslagen i den här filen skrev jag efter uppskattning, inte efter klockan, och flera ligger senare än filernas faktiska tider. Ordningen är rätt beskriven, men klockslagen bevisar den inte. Filtider: deklarationen och resultaten sparades båda senast 13:54. Filtiderna visar alltså inte att deklarationen skrevs före körningen.

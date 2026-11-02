@@ -247,7 +247,19 @@ for k, r in rev.iterrows():
     if len(U) < 50: continue
     tvv = pd.Series({c: (np.nansum(TV[c].values[start:ir + 1]) if c in TV else np.nan) for c in U})
     shr = SH.iloc[max(ir - 5, 0):ir + 1].ffill().iloc[-1]
-    cm = pd.Series({c: (cl[c] * shr[c]) if pd.notna(shr.get(c)) and shr.get(c) > 0 else (mc[c].iloc[ir] if c in mc else np.nan) for c in U})
+    # Rättelse 2 nov cirka 18:20: kursen i panelen är justerad för senare splittar, aktieantalet är historiskt, så kurs × aktier blir fel.
+    # Nu: bolagets mcap (ojusterat) × aktieslagets andel av aktierna i bolagets noterade aktieslag samma dag. Gamla raden:
+    # cm = pd.Series({c: (cl[c] * shr[c]) if pd.notna(shr.get(c)) and shr.get(c) > 0 else (mc[c].iloc[ir] if c in mc else np.nan) for c in U})
+    ROOTS_ = {}
+    for c_ in U: ROOTS_.setdefault(root(c_), []).append(c_)
+    def klassvarde(c):
+        b_ = mc[c].iloc[ir] if c in mc else np.nan
+        if not (b_ > 0): return np.nan
+        sy = ROOTS_[root(c)]
+        if len(sy) == 1: return b_
+        s_ = [shr.get(o) for o in sy]
+        return b_ * shr.get(c) / sum(s_) if all(pd.notna(v) and v > 0 for v in s_) else np.nan
+    cm = pd.Series({c: klassvarde(c) for c in U})
     ffsrc = pd.Series({c: ('historik' if (r.review_cycle, c) in ffh else ('aktuell' if pd.notna(FFC.get(c)) else 'ingen')) for c in U})
     ff = pd.Series({c: ffh.get((r.review_cycle, c), FFC.get(c, np.nan)) for c in U}); ff = ff.where((ff > 0) & (ff <= 100))
     D = pd.DataFrame(dict(tv=tvv, ffm=cm * (ff.fillna(100) / 100), ffsrc=ffsrc)).dropna(subset=['tv', 'ffm']); D = D[D.ffm > 0]

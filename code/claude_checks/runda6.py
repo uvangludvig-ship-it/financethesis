@@ -7,7 +7,7 @@
 import os, sys, json
 STEP = int(sys.argv[1])
 HERE = os.path.dirname(os.path.abspath(__file__))
-os.environ['OUT'] = os.path.join(HERE, 'runda6_resultat')
+os.environ['OUT'] = os.environ.get('R6OUT', os.path.join(HERE, 'runda6_resultat'))
 src = open(os.path.join(HERE, 'runda3.py')).read()
 exec(src.split('# %%\nrng = np.random')[0])          # gemensam uppsättning från runda 3: panel, kalender, regel, medlemmar
 OUT = os.environ['OUT']; os.makedirs(OUT, exist_ok=True)
@@ -83,7 +83,19 @@ elif STEP == 0 or not os.path.exists(CACHE):
         if len(U) < 50: continue
         tvv = pd.Series({c: (np.nansum(TV[c].values[start:ir + 1]) if c in TV else np.nan) for c in U})
         shr = SH.iloc[max(ir - 5, 0):ir + 1].ffill().iloc[-1]
-        cm = pd.Series({c: (cl[c] * shr[c]) if pd.notna(shr.get(c)) and shr.get(c) > 0 else (mc[c].iloc[ir] if c in mc else np.nan) for c in U})
+        # Rättelse 2 nov cirka 18:20: kursen i panelen är justerad för senare splittar, aktieantalet är historiskt, så kurs × aktier blir fel.
+        # Nu: bolagets mcap (ojusterat) × aktieslagets andel av aktierna i bolagets noterade aktieslag samma dag. Gamla raden:
+        # cm = pd.Series({c: (cl[c] * shr[c]) if pd.notna(shr.get(c)) and shr.get(c) > 0 else (mc[c].iloc[ir] if c in mc else np.nan) for c in U})
+        ROOTS_ = {}
+        for c_ in U: ROOTS_.setdefault(root(c_), []).append(c_)
+        def klassvarde(c):
+            b_ = mc[c].iloc[ir] if c in mc else np.nan
+            if not (b_ > 0): return np.nan
+            sy = ROOTS_[root(c)]
+            if len(sy) == 1: return b_
+            s_ = [shr.get(o) for o in sy]
+            return b_ * shr.get(c) / sum(s_) if all(pd.notna(v) and v > 0 for v in s_) else np.nan
+        cm = pd.Series({c: klassvarde(c) for c in U})
         ff = pd.Series({c: ffh.get((r.review_cycle, c), FFC.get(c, np.nan)) for c in U}); ff = ff.where((ff > 0) & (ff <= 100))
         D = pd.DataFrame(dict(tv=tvv, ffm=cm * (ff.fillna(100) / 100))).dropna(); D = D[D.ffm > 0]
         D['sect'] = [ICB.get(c, 'trbc:' + TRBC[c] if c in TRBC else 'okänd') for c in D.index]

@@ -87,3 +87,7 @@ Borttag: indexsälj 0,08, 0,18, 0,60, 0,97; CAR −7,76, −7,91, −0,29, −1,
 - Tillägg före 2017 (sekundär): +0,128 (−0,006 till 0,261), p 0,068.
 
 **Enligt regeln bestämd i förväg:** efter 2017 följs inträdet inte av fler vinstprognoser i konsensus än för jämförbara aktier. En ökning större än cirka 11 % kan uteslutas. Det utesluter inte ökad uppmärksamhet i andra kanaler och avgör inte köp mot uppmärksamhet som prisorsak. Före 2017 pekar skattningen mot en ökning, men intervallet innehåller 0.
+
+## Rättelse av klockslag (2 nov 18:40)
+
+Klockslagen i den här filen skrev jag efter uppskattning, inte efter klockan, och flera ligger senare än filernas faktiska tider. Ordningen är rätt beskriven, men klockslagen bevisar den inte. Filtider: `runda9.py` sparades senast 17:42 och denna fil 17:45. Hela runda 9, med steg 0, rättelsen och utfallen, var alltså klar senast 17:45, inte 18:20 som texten säger. Filtiderna visar inte att deklarationen skrevs före körningen.
