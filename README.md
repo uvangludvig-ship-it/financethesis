@@ -1,3 +1,6 @@
+<!-- OMXSB_COMPLETE_OVERVIEW_20261102 -->
+> **Samlad genomgång, 2 november 2026:** Läs först [kortversionen](output/omxsb_overview_20261102/LAS_FORST.txt) och sedan [hela sammanställningen](output/omxsb_overview_20261102/SAMMANFATTNING.txt). De täcker replikationen, alla identifierade senare analysfamiljer, Claudes runda6/runda7/MSCI, möjliga bidrag och konkreta förbättringar. [Filkartan](output/omxsb_overview_20261102/FILKARTA.txt) visar var materialet ligger. Äldre resultattexter är historik; bland annat T23b och MSCI har ännu orättade inferens-/datapunkter. Detta är beslutsunderlag, inte uppsatstext.
+
 <!-- ANALYSIS_DELIVERY_20261102 -->
 > **Senaste analyser, 2 november 2026:** Börja i `output/omxsb_broadening_20261102/RESULTAT.txt` för den senaste provningen, `output/omxsb_followup_20261102/RESULTAT.txt` för ägande/mängd/volym och `output/omxsb_open_questions_20261102/RESULTAT.txt` för daterade kontroller och prisförlopp. Prisets mekanism och långsiktiga varaktighet är fortfarande öppna. Se `PUBLICERING_20261102.txt` för licensierade råutdrag som stannar lokalt. Äldre struktur- och statusbeskrivningar nedan är historik.
 

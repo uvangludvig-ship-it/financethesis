@@ -38,3 +38,7 @@ One line per use, the same day. Tool, date, purpose, what changed in the project
 
 <!-- OMXSB_GIT_DELIVERY_20261102 -->
 | 2 Nov 2026 | Codex | Publish the completed OMXSB analysis work at the user’s explicit request | Verified origin and public visibility, selected analysis changes, excluded licensed raw extracts, scanned candidate text for credentials, ran audit/repair checks, documented public data scope and current entry points. | No; repository delivery notes only |
+
+
+<!-- OMXSB_COMPLETE_OVERVIEW_20261102 -->
+| 2 Nov 2026 | Codex with independent numerical and contribution reviews | Summarize the completed repository research and identify defensible contributions and improvements at the user’s request | Added short/full decision summaries, tracked-file map and independent audit notes in output/omxsb_overview_20261102. Incorporated Claude runda6/runda7/MSCI with explicit read-only validation status; flagged missing covariance, calendar/weighting differences and MSCI missing-data/dependence issues. No new outcome estimates or FTN returns; no prior outputs overwritten. Updated README navigation. | No; technical research and decision notes only |

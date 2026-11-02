@@ -1,0 +1,70 @@
+SNABB OBEROENDE KOD-/TABELLGRANSKNING: RUNDA6/7 OCH MSCI T18
+2026-11-02. Read-only repo. Inga nya modeller, prisberäkningar, bootstrapomkörningar eller repoändringar.
+
+LÄSSTATUS
+Läst hela code/claude_checks/RESULTAT_2026-11-02.md, hela runda7.py och runda7_deklaration.md, hela runda7_results.csv och steg1.json, samt delar av redan exporterade T22_events/profil. Läst runda3.py:s importerade databyggsteg (före rng), relevanta runda2.py-urvalsblock, runda6:s sparade styrkejson. Läst hela msci_t18.py, deklarationens design och utfallsavsnitt, samtliga T18_results/steg1/steg0/Standard-eventrader och kandidattabellen. OMXS30-listans relevanta identitetsformat inspekterat.
+Alla numeriska resultat nedan är LÄSTA UR SPARADE UTFALL, inte självständigt omräknade i denna granskning. Statistiska formler, variabelkonstruktion och inferens granskas genom kodläsning. MSCI-råkurskedjan har INTE genomgått en ny full rådatarevision här. Varken historiska ändringslistor eller bolagshändelser har återverifierats externt denna gång.
+Rot för kodvägar: /Users/ludviguvang/dev/financethesis/code/claude_checks/.
+
+KORT DOM
+T22 är ett relevant nytt DESKRIPTIVT tidskoncentrationsresultat som ska vara med i kartan över genomfört arbete. Det är inte ett test som generellt skiljer indexeffekt från urval eller köptryck från information. T23a skattar en giltigt omparametriserad summa inom sin gamla kontrollpanel men visar ingen precist identifierad asymmetri. T23b:s standardfel utelämnar en nödvändig gemensam kovarians. MSCI T18 tillför ett intressant relativt handelsvolymmått och en nära-noll aktieslagsskillnad i ett annat index, men den publicerade precisionen bygger på oberoende placebo-dragningar som inte bevarar bolags-/kalenderberoendet. Därför bör en hård3–5%-uteslutningsgräns inte lyftas som slutligt verifierad.
+
+1. RUNDA6: FAKTISKT GENOMFÖRDA STOPP, INTE NOLLRESULTAT
+T19a: N237,G37,SE0,7440,MDE2,1427 mot gräns1,5, underkänd;118 regelvalda. T20: N204,G15,SE1,0609,MDE3,1965 mot gräns1,8, underkänd. T19b väntar enligt rapporten. Inga effektkoefficienter i dessa sparade styrkefiler ska fyllas i från gissningar. Ett stopp säger att den deklarerade precisionsgrinden inte klaras, inte att mekanismen har noll effekt eller att alla andra dataanalyser är omöjliga.
+Källa:runda6_resultat/steg1_utdrag.json; RESULTAT_2026-11-02.md avsnitt5.
+
+2. T22: VAD SOM FAKTISKT MÄTS
+För varje aktie J=medelAR på H={AD,AD+1,ED−1} minus medelAR på övriga observerade dagar i[AD−20,ED+20]. Alla3 H-dagar krävs;minst80% av övriga dagar. Daglig marknadsjustering mot OMXSBGI. Flaggar vissa borttag enligt äldre mekanismfil. Primärt170 tillägg från2017,19 reviews: +0,433034 pp/dag,SE0,112157,CI[0,197400;0,668669],wildp0,002700. MDE0,3323≤0,5.131 borttag:−0,415436[−0,688259;−0,142614].89 tidigare tillägg:0,916424[0,309770;1,523077].
+J_AD tillägg0,484308[0,028744;0,939873];J_ED0,330487[−0,406972;1,067946]. BorttagJ_AD−0,689638[−1,109288;−0,269988];J_ED0,132967[−0,591586;0,857519].
+
+Kodbedömning:
+• mean_test använder en konstant per EVENT. Det är eventviktat med reviewklustring, INTE lika vikt på reviewmedel. En review med fler händelser väger mer. Detta är inte i sig en kodbugg, men inte samma estimand som våra senare huvudtabeller. CI=t(G−1) och p=restrikterad wild-cluster bootstrap är olika procedurer.
+• T22 importerar bara första delen av runda3.py, före rng; det bygger INTE om runda3:s framtidsfiltrerade kontrollpool för detta test. Därför ska kontrollurvalets brister inte falskt kallas ett direkt T22-fel. T22 har ingen kontrollaktie alls.
+• AD är rå beskedsdatum från events_car.csv, inte harmoniserad första handlingsbara dag. H innehåller AD ochAD+1 och fångar därmed normalt första reaktionen både föreöppning och efterstängning, men den andra dagen är olika ekonomiska steg. Det finns ingen explicit tidsstämpel-/Maj2022-undantagshantering i T22. Ingen ren kalenderreformidentifiering.
+• Referensdagarnas O innehåller såväl förebesked som implementeringsmellanrum och efterperiod. En jämförelse före/efter2017 ändrar både informationstider och längden/sammansättningen på referensen. T22 har inte ett test av regimskillnaden; olika koefficienter/signifikanser räcker inte.
+• Dagliga missing return fallback/leverantörsfilter ärvs från runda3 (totret annars close.pct_change;>1000% blir saknad). Någon ny logg över faktiskt påverkade T22-dagar finns inte i den granskade resultatsammanfattningen. Detta är en kontrollpunkt, inte här ett konstaterat materiellt utfallsfel.
+
+VIKTIG IDENTIFIKATION
+J>0 förkastar inte allt 'urval'. Det förkastar närmast en modell där den förväntade dagliga relativa avkastningen är lika på de utpekade dagarna och övriga referensen. Nyheter, företagshändelser, varierande momentum och förväntansbildning kan koncentreras kring samma datum.
+Även en helt slät avtagande daglig drift kan ge J>0: sätt AD=0,ED=d. H:s medeltid=d/3 medan O:s medeltid=d(d+39)/(2(d+38)). För E[AR_t]=a+b*t blir J=−b*d*(d+41)/(6(d+38));b<0 ger positivt J utan någon diskontinuitet. Detta är en algebraisk designinvändning, inte en ny utfallsmodell. En linjär kumulativ trend/konstant daglig drift ger däremot0. 'Hopptest' låter därför mer generellt än den faktiska kontrasten.
+SignifikantJ_AD och ej signifikantJ_ED är INTE ett test av J_AD−J_ED. Punktvärdet på ED−1 för tillägg är dessutom positivt0,33 med ett intervall som tillåter drygt1pp/dag. 'Inget köptryck på handelsdagen' följer inte. Förväntade köp kan prisas före själva handeln. Ingen förändring efterED20 har testats här, så T22 kan inte etablera permanens.
+Försvarbar formulering: 'De tre angivna händelsedagarna har högre genomsnittlig relativ dagsavkastning vid tillägg och lägre vid borttag än de övriga observerade dagarna i det lokala fönstret. Beskedsdagarnas separata kontrast är tydligast skattad. Orsaken till koncentrationen är inte identifierad.'
+Källor:runda7.py r38–75; runda3.py databyggsteg; runda7_resultat/runda7_results.csv och steg1.json.
+
+3. T23a: ASYMMETRIPARAMETERN ÄR RÄTT, MEN KONTROLLUNDERLAGET ÄR GAMMALT
+ED+1: add+del=0,106823[−1,631630;1,845276],p0,9005,N2733rader,G19. ED+20:1,538617[−0,784558;3,861793],p0,1826,N2719rader,G19. N är regressionsrader inklusive kontroller, INTE2733 indexhändelser.
+Parametriseringen X=[Ea,Ed−Ea,...] är algebraiskt korrekt: additionskoefficienten=b0−b1,borttag=b1,såb0 är summan. Gemensam regression med reviewklustring inkluderar kovariansen mellan prisbenen. Ingen konkret kontrastbugg hittad.
+Men input är runda2_resultat/T5urval_T7_T8b_events.csv, INTE vårt senare daterade eligible_rematch-underlag. runda2.py r134–155 har preCAR genomAD−1 som överlappar utfalletsAD−1, framtida indexhändelsefilterk+1, krav på komplett kortframtidaCAR vid poolval, och statisk MIC-screen där okänd marknadsplats inte är verifierat huvudlistad. RIC-stammar är inte en säker historisk emittentlänk och namnbyten kan undgå självmatchningsskydd. Koden tillför inte den nya Nasdaq-identifieringen.
+Tillåtet: ingen precist skattad asymmetri i denna exporterade specifikation. Inte: bevisad symmetri, utesluten uppmärksamhet, eller ännu en oberoende validering med historiskt granskade kontroller.
+Källa:runda7.py r79–87;runda2.py r129–158;runda7_resultat/runda7_results.csv.
+
+4. T23b: KONKRET INFERENSFEL/OBESTYRKT OBEROENDEANTAGANDE
+Rapporterat+3,385286 fondägare,SE1,083147,CI[1,062167;5,708406],p0,007447,G15. Koden r91 använder sqrt(SE_add²+SE_del²). Men komponenterna avser samma översyner och samma fond-/marknadsmiljö, så separata eventgrupper är inte generellt oberoende estimatorer. Variansen ska även innehålla2Cov(b_add,b_del), och ett gemensamt reviewförfarande krävs för robust slutsats. Riktningen på intervallets fel kan inte fastställas utan gemensam beräkning. Jag har inte korrigerat eller kört om detta.
+Behåll punktaritmetiken och märk intervallet som baserat på ett obestyrkt oberoendeantagande, inte säker extra ägarasymmetri. 'Utanför OMXSB-benchmark' är inte samma sak som 'utanför indexfonder', och familj/mandatklassning är inte passiv/aktiv klassning. Summans ökning identifierar inte uppmärksamhet.
+Källa:runda7.py r88–93; runda7_deklaration.md T23b.
+
+5. MSCI T18: DET FAKTISKA TILLÄGGET
+Standardprimär24 event/12 bolag: signerad ändrat-minus-syster-logavkastning+0,21pp,rapporteratplaceboCI[−1,14;1,53],p0,56. Standard/systerutanför15event/10bolag:−0,29[−2,34;1,81]. SmallCap13/9:−2,33[−4,23;−0,04],med två efteråt upptäckta datafel;utan dem+0,25 endast beskrivande. Alla37/18:−0,68[−1,73;0,59]. Standardben motmarknad+1,52/+1,31 är exporterade medel, inga här redovisade gemensamma intervall.
+Första steget: log(1+ED−1volym)−log(1+medianbaselinevolym) i ändrade slaget minus samma i systern:2,46548[1,92340;3,00756],N24. exp(2,465)≈11,8 är ungefär ett geometriskt RELATIVT normaliseringsmått, inte bevis att varje indexaktie omsätts12gånger eller att12gånger är indexfondernas köp. BaselineED−60:ED−21,ingen nettoriktningsinformation. Det är bättre beskrivet som differerande handelsaktivitet än ett instrumentellt första steg för påtvingad köpdos.
+
+KONKRETA KOD-/INFERENSGRÄNSER
+A. Oberoende placebo-dragning: null_means r149–150 drar ett fönster oberoende för VARJE event. Återkommande bolag/samtida reviews hålls inte tillsammans. Intervallen ochMDE1,8438 bevarar därför inte den faktiska korrelationsstrukturen. Första stegets SE r153–154 är också iid-event-SE utan bolags/reviewklustring. Övregräns1,53 är ett resultat under denna modell, inte redan en robust uteslutning av alla3–5%-mekanismer.
+B. Nollifyllnad:TRI r49 gör saknad totalavkastning till0 och maskar bara före första observerade close. Senare luckor kan därför skapa konstanta syntetiska indexnivåer trots saknat pris. R4 r75–77 räknar bara dagar där pris finns; NaN staleness passerar eftersomNaN>0,5 ärFalse. T18_events visar konkretHufvudstaden2007 med statusok och saknad stillaståendeandel. Detta är ett verifierat datagrindsfel i SmallCap, inte bevisat samma materiella fel i Standard.
+C. R2/R3 är kurströsklar, inte en komplett bolagshändelselogg. R3 missar rörelser utspridda över flera dagar, vilket Transcomfallet redan visar; kan även filtrera legitim relativ rörelse. R4 appliceras på verkliga event men inte på placebo-fönstrens egen staleandel. Exchangeabilityförutsättningen behöver därför uttrycklig reservation.
+D. Marknadsbenens källval r179–183 väljerTR individuellt; spreaden r79–81 kräverTRförbåda annarsprisförbåda. Där ena aktieslaget harTRmen det andra inte kan två marknadsben därför vara ett annat mått än spreaden. En radvis identitetskontroll behövs innan +1,52−1,31 används som generell algebraisk uppdelning; här har ingen materiell skillnad konstaterats.
+E. Överlappsscreen använderRIC-regexstem ochOMXS30ticker-prefix, inte historisk bolagskod/ISINkedja. KandidatensKinnevik,VOLV,etc verkar namngivna, men detta är fortfarande aliasrisk och saknadeOMXS30datum hoppades över. Ingen konkret ytterligare falskt inkluderad Standardhändelse verifierad här. SysterutanförMSCIstatus är inte automatiskt ingen efterfrågan i annat index.
+F. MångaStandardfall är uttryckliga flyttarST↔SC. Samma slag kan ha köp i ett mandat och försäljning i ett annat. Stor relativ volym visar inte nettodemandens storlek. Detta är särskilt centralt om testet ska jämföras med G&S-migration.
+G. 3–5% i tidigare studier är en total indexreaktion i deras population, inte en teoris nödvändiga aktuella residualskillnad mellan två svenska arbitrerbara aktieslag. Även ett korrekt snävtCIkring0 skulle begränsa den slagspecifika komponenten i denna miljö, inte all efterfrågeeffekt.
+Källa:msci/msci_t18.py radnummerovan;msci/t18_resultat/T18_results.csv,steg1.json,steg0_urval.csv,T18_standard_events.csv;msci/msci_deklaration.md.
+
+6. KORRIGERINGAR I CLAUDES SAMMANFATTNING SOM INTE FÅR FÖLJA MED
+• 'Urval=jämn trend' är en snäv modellrestriktion, inte en allmän ekonomisk definition. T22 etablerar inte ett kausalt beskedshopp i en regressionsdiskontinuitetsmening.
+• 'Ingen säker ED−1-koefficient, alltså inte tillfälligt köptryck' och 'ingen återgång, alltså bestående' är fel. Våra senare ED20→100-intervall förblir breda; T22 slutarED20.
+• 'Migrationer2019–26 nästan obefintliga' är för stort anspråk för observerade svenskrapporterade fondgrupper. GamlaUSA2,3%-demand i avsnitt2 är inte rätt direktfallstal;5,61 gäller jämförelsen i senaste avstämningen.
+• 'Ägarförändringen mest passiva pengar' byter både enhet (antal→pengar) och klassning (benchmark→passiv). T23b upprepar inte vår slutliga stabiliserade ägarledger. 'Ett fondbolag fattar ett beslut' är inte observerat.
+• 'Standard kan utesluta3–5%' är endast en villkorad slutsats från den valda placeboinferensen och en svåröversatt effektbenchmark. Inte ett säkrat förkastande av köptryck.
+
+7. ÄNDRAR DET BIDRAGSKARTAN?
+Ja, komplettera med två faktiskt genomförda observationer: (i) marknadsjusterad dagsavkastning är koncentrerad till deklarerade indexdagar, (ii) MSCI ger större RELATIV handelsaktivitet i det ändrade aktieslaget utan tydligt skattad lika stor relativ prisrörelse. Dessa var utelämnade i vår fyrpaketsinventering och får inte kallas ännu oprövade möjligheter.
+Nej, de gör inte vår observationskedja till ett löst kausalt varför-test. Bäst sammanhängande karta är nu: relativt prisförlopp → tidskoncentration → dokumenterade fond-/benchmarkförändringar och handelsaktivitet → gränser för vad som är slagspecifikt respektive gemensamt. Markera varje länk som deskriptiv eller osäkert särskiljande. T22 kan bli en värdefull kompletterande huvudfigur när klocka/estimand redovisas;MSCIen extern inomemittentfalsifikation med omarbetad inferens/data-QA som nästa konkreta grind. Detta ersätter inte den bättre historiskt verifierade kontrollpanelen eller de genomförda ägarresultaten.
+Ingen rekommendation om ny resultatsökning ges här. Minsta nödvändiga rättning är gemensam T23b-kovarians, jämförbar inferens/coverage för MSCI och försiktigare T22-etikett; alla gamla resultat ska förbli synliga med rätt status.
