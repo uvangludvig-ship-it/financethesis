@@ -1,5 +1,7 @@
 # Runda 11: resultat (G&S fullt ut, multiplikatorn M)
 
+> **Rättelser 3 november:** se `../RATTELSER_2026-11-03.md`. Punkt 1 nedan (M föll från 199 till 2,3, p 0,055) håller inte med rättat D: 2007–11 bygger då på 6 tillägg, M cirka 96, p 0,39. Använd rättelsedokumentets siffror.
+
 Deklaration: `runda11_deklaration.md` (sparad 19:23:35). Tillägg och körtider: `runda11_tillagg.md`. Kod: `runda11.py`. Data: `runda11_resultat/` (`runda11_resultat.csv` med alla skattningar, `handelser.csv` per händelse, `G_figur1_figur5.csv`, `I_figur7.csv`, `F_nyemissioner_urval.csv`). Figurerna finns som data, inte som bilder.
 
 Steg 0 godkänt (T24 återskapat, största avvikelse 0,022). Steg 1: H11a och H11b körs enligt deklarationen; T30 klarar inte styrkevillkoret (MDE 3,8–8,2 mot 2) och redovisas bara som lutning.
