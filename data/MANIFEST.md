@@ -954,3 +954,23 @@ Frozen request: 20 Morningstar performanceIds across five FI funds; 2017-01-01 t
 | `data/raw/shof/Valuations/pilot_20261103/FUNDS_VALUATIONS_1793724895212.zip` | SHoF Valuations; 615519 bytes; SHA256 `8249819776c0932cf84aba1e222fa595a761dd67d022567145b38c14a07833f3`; 17923 source rows, 15 classes with any rows; archive CRC valid. Empty historical placeholder rows do not establish class activity or capital coverage. |
 
 Published files contain request/source metadata, field-presence/date diagnostics, code and technical conclusions only. No licensed numeric TNA/NF/TRI series, authentication details or mail contents are published. Missing net flow remains missing, not zero. Vendor net flow is estimated, not observed cash or exchange orders. The pilot repairs some source coverage; it is not population-level capital coverage, a precision pass, a causal result or evidence about actual stock-price risk. No new economic outcomes or FTN analysis were opened.
+
+<!-- OMXSB_SHOF_COVERAGE_20261103 -->
+### SHoF source-to-population coverage completed, 3 November 2026
+
+Entry point: `output/omxsb_shof_coverage_20261103/README_SV.txt`. FinalF replaces all old source flags for178 requested funds using raw-data checks. Fixed135-event population, original3controls, same funds and both quarterly endpoints. Source coverage only; no new returns, estimated flows, covariance, price-risk or FTN outcomes. No original raw file was changed. Full identifiers, original query IDs, dates, CRC checks and hashes are recorded in `provenance/SOURCE_ACQUISITIONS.json`; published package hashes are in `PACKAGE_SHA256.json`.
+
+| New private licensed archive, relative to `data/raw/shof/` | Source metadata |
+|---|---|
+| `Reinvestments/coverage_20261103/Prices/FUNDS_PRICES_1793726853862.zip` | SHoF Prices, exact2class pilot2017–2023;3518rows;52193bytes;SHA256`c210a32c4cddf9ec31c93b5190d96dc683d6170084852e3f0df89c113411ce21`. Stored under the ignored Reinvestments tree to preserve licensing. |
+| `Reinvestments/coverage_20261103/Dividends/FUNDS_DIVIDENDS_1793726872989.zip` | Same2class request;7delivered SEB A records;556bytes;SHA256`2fd1b677379f6a56bccfa6174872a727d1c4e448467544a2af25f280a65e3c1f`. Placeholder1900 payment dates excluded from economic interpretation. |
+| `Reinvestments/coverage_20261103/Next10/FUNDS_RIPS_1793727454327.zip` | Fixed45class/10fund request2017–2023;90959rows/40classes;7787845bytes;SHA256`c35102d58786d9e0535db085dbc1abf83583ff329d518160ccb6fd3889c5b929`. |
+| `Valuations/coverage_20261103/Next10/FUNDS_VALUATIONS_1793727460408.zip` | SameNext10 request;11553rows/40classes;256859bytes;SHA256`0f8239dc7fd029170ed751071d05aa3303621d36b92a379b3aae0f8418c2ff53`. |
+| `Reinvestments/coverage_20261103/ExistingA/FUNDS_RIPS_1793728126418.zip` | Fixed267class/163fund remaining-A validation;2016-12-01 through2023-12-31;602793rows/249classes;47953733bytes;SHA256`74520e74ae7ef1eef55f3d4b07d9cfa50312348bc5fc0c3a12c95b1b219d6a1f`. Main24month windows unchanged. |
+| `Valuations/coverage_20261103/ExistingA/FUNDS_VALUATIONS_1793728133604.zip` | SameExistingA request;162225rows/243classes;4932266bytes;SHA256`2a4eea5867655ee7964ff724a55f25aacdfba4192de1fccb69f81fac38221f09`. |
+
+The split query `FUNDS_SPLITS_1793726923334` returned an official no-results notification, not an archive. This does not certify historical absence. Automated SHoF delivery messages were used only to retrieve these query results; mail contents and authentication links are excluded from publication.
+
+Public FX: ECB euro-reference history, source page `https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html`. Derived1813date table2016-12-01 through2023-12-29 in `provenance/ECB_FX_SEK_201612_202312.csv`, SHA256`9b02dabfc22d17a27ec26cf11873be97563e7a72711582d843c00c70692560c6`; EURSEK=ECBSEK and NOKSEK=ECBSEK/ECBNOK. No missing dates filled in the source table. Fixed previous-date convention only for verified weekend valuation dates, at most4days, documented separately in source rules. Reference FX is not certified NAV-provider fixing.
+
+Final native-source coverage51.71% mean/51.34% pooled refers only to the fixed observed FI-fund population, not all company owners. ConditionalNAV remains separate55.91%/54.35%. Grossnewposition coverage among70 additions is29.81% native/49.01%conditional in marketcap-normalized units, not pooled cash. No claimed population risk effect or precision pass. Current-master historical class completeness, FX timing and NAV reconstruction remain conditional. Only selected derived summaries, identifiers, flags, code and audit metadata are public; licensed numeric raw series remain ignored.

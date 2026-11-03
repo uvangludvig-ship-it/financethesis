@@ -1,0 +1,20 @@
+2026-11-03. Källtäckning D, inga beräknade fondavkastningar/flöden/kovarianser.
+
+50 fond×review-fönster,25ändpunkter/24månadsintervall per fönster. De gamla A/B/C-versionerna ändras inte.
+FI-id   Levererad RIP typ1 + klassunion/FX   Inklusive VILLKORAD NAV/utdelningsrekonstruktion
+51331   10/10                              10/10
+51482    9/10                               9/10
+60087    0/10                              10/10
+60302   10/10                              10/10
+60824    0/10                               7/10
+SUMMA   29/50                              46/50
+
+Filen D_FUND_REVIEW_SOURCE_ELIGIBILITY.csv är den låsta indatafilen till täckningsgranskaren. D_RIPS_source_supported betyder källstöd med levererat totalavkastningsindex; D_NAV_conditional_source_supported inkluderar samma29plus17ytterligare fönster under dokumenterade NAV/utdelningsantaganden. Det senare är inte levereradTRI eller certifierade flöden. D_provisional_current_master markerar60302:s nytillkomna klass; D_dated_lineage_verified_entry_only markerar51482:s issuerbekräftade klassstarter. Ingen flagga certifierar hela den historiska klasspopulationen.
+
+Faktiska samma-dag-intersektioner mellan kapital och RIP/NAV kontrollerades. Summan av klasskapital, med NOK omräknad till SEK, stämdes av inom den förutbestämda1%-toleransen mot ett samtida fondkapital. D har ingen konstant-klasslista-restriktion. Ingen före-start-RIP krävs för en klass med verifierat/provisoriskt dokumenterat strukturellt nollkapital. Däremot används dess egen serie när den har positivt ingående kapital.
+
+Kvarstående stopp:51482/2019H1 saknar samtida fond-TNA tidigt2017.60824/2022H2,2023H1,2023H2 saknar samtidigt fond-TNA vid september2022:s klasskapitaldatum. Dessa datumproblem har inte fyllts med noll eller ett äldre fondkapital. Inga alternativa toleranser har prövats.
+
+Implementationsrättelse före utfall: första D-körningen krävde felaktigt att varje fond-TNA-kopia var märktSEK. NOK-strömmar kan ha fundcurrencyiso=NOK trots att en direktSEK-kopia finns. Slutkoden väljer en direktSEK-kopia en gång och jämför kopior i samma valuta, medan NOKklasskapital konverteras. Den första körningen finns i archive_initial_D_currency_gate/. Detta följer den låsta regeln om ett fondkapital i konsekvent valuta, och använder inga riskutfall. NOKSEK=definieras uttryckligen somSEKperNOK i primärkällan i FX_ORIENTATION_EVIDENCE.json.
+
+Före ekonomiska beräkningar återstår villkorad historisk klassfullständighet, distributions-/splitbasis, värderingstidpunkter inom dagen, eventuell NAV-rekonstruktion och flödesestimatorns migrations-/tidpunktsfel.29/50 och46/50 är inte power eller täckning av hela FI-marknaden. Reproducerade100fund-review-modeflaggor finns i D_FINAL_CHECK.json.

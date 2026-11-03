@@ -1,0 +1,100 @@
+"""Existing-A raw source validation using fixed accounting and ECB conventions. No economic outcomes."""
+from pathlib import Path
+import pandas as pd,numpy as np,zipfile,io,json,datetime,hashlib,argparse
+O=Path(__file__).resolve().parent;C=Path('/Users/ludviguvang/Documents/Codex/2026-10-30/oke')
+ap=argparse.ArgumentParser();ap.add_argument('--valuations',type=Path,required=True);ap.add_argument('--rips',type=Path,required=True);args=ap.parse_args()
+MP=C/'work/shof_coverage_20261103/audit/EXISTING_A_RAW_VALIDATION_CLASSES.csv';FP=C/'work/shof_coverage_20261103/root/ECB_FX_SEK_201612_202312.csv';FS=C/'work/shof_coverage_20261103/root/ECB_FX_SOURCE.json'
+RP=C/'work/shof_coverage_20261103/audit/EXISTING_A_RAW_VALIDATION_FUND_REVIEWS.csv'
+inputs=[args.valuations,args.rips,MP,RP,FP,FS,O/'RULE_LOCK.txt',Path(__file__)]
+(O/'INPUT_LOCK.json').write_text(json.dumps(dict(at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),scope='Sourcepresence and convertedcapitalreconciliation ONLY. No return/flow/covariance.',inputs={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs}),indent=2))
+def readzip(p,cols):
+ with zipfile.ZipFile(p) as z:
+  ns=[n for n in z.namelist() if n.lower().endswith('.csv')];assert len(ns)==1
+  d=pd.read_csv(io.BytesIO(z.read(ns[0])),sep=';',usecols=lambda x:x.lower() in cols,dtype=str)
+ d.columns=d.columns.str.lower();d.date=pd.to_datetime(d.date.str[:10]);return d[d.date.between('2016-12-01','2023-12-31')]
+PAIRS=pd.read_csv(RP,dtype=str,usecols=['review','fund_id','fundid']);pairset=set(zip(PAIRS.review,PAIRS.fund_id));assert len(pairset)==len(PAIRS)
+M=pd.read_csv(MP,dtype=str);M=M.rename(columns={'fund_id':'FI_fund_id'});M['inc']=pd.to_datetime(M.inceptiondate);M['obs']=pd.to_datetime(M.obsoletedate)
+assert not M.secid.duplicated().any();assert not M.performanceid.duplicated().any()
+assert M.inc.notna().all();assert M.groupby('FI_fund_id').fundid.nunique().eq(1).all()
+V=readzip(args.valuations,{'performanceid','secid','date','classcurrencyiso','fundcurrencyiso','tnaclass','tnafund'})
+T=readzip(args.rips,{'performanceid','secid','date','returntype','unit_sek'});T=T[T.returntype.isin(['1','1.0'])]
+assert set(V.performanceid)<=set(M.performanceid);assert set(T.performanceid)<=set(M.performanceid)
+presence=M[['FI_fund_id','fundid','performanceid','secid','inceptiondate','obsoletedate','currencyid']].copy()
+presence['Valuations_present']=presence.performanceid.isin(V.performanceid)
+presence['native_RIPS_present']=presence.performanceid.isin(T.performanceid)
+presence['pre2024_inception']=pd.to_datetime(presence.inceptiondate).lt('2024-01-01')
+presence.to_csv(O/'REQUESTED_CLASS_SOURCE_PRESENCE.csv',index=False)
+assert not V.duplicated(['performanceid','date']).any();assert not T.duplicated(['performanceid','date']).any()
+secmap=M.set_index('performanceid').secid.to_dict()
+for z in [V,T]:
+ assert z.secid.eq(z.performanceid.map(secmap)).all(),'SecId mismatch or missing identity'
+for col in ['tnaclass','tnafund']:V[col]=pd.to_numeric(V[col],errors='coerce')
+tri=set(map(tuple,T.loc[pd.to_numeric(T.unit_sek,errors='coerce').gt(0),['performanceid','date']].to_numpy()))
+FX=pd.read_csv(FP);FX.date=pd.to_datetime(FX.date);assert not FX.date.duplicated().any();FX=FX.set_index('date')
+def datedrate(ccy,date):
+ if ccy=='SEK':return 1.,date
+ col=ccy+'SEK'
+ if col not in FX:return None,None
+ candidates=[date]
+ if date.weekday()>=5:candidates += [date-pd.Timedelta(days=i) for i in range(1,5)]
+ for d in candidates:
+  if d in FX.index:
+   x=FX.loc[d,col]
+   if pd.notna(x) and x>0:return float(x),d
+ return None,None
+def rate(ccy,date):return datedrate(ccy,date)[0]
+V=V.merge(M[['performanceid','FI_fund_id','inc']],on='performanceid',validate='m:1')
+contradictions=V[V.tnaclass.gt(0)&V.date.lt(V.inc)][['FI_fund_id','performanceid','date','inc']]
+contradictions.to_csv(O/'PREINCEPTION_CLASS_CAPITAL_FLAGS.csv',index=False)
+endpoints=[]
+for fid,classes in M.groupby('FI_fund_id'):
+ vv=V[V.FI_fund_id.eq(fid)]
+ for mo in pd.period_range('2016-12','2023-12',freq='M'):
+  end=mo.end_time.normalize();active=classes[classes.inc.le(end)&(classes.obs.isna()|classes.obs.ge(end))];needed=set(active.performanceid)
+  row=dict(FI_fund_id=fid,month=str(mo),active_class_ids=';'.join(sorted(needed)),active_classes=len(needed),source_date=None,uses_reference_FX=False,capital_reconciliation_pass=False,fund_TNA_same_currency_copies_pass=False,pass_source=False,reason='no_common_TNA_RIP_FX_date_within4days')
+  exits=classes[classes.obs.notna()&classes.obs.le(end)]
+  if len(exits):row['reason']='dated_class_exit_not_independently_verified';endpoints.append(row);continue
+  badinc=contradictions[contradictions.FI_fund_id.eq(fid)&contradictions.date.between(mo.start_time,mo.end_time)]
+  if len(badinc):row['reason']='positive_class_capital_before_master_inception';endpoints.append(row);continue
+  found=None
+  for date in sorted(vv.loc[vv.date.between(end-pd.Timedelta(days=4),end),'date'].unique(),reverse=True):
+   date=pd.Timestamp(date)
+   if (active.inc>date).any():continue
+   z=vv[vv.date.eq(date)&vv.performanceid.isin(needed)].copy()
+   if not needed or set(z.performanceid)!=needed or not z.tnaclass.gt(0).all():continue
+   if any((pid,date) not in tri for pid in needed):continue
+   if any(rate(ccy,date) is None for ccy in z.classcurrencyiso):continue
+   if not any(a.tnafund>0 and rate(a.fundcurrencyiso,date) is not None for a in z.itertuples()):continue
+   # First joint source-date chosen before the capital reconciliation.
+   found=(date,z);break
+  if found:
+   date,z=found;row['source_date']=str(date.date());row['uses_reference_FX']=not bool(z.classcurrencyiso.eq('SEK').all())
+   fxdates={datedrate(ccy,date)[1] for ccy in z.classcurrencyiso if ccy!='SEK'}
+   row['FX_reference_dates']=';'.join(sorted(str(d.date()) for d in fxdates));row['FX_known_weekend_previous_close']=any(d<date for d in fxdates)
+   converted=z.apply(lambda a:a.tnaclass*rate(a.classcurrencyiso,date),axis=1)
+   f=None
+   for ccy in ['SEK','EUR','NOK']:
+    q=z.loc[z.tnafund.gt(0)&z.fundcurrencyiso.eq(ccy),'tnafund'];r=rate(ccy,date)
+    if len(q) and r is not None:
+     f=q*r;row['fund_TNA_reference_currency']=ccy
+     if ccy!='SEK':
+      fxdates.add(datedrate(ccy,date)[1]);row['FX_reference_dates']=';'.join(sorted(str(d.date()) for d in fxdates));row['FX_known_weekend_previous_close']=any(d<date for d in fxdates)
+     break
+   if f is None:row['reason']='no_contemporaneous_fund_TNA_in_supported_currency'
+   else:
+    den=f.median();row['capital_reconciliation_pass']=bool(.99<=converted.sum()/den<=1.01);row['fund_TNA_same_currency_copies_pass']=bool((f.max()-f.min())/den<.001)
+    row['pass_source']=row['capital_reconciliation_pass'] and row['fund_TNA_same_currency_copies_pass'];row['reason']='pass' if row['pass_source'] else ('capital_reconciliation' if not row['capital_reconciliation_pass'] else 'fund_TNA_duplicate_conflict')
+  endpoints.append(row)
+E=pd.DataFrame(endpoints);E.to_csv(O/'EXISTING_A_RAW_ENDPOINT_SOURCE_FLAGS.csv',index=False)
+rows=[]
+for year in range(2019,2024):
+ for half,m in [('H1',3),('H2',9)]:
+  last=pd.Period(f'{year}-{m:02d}',freq='M');first=last-24
+  for fid,cl in M.groupby('FI_fund_id'):
+   z=E[E.FI_fund_id.eq(fid)&E.month.between(str(first),str(last))];assert len(z)==25
+   entrants=cl[cl.inc.gt(first.end_time)&cl.inc.le(last.end_time)]
+   rows.append(dict(review=f'{year}{half}',FI_fund_id=fid,in_frozen_old_A_pair=(f'{year}{half}',fid) in pairset,fundid=cl.fundid.iloc[0],first_endpoint_month=str(first),last_endpoint_month=str(last),D_RIPS_ECB_source_supported=bool(z.pass_source.all()),valid_endpoints=int(z.pass_source.sum()),uses_reference_FX=bool(z.uses_reference_FX.any()),new_entry_class_ids=';'.join(sorted(entrants.performanceid)),D_provisional_current_master=bool(z.pass_source.all()),new_entry_current_master_only=bool(len(entrants)),D_dated_lineage_verified=False,historical_class_universe_fully_certified=False,conditional_NAV_used=False,failure_reasons=';'.join(f'{r.month}:{r.reason}' for r in z[~z.pass_source].itertuples())))
+S=pd.DataFrame(rows);S.to_csv(O/'EXISTING_A_RAW_FUND_REVIEW_SOURCE_ELIGIBILITY.csv',index=False)
+summary=S.groupby('FI_fund_id').D_RIPS_ECB_source_supported.sum().astype(int).to_dict()
+(O/'SUMMARY.json').write_text(json.dumps(dict(at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),source_only=True,classes_requested=len(M),funds_requested=M.FI_fund_id.nunique(),old_A_requested_pairs=len(PAIRS),windows=len(S),obsolete_classes_in_manifest=int(M.obs.notna().sum()),main_windows_unchanged=True,passing_windows=int(S.D_RIPS_ECB_source_supported.sum()),old_A_passing_windows=int(S.loc[S.in_frozen_old_A_pair,'D_RIPS_ECB_source_supported'].sum()),old_A_output_pairs=int(S.in_frozen_old_A_pair.sum()),byfund=summary,preinception_positive_class_capital_rows=len(contradictions),RIPS_present_classes=T.performanceid.nunique(),valuations_present_classes=V.performanceid.nunique(),ECB_referenceFX_not_NAVprovider_fixing=True,FX_weekend_prior_close_max4days=True,no_weekday_missing_FX_filled=True,no_returns_flows_covariances=True,eligibility_SHA256=hashlib.sha256((O/'EXISTING_A_RAW_FUND_REVIEW_SOURCE_ELIGIBILITY.csv').read_bytes()).hexdigest()),indent=2))
+print(json.dumps(summary,indent=2));print('Total',S.D_RIPS_ECB_source_supported.sum(),'of',len(S))
