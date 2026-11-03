@@ -1,0 +1,62 @@
+FTN-SPÄRRENS OMFATTNING OCH REN DATUMKONTROLL
+2026-11-03. Metadatakontroll, inga nya pris-, avkastnings- eller flödesutfall.
+
+SLUTSATS
+PLAN och 03_DATA förbjuder inte generellt alla aktiekurser efter 2023. Spärren
+gäller analys av FTN-event före avtalad avblindning. Att hittills stanna före
+2024 är en konservativ arbetsavgränsning, inte ett ordagrant kalenderförbud.
+Den nu kontrollerade lokala FTN-kalendern räcker dock inte för att certifiera
+att utvidgade auktionsobservationer är fria från FTN-överlapp. Spärr kvarstår.
+
+VAD SOM KONTROLLERADES
+Först lästes kolumnnamnen i exit_days_by_loser.csv och data/derived/ftn/*.csv.
+Därefter användes bara datum och identifierare ur bids_long, exit_days,
+round_membership och OMXSB-eventlistan. I exit_days innehåller big_days även
+numeriska flödesuppgifter i samma textcell; endast datumet före kolon
+projicerades, inga flödesvärden tolkades, skrevs ut eller analyserades.
+Handelsdagsförskjutningen använder den befintliga .OMXSBGI-datumkalendern,
+med endast RIC och datum projicerade, utan kursvärden.
+
+Indexreview    ED−1          ED−6
+2024H1         2024-05-31    2024-05-24
+2024H2         2024-11-29    2024-11-22
+2025H1         2025-05-30    2025-05-22
+2025H2         2025-11-28    2025-11-21
+2026H1         2026-05-29    2026-05-22
+
+Inget av dessa tio datum matchar exakt en tilldelningsdag i bids_long, en
+redan detekterad stor fondförändringsdag eller ett registrerat avslutsdatum.
+2026H2 finns inte i den kontrollerade OMXSB-eventfilen. Dessa resultat är
+screeningmetadata och inte tillstånd att öppna nya utfall.
+
+VARFÖR DATUMFRÅNVARO INTE RÄCKER
+1. bids_long täcker 11 registrerade tilldelningsrundor. En tilldelningsdag är
+   inte samma sak som ett komplett schema över fondförsäljningar.
+2. Alla 78 förlorande fond-rundor i membership finns som rader i exit_days.
+   Det betyder registertäckning på fondnivå, inte 78 kompletta dagsserier.
+3. detect_exit_days.py klassificerar en dag om uppskattat fondflöde eller
+   förändring i antal fondandelar är högst −5 procent. Små deltrancher kan
+   missas; stora andra utflöden kan flaggas. Det är inte ett officiellt
+   orderregister. Ingen ny sådan klassificering gjordes i denna kontroll.
+4. 03_DATA §C säger uttryckligen att de flesta svenska fonder ofta bara har
+   månadsobservationer och räknar upp fonder vars exakta tranchdagar saknas.
+   §D anger datastopp 2026-09-30 och senare småbolagsomläggning.
+5. Exakt datumfrånvaro utesluter inte eventfönster. Exempelvis kommer
+   OMXSB ED−1 den 2026-05-29 dagen efter de registrerade tilldelningarna för
+   europeiska respektive svenska småbolagsfonder den 2026-05-28.
+6. Inga FTN-aktieinnehav eller aktiespecifika försäljningar har lästs; därför
+   har inte heller en eventuell avgränsning på aktienivå kunnat verifieras.
+
+VAD SOM KRÄVS FÖR ANNAT BESLUT
+En överenskommen definition av vilket FTN-eventfönster som skyddas och ett
+tillräckligt komplett, källbelagt schema över de relevanta FTN-händelserna/
+avvecklingsorderna. Om stock-specific clearance används måste även den
+exponeringen vara underbyggd. Denna granskning uppfyller inget av dessa
+ersättningsvillkor och inför ingen ny datahämtning.
+
+REPRODUKTION OCH KÄLLOR
+ftn_calendar_metadata_audit.py: datumprojektion, jämförelse och inputhashar.
+FTN_CALENDAR_METADATA_AUDIT.json: exakta kolumner, täckningsantal och alla
+tio datumjämförelser. Inga råa kurs- eller flödesvärden finns i filen.
+Repo PLAN.md, rad 74; thesis/design/03_DATA.md, §C–E; code/build/detect_exit_days.py.
+Alla ursprungliga filer har lämnats oförändrade.

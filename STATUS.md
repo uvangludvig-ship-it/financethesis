@@ -1,3 +1,8 @@
+<!-- OMXSB_SCALED_ROUND_20261103 -->
+> **3 november 2026, genomfört:** Breddad källkontroll, 35-familjers analysinventering och ett nytt förklarat retentionsutfall för 59 tillägg/10 översyner. Matchade nya positioner 0,831→0,973 pp; efterförändring +0,142 [−0,044; +0,329], nominellt explorativt intervall. Separat rårekonstruktion passerar. Se `output/omxsb_scaled_round_20261103/README_SV.txt`.
+> **Databeslut:** Bred före2024-auktionsinferens stoppad: CLS_AUC bara för 2023H1/H2 i de 56 frågorna. Ny Excel-export ger 701 medlemsändringsrader, varav 165 före2007; historiska kandidater behöver primärkällor och datumavstämning. Den är inte en komplett vikt- eller beskedskalender.
+> **Öppet:** Mekanismen bakom priset och dess beständighet efter20dagar är fortsatt olösta. Retention gäller den källtäckta kvartalskohorten, inte obrutet ägande eller alla bolag. Ingen ny historisk prisstudie eller FTN-utfallsanalys har körts; äldre resultat och källoriginal bevaras.
+
 <!-- OMXSB_ALTERNATIVE_EXECUTION_20261103 -->
 > **3 november 2026, alternativ datarunda:** Klart: verifierade LSEG-medlemslistor och två individuella auktionskontraster från fasta 2023-event; källförsök, NA-fall och oberoende omräkning i `output/omxsb_alternative_execution_20261103/README_SV.txt`.
 > **Öppet:** indexvikter/IndexShares saknas i prövade frågor, 2019-auktionsfält saknas, Holdings-behörighet är inte verifierad. Prisets generella mekanism och långsiktiga varaktighet är inte lösta av piloten.
