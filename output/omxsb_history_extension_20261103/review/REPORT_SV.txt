@@ -1,0 +1,79 @@
+OBEROENDE GRANSKNING AV HISTORIKUTÖKNINGEN — SLUTSTATUS PASS
+3 november 2026. Teknisk käll-/kod-/aritmetikgranskning, inte uppsatstext.
+
+Slutsats
+Utökningen är korrekt implementerad som en separat, uttryckligen provisorisk
+historisk känslighetsanalys. Den ger inte en primärkällsverifierad huvudanalys
+från 2002. Den verifierade analysen förblir 2007–2026; nya test börjar 2003.
+Inga kvarstående aritmetikfel hittades i den låsta körningen.
+
+Oberoende återberäkning
+verify.py importerar inga funktioner ur extend.py. Den läser ursprungspanelen,
+nya normaliserade källor och låsta eventledgers samt skriver endast kontroll-
+antal, avvikelser och pass/fail. Inga alternativa skattningar har prövats.
+
+- Alla 536 ursprungliga inputrader bevaras kolumnvis; alla 487 resultat-ID finns kvar.
+- Samtliga 1 461 ursprungliga ann/eff/tot-celler återskapas från rådata med exakt
+  noll avvikelse. De publicerade moderna cellerna är också exakt bevarade.
+- 165 äldre rader delas i 79 initiala medlemsrader, 57 ordinarie kandidater på
+  åtta datum och 29 andra ändringar. Endast de 57 kandidaterna når eventmätningen.
+- Alla 57 tidiga stödrader och 399 tidiga mått återskapas exakt från pris-/volym-
+  input. 54 ED-fönster, 47/46/45/44 post10/20/60/100-fönster och 55 volym-/spread-
+  observationer är kompletta. Noll tidiga ann/tot-resultat finns.
+- Samtliga fem sammanfattningars 3 780 jämförda numeriska celler stämmer;
+  största avrundningsskillnad 7,11e−15. Reviewvikter, G−1-frihetsgrader och
+  avsaknad av intervall när G<2 är separat kontrollerade.
+- 503 balanserade eventbanor har exakt 102 punkter (−1 till 100), nollankare
+  vid −1 och slutvärde lika post100. Sammanfattningens 4 080 celler stämmer.
+- Alla låsta input-, kod- och grundspecifikationshashar stämmer. Körningslåset
+  föregår resultatmanifestet. Ingen ursprunglig input-/resultatfil har ändrats.
+
+Rättningar före körningen
+Granskningen pekade ut kalenderluckor, okontrollerade källskarvar, felaktig
+provisional-mask samt behovet av ett lås före utfall. Den slutliga körningen
+behåller OMXSBGI:s saknade session 2006-01-05 via OMXSPI-kalendern, utan att
+ersätta avkastningsbenchmark. Prisreturer över källskarvar blockeras om inte
+minst 20 överlappande värden alla överensstämmer. Volymfönster och quotepar
+kräver sammanhängande källetiketter. Vendor- och primary-grupper hålls isär.
+Prisfallback redovisas per fönster. Moderna huvud-CAR bevarar uttryckligen
+sin gamla definition; nya fönster har strängare fullständighetskrav.
+
+Vad PASS inte verifierar
+1. Ingen av de 57 tidiga ändringarna har verifierat originalbesked/ED. De är
+   leverantörskandidater, inte 57 bekräftade indexchocker. AD imputeras inte.
+2. Datumunionen visar ett konkret benchmarkhål men är inte en självständig,
+   komplett historisk börskalender. Numeriska överlappningar belägger gemensamma
+   celler, inte historisk valuta, alla RIC-identiteter eller bolagshändelser.
+3. Native dagsavkastningsfält saknar egen Date/CalcDate i uttaget; eventuell
+   återanvändning vid icke-handel är en källbegränsning. Stock- och indexpriser
+   krävs på båda ändpunkterna, men det bevisar inte faktisk handel varje dag.
+4. Konstant volymskalning faller bort i en 45-dagarsandel. Enhetsbrott eller
+   bolagshändelser inom fönstret gör det inte. Historisk venue-/justeringsbasis
+   är inte fullständigt certifierad av en sammanhängande källetikett.
+5. Review-t-intervallen är nominella och explorativa efter många kända analyser.
+   De förutsätter tillräckligt oberoende reviews. Återkommande bolag, långa
+   överlappande fönster och gemensamma kalenderhändelser kan bryta antagandet.
+   Reviewmedel är en ny sammanfattning, inte gamla eventviktade CR1/WCB-inferensen.
+6. SPECIFICATION_ADDENDUM.txt saknar egen hash i RUN_LOCK. Kod och grundspec är
+   låsta före körning; tilläggets innehåll var granskat före körning i chatten.
+   En efterhands-hash ska inte beskrivas som en ursprunglig förregistrering.
+
+Tolkning och nästa steg
+Den nya historiken förlänger en deskriptiv volym-/prisbild, men skapar inte
+nya instrument, en historisk kontrollpopulation eller kausal mekanismvariation.
+Januari/juli respektive juni/december, marknadens auktionsutveckling och ändrad
+bolagskomposition får inte likställas med en isolerad indexeffekt över tiden.
+Ingen kvot mellan CAR och volymandel har identifierats som efterfrågeelasticitet.
+
+En möjlig ny fråga om indexaktiespecifik handelskoncentration jämfört med
+frysta samma-dagskontroller diskuterades efter historikutfallet, men beräknades
+inte här. Root har valt en tydligare, separat låst volymbokföringsdesign:
+totalt bruttohandelsvärde kontra fördelning över omviktningsdagen/övriga dagar.
+Detta granskningspaket gör inga nya ekonomiska tester eller FTN-analyser.
+
+Filer och kronologi
+SOURCE_PRESENCE* och TEST_EXTENSION_MAP dokumenterar den första inventeringen
+innan de nya prisuttagen. De är historiska underlag, inte aktuell slutlig täckning.
+INDEPENDENT_VALIDATION.json är slutlig replay från 22:30 UTC. verify.log visar
+samma körning. PUBLICATION_ALLOWLIST.json anger exakt vad som får kopieras.
+Alla råa pris-/volym-/quoteuttag, full arbetsbok och medlemskatalog är uteslutna.

@@ -1,0 +1,49 @@
+Reproducing the historical extension
+
+Dependencies: Python3, pandas, numpy, scipy, pyarrow, openpyxl.
+Acquisition additionally needs lseg-data and the user's logged-in Workspace desktop.
+No credentials are stored or needed in this package.
+
+Existing inputs, unchanged:
+  data/input/omxsb/omxsb_events_with_ric_2007_2026.csv
+  output/omxsb_replication_2007/events_car.csv
+  data/raw/lseg/panel_2005_2026/stocks_daily_2005.parquet
+  data/raw/lseg/panel_2005_2026/indices_daily (1).csv
+
+Licensed local inputs, under this output directory's private/:
+  FETCHED_NORMALIZED_LONG.csv.gz
+  FETCHED_INDICES_LONG.csv.gz
+  The original supplied workbook is kept unchanged at its download path and at
+  output/omxsb_scaled_round_20261103/private/user_source/.
+  Raw request payloads and exact source-field provenance remain privately under the
+  original work directory recorded in prices/SOURCE_HASHES.json. The public acquisition
+  scripts and PORTABLE_REPLAY.json describe reconstructing them with licensed access.
+
+From repository root, create a new output directory, copy SPECIFICATION.txt and
+SPECIFICATION_ADDENDUM.txt into it, then run (replace the workbook and replay paths):
+
+  python3 code/build/omxsb_history_extension/extend.py \
+    --workbook '/absolute/path/OMXSBGI_index leavers & joiners_03-Nov-2026.xlsx' \
+    --verification output/omxsb_history_extension_20261103/EVENT_VERIFICATION_OVERLAY.csv \
+    --price-supplement output/omxsb_history_extension_20261103/private/FETCHED_NORMALIZED_LONG.csv.gz \
+    --index-supplement output/omxsb_history_extension_20261103/private/FETCHED_INDICES_LONG.csv.gz \
+    --output /absolute/path/to/new/replay_directory
+
+The program refuses to overwrite a directory containing RUN_LOCK.json. Failed attempts
+must be kept and retried in a new directory. No source files are edited. A failed legacy
+return replay stops execution before extension outcomes are generated.
+
+Run the focused guards:
+  python3 code/build/omxsb_history_extension/test_extension.py
+
+To promote an early event from provisional to verified, create a NEW verification CSV
+and new output directory. Required fields: workbook_row, event_verified, ed_verified,
+ad_verified, source_conflict, effective_date, announcement_date, source_url. Evidence
+must establish the actual security/change, not merely a date for a different index.
+Only true event_verified + ed_verified + no conflict admits an event to the primary
+ED-based extension. AD tests additionally require ad_verified and an actual AD.
+Missing fields default to false; announcement dates are never derived from ED.
+
+Publication: do not stage private/, the user workbook, provider raw series, or full
+third-party source texts. Public results identify early observations by source-row ID.
+The public catalog does not redistribute the vendor's entire historical membership list.

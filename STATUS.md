@@ -1,3 +1,8 @@
+<!-- OMXSB_HISTORY_EXTENSION_20261103 -->
+> **3 november 2026, historikutökning genomförd:** 90 LSEG-frågor gav kompletterande äldre kurser och en uttrycklig lucka i OMXSBGI 2006-01-05. 57 kandidathändelser på åtta datum; 54 kompletta ED-fönster och 55 volym-/spreadobservationer. Resultat i `output/omxsb_history_extension_20261103/REPORT_SV.txt`.
+> **Källgräns:** 2002 är en startlista, inte 79 inval. Inga äldre originalbesked verifierade; därför separat preliminär 2003–2026-pool och oförändrad huvudanalys 2007–2026. Samtliga 1 461 tidigare ann/eff/tot-värden återskapas exakt. Inga nya FTN-utfall.
+> **Fortsättning enligt användarens uttryckliga instruktion:** kontrollera om koncentrerad handelsdagsvolym motsvarar högre total handel eller omfördelning mellan dagar, med frysta kontroller och enhetskontroll före nya utfall.
+
 <!-- OMXSB_SCALED_ROUND_20261103 -->
 > **3 november 2026, genomfört:** Breddad källkontroll, 35-familjers analysinventering och ett nytt förklarat retentionsutfall för 59 tillägg/10 översyner. Matchade nya positioner 0,831→0,973 pp; efterförändring +0,142 [−0,044; +0,329], nominellt explorativt intervall. Separat rårekonstruktion passerar. Se `output/omxsb_scaled_round_20261103/README_SV.txt`.
 > **Databeslut:** Bred före2024-auktionsinferens stoppad: CLS_AUC bara för 2023H1/H2 i de 56 frågorna. Ny Excel-export ger 701 medlemsändringsrader, varav 165 före2007; historiska kandidater behöver primärkällor och datumavstämning. Den är inte en komplett vikt- eller beskedskalender.

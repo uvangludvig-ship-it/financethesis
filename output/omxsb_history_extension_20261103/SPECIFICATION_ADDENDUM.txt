@@ -1,0 +1,19 @@
+Before new outcomes, 2026-11-03: implementation review and user-requested pooled table.
+
+The user explicitly requests results for the full 2002–2026 source period. Add a
+PROVISIONAL_COMBINED table containing old observations plus eligible vendor-date early
+observations. It is a conditional sensitivity, not the verified main analysis. No 2002
+initial-basket observation is treated as an economic index addition. No inferred ADs.
+
+Independent implementation review identified safeguards before execution:
+- Use OMXSBGI plus OMXSPI session dates, but OMXSBGI alone for the return benchmark;
+  preserve missing benchmark returns rather than remove trading sessions.
+- Prevent price/index-level returns across unverified source seams. At least20 directly
+  overlapping values must all agree (rtol1e-8,atol1e-10) to treat two sources as compatible.
+  Do not rebase or overwrite levels. Volumes/quotes require coherent source labels.
+- Bound supplied early observations to2001-01-01..2007-01-19; this covers lastED+200days.
+- Log price-return fallback separately for each complete window. Keep the original
+  487-event ann/eff/tot observations unchanged. Newly calculated baseline summaries use
+  review-mean t intervals, and are not presented as the old notebook's CR1/WCB results.
+- Write an immutable operational input/code lock before outcomes; re-runs require a
+  new directory. This is not external preregistration and does not erase prior exploration.

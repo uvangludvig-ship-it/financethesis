@@ -2,6 +2,10 @@
 
 Updated 27 Oct 2026 at the restructuring. **Rule: a new data file gets a row here the same day.** The per-file tables at the bottom are generated (`sizes, rows, columns`); the prose is maintained by hand.
 
+### Historical extension, 3 November 2026
+
+`output/omxsb_history_extension_20261103/` contains the source-gated 2002–2026 catalog extension and provisional ED-based 2003–2026 results. The original 2007–2026 inputs/results are unchanged. The user's XLSX (SHA256 `555fce1ee8d7a82965fa178d01db179a531d0813d7946a06d919154b56a41316`) supplies 79 initial-basket rows, 57 early scheduled candidates and 29 other early changes; zero original early announcements were verified. New licensed stock and index supplements reside in its ignored `private/` directory, hashes in `RUN_MANIFEST.json`; full acquisition source/provenance hashes in `prices/SOURCE_HASHES.json`. All 90 requests, empty responses, duplicate coalescing and OMXSBGI's 2006-01-05 gap are documented. Public derived files include `EVENT_METRICS.csv`, `EARLY_TEST_COVERAGE.csv`, `FULL_PERIOD_RESULTS.csv`, `TEST_SCOPE.csv`, baseline replay and source-row verification overlays. Raw vendor history and price payloads remain private. No early ADs, holdings, AUM or weights were imputed.
+
 ## The four layers
 
 | Folder | Meaning | Who writes it |
