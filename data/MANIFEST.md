@@ -941,3 +941,16 @@ Entry point: `output/omxsb_contribution_round_20261103/README.txt`. The publicat
 | `output/omxsb_contribution_round_20261103/network_consequence/` | Baseline-only actual owner-portfolio construction, unchanged118-event/three-control cohort. Initial0 then repaired1 complete comparison; no return outcome. `completed_identity_evidence.csv` contains10 source-backed ISIN/RIC links used in75 dated review rows; source URLs/retrieval hashes in identity_sources/manifest.json. Downloaded HTML/PDF fulltexts and full holdings copies remain local. |
 
 `verify_published.py` replays the normalized contribution and count arithmetic using only the published derived ledger and Python standard library. It does not replace raw-source, identity or causal validation. Original scripts and timestamped declarations are retained as provenance snapshots in this self-contained audit package; some full-replay helpers use documented local source paths.
+
+
+<!-- OMXSB_SHOF_SOURCE_PILOT_20261103 -->
+### SHoF source-only pilot completed after login, 3 November 2026
+
+Frozen request: 20 Morningstar performanceIds across five FI funds; 2017-01-01 through 2023-12-31. Entry point: `output/omxsb_shof_pilot_20261103/README_SV.txt`. Exact identifiers and the pre-download specification remain in the audit package and in `output/omxsb_design_frontier_20261103/independent/`. The earlier pending-login note is historical.
+
+| Local licensed raw file (gitignored) | Verified source metadata |
+|---|---|
+| `data/raw/shof/Reinvestments/pilot_20261103/FUNDS_RIPS_1793724775329.zip` | SHoF Re-invested Prices; 1840445 bytes; SHA256 `5cc7dd2e85842b5fc9f725a4e3b5d34e5b5a338d8af27ce027aa976dabe318f9`; 22872 source rows, 14 classes, type 1 only; archive CRC valid. |
+| `data/raw/shof/Valuations/pilot_20261103/FUNDS_VALUATIONS_1793724895212.zip` | SHoF Valuations; 615519 bytes; SHA256 `8249819776c0932cf84aba1e222fa595a761dd67d022567145b38c14a07833f3`; 17923 source rows, 15 classes with any rows; archive CRC valid. Empty historical placeholder rows do not establish class activity or capital coverage. |
+
+Published files contain request/source metadata, field-presence/date diagnostics, code and technical conclusions only. No licensed numeric TNA/NF/TRI series, authentication details or mail contents are published. Missing net flow remains missing, not zero. Vendor net flow is estimated, not observed cash or exchange orders. The pilot repairs some source coverage; it is not population-level capital coverage, a precision pass, a causal result or evidence about actual stock-price risk. No new economic outcomes or FTN analysis were opened.
