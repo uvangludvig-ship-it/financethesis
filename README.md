@@ -1,3 +1,6 @@
+<!-- OMXSB_CONTRIBUTION_ROUND_20261103 -->
+> **Ny kapitaluppdelning, 3 november 2026:** [Resultat och beslut](output/omxsb_contribution_round_20261103/RESULTAT_OCH_BESLUT.txt) visar vilka nya respektive befintliga fondpositioner som bär kapitalförändringen i 98 tillägg med fasta kontroller. Fondantal och kapital ger olika rangordning av fondgrupperna. Separat omräkning bekräftar resultatet; prisets orsak är fortsatt öppen. Paketet innehåller också en stoppad riskdesign och rådatagranskningen av Runda11. [Körunderlag och publiceringsomfattning](output/omxsb_contribution_round_20261103/README.txt). Tekniskt forskningsmaterial, inte uppsatstext.
+
 <!-- OMXSB_COMPLETE_OVERVIEW_20261102 -->
 > **Samlad genomgång, 2 november 2026:** Läs först [kortversionen](output/omxsb_overview_20261102/LAS_FORST.txt) och sedan [hela sammanställningen](output/omxsb_overview_20261102/SAMMANFATTNING.txt). De täcker replikationen, alla identifierade senare analysfamiljer, Claudes runda6/runda7/MSCI, möjliga bidrag och konkreta förbättringar. [Filkartan](output/omxsb_overview_20261102/FILKARTA.txt) visar var materialet ligger. Äldre resultattexter är historik; bland annat T23b och MSCI har ännu orättade inferens-/datapunkter. Detta är beslutsunderlag, inte uppsatstext.
 

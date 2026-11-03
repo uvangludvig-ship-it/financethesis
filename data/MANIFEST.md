@@ -928,3 +928,16 @@ All files and code are listed with SHA256 in output/omxsb_execution_followup_202
 | output/omxsb_execution_followup_20261102/sources/ | Original Nasdaq announcement/correction texts, dated methodology, Petajisto2011 and Pegoraro/Sammon/Shim2026 working-paper reading ledger. Exact reading depth/access limits given; no copyright fulltexts copied. 2020H2_primary_update.json supersedes its earlier primary-text gap without a date change. Independent v1/v2/control arithmetic checks are separate from identification. |
 
 Entry point: output/omxsb_execution_followup_20261102/REPORT.txt. Code: code/build/omxsb_execution_{timing,announced,controls,demand}_20261102.py; additional portable accounting/verification scripts are in each additive module. The original authenticated vendor data remains a local prerequisite; the prepared LSEG field pilot was not executed.
+
+<!-- OMXSB_CONTRIBUTION_ROUND_20261103 -->
+### Ownership capital, network feasibility and Runda11 audit, 3 November 2026
+
+Entry point: `output/omxsb_contribution_round_20261103/README.txt`. The publication manifest records selected source/output hashes. Raw vendor and FI originals are unchanged and required separately for full replay. All estimates are exploratory; no FTN outcomes.
+
+| Artifact | Source, transformation and limits |
+|---|---|
+| `output/omxsb_contribution_round_20261103/ownership_capital/` | Existing original fixed-control FI population, raw quantity/end-price consensus and historical LSEG issuer market value; strict all-four-role unit/report gate leaves185 events (98 additions/87 deletions),14 reviews. `normalized_fund_role_contributions.csv.gz` has382404 derived normalized rows, no raw prices/caps/quantities. New/continuing/exiting components and all benchmark-group aggregates retained; same-support owner counts declared after primary outcomes, descriptive only. Source paths/hashes/XML report metadata in raw_input_map/raw_archive_hashes/raw_control_report_map; raw diagnostics excluded from publication. |
+| `output/omxsb_contribution_round_20261103/latest_demand_audit/` | Independent reconstruction of current Runda11 from its saved events and licensed inputs; published derived coverage and Fieller diagnostics only. All468 price calculations independently reproduced; reporting absence and historical population remain unresolved. `ownership_independent/` separately reconstructs the new185-event capital analysis and support from underlying inputs. |
+| `output/omxsb_contribution_round_20261103/network_consequence/` | Baseline-only actual owner-portfolio construction, unchanged118-event/three-control cohort. Initial0 then repaired1 complete comparison; no return outcome. `completed_identity_evidence.csv` contains10 source-backed ISIN/RIC links used in75 dated review rows; source URLs/retrieval hashes in identity_sources/manifest.json. Downloaded HTML/PDF fulltexts and full holdings copies remain local. |
+
+`verify_published.py` replays the normalized contribution and count arithmetic using only the published derived ledger and Python standard library. It does not replace raw-source, identity or causal validation. Original scripts and timestamped declarations are retained as provenance snapshots in this self-contained audit package; some full-replay helpers use documented local source paths.

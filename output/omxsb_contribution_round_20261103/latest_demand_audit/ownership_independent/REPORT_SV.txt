@@ -1,0 +1,36 @@
+Oberoende kontroll av ägar-/kapitaluppdelningen, 3 november 2026
+Teknisk granskningsanteckning; inte uppsatstext eller ny hypotes.
+
+Bedömning: inga räknefel eller asymmetriska fond-/kontrollexkluderingar hittades. Huvudresultatet kan redovisas som en avgränsad, explorativ beskrivning av observerade kvartalsvisa nettopositioner. Det identifierar inte indexorder eller prisorsak.
+
+Självständigt återskapade tilläggsresultat, 98 händelser / 14 översyner:
+Nya ägare, event minus kontroll: +0,953853 pp, 95 % intervall [0,569852;1,337854].
+Fortsatta ägare: −0,138458 pp [−0,379879;0,102963].
+Utträdande ägare: +0,014140 pp [−0,103914;0,132194].
+Totalt: +0,829535 pp [0,378519;1,280552].
+Primärt nya minus tidigare (fortsatta + utträdande): +1,078171 pp [0,589326;1,567016], SE 0,226278.
+
+Borttag bevaras: 87 händelser / 14 översyner, total matchad förändring −0,771917 pp [−1,463781;−0,080052]. Ingen ny hypotes eller alternativ tidsperiod har lagts till.
+
+Vad som kontrollerades oberoende
+1. Urval: 219 ursprungliga ägarhändelser → 204 med tidigare validerad eventkvantitet → 185 där samtliga fyra ursprungliga aktier klarar kapitalgrinden. De ytterligare exkluderingarna är 13 tillägg och 6 borttag. Alla grindsvar återskapas. Inga kontroller byts ut, varje händelse har exakt en eventaktie och tre olika kontroller.
+2. Fondstöd: de behållna fond-ID:na återskapas från originalledgern, rapportmetadata och kvalitetsfel; samma exakta fonder finns i samtliga fyra roller. Alla komponenter bygger på dessa identiska rader. Tom rapport räknas inte som nollinnehav. Fond 61031 utesluts symmetriskt i 23 händelser 2020H2. En ytterligare fond/händelse utesluts för enhetsfel. Fond 51437 är redan frånvarande i det ärvda 2022H1-urvalet: den extra fusionsregeln tar alltså här bort noll ytterligare rader.
+3. Råkvantitet och enhet: 382 404 slutliga fond-/aktieroller återskapas direkt från FI:s långa innehavsfil, originalalias och LSEG:s marknadsvärde. Maximalt fel mot den exporterade normaliserade ledgern är 4,44e−16 pp. Av 764 808 endpoints är 708 405 nollor inom verifierat icke-tomt rapportstöd. Inga variationer i rapportmetadatans fond-ISIN hittades mellan före/efter för de behållna raderna.
+4. Splittar: tre aktie/översynspar har annan faktor än ett: Lagercrantz 2020H2 ×3, Addnode 2022H1 ×4 och Heba 2022H1 ×2. Alla stämmer med den befintliga daterade källförteckningen och ligger inom respektive kvartal. Övriga kontrollobservationer ärver den deklarerade grinden för identifierare, nominellt FI-pris och oförklarade enhetsförändringar; detta är inte en ny komplett leverantörsrevision av alla bolagshändelser.
+5. Bokföring: nya + fortsatta + utträdande = samtliga nettokvantiteter, även när totalen beräknas direkt före komponentuppdelning. Event minus det aritmetiska medlet av samma tre kontroller gäller överallt. Samtliga 23 310 event-/grupp-/komponentceller återskapas, maximalt fel 8,88e−16 pp.
+6. Inferens: först lika vikt mellan event inom en översyn, därefter lika vikt mellan 14 översyner. Samtliga 1 512 sammanfattningsfält återskapas, maximalt fel 3,33e−16. Kovariansmatrisen för nya, fortsatta och utträdande ägare återskapas, maximalt fel 8,67e−18. Kontrastens SE återfås med vikterna (1,−1,−1), alltså med full kovarians. Intervallet har inte skapats genom att subtrahera separata intervallgränser.
+
+Tolkning som måste bevaras
+- Enheten är förändrat antal aktier värderat till samma nominella slutkurs, dividerat med emittentens slutliga marknadsvärde, i procentenheter. Det är inte procent av det noterade aktieslagets aktieantal och inte ett SEK-flöde.
+- Nya ägare betyder innehav noll vid förra kvartalsslutet och positivt vid nästa. Det kan vara återinträde och säger inte när affärerna ägde rum. Fortsatta ägare kan ha köpt och sålt mycket under kvartalet trots liten nettoändring.
+- Utträdande ägares positiva matchade bidrag +0,014 betyder mindre minskning än hos kontrollerna, inte att utträdande fonder köpte. Nya bidrag kan vara större än totalen eftersom komponenterna är signerade; någon vanlig andel av en positiv kaka ska inte konstrueras.
+- Kontrollaktierna och tidpunkterna är inte randomiserade. Urvalets kvalitetsspärrar, fondrapporttäckning och varierande fondpopulation begränsar generalisering. Gemensamt stöd inom varje event är inte en enda oförändrad fondpopulation genom hela perioden.
+- Fjorton reviewmedel ger ett nominellt explorativt t-intervall med antagande om oberoende översyner. Återkommande emittenter/beroende mellan översyner eller tidigare analysval hanteras inte av detta intervall.
+- Gruppnamnen bygger på jämförelseindex och namnsignaler. OMXSB_index_named är inte en certifierad grupp rent passiva trackers och OMXSB_other_named är inte liktydigt med aktiva fonder.
+
+Den efterföljande beskrivande räkningen på samma 98 tillägg kan stödja den smala mätpoängen att fler fondägare inte automatiskt innebär större kapitalbidrag. Namngruppen OMXSB_index_named har färre extra nettoägare än OMXSB_other_named men större normaliserad kapitalförändring. Detta är ett redan rapporterat efterhandsresultat, inte ett nytt test eller belägg för mekanismen uppmärksamhet kontra passiv efterfrågan. Äldre +9,94 ägare från ett annat urval ska inte ställas direkt mot det nya kapitalmåttet; den jämförbara siffran i det nya urvalet är +9,636.
+
+Reproduktion och gränser
+Kör från latest_demand_audit med ./.venv/bin/python ownership_independent/audit.py, headline_verify.py respektive check_descriptive_counts.py. Ingen kod från den ursprungliga analytikern importeras eller anropas. Inga originalfiler ändras. VERIFICATION.json innehåller råkällhashar och exakta kontroller; HEADLINE_CHECK.json och SELECTION_GATE_CHECK.json isolerar huvudresultat och urval. Den ursprungliga analytikerns XML-kontroll av 1 864 endpoints har lästs men inte räknats som min egen datainsamling. Inga hela råinnehav, FTN-utfall eller uppsatstexter har kopierats.
+
+Efterkontroll: ursprungsanalytikern rättade tomma reason-fält för godkända event. Den arkiverade filen matchar exakt vår ursprungliga hash; samtliga event-ID, gate_pass och underkända skäl är identiska. Rättelsen är rent formateringsmässig och ändrar inget urval eller resultat. Se COSMETIC_GATE_CORRECTION_CHECK.json.
