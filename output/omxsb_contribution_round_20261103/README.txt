@@ -1,6 +1,6 @@
 OMXSB — bidragsrunda 3 november 2026
 
-Börja med RESULTAT_OCH_BESLUT.txt. Detta är tekniskt forsknings- och beslutsmaterial, inte AI-skriven uppsatstext.
+Börja med RESULTAT_OCH_BESLUT.txt och VERSIONSNOT_20261103.txt. Detta är tekniskt forsknings- och beslutsmaterial, inte AI-skriven uppsatstext.
 
 Nytt färdigt resultat: ownership_capital/ mäter vilka fondpositioner som bär den kontrolljusterade kvartalsförändringen i kapital. Huvudresultatet och den efterföljande beskrivande jämförelsen mellan fondantal och kapital har återskapats av en annan analytiker i latest_demand_audit/ownership_independent/.
 
@@ -14,6 +14,6 @@ Detta kontrollerar filhashar, kodsyntax, samtliga normaliserade fond-/aktierader
 
 Full lokal reproduktion kräver de angivna FI- och licensierade LSEG-indata samt tidigare granskade projektledgers. Se grenarnas README_REPLAY/README/REPLAY och inputkartor. Vissa originalskript har dokumenterade lokala sökvägar; ändra dessa på en annan dator. Kod som använder FINANCETHESIS_REPO kan styras med den miljövariabeln. Ett rent publikt repo utan källmaterialet räcker inte för att återskapa hela datainsamlingen.
 
-Publiceringsomfattning: PUBLICATION_MANIFEST.json listar 107 oförändrade filer kopierade från arbetsmapparna med hash. Utöver dessa finns denna paketintroduktion, verify_published.py och dess kontrollresultat. Inga råa LSEG-serier/innehav, hela FI-arkiv, Pythonmiljöer eller nedladdade PDF-/HTML-fulltexter ingår. Lokala original, felkörningar och rådiagnostik finns kvar i arbetsmapparna. Grenrapporter kan hänvisa till sådana lokala filer; deras frånvaro från det publika urvalet är avsiktlig och anges i respektive publiceringslista. Några agentrapporter säger att de inte skrivit till repot: det beskriver agenternas arbetsfas; huvudagenten har därefter paketerat resultaten här.
+Publiceringsomfattning: PUBLICATION_MANIFEST.json listar de utvalda filer som kopierats från arbetsmapparna med hash. Utöver dessa finns denna paketintroduktion, verify_published.py och dess kontrollresultat. Inga råa LSEG-serier/innehav, hela FI-arkiv, Pythonmiljöer eller nedladdade PDF-/HTML-fulltexter ingår. Lokala original, felkörningar och rådiagnostik finns kvar i arbetsmapparna. Grenrapporter kan hänvisa till sådana lokala filer; deras frånvaro från det publika urvalet är avsiktlig och anges i respektive publiceringslista. Några agentrapporter säger att de inte skrivit till repot: det beskriver agenternas arbetsfas; huvudagenten har därefter paketerat resultaten här.
 
 Inga tidigare huvudresultat skrivs över, inga FTN-utfall och ingen uppsatstext har beräknats/skrivits. AI-användningen är förd i thesis/AI_LOG.md.

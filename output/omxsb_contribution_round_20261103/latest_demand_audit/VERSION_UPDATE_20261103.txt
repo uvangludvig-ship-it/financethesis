@@ -1,0 +1,27 @@
+Versionsnotering — rättelsen e77c680, 3 november 2026 kl. 15:26:56 CET
+Begränsad efterkontroll av ny kod, sparade tabeller och tidigare identifierade event-ID. Ingen ny empirisk sökning eller bootstrapkörning. De äldre granskningsfilerna och deras hashvärden har inte ändrats.
+
+Vilken version granskningen gäller
+REPORT_SV.txt och dess ursprungliga numeriska diagnostik granskar Runda 11 i commit 3ff0da7, före den nya rättelsen. Commit e77c680 lägger till RATTELSER_2026-11-03.md och separata korrigerade resultat. Rättelsedokumentet anger uttryckligen att det har företräde framför äldre resultattexter. Den ursprungliga handelser.csv finns kvar oförändrad.
+
+Felet med helt saknad rapporterande indexfond är nu rättat i de nya resultaten
+Jag har kontrollerat samtliga åtta tidigare identifierade fall i Runda 11:s primära totalfönsterurval. Deras D_ny är nu saknat, inte noll, och n_indexfonder är noll:
+Tillägg: OMXSB-2008H1-02, OMXSB-2008H2-04, OMXSB-2009JAN-02, OMXSB-2010H1-04, OMXSB-2010H1-05.
+Borttag: OMXSB-2007H2-08, OMXSB-2007H2-09, OMXSB-2008H2-08.
+Exakt dessa åtta primära observationer byter från uppmätt D-värde till saknat. Kontrollen finns i VERSION_UPDATE_FALSEZERO_CHECK.csv och VERSION_UPDATE_CHECK_20261103.json.
+
+De aktuella sparade resultaten ska därför beskrivas korrekt
+- Tidiga tillägg i den rättade okontrollerade tabellen: 6 händelser / 4 översyner, kvot 95,682, rapporterat bootstrapintervall [−27,274;247,467].
+- Med kontroller återstår 5 tidiga tillägg. Den rapporterade skillnaden tidigt–sent är 77,434 [−45,400;200,268], wild-bootstrap p=0,388539.
+- Författaren har uttryckligen dragit tillbaka slutsatsen ”M föll från 200 till 2”. Den får inte längre beskrivas som deras aktuella statistiska slutsats.
+- Den äldre auditens obegränsade Fiellermängd avser det gamla 11-händelseurvalet. Den har INTE räknats om för de nya 6 händelserna och får inte återges som det nya korrigerade resultatets intervall.
+
+Vad som fortfarande inte är löst
+1. Saknad rad i målaktien före/efter blir fortfarande noll om fonden anses rapportera någon annan hämtad aktie i datumen runt händelsen. Den underliggande kvantiteten är fortfarande Runda 11-D; komplett fondrapport och säker frånvaronolla har inte lagts till. Den nya rättelsen löser alltså helt saknad kvalificerad fondpopulation för de åtta fallen, inte alla implicita innehavsnollor.
+2. Historisk klassificering efter dagens fondnamn finns kvar och erkänns i rättelsen. Samma splitfilter används, med de tidigare verifierade förbättringarna men utan full enhets-/identitetsrevision. LSEG/FI-korrelationen i ett senare urval löser inte dessa definitionsfrågor generellt.
+3. Bootstrapen kastar inte längre icke-positiva nämnardragningar. Men koden sätter cm/dm till +∞ eller −∞ när dm≤0, även om dm är ändligt negativt. Det är inte den faktiska kvoten: cm=1 och dm=−1 ger −1, inte +∞. Den nya sparade rättade LSEG-tabellen redovisar dock andel_oandliga=0 i alla sina celler; denna kodbrist ska därför inte påstås förklara dess nya punktvärden eller intervall. Percentilintervallen utgör fortfarande inte full Fiellerinferens. Tabell 6 behandlar fortfarande skattat period-D som givet.
+4. Den nya SHoF-variabeln är ett modellbaserat förväntat D, inte en ny observerad och verifierad historisk köpserie. Den använder den tidigare årsseriens december-AUM/indexvärde, vars indexkapital har dokumenterade omfattnings- och täckningsproblem. Fri flytande andel kan falla tillbaka till dagens klassificeringsvärde eller 100 procent. Den använder också andra eventurval än LSEG-raden. Dessa fakta gör inte påståendena om cirka 20 gånger större ägarandel, ”troligen 50–200” tidigt M eller dagens marknadselasticitet verifierade. SHoF är en annan kapitaldatakälla; proxyberäkningen är inte oberoende av LSEG:s indexkapital/fri-flytande-andel.
+5. Påståendet att säljarna identifierats utanför fonderna kvarstår i rättelsetexten. Ofullständig fondpopulation och kvartalsvisa nettopositioner identifierar fortfarande inte motparterna till indexdagens köp eller prisrörelsens orsak.
+
+Rimlig sammanfattning av senaste läget
+Den nya rättelsen har faktiskt tagit bort de åtta konkreta felaktiga nollorna och retirerat från den gamla starka tidsnedgången. Det är en saklig förbättring som ska erkännas. Samtidigt är en jämförbar historisk fondpopulation, säkra målaktienollor och en full validering av kvotens tolkning fortfarande inte etablerade. Den begränsade efterkontrollen validerar inte en ny ekonomisk långserie och ändrar inte den separat granskade ägar-/kapitaluppdelningen.
