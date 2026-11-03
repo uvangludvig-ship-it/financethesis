@@ -1,0 +1,13 @@
+Tillägg: två aktuella fältkontroller, 2026-11-03 kl. 19:31 UTC
+
+Ingen positiv kontroll för vikt- eller aktieantalsfälten erhölls. Den aktuella S&P 500-frågan (.SPX) gav 503 icke-tomma constituent-RIC-rader och den aktuella OMX Stockholm Benchmark Cap GI-frågan (.OMXSBCAPGI) gav 111. Båda gav noll icke-tomma respektive numeriska värden för både TR.IndexConstituentWeightPercent och TR.IndexConstituentShares. Tomma strängar har kontrollerats separat och är inte nollvikter.
+
+Exakt en fråga per index kördes, med samma tre fält och utan historiskt datum. Det tredje fältet var TR.IndexConstituentRIC. .OMXSBCAPGI:s identitet hade redan verifierats i den tidigare metadatafrågan; dess namn är OMX Stockholm Benchmark Cap_GI, Equity Index, NASDAQ Stockholm AB. Ingen ny identitetssökning krävdes. Standard desktop-session öppnades utan tillförd appnyckel och stängdes uttryckligen efter frågorna. Inga inloggningsuppgifter söktes eller lästes.
+
+Tolkning: den tidigare historiska OMXSB-piloten visar fortfarande att vi inte fick giltiga officiella vikter eller IndexShares. Dessa ytterligare tomma svar visar att problemet inte kan avgränsas till historiska uncapped-OMXSB-frågor. De bekräftar inte att fälten fungerar för denna session och fastställer inte om orsaken är behörighet, innehållstäckning eller fråge-/fältbegränsning. Det kom inget uttryckligt behörighetsfel. Ett framtida provider-svar måste klargöra detta; ingen ytterligare sökning eller analys ingår här.
+
+Cap GI och S&P 500 används enbart för källdiagnostik. De ersätter inte det uncappade OMXSB-indexet. Inga nuvarande vikter används som historiska vikter, och ingen korg-, efterfråge-, pris- eller avkastningsanalys har utförts. Den frysta huvudpilotens samtliga 25 innehållsfiler är oförändrade; dess tidigare publiceringslista och hashmanifest har dessutom sparats separat. Totalt antal desktop-källfrågor är nu 29: tidigare 27 plus dessa 2.
+
+Reproduktion: desktop_field_control.py behöver den lokala SDK-miljön, en legitim inloggad Workspace desktop-session och privat identity_search_1.csv från den tidigare metadatareparationen. FIELD_CONTROL_LOCK.json sparades före API-frågorna. FIELD_CONTROL_RESULTS.json visar enbart täckningsantal, privata filnamn och hashvärden. Numeriska rådata/RIC-listor ligger endast under private/ och ingår inte i publiceringen.
+
+Paketering: PUBLICATION_ALLOWLIST.txt är en exakt lista med en relativ fil per rad. Alla olistade filer och undermappar, särskilt private/, sources/, .venv/ och timezone_source/, utesluts. Tidszonsuppgiften har en separat egen fillista. PUBLICATION_SHA256.json täcker listade filer utom sig självt. PRE_FIELD_CONTROL-filerna bevarar den tidigare listan och dess hashvärden.

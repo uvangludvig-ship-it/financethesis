@@ -1,0 +1,29 @@
+HFT-pilot slutförd 2026-11-03: två individuella beskrivande kontraster, två saknade utfall.
+Detta är en teknisk analysanteckning, inte uppsatstext.
+
+Den frysta jämförelsen gick att genomföra för Camurus (tillägg) och AFRY (borttag) i samma indexöversyn 2023H2. Auktionspremien är 10 000 × (slutauktionens pris / sista giltiga mittkurs före auktionen − 1). Den signerade kontrasten jämför omviktningsdagen 30 november med den fasta jämförelsedagen 23 november; borttag får omvänt tecken. Positiv kontrast betyder därför relativt högre auktionspris för tillägg eller lägre för borttag.
+
+                         AP 23 nov      AP 30 nov     Signerad skillnad
+Camurus, tillägg          +4,5434 bp     -75,2203 bp       -79,7637 bp
+AFRY, borttag            +7,8555 bp     -23,4926 bp       +31,3480 bp
+
+Bilia och Atrium Ljungberg 2019 är NA: det begärda auktionsfältet saknas båda fasta dagarna. Inga aktier, datum, fönster eller slutkursalternativ ersatte dem. Inget medel över de två täckta eventen beräknades. Ingen återgång nästa dag, regressionsmodell, signifikansprövning eller FTN-analys utfördes.
+
+De två tecknen går åt olika håll. Detta visar vad den nyvaliderade mätningen faktiskt ger för två enskilda exempel; det belägger varken en generell indexeffekt eller en effekt av trackers. Jämförelsen kontrollerar inte för samtidig företagsinformation, marknadsrörelser eller andra auktionsorder. Den mäter heller inte fonders transaktionskostnad eller identifierade nettoorder. Jämförelsedagen 23 november är annonseringsdagen, men meddelandet publicerades efter stängning; nästa morgon används därför inte som neutral återgångskontroll. Urval och mått låstes före HFT-uttag, men tidigare dagliga analyser var redan kända: explorativ pilot, inte blind förregistrering.
+
+Källkedjan
+1. SHoF:s fulla orderböcker ger sista giltiga positiva, okorsade köp-/säljkurs med positiva visade storlekar i de sista 60 sekunderna före 17:25. Alla fyra 2023-dagar har en enda slutlig kursstatus, 0,53–3,59 sekunder före gränsen. Tidsordningen är monoton. Samma daterade ISIN, symbol, XSTO och SEK kontrollerades; Nasdaq-listningen ger separat daterad identitet. LSEG:s nuvarande instrumentuppgifter är bara stöd, inte historiskt bevis.
+2. SHoF:s återfunna dokumentation från oktober 2020 definierar T som kontinuerlig handel och IOO som öppningsrelaterad bokinformation, men anger ingen tidszon. Därför ändrades detta källkrav uttryckligen och tidsstämplat före premierna beräknades. Enbart lokal börsklocka och UTC prövades mot Nasdaqs daterade marknadsmodell 2023. Lokal tolkning passar samtliga 21 597 T-rader och 147 IOO-rader; UTC-tolkning ger 6 637 T-rader utanför den kontinuerliga sessionen och samtliga IOO-rader utanför öppningsfönstret. Även öppningsövergången passar bara lokal tid. Slutsatsen är en dokumentstödd klockinferens, inte ett påstående att SHoF uttryckligen deklarerar lokal tidszon. Bilia 2019 ger en separat sommarkonsistenskontroll; 2023-dokumentet används inte som historiskt schemaintyg för 2019.
+3. Ingen av de fem levererade fulla bokfilerna har en rad från 17:25 eller senare. Bilia-filen med transaktionsfilter motsvarar exakt samtliga 862 transaktionsrader i fullfilen och tillför ingen auktion. SHoF-dokumentationen stödjer auktioner generellt, så filernas lucka får inte kallas en bevisad generell uteslutning. NMQ-uttagets två scheman saknar identifierat auktionsprisfält och användes inte till ersättningsutfall.
+4. Priset hämtas därför från separat dokumenterade LSEG CLS_AUC, slutauktionens uncrosspris, med adjustments=['unadjusted']. Alla fyra exakta 2023-datum har ett positivt pris och positiv tillhörande volym som närvarokontroll. OFF_CLOSE och TRDPRC_1 användes inte. SHoF:s rekonstruerade prisfält och LSEG:s avkodade pris används direkt i SEK per aktie. Råproduktens regel om fyra implicita decimaler gäller inte dessa rekonstruerade fält; TRD_UNITS beskriver precision och är ingen valutafaktor. Volym-, match-ID- och rättelsesemantik räcker fortfarande inte för en orderflödesanalys, vilket är en annan fråga än denna separata prisjämförelse.
+
+Reproducerbarhet och gränser
+FINAL_EXECUTION_LOCK.json låser kod och källhashar före beräkning. CLOCK_VALIDATION.json sparades innan auktionsvärdena öppnades. FINAL_SOURCE_GATE_SUMMARY.json och INDIVIDUAL_AUCTION_CONTRASTS.csv är slutliga; tidigare source-only-filer bevarar vad som var känt då. Fem syntetiska testfall kontrollerar tvetydiga slutkurser, saknat auktionspris, lokal/UTC-diskriminering, tecken/enheter och exakt tidsgräns. Det äldre källinventeringstestet har tre testfall. Reproduktion kräver tillgång till privata licensierade original; publiceringslistan innehåller inga råa priser, kvantiteter, deltagare eller fullständiga källtexter.
+En separat analytiker återskapade klockkontroller, slutkurser, fyra dagspremier och två signerade kontraster med egen kod och Decimal-aritmetik. Samtliga matchade inom 10⁻⁸ baspunkter; största avvikelsen i en dagspremie var 8,78 × 10⁻¹³ baspunkter. Båda 2019-utfallen förblev saknade. INDEPENDENT_VALIDATION_POINTER.json anger granskningsfilens och den oberoende kodens hash.
+
+Källor (parafraser; inga fulltexter publiceras)
+SHoF dokumentation rev1.1, oktober2020: https://web.archive.org/web/20230107102616id_/https://www.houseoffinance.se/SHoF_NASDAQ_Documentation.pdf
+Nasdaq Nordic Market Model2023_08, kapitel3.3,4.2.1,4.2.4: https://www.nasdaq.com/docs/2023/10/31/Nasdaq-Nordic-Market-Model-2023_08.pdf
+LSEG CLS_AUC-definition, accepterat svar av innehållsexpert: https://community.developers.lseg.com/discussion/30335/how-to-get-closing-trade-price-for-european-markets
+LSEG get_history och unadjusted: https://cdn.refinitiv.com/public/lseg-lib-python-doc/2.0.0.2/book/en/sections/access-layer/access/get-history-function.html
+Daterad Nasdaq-identitet 2023: https://attachment.news.eu.nasdaq.com/a2e58e4ded629d498cbe7d4794229ffb5

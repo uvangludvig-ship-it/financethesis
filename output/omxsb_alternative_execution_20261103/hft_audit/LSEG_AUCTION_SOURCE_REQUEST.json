@@ -1,0 +1,28 @@
+{
+  "stage": "source_presence_and_metadata_only",
+  "purpose": "Recover the already locked closing-auction price; do not substitute adjusted close or change the primary contrast.",
+  "pilot_instrument": "BILIa.ST",
+  "pilot_ISIN_at_event": "SE0009921588",
+  "pilot_dates": ["2019-05-23", "2019-05-31"],
+  "historical_fields_requested_separately": ["CLS_AUC", "CLS_AUCVOL", "OFF_CLOSE"],
+  "interval": "daily",
+  "adjustments": ["unadjusted"],
+  "primary_required_field": "CLS_AUC",
+  "crosscheck_only_field": "OFF_CLOSE",
+  "metadata_candidates": ["CURRENCY", "TRD_UNITS", "ISIN_CODE", "DSPLY_NAME", "XMIC_CODE", "OFF_CLS_DT", "OFF_CL_TIM"],
+  "metadata_caveat": "Check actual availability and field dictionary. Current snapshot metadata does not establish historical instrument/currency/adjustment status. TRD_UNITS describes price precision, not a price-currency multiplier.",
+  "definition_source": "https://community.developers.lseg.com/discussion/30335/how-to-get-closing-trade-price-for-european-markets",
+  "API_adjustment_source": "https://cdn.refinitiv.com/public/lseg-lib-python-doc/2.0.0.2/book/en/sections/access-layer/access/get-history-function.html",
+  "metadata_source": "https://developers.lseg.com/content/dam/devportal/realtimeapi_pdfs/ema_cpp_rdm_usage_guide.pdf",
+  "required_validation": [
+    "Historical date-indexed observations, not current snapshot values presented as 2019 history",
+    "Unadjusted/as-traded price in the same SEK share unit as the historical SHoF instrument",
+    "A positive final auction price distinct from indicative auction price fields; zero/NA not imputed",
+    "Document whether auction-volume field is available/positive without assuming its absence means no auction",
+    "Confirm Stockholm coverage and field meaning; documentation of European examples alone is not proof of Bilia coverage",
+    "Preserve request, response metadata, exact source identifiers, raw private response and hashes",
+    "Do not compute the primary price contrast before the gate is passed"
+  ],
+  "not_authorized_as_fallback": ["TR.PriceClose", "TRDPRC_1", "OFF_CLOSE alone", "adjusted daily close", "monthly Latest Paid", "indicative equilibrium price"],
+  "next_stage_if_valid": "Use the unchanged four-event, sixteen-session manifest. Only eight same-day closing-auction prices are needed for primary ED-1 versus ED-6; next-session quotes remain descriptive."
+}

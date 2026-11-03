@@ -1,0 +1,26 @@
+HFT-PILOT: KÄLLGRIND,2026-11-03
+
+Det låsta auktionsmåttet kan ännu inte beräknas. Två verkliga SHoF-exporter för Bilia A2019-05-31 innehåller ingen verifierad stängningsauktion. Vi har inte räknat pris-, avkastnings-, volym- eller riskutfall. Detta är inte ett ekonomiskt nollresultat.
+
+Urval: första metadata-giltiga tillägg/borttag i2019H1 och2023H2, sorterat på event_id: BiliaA, AtriumLjungbergB, Camurus ochAFRY. Exakta historiska ISIN och16 låsta instrumentdagar finns i PILOT_EVENTS.csv/PILOT_REQUEST_SESSIONS.csv. Inga CAR/volymer användes för urvalet. BasdagED-6 är2023-11-23, då beskedet kom efter stängningen; nästa morgon är därför ingen neutral overnightjämförelse. Denna metadataupptäckt ändrade den föreslagna overnightprimären före HFT-hämtningen.
+
+Primären är signerad skillnad i samma-dag auktionpremie mot sista giltiga för-auktionsmid, ED-1 minus ED-6. Nästa session är enbart beskrivande. PRIMARY_CONTRAST_LOCK.txt anger exakt regel, källstopp och att detta är explorativt efter kända dagligaresultat. Ingen blind förregistrering påstås.
+
+Faktiskt kontrollerat
+- Full reconstruction:5483rader,20kolumner, korrektBILI A/SE0009921588/XSTO/SEK. GZIP trots.zip-suffix, semikolonCSV.0malformade och0exakta dubletter.
+-862rader har både transaktionspris och transaktionsstorlek;4621 saknar båda med strängenN/A. Det är missing, inte0.
+-Transaction-only:862rader,18kolumner. Alla gemensamma celler exakt lika fullfilens862transaktionsrader, i samma radordning. Endast buyer/seller borttagna. Exportvalet tillför inga auktionrader.
+-Fullfilens sista exporterade tid17:24:58.455341783; transaktionsfilens17:24:55.365536745.0rader från17:25ochframåt. FullfilstatusIOO24,T5454,QTA5. QTA förekommer spritt under dagen och får inte antas betyda stängningsauktion.
+-325extra rader delar datum/tid/instrument med tidigare rad, trots0exakta dubletter. Två intilliggande par upprepar samma transaktionsfält samtidigt som boken ändras;13återanvända transaktionstupler totalt. Detta kan vara separata affärer eller transformering, inte bevis för dubbelräkning. Ingen deduplicering eller volymsummering görs utan match-/rättelsesemantik.
+-Tidsmönstret liknar lokal Stockholmstid, men exporterad tidszon är inte dokumenterad. RåITCH:sUTC är inte bevis för SHoF-exportens tidszon.
+
+Avgränsning
+En instrumentdag visar en faktisk källlucka och exakt likhet mellan dessa två exporter. Det bevisar inte att SHoF alltid utelämnar auktioner eller varför denna dag saknar dem. Den offentliga produkttexten/FAQ anger ingen sådan exklusionsregel. Dokumentationslänken ger404. Ingen bredare HFT-batch eller ersättningsaktie motiveras av denna källkontroll ensam.
+
+Konkret reparationsförsök
+LSEG:s dokumenterade CLS_AUC avser finalt kvällsauktionspris. En liten historisknärvarokontroll förBILIa.ST2019-05-23/31 medexplicitunadjusted och datum-/valuta-/instrumentmetadata är specificerad i LSEG_AUCTION_SOURCE_REQUEST.json. Root hanterar sessionen. OFF_CLOSE är bara kontroll: Nasdaqs2023regel tillåter lasttradefallback om ingenauktionskurs finns. Vanligadjustedclose, månadsLatestPaid och indikativ jämviktskurs är inte tillåtna ersättningar.
+SHoFNordicMarketQuality har ingen verifierad auktionskursvariabel i offentliga dokumenten; dess metod-PDF ger404. Det är ännu en okändkälla, inte en bevisad reparation.
+
+Reproducerbarhet/publicering
+select_pilot.py läser enbart event-/identitets-/kalendermetadata. inspect_hft_source.py, audit_bilia_schema.py och compare_bilia_exports.py reproducerar källkontrollerna. Tre syntetiska tester kontrollerar GZIPmedfeländelse, semikolon/citering, N/Amissing kontra0 och att trade/cancel medsammanställdtidsnyckel inte kollapsas. Initiala BILIA_SCHEMA_INVENTORY.json räknade inteN/Asommissing; oförändradhistorik sparad men v2ärkorrekt och endastv2publiceras.
+Publiceringslistan omfattar egna noter/kod, källmetadata och härledda källräknare. Inga råa licensierade pris-/kvantitets-/deltagarserier eller fulltexter ingår. Ingen FTN-data har öppnats; ingen uppsatstext skrivits; repo är read-only för denna agent.

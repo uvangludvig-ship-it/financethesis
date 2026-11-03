@@ -1,0 +1,89 @@
+OFFICIELLA OMXSB-KORGAR: KONKRETA ÅTKOMSTFÖRSÖK, 3 NOVEMBER 2026
+Tekniskt arbetsunderlag, inte uppsatstext. Inga nya prisutfall eller FTN-utfall.
+
+STATUSUPPDATERING: texten nedan beskriver läget före 19:03 UTC. Användaren öppnade
+sedan Workspace och en legitim desktop-pilot genomfördes. Läs DESKTOP_UPDATE_SV.txt
+för det senaste utfallet: session och historiska medlemmar fungerar, men samtliga
+prövade vikt-/indexaktieantalsfält är tomma. Den korrekta RIC:en är nu live-
+verifierad som .OMXSBPI; den gamla .OMXSB-kandidaten misslyckades.
+
+Resultat: originalkorgen är ännu inte hämtad. Den officiella källan och dess
+fält är verifierade; två exakt daterade filförsök stoppas av inloggning. En liten
+LSEG CodeBook-pilot är körklar men INTE KÖRD. Det finns inget nytt belägg för
+användbar aktiespecifik omviktningsvariation förrän korgarna faktiskt levererats.
+
+Vad som provats
+
+Första pilot är den uncappade OMXSB, Nasdaq-symbol OMXSBPI. Projektets befintliga
+LSEG-kod använder .OMXSB för prisversionen; .OMXSBPI får inte antas vara samma
+RIC. Den officiella Nasdaq-notisen från 23 november 2023 är hämtad: den anger
+ny portfölj från 1 december och länkar till GIW, men innehåller ingen komplett
+fil med Index Shares. Själva pressnotisen är därför inte viktleveransen.
+
+Två publika GET-försök gjordes 18:58 UTC:
+  2023-11-30, OMXSBPI, FileType=EOD, Type=pipe
+  2023-12-01, OMXSBPI, FileType=SOD, Type=pipe
+Båda gav HTTP 200 efter omdirigering till Reports2/login.aspx. Svaren är 2 336
+bytes HTML med inloggningsformulär, INTE tomma viktfiler eller bevis att historiken
+saknas. De fullständiga URL:erna, slutadresserna och SHA256 finns i
+PUBLIC_SOURCE_ATTEMPTS.json. Inga autentiseringsuppgifter, cookies eller andra
+åtkomstvägar provades efter denna gräns. GIW:s separata Month End-sida visar också
+”No Access”. Den publika Weighting-sidan begär inloggning för full data.
+
+Nasdaqs nu länkade GIW API-specifikation är version 3.4. Den beskriver SOD, EOD,
+PRO och DPRO samt Index Shares, Security Shares, Free Float Factor och Capping
+Factor. SOD använder föregående stängningspris med bolagshändelsejusteringar;
+därför är före/efterfilernas tids- och justeringskonventioner viktiga. Den äldre
+version 3.0B hittades först men används inte som aktuell specifikation.
+Proforma finns bara för utvalda index. Daily Pro Forma är en uppdaterad framtids-
+bild, inte automatiskt ett arkiv av vad som var känt vid beskedet. Vi har inte
+verifierat OMXSB:s arkivdjup, proformatäckning eller tillgång till äldre versioner.
+Källa: https://www.nasdaqtrader.com/content/technicalSupport/specifications/dataproducts/GIW_WebService_Spec_current.pdf
+Navigering: https://indexes.nasdaq.com/docs/Tips%20to%20Navigate%20Your%20New%20Global%20Index%20Watch%20Access.pdf
+
+Vad LSEG-spåret faktiskt ger
+
+Refinitiv Workspace.app finns installerad. Ingen matchande process eller lokal
+lyssnare på 9000/9060 hittades; den kontrollerade Pythonmiljön saknar lseg,
+refinitiv och eikon. Detta visar inte att användarens konto saknar behörighet.
+Tidigare lokala notebookar visar användning av Workspace CodeBook. Root försökte
+öppna appen men rapporterade att Computer Use-behörighet saknas. Jag har inte
+öppnat någon browser, app eller inloggning.
+
+codebook_index_pilot.py använder bara dokumenterade TR-fält och testar varje fält
+separat på .OMXSB för 30 november och 1 december 2023. Den sparar originalrespons,
+kolumnnamn, saknat och fel, men räknar ingen förändring. Vikter och medlemmar kan
+ha olika behörigheter. En leverantörsrespons är inte automatiskt en originalfil
+från Nasdaq eller en historisk informationsversion. Returnerat datum, index-
+identitet, full medlemslista och definitionen av IndexConstituentShares måste
+stämmas av innan någon mekanisk analys.
+
+En LSEG-supporttråd om exakt .OMXSBCAPGI redovisade vikter från 12 juni 2019 men
+inte tidigare. Den motiverar 2023H2 som första försök; den bevisar varken dagens
+historikgräns, behörigheten eller uncappad OMXSB-täckning. 2019H1 kan senare
+provas med 31 maj/3 juni, men har inte påståtts omöjlig.
+https://community.developers.lseg.com/discussion/55281/historical-index-weight-data
+
+Officiell webbingång för root: https://workspace.refinitiv.com/web
+LSEG:s guide anger att CodeBook kan användas i webbläsaren:
+https://developers.lseg.com/en/article-catalog/article/use-eikon-data-api-or-rdp-library-python-codebook-web-browser
+Nyare migreringsdokument anger https://login.workspace.lseg.com/ för migrerade
+webbanvändare. Ingen av dessa inloggningar har genomförts av denna agent.
+
+Vad som skulle vara ett nytt användbart datasteg
+
+Kompletta daterade korgar kan avslöja ändrade indexaktieantal bland kvarvarande
+medlemmar. Men en viktändring driven av aktiekursen är inte en påtvingad affär.
+Om alla kvarvarande aktieantal är oförändrade, eller bara skalas lika, finns ingen
+aktiespecifik mängdchock efter borttagning av den gemensamma skalan. Gemensam
+nämnarändring kan fortfarande kräva proportionell handel; variation som uppstår
+enbart genom division med omsättning är likviditetsvariation. Ändrat float eller
+emissioner kan ge företagsspecifik variation men också företagsnyheter. Capping
+är ett separat variantspår och kan inte tillskrivas uncappad OMXSB.
+
+Nästa konkreta steg är endast CodeBook-källprovet eller en behörig GIW-export av
+det färdiga filparet. READY_REQUEST.txt och MECHANICAL_VARIATION_GATE.txt anger
+precis leverans och kontroll. Ingen begäran har skickats, inget köpts och ingen
+registrering skapats. ETF-innehav, månatligt listat aktieantal och gamla proxy-
+vikter har inte kallats officiella indexvikter. Den tidigare 0/78-grinden för
+fullständigt värderade proxykorgar kvarstår oförändrad.

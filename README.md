@@ -1,3 +1,6 @@
+<!-- OMXSB_ALTERNATIVE_EXECUTION_20261103 -->
+> **Nya datakällor och auktionspilot, 3 november 2026:** [Genomförande och exakta begränsningar](output/omxsb_alternative_execution_20261103/README_SV.txt). Inloggad LSEG-desktop ger verifierade historiska indexmedlemmar men ännu inga användbara vikter. LSEG:s auktionspris kombinerat med SHoF:s orderbok ger två individuella, förutbestämda 2023-kontraster; de har motsatta tecken och löser inte mekanismen. Två 2019-fall är fortsatt saknade. Alla källförsök, explicit metodändring och separat omräkning är sparade. Licensrådata stannar lokalt.
+
 <!-- OMXSB_CONTRIBUTION_ROUND_20261103 -->
 > **Ny kapitaluppdelning, 3 november 2026:** [Resultat och beslut](output/omxsb_contribution_round_20261103/RESULTAT_OCH_BESLUT.txt) visar vilka nya respektive befintliga fondpositioner som bär kapitalförändringen i 98 tillägg med fasta kontroller. Fondantal och kapital ger olika rangordning av fondgrupperna. Separat omräkning bekräftar resultatet; prisets orsak är fortsatt öppen. Paketet innehåller också en stoppad riskdesign och rådatagranskningen av Runda11. [Körunderlag och publiceringsomfattning](output/omxsb_contribution_round_20261103/README.txt). Tekniskt forskningsmaterial, inte uppsatstext.
 

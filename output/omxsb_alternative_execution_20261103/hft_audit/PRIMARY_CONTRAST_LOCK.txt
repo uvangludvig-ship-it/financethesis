@@ -1,0 +1,22 @@
+HFT exploratory pilot: primary contrast locked 2026-11-03 before HFT price/volume outcomes.
+This is an exploratory source pilot after earlier daily OMXSB findings were known. It is not a blind preregistration.
+
+METADATA AMENDMENT TO PRE_ACQUISITION_SPEC
+The preferred symmetric overnight contrast in the initial source spec is not the primary outcome. Metadata showed that 2023-11-23 (ED-6) is also the announcement date, with the notice at 18:00 CET after the closing auction. Its next morning contains the announcement response. Subtracting that overnight return would confound the requested temporary auction comparison. Root agreed before submitting the first HFT source request. This amendment used calendar/announcement metadata, not HFT or new daily outcomes.
+Additional sessions 2019-05-24 and 2023-11-24 were approved before download. They are source/diagnostic sessions only, not alternative primary windows. Continuous interval downloads may contain other days; those additional days are used only for source completeness and mapping checks.
+
+FIXED PRIMARY MEASURE
+For event i, sign s_i=+1 for addition, -1 for deletion.
+For d=ED-1 or ED-6, let P_A(i,d) be the uniquely identified closing-auction uncross execution price. Let M_C(i,d) be the last valid, positive, uncrossed displayed best-bid/ask midpoint strictly before the documented start of the closing-auction phase; require the quote observation timestamp to lie in the final 60 seconds of continuous trading. No search over windows and no quote from the auction phase. Session boundaries and timezone must be documented for the historical source, not inferred from the largest print or return.
+Auction premium in basis points: AP(i,d)=10000*(P_A(i,d)/M_C(i,d)-1).
+Only primary contrast: C_i=s_i*(AP(i,ED-1)-AP(i,ED-6)).
+Positive means an unusually high closing-auction price for additions or low price for deletions relative to that stock's fixed comparison session. It does not identify index-induced pressure, fund execution costs, or net index orders.
+Report the four event values, paired source availability and source gate failures. No significance tests, fitted regressions, precision promises or alternative event windows. An equal-event mean may be shown purely as a four-observation description if all four pass; no inference or time-trend claim.
+
+SECONDARY DESCRIPTION, NEVER AN ALTERNATIVE PRIMARY
+For each available rebalance session, calculate direction-signed next-session midpoint change from auction price only if corporate actions and historical trading schedule are valid. Fixed early midpoint is the last valid quote at or before five minutes after the documented start of continuous trading, timestamp within the immediately preceding 60 seconds. No alternative open/5/10/30-minute choice. Report this value individually as an overnight/early-session change, not pure reversal, because news and market moves intervene. The comparison-session next morning, if shown at all, is explicitly marked as containing the 2023 announcement response and is never used to estimate a neutral overnight counterfactual. These are subordinate descriptive diagnostics, not a second confirmatory hypothesis.
+
+SOURCE STOP RULES
+No explicit validated auction designation, no unambiguous match/correction semantics, no documented timezone/session phase, no usable quotes at the locked benchmark, or ambiguous instrument/currency => corresponding result NA with reason. Missingness never triggers replacement stock, another window, transaction-VWAP substitution or zero. If transaction-level export lacks quote states, request the same locked instrument/session book data or finish source-only. The current 2025 ITCH specification is only a lead: historical SHoF transformation and 2019/2023 message versions require confirmation. Do not assume raw ITCH column semantics in the SHoF output.
+
+Publication: no raw licensed execution/quote values or order-level identifiers. Publish only metadata, scripts, hashes, source checks and permitted aggregate/event-derived contrasts. Repo read-only; no FTN observations or AI-authored thesis text.

@@ -1,0 +1,23 @@
+OBEROENDE SLUTGRANSKNING, 2026-11-03
+Status: källkontroller, låst aritmetik och publiceringslistor kontrollerade. Inga alternativa estimat beräknade. Teknisk granskningsnot, inte uppsatstext.
+
+Vad som faktiskt håller
+1. Giltigt historiskt medlemskap är 105 den 30 november 2023 och 104 den 1 december. Sex tillägg/sju borttag matchar exakt den SLUTLIGA implementerade listan efter uppdateringen 29 november, inte ursprunglig annonsering 23 november. JM finns båda datumen och Karnov inget. Namnförfrågans extra rad saknar RIC; samtliga giltiga RIC-mängder stämmer.
+2. Båda datumen saknar helt numeriska indexvikter, Index Shares och returnerat viktdatum. SDK-notna räknade tidigare tom text som ifylld; slutrapporten rättar detta tydligt. Även de två ytterligare aktuella fältkontrollerna (.SPX 503 rader, .OMXSBCAPGI 111) har helt tomma vikter/Index Shares. Tomt är inte noll. Ingen positiv fältkontroll eller kvantitativ omviktningschock har erhållits; orsaken kan inte säkert kallas behörighetsfel eller OMXSB-specifik historikbrist.
+3. Bilia fullrekonstruktion har 5 483 rader. Dess 862 rader med båda transaktionsfälten är exakt identiska med transaction-only-exporten i samtliga 18 gemensamma kolumner och samma ordning. Buyer/seller är de enda borttagna kolumnerna. 4 621 rader saknar båda transaktionsfälten. Noll exakta raddubletter men 325 extra tids-/instrumentnycklar; 13 återanvända transaktionstupler är totalt. Dessa är inte 862 verifierat unika affärer. Ingen generell SHoF-exklusionspolicy för auktioner är belagd.
+4. Alla fem bokfiler, samtliga 13 LSEG pris-/minutkällsvar och NMQ:s två fyraradiga scheman har kontrollerats direkt. Fyra av åtta dagliga auktionsfält finns; fem minutfrågor ger noll rader. Identifiering, saknade fält, sista kandidatquote och entydighet återskapas. NMQ:s numeriska kvalitetsmått används inte som ersättning.
+
+Låst prisberäkning: PASS
+verify_primary.py återskapar direkt från originalfilerna, med standardbibliotek och Decimal, de fyra dagliga auktionspremierna och båda signerade kontrasten. Producentens beräkningsfunktioner importeras eller körs inte. Tecken, fasta datum, sista giltiga T-quote inom 60 sekunder, en enda numerisk top-of-book-status, råhashar och exakta auktionsdatum kontrolleras. Största AP-avvikelse är 8,78e-13 baspunkter mot den publicerade CSV:n. De två 2019-raderna förblir NA. Ingen tvåeventsmedelpunkt, ny aktie, nytt fönster eller alternativ estimator har införts.
+
+Tidszon är en redovisad inferens
+Källmetodändringen är tidsstämplad och hashad före AP-beräkningen. Dokumenterade IOO/T-faser och daterat Nasdaq-schema ersätter uttryckligen det äldre kravet på ett leverantörsdeklarerat tidszonnamn. Oberoende kontroll reproducerar att lokal börsklocka passar samtliga fyra 2023-filer och UTC inte gör det. Sommarkontrollen 2019 är stöd, inte ett historiskt schemaintyg från 2023-dokumentet. Detta är metodiskt rimligt för den frysta beskrivande prisjämförelsen, men får inte kallas en uttrycklig SHoF-tidszondeklaration. Nuvarande LSEG-identitet är också bara stöd; daterad SHoF-identitet och separat Nasdaq-notering bär den historiska kontrollen.
+
+Tolkning
+Camurus och AFRY ger olika tecken. Två exempel i samma översyn identifierar varken indexorsakad prispress, trackers handel, fonders exekveringskostnad eller en populationseffekt. Bristande match-/rättelsesemantik hindrar fortsatt volym-/deltagaranalys; den förhindrar inte i sig prisjämförelsen med separat slutauktionsfält. Saknade 2019-utfall är inte ekonomiska nollresultat.
+
+Publicering: granskad avgränsning
+Indexets slutliga lista har 34 filer/33 hashar och tidszonslistan 8/7; respektive hashmanifest undantar avsiktligt sig självt. HFT:s slutliga 48 filer/48 hashar stämmer, inklusive pekaren till denna oberoende aritmetiska kontroll. Inga private/, fulltextkällor, miljöer, råloggar eller ursprunglig felaktig HFT-inventering v1 ingår. Tillåten resultat-CSV innehåller endast härledda AP/kontraster, inte råa priser, mittkurser, volymer eller deltagare. Genomlästa kod-/metadatabilagor innehåller inga credentials eller privata numeriska pris-/viktrader.
+auction_source:s slutliga 12-filslista och 11 kontrollsummor är också kontrollerade; listan undantar sin egen hash och utesluter uttryckligen private/*.csv. Dess granskade kod, försöksmetadata och klockändring innehåller inte råa prisobservationer. Granskningen fastställer inte leverantörens allmänna licensvillkor.
+
+Exakt proveniens finns i PRIMARY_ARITHMETIC_VERIFICATION.json och SOURCE_AND_PUBLICATION_VERIFICATION.json. Tidigare SOURCE_VERIFICATION_PRE_AP.json bevarar granskningsläget före självständig prisrekonstruktion och är inte senaste publiceringsstatus. Repo och andra agenters analysfiler har inte ändrats.

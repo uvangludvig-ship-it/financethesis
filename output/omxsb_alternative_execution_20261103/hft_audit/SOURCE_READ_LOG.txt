@@ -1,0 +1,41 @@
+2026-11-03. Bounded primary-source checks. No full copyrighted documents copied into this package.
+
+1. SHoF Reconstructed Order Book
+https://www.houseoffinance.se/data-center/nasdaq-hft/reconstructed-order-book/
+Read the product descriptions and aggregation limits. Full reconstruction is described as all reconstructed snapshots; transaction option selects snapshots with transactions. This does not specify historical closing-auction inclusion, transformed timestamp timezone or execution correction handling. Linked SHoF_NASDAQ_Documentation.pdf returns404.
+
+2. SHoF source FAQ, dated2019-02-21
+https://support.data.houseoffinance.se/index.php?action=artikel&artlang=en&cat=4&id=2
+Read source description: historical Nasdaq binary message streams are analyzed and augmented. Therefore SHoF output is a transformation, not interchangeable with raw ITCH field definitions. No closing-auction exclusion policy found on the page.
+
+3. Nasdaq Nordic Market Model2023_08, AppendixJ, printedp107
+https://www.nasdaq.com/docs/2023/10/31/Nasdaq-Nordic-Market-Model-2023_08.pdf
+Read official-close definition and GCF publication description. Official close normally uses the closing auction, but falls back to a qualifying last trade when no closing-auction price exists. GCF summary also reports the last continuous-session bid/ask. This supports a possible source join, but official-close alone cannot prove that the auction occurred. It is direct2023 documentation, not automatic proof of unchanged2019 rules.
+
+4. Nasdaq Nordic auction factsheet
+https://www.nasdaq.com/INETNordicAuctionsFactsheet
+Read schedule: Stockholm closing call17:25–17:30 and randomized uncross17:29:30–17:30; individual auction orders are not published and indicative information is disseminated separately. This is consistent with, but does not prove the cause of, the observed SHoF cutoff. Historical SHoF local/UTC convention remains unresolved.
+
+5. Nasdaq HistoricalView product
+https://www.nasdaq.com/products/data/nordic-baltic/historicalview
+Read product/delivery description. HistoricalView-ITCH contains historical order/trade transaction logs; older files may be requested from Market Data Sales. This is a possible independent source, not acquired access or a request sent by this audit.
+
+6. LSEG content expert reply, exact auction field
+https://community.developers.lseg.com/discussion/30335/how-to-get-closing-trade-price-for-european-markets
+Read accepted reply by Tim Smith: CLS_AUC is the final evening-auction uncrossing price. OFF_CLOSE is the officially confirmed closing price and the two need not coincide when there is no auction or different venue rules. Stockholm/date availability must still be checked. This is the source for the narrowly specified field request, not proof of available historical Bilia values.
+
+7. LSEG EMA C++ RDM Usage Guide, current version3.10.1.L1, September2026
+https://developers.lseg.com/content/dam/devportal/realtimeapi_pdfs/ema_cpp_rdm_usage_guide.pdf
+Read currency/price-precision field descriptions: CURRENCY(FID15) and TRD_UNITS(FID53). Precision is not a currency-conversion multiplier. Current field documentation is not historical instrument metadata.
+
+8. SHoF Nordic Market Quality
+https://www.houseoffinance.se/data-center/nasdaq-hft/nordic-market-quality/
+Read publicly visible product summary: trade- and quote-based market-quality metrics. No closing-auction-price field is documented there. Linked MQ_metrics.pdf returns404; authenticated query access is a separate root-owned browser step. We therefore have neither verified auction-price availability nor proof of its absence in NMQ.
+
+9. Raw Nordic TotalViewITCH3.04.X lead
+https://www.nasdaq.com/docs/2025/10/14/Nordic_Equity_TotalView-ITCH_3.04.X.pdf
+This agent's web fetch returned403. Root independently read the document. Raw-message UTC/cross-trade definitions are not silently transferred to transformed SHoF2019 output.
+
+10. LSEG get_history adjustment argument
+https://cdn.refinitiv.com/public/lseg-lib-python-doc/2.0.0.2/book/en/sections/access-layer/access/get-history-function.html
+Root checked the official API documentation and supplied adjustments=['unadjusted']. The audit request preserves that explicit setting. A later historical response still needs direct source/units validation.

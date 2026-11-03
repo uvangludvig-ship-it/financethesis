@@ -1,0 +1,66 @@
+DESKTOP-PILOT GENOMFÖRD — 3 november 2026, efter 19:06 UTC
+Senaste status; ersätter tidigare uppgift att en lokal anslutning inte var tillgänglig.
+
+Användarens öppna, inloggade Workspace gjorde en legitim lokal LSEG-session möjlig.
+lseg-data 2.1.1 installerades från vanliga PyPI i en isolerad miljö i arbetsmappen.
+ld.open_session() utan argument öppnade DesktopSession. Ingen appnyckel behövde
+anges, inga credentials söktes, ingen browser eller app-UI användes av agenten.
+Workspace lämnades inloggad; inga utloggningsanrop gjordes.
+
+Det första identifieringsfelet är löst, inte dolt
+De första nio låsta frågorna på den gamla kodkandidaten .OMXSB gav samma fel:
+”Unable to resolve all requested identifiers in ['.OMXSB'].” Två begränsade
+metadatafrågor gav därefter .OMXSBPI med namnet OMX Stockholm Benchmark_PI,
+Equity Index, NASDAQ Stockholm AB. Exakt samma nio frågor kördes därför om med
+den verifierade identifieraren. .OMXSBCAPPI och ESG-versionerna byttes inte in.
+
+Vad som faktiskt kom tillbaka
+För 2023-11-30 levererades 105 giltiga historiska medlems-RIC, och för 2023-12-01
+104. Skillnaden är exakt de sex tillägg och sju borttag i projektets låsta SLUTLIGA
+implementerade eventlista efter Nasdaqs uppdatering den 29 november. Den är inte
+identisk med den ursprungliga notisen den 23 november (sju tillägg/åtta borttag).
+Uppdateringen behöll JM och tog bort det planerade tillägget Karnov; JM finns
+i båda levererade medlemslistorna och Karnov i ingen. Detta är en konkret och verifierbar ny åtkomst till
+historiskt medlemskap för denna översyn, inte bara dagens lista.
+
+Viktfältet TR.IndexConstituentWeightPercent och aktieantalsfältet
+TR.IndexConstituentShares är däremot helt tomma på BÅDA datumen. Även viktfältets
+returdatum är tomt. Noll giltiga numeriska vikter, noll giltiga indexaktieantal.
+Vi har därför inte hämtat en användbar viktkorg och inte beräknat efterfrågan.
+
+En viktig kvalitetsrättelse bevaras i loggen: SDK:n returnerade tomma strängar,
+som pandas.notna först räknade som ifyllda. Korrekt kontroll kräver både icke-NA
+och icke-tom text, följt av numerisk typkontroll. Inga tomma fält har behandlats
+som verkliga nollvikter. Namnfrågorna hade en extra rad utan giltig RIC; därav
+106/105 respektive 105/104 råa rader. De giltiga RIC-mängderna stämmer mellan
+frågorna. Skillnaden är inte ett bortfall av en identifierad, giltig medlem.
+
+Avgränsade alternativ gav samma viktbegränsning
+Efter identitetsreparationen provades separat viktfält, separat aktieantalsfält,
+daterad PI-chain, verifierad uncappad GI-chain, datum direkt i TR-fälten, dagens
+PI som innehållskontroll samt direkt historisk .OMXSBGI. Den sista varianten
+motiverades av att originalnotisen länkar till Nasdaq OMXSBGI Weighting; den var
+en källdiagnos, ingen ersättning av den specificerade PI-korgen. Samtliga gav
+tomma vikt-/aktieantalsfält. Chain-förfrågningarna expanderade till 111 instrument
+men gav inga giltiga indexfält; de räknas inte som historiska korgar.
+
+Totalt: nio ursprungliga och nio identitetsreparerade get_data-frågor, två
+instrumentmetadatafrågor samt sju alternativa källdiagnoser. Ingen ekonomisk
+kontrast, prisförändring eller FTN-analys. Alla råsvar ligger under private/ och
+är undantagna från publiceringslistan. Originalmisslyckandena är bevarade.
+
+Exakt kvarvarande hinder
+Den publika Nasdaq-filvägen kräver inloggning. LSEG-sessionen fungerar och har
+historiska medlemmar, men de testade indexvikt-/aktieantalsfälten ger inget
+innehåll. Inget explicit ”permission denied” erhölls. Därför är det ännu inte
+avgjort om kontot saknar en särskild viktbehörighet eller om just dessa fält/index
+saknar levererat innehåll. En fungerande session eller medlemslista bevisar inte
+viktbehörighet. Det krävs en behörig GIW-originalexport eller en leverantörs-
+förklaring med fungerande exakt fält/index/datumkombination. READY_REQUEST.txt
+är uppdaterad med denna diagnostik och har inte skickats.
+
+Det tidigare metodvillkoret kvarstår: utan giltiga Index Shares/faktorer och
+korrekt tids-/bolagshändelsehantering går det inte att skilja aktiespecifik
+mekanisk handel från prisdrift eller gemensam omskalning. Ingen korg- eller
+efterfrågeanalys har därför gjorts. Det är ett åtkomst-/mätstopp, inte ett
+ekonomiskt nollresultat.

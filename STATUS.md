@@ -1,3 +1,8 @@
+<!-- OMXSB_ALTERNATIVE_EXECUTION_20261103 -->
+> **3 november 2026, alternativ datarunda:** Klart: verifierade LSEG-medlemslistor och två individuella auktionskontraster från fasta 2023-event; källförsök, NA-fall och oberoende omräkning i `output/omxsb_alternative_execution_20261103/README_SV.txt`.
+> **Öppet:** indexvikter/IndexShares saknas i prövade frågor, 2019-auktionsfält saknas, Holdings-behörighet är inte verifierad. Prisets generella mekanism och långsiktiga varaktighet är inte lösta av piloten.
+> **Nästa sakliga beslut:** om auktionsmåttet ska skalas upp, lås ett större urval och en jämförelsedesign innan nya utfall; två fall från samma översyn ger ingen generell slutsats. Inga FTN-utfall öppnade.
+
 <!-- ANALYSIS_DELIVERY_20261102 -->
 > **2 november 2026, genomfört:** Rättelser, daterade kontroller, ägar- och mandatdekomposition, retention, köp/volym-normalisering, modelljämförelse, samma-aktie-kontroll och censurerad FI-blankningsprofil är sparade med kod och verifieringar.
 > **Nästa:** Samla försvarbara bidrag från resultaten; välj inte fler varianter efter signifikans.
