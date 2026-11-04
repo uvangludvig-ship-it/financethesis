@@ -1,72 +1,59 @@
-SHoF: närmare granskning av auktionsspåret, 4 november 2026
-Teknisk arbetsrapport. Ingen uppsatstext och inga nya ekonomiska skattningar.
+SHoF: källgranskning och första minutpilot, 4 november 2026
+Teknisk arbetsrapport. Ingen uppsatstext eller ny ekonomisk skattning.
 
-Det var detta spår användaren syftade på
-Vi ville mäta priset i stängningsauktionen mot sista giltiga köp-/säljkurs
-omedelbart före auktionen, på indexets handelsdag och på låsta jämförelsedagar.
-Det säger hur priset ändras just när omviktningen genomförs. Det identifierar
-inte ensamt orsaken till hela uppgången sedan indexbeskedet eller säljarens
-identitet. De tidigare två 2023-exemplen är kvar som enskilda pilotfall.
+Nytt verifierat resultat
+Ett nytt minututtag för Bilia A, 2019-05-31, är nedladdat och bevarat byte-exakt.
+Det innehåller 432 minuter. I samtliga återges fullbokens sista köp-/säljkurser,
+visade storlekar på två nivåer, handelsstatus och identitet exakt. Ingen
+icke-tom minut saknas och inga tomma minuter fylls ut i detta pilotpar.
+Den tidigare specificerade kontrollen efter 09:01 ger 424 av 424 träffar.
 
-Den tidigare flaskhalsen
-LSEG:s kontrollerade auktionsfält gav täckning för två översyner 2023 men ingen
-historisk täckning före 2023 i det låsta uttaget. SHoF gav sista orderbokskurs
-före auktionen, men inte själva slutauktionen i de levererade filerna.
-Detta stoppade den breda jämförelsen. Det bevisade inte att SHoF:s råarkiv
-saknar stängningsauktionerna.
+Vad det löser och inte löser
+Det stöder att minututtaget kan ge samma kursläge före auktionen som den
+betydligt större fullfilen. För just pilotdagen är den sista giltiga kursen
+från 17:24:58.455341783. Minutfilen etiketterar den 17:24:00; den exakta
+uppdateringstiden måste därför styrkas genom fullboken. Detta är ännu ingen
+verifierad regel för hela historiken. Transaktionsfälten följer inte samma
+sista-rad-regel och får inte behandlas som enskilda avslut.
 
-Vad vi nu har gjort och verifierat
-1. Läst om samtliga sju bevarade SHoF-original. Fem fullböcker slutar mellan
-   17:24:56 och 17:24:59 enligt exporterad klocka. Ingen har rader från17:25.
-2. Bilia-uttaget Transactions innehåller exakt samma862 transaktionsrader
-   som fullboken, med två kolumner borttagna:15 516 gemensamma celler lika.
-   Det är ingen oberoende avslutskälla. NMQ-filen är dagsmått, inte minutdata.
-3. Granskat aktuell SHoF-webb, äldre originalmanual och Nasdaq-protokollet.
-   Manualen beskriver separata Trade Ticker och Full Day Timeserie. Råa
-   Nasdaq-meddelanden har en särskild closing-cross-typ. Det ger en konkret
-   annan källa att pröva, men dagens exporttillgång är fortfarande obekräftad.
-4. Återkört hela råinventeringen och fått exakt samma metadata och filparbevis.
-   Alla sju originalhashar är oförändrade. Inga råpriser publiceras.
-5. Öppnat befintligt SHoF-formulär i Chrome och verifierat dess exportval.
-   Vid navigering/omladdning skickade SHoF vidare till universitetsinloggning;
-   den sidan visades tom. Användaren har fått en konkret begäran att återöppna
-   exportformuläret via Handels. Inga nya datajobb har skickats denna runda.
+Minutfilen har fortfarande inga rader från 17:25. Den ger alltså inte själva
+slutauktionen. Ingen ny auktionspremie eller avkastning har räknats.
 
-Exakt nästa steg
-Åtkomstkontroll av Trade Ticker/Full Day Timeserie med Bilia2019-05-31 och
-Camurus2023-11-30. Kontrollera genomförd slutauktion, rättelser, identitet,
-tidzon, prisskalning och matchnummer innan pris eller volym beräknas.
-Om de separata produkterna saknas i den ordinarie menyn finns en specificerad
-dataförfrågan att ta till SHoF. Den är inte skickad. Ingen produkt-URL gissas.
+Återstående fasta källkontroll
+Camurus och AFRY på 23 och 30 november 2023 ingår i samma låsta femdagarsprov.
+Ett gemensamt minututtag för 23–30 november har begärts via formuläret, med
+en omaktivering när inget kvitto syntes. Ingen leverans eller mottagning har
+ännu bekräftats. Det betyder inte att data saknas. Övriga dagar i intervallet
+ska ignoreras om filen levereras. De fyra fasta jämförelserna är fortsatt
+öppna. Inga extra bolag/dagar eller alternativa ekonomiska fönster har valts.
+Chrome har lämnats fritt så användaren kan arbeta i Word; lokala kontroller
+kräver ingen webbläsarstyrning. Jobbstatus skiljer bekräftade leveranser från
+osäkra knappaktiveringar: ACQUISITION_LEDGER.json och ACCESS_STATUS.json.
 
-Separat behöver en skalbar export av kursen före auktionen valideras mot
-befintliga fullböcker. Minut-/sekundaggregation är inte automatiskt sista
-noterade kurs och återställer inte automatiskt saknade auktionsposter.
-Den tidigare låsta valideringsordningen och dagens begränsning till högst
-åtta källjobb finns i ACQUISITION_LOCK.txt. Hittills är antalet nya jobb0.
+Vad den tidigare källgranskningen redan visade
+- Fem fullständiga orderböcker slutar 17:24:56–17:24:59, inga rader från 17:25.
+- Transactions-uttaget är samma Bilia-avslutsrader som redan finns i fullboken.
+- NMQ-uttaget är dagsmått, trots att vissa variabelnamn nämner minuter.
+- Buyer/seller saknas på alla rader i de fyra 2023-fullböckerna.
+- SHoF:s äldre manual beskriver separata Trade Ticker och Full Day Timeserie.
+  Dessa produkters aktuella exporttillgång är fortfarande obekräftad.
+  Dagens publika meny verifierar bara reconstructed book och NMQ.
+Detta bevisar inte att SHoF:s råarkiv saknar auktioner. En konkret teknisk
+förfrågan finns i documentation/DATA_REQUEST_NOT_SENT.txt men har inte skickats.
 
-Vad detta betyder för uppsatsen
-Spåret är fortfarande värt en avgränsad källkontroll. Får vi verkliga
-auktionsavslut bakåt i tiden kan fler översyner bli möjliga att undersöka.
-Det är ännu ingen ny empirisk upptäckt eller garanti om precision. Även en
-fullgod auktionsfil visar handelsförloppet; den avslöjar inte automatiskt vilka
-fonder/hedgefonder som handlar. Buyer/seller är tomt i alla fyra2023-fullböcker.
-Tidigare breda stoppbeslut gäller tills faktisk täckning har verifierats.
+Åtkomsthistorik
+Startsidan meddelade flytt, men officiell navigering ledde tillbaka till samma
+exportadress. Native Chrome följde först fel fönster; användaren klargjorde
+att två fönster var öppna. En utgången SHoF-session förnyades därefter via HHS.
+Bilia kunde då sökas och hämtas. Det tidigare åtkomstproblemet får inte tolkas
+som frånvaro av forskningsdata. Ursprungliga statusuppgifter är bevarade i
+ACCESS_STATUS.json med denna korrigering av orsakstolkningen.
 
-Dokumentation: raw_audit/REPORT_SV.txt och documentation/REPORT_SV.txt.
-Reproduktion: raw_audit/inventory.py; rotens kontroll: ROOT_REPLAY.json.
-Alla äldre ekonomiska resultat är oförändrade. Ingen FTN-analys utförd.
-
-ÅTKOMSTUPPDATERING 4 NOVEMBER 10.28 SVENSK TID
-Användarens flyttmeddelande gäller databasens startsida. Via den officiella
-nya webbplatsen, NASDAQ HFT -> Reconstructed Order Book -> Access the dataset,
-öppnades exportformuläret åter på samma databasadress. Inloggning blockerar
-inte längre den rekonstruerade produkten. Inga råproduktmenyer eller nya
-exporter har därmed verifierats. Nya jobb är fortfarande0: fortsatt native
-webbläsarstyrning avbröts upprepade gånger av samtidig användarnavigering.
-Ingen aktivitet i användarens andra dokument; inga nya ekonomiska utfall.
-
-11.07 svensk tid: nytt försök efter användarens klartecken gav återkommande
-styrningsavbrott och två tidsgränser/omstarter. Direkt flikstyrning felade
-också. Inga nya datajobb eller exporter. Fråga om annan samtidig Chrome-
-aktivitet är ställd; orsaken får inte förväxlas med saknad databasåtkomst.
+Underlag
+minute_validation/: minutpilotens kod, metadata och källjämförelser.
+raw_audit/: kontroll av de sju tidigare bevarade originalen.
+documentation/: produkt- och protokollgranskning.
+ACQUISITION_LOCK.txt: i förväg låst källurval och högst åtta nya jobb.
+Licensed råfiler ligger endast i den git-ignorerade datamappen.
+De tidigare ekonomiska pilotresultaten och breda stoppbesluten är oförändrade.
+Ingen FTN-analys utförd.
