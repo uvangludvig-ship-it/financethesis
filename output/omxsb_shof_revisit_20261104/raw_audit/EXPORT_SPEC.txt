@@ -1,0 +1,65 @@
+AVGRÄNSAT NYTT SHoF-KÄLLUTTAG — INGA NYA EFFEKTER
+4 november 2026. Förslag före eventuell ny export; inte ett nytt effekturval.
+
+Fråga: finns den saknade stängningsfasen/cross-matchningen i en annan SHoF-
+produkt än de levererade rekonstruerade fullböckerna?
+
+Fasta identiteter och datum (XSTO, SEK)
+BILI A: ISIN SE0009921588, SHoF instrumentid123,2019-05-31.
+CAMX: ISIN SE0007692850, SHoF instrumentid45963,2023-11-23 och2023-11-30.
+AFRY: ISIN SE0005999836, SHoF instrumentid3593,2023-11-23 och2023-11-30.
+Instrument-ID kommer från dessa ursprungliga filer och måste stämma mot nya
+exportens identitet. Ingen ersättningsaktie eller nytt datum väljs efter data.
+Om Bilia2019-05-23 behövs senare är det redan en låst jämförelsedag i gamla
+pilotlistan, men den ingår inte i denna sju-originals jämförelse.
+
+Prioritet och exakt avgränsning
+1. Trade Ticker: samma Bilia-instrument/dag, hela dagen, alla tillgängliga
+   meddelandetyper, inga continuous-only-/printable-only-/auction-exclusion-
+   filter. Spara TYPE, MATCHNUMBER, ORDERREFERENCE, tid, pris och kvantitet
+   samt alla faktiska cross-/rättelse-/annulleringsfält om de finns.
+2. Full Day Timeserie: samma dag, full rå JSON/meddelandesekvens. Bevara
+   meddelandetype, originaltid, sekvens, order-/matchreferenser, cross-/system-
+   status, eventuella broken trades och referensdata. Ingen minutaggregation
+   eller egen meddelandefiltrering före kontrollen. Om UI tvingar sampling,
+   dokumentera exakt inställning och skilj den produkten från rå JSON.
+3. Validera därefter exakt samma exporttyp på de fyra fasta2023-dagarna för
+   att pröva om källförbättringen faktiskt täcker den gamla pilotens båda datum.
+   Tidigare saknad täckning och alla nya misslyckade förfrågningar sparas.
+
+Order Book View är lägre prioritet:2020manualen begränsar den till non-cross-
+order. Full Reconstruction/Transactions ska inte hämtas igen med oförändrad
+inställning och benämnas en ny oberoende auktionskälla.
+
+Bevara för varje förfrågan
+Exakt UI-produktnamn, filter, intervall/sampling, instrument-ID, efterfrågad
+datum/tidsrange och eventuell session/venue; faktisk filtyp, header/schema,
+nedladdningstid och hash. Spara ingen credential eller sessionscookie.
+Spara hela råexporten privat, utan att tolka ett filnamn som ett schemaintyg.
+
+Validering före ekonomiska utfall
+A. Exakt datum, ISIN/aktieslag, XSTO och valuta. Aktuell metadata ensam
+   verifierar inte historisk identitet. Dokumentera eventuell mapping.
+B. Exportklockans timezone/epoch/DST, tidsenhet och sekvens. Rå ITCH-regler
+   måste kopplas till faktisk SHoF-transformation; tidigare rekonstruerad
+   lokal-klockinferens överförs inte automatiskt. Bevara originaltiden.
+C. Identifiera closing-cross med dokumenterad TYPE/cross-type eller giltig
+   systemfas och meddelandesemantik. Största print, sista trade,17:30-tid eller
+   stapelmaximum får inte väljas som auktion utan metadata.
+D. Skilj bokindikator/indikativt pris från genomfört slutligt uncross. Beakta
+   eventuell förlängd auktion, efterrapporterad handel och rättelser. Saknad
+   avkastning/auktion får inte ersättas med officiell slutkurs eller sista trade.
+E. MATCHNUMBER kan förekomma på både köp- och säljben. Fastställ nyckelns
+   dag/instrument/venue-scope och korrigeringslogik innan antal eller kvantitet
+   summeras. Radera inte upprepade txpx/txsz eller tidsstämplar som dubbletter
+   utan dokumentation. Buyer/seller-identitet är inte fondtyp.
+F. Validera prisens decimal-/valuta-/bolagshändelsebasis separat per produkt.
+   Rå PRICE kan ha fyra implicita decimaler; rekonstruerade fält är en annan
+   representation. Ingen faktor får härledas från att ett pris ser rimligt ut.
+G. För minutdata: fastställ om tid är start/slut, vilka meddelanden som ingår,
+   om värden är sista observation/medel/VWAP/OHLC, hur tomma minuter hanteras,
+   och om en uncross är separat markerad. En bar ensam löser inte matchgrinden.
+
+Godkänt nästa steg är källmetadata: vilka meddelanden/tider som finns, möjliga
+closing-cross-rader och match-/rättelselänkar. Ingen ny premie, retur, VWAP,
+nettoorder eller deltagargrupp beräknas under denna exportkontroll.

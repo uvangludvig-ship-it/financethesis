@@ -1,0 +1,96 @@
+SHoF HFT: OBEROENDE NYLÄSNING AV SJU GAMLA ORIGINAL
+4 november 2026. Källinventering; inga nya priser, avkastningar eller effekter.
+
+Vad som faktiskt är belagt
+De levererade rekonstruerade böckerna slutar före stängningsauktionen på alla
+fem instrumentdagar. Det är en begränsning i dessa exporter. Det är INTE belagt
+att SHoF:s underliggande ITCH-data eller andra exportprodukter saknar auktionen.
+Den återfunna SHoF-dokumentationen beskriver tvärtom cross-transaktioner generellt.
+
+Instrument/dag       Fulla rader  Tx-fältrader  Sista tid i fullfilen
+Bilia 2019-05-31        5 483          862     17:24:58.455341783
+Camurus 2023-11-23      4 261          841     17:24:56.414833231
+Camurus 2023-11-30     11 100        1 554     17:24:59.466692965
+AFRY 2023-11-23         1 919          338     17:24:56.994286542
+AFRY 2023-11-30         4 469          690     17:24:58.685142992
+
+Varje radantal och tid är omräknad från originalet. Samtliga fem har:
+0 rader från 17:25 och framåt, 0 status L, 0 treteckenskoder med C som tredje
+tecken. Endast T, IOO och på vissa dagar QTA observeras. T är dokumenterad
+kontinuerlig handel; IOO är öppningsrelaterad bokinformation. Rev1.1 definierar
+inte A som tredje tecken, så QTA får inte döpas om till slutauktion.
+
+En transaktionsrad är här en rad med båda txpx och txsz ifyllda. Antalet är
+inte verifierat antal separata ekonomiska avslut. Match-ID, rättelselänkar och
+rå meddelandetyp saknas. Alla fullböcker har0 exakta dubblettrader men flera
+upprepade tidsstämplar. För Bilia är325 extra rader med samma tid/instrument
+inte325 exakta dubbletter. Ingen sådan rad tas bort eller summeras till volym.
+2023 års buyer/seller-kolumner är tomma på ALLA rader. Bilia har även saknade
+deltagarfält. Exporterna ger ingen verifierad uppdelning i fonder/arbitrageörer.
+
+Det exakta filparet
+Bilia Transactions-filen har862 rader och18 kolumner. Den är exakt samma
+862 rader som fullfilen efter urval på ifyllda txpx/txsz, i samma ordning, med
+buyer/seller borttagna. Alla15 516 gemensamma celler är lika och de kanoniska
+hashvärdena är identiska. Sista transaktionstid är17:24:55.365536745 i båda.
+Ett nytt klick på samma Transactions-filter ger därför ingen belagd ny källa.
+Detta är bevis för filparet, inte för alla SHoF-filer eller unika avslutsben.
+
+Vad NMQ-filen är
+Det riktiga ZIP-arkivet innehåller två dagliga tabeller, qmq och tmq, med fyra
+Bilia-rader vardera:27,28,29 och31 maj2019. Det finns bara Stock och Date som
+tidsnycklar. Fältnamn som RV_1mn, RV_5mn eller PI_*_5mn anger måttens horisonter,
+inte minuterader. Ingen separat tidsstämpel, explicit slutauktionsflagga eller
+slutauktionspris finns i det levererade schemat. Numeriska NMQ-utfall läses inte.
+
+Produktgränser enligt primärdokumentet, rev1.1 oktober2020
+Full Reconstruction: rekonstruerad andranivåbok med quotes/txfält och status.
+Transactions: i det kontrollerade Bilia-paret bara ett urval av denna produkt.
+Order Book View: råa orderreferenser/typer men uttryckligen non-cross-order.
+Trade Ticker: annan produkt med TYPE och MATCHNUMBER. Köp- och säljben kan
+dela matchnummer; båda får inte räknas som två separata matchningar.
+Full Day Timeserie: dokumenterad som JSON med varje meddelande för dagen.
+Den beskrivningen är inte samma sak som en minutaggregerad tidsserie.
+Inget Trade Ticker-, Order Book View-, rå Full Day Timeserie- eller minututtag
+finns bland de sju original som granskas här. Nuvarande UI-tillgång är rootens
+separata kontroll; dokumentationens existens bevisar inte att uttaget fungerar.
+
+Tid och priser
+Originalfilerna innehåller ingen tidszon. Tidigare lokal börsklocka var en
+öppet redovisad inferens från dokumenterade handelsfaser och sommar/vinter,
+inte ett explicit SHoF-metadatafält. Tiderna ovan är exportens oförändrade klocka.
+Nya råprodukter kan ha annan tidsrepresentation och måste valideras separat.
+Regeln om fyra implicita prisdecimaler gäller dokumentets råa PRICE-fält;
+den får inte appliceras automatiskt på rekonstruerade bidpx/askpx/txpx.
+Ingen prisnivå eller avkastning har beräknats i denna granskning.
+
+Nästa konkreta källförsök
+Pröva Trade Ticker och/eller oaggregerad Full Day Timeserie på exakt samma
+Bilia2019-05-31, följt av de fyra redan låsta Camurus/AFRY-dagarna. Spara full
+dag utan continuous-only-filter, inklusive systemfas, cross/auction, broken-
+trade/rättelser och identitetsmetadata. EXPORT_SPEC.txt anger fält och grindar.
+Om UI bara levererar minuter måste exakt aggregations-/timestampregel och
+auktionsmeddelandenas behandling först visas. En17:30-bar är inte ett bevis
+för slutauktion. Tom export är inte noll auktion eller noll omsättning.
+
+Filer/reproduktion
+inventory.py använder endast Python-standardbiblioteket och de sju explicita
+filnamnen. --repo-root och en ny --output gör körningen flyttbar. Ingen källa
+ändras; alla sju hashar jämförs före/efter. Sex .csv.zip-filer är i själva verket
+gzip, den sjunde är ZIP. Samtliga integritetskontroller passerar.
+validated_inventory/ är slutlig inventering. Det första lokala försöket
+frozen_inventory/ bevaras utanför publicering; slutversionen skiljer tydligt
+mellan två olika dubblettnycklar. Bilia har2 extra rader på tid+instrument+
+txpx+txsz, men13 på gamla auditens txpx+txsz+buyer+seller. Det är olika nycklar,
+inte ändrade data eller ett fel i den gamla13-radskontrollen.
+Endast allowlistfiler publiceras. Inga råpriser, kvantiteter, deltagar-ID eller
+fulla dokument kopieras. Tidigare publicerade analyser har lämnats oförändrade.
+
+Lästa källor
+Primärmanual rev1.1, sid1–2, återfunnen cache med SHA256
+7dc08d9ca07acd44eaadf390ac012a18bdc2ff15cbd975887017121dad4c2a16:
+https://web.archive.org/web/20230107102616id_/https://www.houseoffinance.se/SHoF_NASDAQ_Documentation.pdf
+Officiellt JSON-parserexempel, lokal tidigare cache läst, inte ny nätförfrågan:
+https://github.com/SwedishHouseofFinance/SHoF-Nasdaq-JSON-Parser
+Tidigare publicerade källnoter: hft_audit/RECOVERED_SHOF_DOCUMENT_NOTE.txt,
+CROSS_SOURCE_PRICE_GATE_CLARIFICATION.txt och SOURCE_REPORT_FINAL_SV.txt.

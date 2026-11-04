@@ -1,0 +1,6 @@
+Documentation-only SHoF product audit, 2026-11-04.
+Read REPORT_SV.txt first. PRODUCT_MATRIX.json separates explicit definitions, observations and unknowns. DATA_REQUEST_NOT_SENT.txt is a technical source-pilot specification, not a sent email or completed data request. NASDAQ_FIELD_EVIDENCE.txt gives precise primary-source locators. SOURCE_LEDGER.json and LOCAL_INPUT_HASHES.json record provenance; no hash is invented for a cached web page without local original bytes.
+
+No economic outcomes, licensed raw values, FTN outcomes, account requests or repository edits. The prior stop remains unchanged. The parent may have later UI evidence; it is not silently included in this independently bounded documentation audit.
+
+Publish exactly PUBLICATION_ALLOWLIST.json. Exclude private_sources/ and every original HTML/PDF/text copy under previous work folders. PUBLICATION_SHA256.json intentionally excludes its own hash. build_package.py uses the original local documentation paths listed in it; fetch_public_docs.py is a bounded public-doc retrieval, not a SHoF data downloader. Its archived attempts may fail differently on rerun, so do not overwrite the frozen audit to represent the same observation.
