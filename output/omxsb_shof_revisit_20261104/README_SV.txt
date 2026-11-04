@@ -65,3 +65,8 @@ inte längre den rekonstruerade produkten. Inga råproduktmenyer eller nya
 exporter har därmed verifierats. Nya jobb är fortfarande0: fortsatt native
 webbläsarstyrning avbröts upprepade gånger av samtidig användarnavigering.
 Ingen aktivitet i användarens andra dokument; inga nya ekonomiska utfall.
+
+11.07 svensk tid: nytt försök efter användarens klartecken gav återkommande
+styrningsavbrott och två tidsgränser/omstarter. Direkt flikstyrning felade
+också. Inga nya datajobb eller exporter. Fråga om annan samtidig Chrome-
+aktivitet är ställd; orsaken får inte förväxlas med saknad databasåtkomst.
