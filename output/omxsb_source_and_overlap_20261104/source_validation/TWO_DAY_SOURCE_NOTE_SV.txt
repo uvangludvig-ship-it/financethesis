@@ -1,0 +1,21 @@
+Källvalidering 4 november 2026: Bilia 31 maj 2019 och Camurus 23 november 2023
+
+STATUS: två av fem på förhand fixerade aktiedagar är jämförda. Detta är en teknisk källkontroll. Inga nya avkastningar, auktionspremier eller andra ekonomiska utfall beräknas. Tidigare resultat ändras inte.
+
+Den nya Camurusfilen har 6 638 rader för CAMX, SE0007692850, XSTO, SEK, instrumentid 45963. Trots rapporterad begäran 23–23 november innehåller leveransen 16 dagar, 2–23 november. Orsaken till datumavvikelsen är okänd. Filen är en gzip-ström med .zip-suffix, 113 790 byte; en byte-exakt kopia har sparats i ignored rådatakatalog. De 15 extra dagarna inventeras endast och ingår inte i jämförelsen. Större filstorlek betyder här ett längre datumintervall, inte fullbok eller fler aktier.
+
+Camurus 23 november: alla 377 icke-tomma fullboksminuter har exakt en sampled rad och inga rader skapas i tomma fullboksminuter. Samtliga 377 raders bästa bud/ask och storlekar, båda prisnivåerna, status och identitet motsvarar sista fullfilraden i samma minut. Alla 368 minuter med T-uppdatering har en sampled T-rad. De övriga nio raderna har IOO-status.
+
+Både fullfil och sampled fil är kronologiskt icke-fallande. Camurusfullfilen har 246 extra rader med lika tidsstämpel och 152 sådana tidsgrupper med olika top4-tillstånd. Fem minutslut (09:30, 11:39, 15:25, 16:29 och 17:20) har motstridiga tillstånd vid exakt samma sista tidsstämpel. Där beläggs överensstämmelse med sista FILrad, inte att tidsstämpeln ensam bestämmer den ekonomiska ordningen. Terminalminuten har en unik sista giltig uppdatering och berörs inte av detta problem.
+
+Camurus sista sampled label är 17:24:00. De fyra fälten är identiska med den unika giltiga fullboksuppdateringen 17:24:56.414833231, 3.585166769 sekunder före 17:25. För Bilia är motsvarande tid 17:24:58.455341783, 1.544658217 sekunder före 17:25. Originaltiderna följer inte med i minututtaget. Färskheten för dessa två dagar beläggs därför genom fullböckerna, inte genom att tolka den avrundade minuten som en verklig uppdateringstid.
+
+Bilia jämförs igen med oförändrad kod och oförändrade råhashar: 432/432 minutrader matchar sista fullbokstillståndet. En minut med T-uppdateringar slutar i QTA och återges också som QTA; det är ingen saknad minut. Bilia har inga konfliktande tillstånd vid minuternas sista tidsstämplar.
+
+Det ursprungliga fördeklarerade validatorresultatet och den kompletterande jämförelsen är förenliga: startlabel plus sista snapshot passar, originalnanosekunderna har inte behållits. Transactionfältens samplevärden motsvarar inte generellt sista fullraden. Quote-resultatet får inte överföras till avslutspris eller avslutsvolym.
+
+Varken fullbok eller minututtag har rader från 17:25 och framåt för de jämförda dagarna. Inga L-statusrader eller avslut med tredje statustecknet C finns. Detta visar en lucka i just dessa exporter, inte att hela SHoF-databasen saknar stängningsauktioner.
+
+Återstående fasta dagar: Camurus 30 november 2023, AFRY 23 och 30 november 2023. Ingen global dokumentation av samplingsalgoritm eller tidsfärskhet ersätts av dessa två observationer. En eventuell överlappande leverans är en källreplikation, inte en extra observation. Bred auktionsinferens förblir stoppad enligt den tidigare källgrinden.
+
+Maskinläsbar evidens: TWO_DAY_PREDECLARED_VALIDATOR.json, TWO_DAY_BIN_ORDERING_CHECK.json och DELIVERY_1793789997030_METADATA.json. Numeriska råpriser och handelsstorlekar ingår inte i det publicerbara materialet.

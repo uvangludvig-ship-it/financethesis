@@ -1,0 +1,35 @@
+Frozen-estimand check; no q2 outcomes read
+
+For event stock i, let A_i be ORIGINAL validated q0=0,q1>0 fund cells.
+w_if = original positive q1 new-pp weight, W_i=sum_{f in A_i} w_if>0.
+Within i, w_if=K_i*q_if1 with one positive common price/capitalization factor.
+Let q_if2*=q_if2/f_i12 (in q1 share units). For source-valid cells:
+r_if=min(1,q_if2*/q_if1). Verified report-based absence is q_if2*=0.
+For other cells, r_if is unknown in[0,1], retaining ORIGINAL w_if.
+L_i=sum_valid(w_if*r_if)/W_i.
+H_i=L_i+sum_unknown(w_if)/W_i.
+Aggregate L/H separately by arithmetic event means within each frozen review,
+then arithmetic review means. Never renormalize over valid cells/events.
+
+Invariant checks before accepting implementation:
+- Exactly70event IDs,10review IDs, frozen role/entrant identities; W_i>0.
+- Original q0/q1 entrant labels reproduce for supported cells; q2 positivity never screens.
+- Same verified physical units on both sides; positive factor; invalid/signed/blank is unknown.
+- 0<=L_i<=H_i<=1; H_i-L_i equals source-only unsupported q1 weight share.
+- All source-valid q2=0 implies L=H=0; all>=q1 implies L=H=1.
+- Completely unsupported event yields[0,1], with its original aggregation weight.
+- Splitting one identical position into two artificial rows must not change weighted result.
+- A100-unit exit and separate100-unit expansion must not cancel under per-fund caps.
+- Underlying quantity/value aliases must be deduplicated before caps; no duplicate fund shareclasses.
+
+Identification interval is conditional on correct original q0/q1 classification
+and valid observed q2 measurement. It is not a confidence interval or an interval
+for continuous holding: actual continuous retention can be anywhere from zero
+to the endpoint-overlap upper bound even when every endpoint is observed.
+An unexpected original-cohort/q1-weight inconsistency cannot be repaired by
+marking only q2 unknown. Stop that calculation for an explicit source decision;
+do not silently keep an invalid denominator or remove the original event.
+
+No matched fractional contrast exists for all70events under the current frozen
+three-peer design because some peer cohorts have W=0. No zero imputation or
+selected positive-denominator subsample is permitted as a replacement primary.

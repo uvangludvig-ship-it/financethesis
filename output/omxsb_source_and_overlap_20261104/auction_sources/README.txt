@@ -1,0 +1,8 @@
+Read REPORT_SV.txt and VALIDATED_SOURCE_PRESENCE.json.
+Two and only two new Desktop requests were made using an officially documented auction-volume field. No auction price was fetched, no returns/contrasts were computed, and no wider request was made after the older pilot failed.
+
+SOURCE_PILOT_LOCK.json preceded the requests. SOURCE_PILOT_RESULT.json preserves the original request log. Its generic numeric diagnostic incorrectly counted a datetime NaT sentinel as numeric in the Date column; that date-numeric diagnostic must not be used. validate_source_presence.py separately reads CSV strings and validates only dated auction-volume presence. The bug did not affect the volume missingness counts. The original executed script is hashed in VALIDATED_SOURCE_PRESENCE.json and kept privately; the public probe has this metadata diagnostic repaired. No API request was repeated.
+
+Private raw CSVs and the original executed script remain under private/ and are excluded from publication. No source PDF or HTML is republished. No key/config search, raw session token, login secret, account identifier, price or quantity appears in the public package. Source URLs, schema names, presence flags, request parameters and hashes are intentionally public.
+
+The public probe requires the existing local lseg-data2.1.1 environment and an authorized running Desktop. Running it again makes new source requests: it is not a passive replay. The independent validator uses only standard Python and the two private files. Final file list is exactly PUBLICATION_ALLOWLIST.json; PUBLICATION_SHA256.json excludes its own hash. Older source audits remain unchanged.

@@ -1,3 +1,7 @@
+Aktuell slutstatus: se ../omxsb_source_and_overlap_20261104/README_SV.txt.
+Alla fem fasta dagar är nu verifierade; nedanstående text är den bevarade
+delsnapshoten från 10:42 UTC med endast Bilia levererad.
+
 SHoF: källgranskning och första minutpilot, 4 november 2026
 Teknisk arbetsrapport. Ingen uppsatstext eller ny ekonomisk skattning.
 

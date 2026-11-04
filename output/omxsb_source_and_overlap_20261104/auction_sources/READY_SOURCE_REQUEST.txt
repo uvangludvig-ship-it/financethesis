@@ -1,0 +1,20 @@
+Exact technical source specification; NOT sent and NOT an entitlement claim
+
+Fixed first cases: BILIa.ST / Bilia A / ISIN SE0009921588 / XSTO /2019-05-31;
+CAMX.ST / Camurus / ISIN SE0007692850 / XSTO /2023-11-30.
+Validate dated instrument identity in the delivered source, not just today's name.
+Only source/schema/date/auction-record presence is to be assessed before outcomes.
+
+A. Existing institution-authorized LSEG Tick History account
+Required: DataScope Tick History authentication and permissions for historical Stockholm Time & Sales or Raw extraction. Desktop Workspace alone is not proof. Current documented REST service base is https://selectapi.datascope.lseg.com/RestApi/v1/ . No request was sent to this service.
+First inspect valid content fields for TickHistoryTimeAndSales using the documented GetValidContentFieldTypes operation. Published manual field names include Auction - Exchange Time, Auction - Price, Auction - Volume and Auction - Qualifiers. Preserve relevant trade/correction/qualifier records and original source identifiers for the complete two days. Confirm whether Auction means completed final crossing in this venue mapping rather than an indicative auction update. Exchange time can depend on venue; request explicit timezone, currency, price/quantity units and correction semantics. A record labelled Auction without closing subtype/phase evidence is insufficient.
+If the normalized report omits required semantics, Raw is the documented alternative; obtain the authorized field dictionary first rather than guessing FIDs. No credential, application key, URL suffix, field-number grid, or fee-bearing extraction is supplied or executed by this package. Stockholm/day-specific coverage remains a separate validation step even with authentication.
+
+B. Existing institution-authorized Nasdaq/SHoF source archive
+Prefer the documented final ITCH cross message (type Q, cross subtype C), not the last continuous trade or indicative NOII price. If retrieving the separate Nasdaq E*O*D Cross trade / Reveal MPID product, obtain its applicable historical schema and access path. The public2015 example uses message type C for multiple kinds of revealed trades, contains execution time, order book, quantity, price, match number and buy/sell fields, but does not supply a standalone closing-cross subtype. It therefore needs phase/cross classification and cancellation linkage; C alone is not a closing flag. Preserve both-sided match semantics and deduplicate economic matches only according to the actual schema.
+Current ordinary file delivery has migrated from FDS to Nasdaq Data Link Files. Neither a subscription's rolling30-day files nor a protocol specification proves access to the two older dates. Request the exact archive/product already entitled, applicable schema version, end-of-day correction completeness, and date-level missingness. Do not create guessed download paths or purchase/register for a new service.
+
+C. Existing SHoF menu
+Trade Ticker or Full Day Timeserie are historically documented product names. Root controls any subsequent normal authenticated UI. Their direct URLs are not verified, so none is invented here. The old reconstructed Transactions filter is already shown to contain the same pre-auction rows and is not a new raw-source route.
+
+Acceptance: real positive executed final closing-cross record; correct dated identity, complete source provenance and unambiguous units/timezone/phase; necessary corrections reconciled. Zero quantity, absent row, unsupported field, access error and no trading are separate outcomes. Public deliverables show presence/hashes/metadata only. The unchanged economic design remains locked until source gates pass.
