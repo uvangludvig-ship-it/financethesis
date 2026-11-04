@@ -1,4 +1,4 @@
-# Updated: 2026-11-04 17:53:40 CET (from date)
+# Updated: 2026-11-04 18:15:47 CET (from date)
 """Build journal-style Word tables from the thesis CSV sources.
 
 Run with Python and the packages pandas and python-docx installed.
@@ -376,7 +376,7 @@ button{font:inherit;padding:9px 16px;cursor:pointer} #status{margin-left:14px}
 @media print{.tools{display:none}}</style>
 <div class="tools"><button id="copy">Kopiera tabellen till Word</button><span id="status" role="status"></span>
 <p>Klicka på knappen och klistra in i ditt Word-dokument med ⌘V.
-Välj <b>Behåll källformatering</b> om Word frågar. Tabell 2 passar på en liggande sida.</p></div>
+Välj <b>Behåll källformatering</b> om Word frågar. Tabell 2 passar på en stående A4-sida.</p></div>
 <main id="content">''' + fragment + '''</main>
 <script>
 document.getElementById('copy').onclick = () => {
@@ -405,25 +405,34 @@ def main():
     panels = [descriptive_rows(events[events.type.eq(ty)]) for ty in ('addition', 'deletion')]
     panels.append(descriptive_rows(members))
     OUT.mkdir(parents=True, exist_ok=True)
-    headers = ['Period', 'N', 'Market value,\nSEK bn', 'Size, %\nof OMXSB', 'Turnover\nvs market', 'Residual volatility,\n% per day', 'Analysts', 'Run-up, %\nAD−100 to AD−1']
+    headers = ['Period', 'N', 'Market value\n(SEK bn)', 'Size\n(%)', 'Abnormal\nturnover', 'Residual\nvolatility\n(%/day)', 'Analysts', 'Run-up\n(%)']
     doc = document('Table 2. Securities added to and deleted from OMXSB, by period')
     section = doc.sections[0]
     from docx.enum.section import WD_ORIENT
-    section.orientation = WD_ORIENT.LANDSCAPE
-    section.page_width, section.page_height = Cm(29.7), Cm(21)
-    section.top_margin = section.bottom_margin = Cm(1.2)
+    section.orientation = WD_ORIENT.PORTRAIT
+    section.page_width, section.page_height = Cm(21), Cm(29.7)
+    section.top_margin = section.bottom_margin = Cm(2.5)
+    section.left_margin = section.right_margin = Cm(2.5)
     labels = ['Panel A. Additions', 'Panel B. Deletions', 'Panel C. OMXSB members at the review']
     rows = []
     panel_positions = []
     for label, data in zip(labels, panels):
         panel_positions.append(len(rows)+1)
         rows.extend([label, *data])
-    table = make_table(doc, headers, rows, [1.8, 1.0, 3.0, 3.2, 3.2, 4.8, 2.5, 6.2], panels=panel_positions)
+    table = make_table(doc, headers, rows, [1.7, 0.9, 2.2, 1.8, 2.2, 2.7, 1.7, 2.8], panels=panel_positions)
+    # Compact cell margins keep the table within the 16 cm portrait text area.
+    margins = OxmlElement('w:tblCellMar')
+    for side in ('left', 'right'):
+        edge = OxmlElement('w:' + side)
+        edge.set(qn('w:w'), '45')
+        edge.set(qn('w:type'), 'dxa')
+        margins.append(edge)
+    table._tbl.tblPr.append(margins)
     for row in table.rows:
         for cell in row.cells:
             for p in cell.paragraphs:
-                p.paragraph_format.space_before = Pt(2)
-                p.paragraph_format.space_after = Pt(2)
+                p.paragraph_format.space_before = Pt(1)
+                p.paragraph_format.space_after = Pt(1)
     note(doc, 'Each cell reports the mean above the median, using available observations. N counts observations with size (k_storlek). Period follows per in the event source. AD is the announcement date; ED is the effective date. Market value: mcap_pre in SEK billion, measured before AD; this source field is company market value, whereas Size uses share-class value at AD−1 as a percentage of pre-review OMXSB value. Turnover: mean daily SEK turnover divided by share-class value over the 21 trading days before AD, less the value-weighted main-list mean, in percentage points. Residual volatility: square root of residual variance from daily percentage returns on OMXSBGI over AD−250 to AD−2 (at least 100 observations; Wurgler and Zhuravskaya, 2002), in percent per day. Analysts: FY1 EPS forecast count in the month before AD. Run-up: summed daily excess returns over OMXSBGI over AD−100 to AD−1, in percent. Panel C uses verified post-review members (status medlem), once per member and review, measured relative to that review’s AD; blank cells denote unavailable data. Source: Nasdaq, LSEG; authors’ calculations.')
     doc.save(OUT / 'table_2.docx')
     copyable_html(doc, OUT / 'table_2_kopiera.html')
@@ -443,6 +452,7 @@ def main():
     log += 'Panel C: status medlem = verified; uncertain/missing statuses excluded; post-review members, prior-review size denominator (current for first review), same panel and missing-data rules as runda11.\n'
     log += 'PASS: reference values; Panel C overlapping measures reproduced.\n'
     log += 'Copyable HTML companions generated from the same editable Word table cells. DOCX files have no document protection or table images.\n'
+    log += 'Table 2 layout: portrait A4, 2.5 cm margins, 16 cm table, Times New Roman 10. Descriptive statistics retained; Greenwood and Sammon Table 2 is a regression table, so this is not an exact content replica. Reference: https://www.hbs.edu/ris/Publication%20Files/23-025_563e45c6-df92-4d9c-ae05-608d4d0acab1.pdf (November 2023 version, Table 2).\n'
     log += '\n'.join(f'SHA256 {p.relative_to(ROOT)}: {hashlib.sha256(p.read_bytes()).hexdigest()}' for p in sources)
     log += '\n\n' + '\n\n'.join(reports) + '\n\nPanel C non-missing counts:\n' + members.groupby('per')[['mcap_pre', 'k_storlek', 'k_oms', 'k_wz', 'k_ana', 'pre100']].count().to_string() + '\n'
     log = '\n'.join(line.rstrip() for line in log.splitlines()) + '\n'
