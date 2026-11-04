@@ -1,6 +1,10 @@
+<!-- OMXSB_ACTIVITY_FOLLOWTHROUGH_20261104 -->
+> **3–4 november 2026, fortsatt analys klar:** Ett i förväg avgränsat test av samlad relativ bruttoomsättning har körts efter källkontroll: 65 tillägg, tre fasta kontroller vardera, tio översyner. Total +7,73 normala dagsomsättningar [0,08; 15,37]; handelsdagen +5,53 och övriga dagar +2,20 är beskrivande komponenter. Nominell/explorativ precision, ingen kausal prismekanism. Separat rårekonstruktion passerar. Se `output/omxsb_followthrough_20261103/README_SV.txt`.
+> **Avgränsning:** ETF-starten 2003 är inte en identifierad efterfrågechock: AP7:s original dokumenterar SBX-indexförvaltning redan 2002. Ingen extra brytpunktsanalys körd. Litteraturkontrollen visar att volymtoppar och externa referensperioder är etablerade; bidraget är en lokal komplettering till befintliga OMXSB-resultat.
+
 <!-- OMXSB_HISTORY_EXTENSION_20261103 -->
 > **3 november 2026, historikutökning genomförd:** 90 LSEG-frågor gav kompletterande äldre kurser och en uttrycklig lucka i OMXSBGI 2006-01-05. 57 kandidathändelser på åtta datum; 54 kompletta ED-fönster och 55 volym-/spreadobservationer. Resultat i `output/omxsb_history_extension_20261103/REPORT_SV.txt`.
-> **Källgräns:** 2002 är en startlista, inte 79 inval. Inga äldre originalbesked verifierade; därför separat preliminär 2003–2026-pool och oförändrad huvudanalys 2007–2026. Samtliga 1 461 tidigare ann/eff/tot-värden återskapas exakt. Inga nya FTN-utfall.
+> **Källgräns:** 2002-raderna behandlas som en startlista, inte som 79 verifierade inval. Inga äldre originalbesked verifierade; därför separat preliminär 2003–2026-pool och oförändrad huvudanalys 2007–2026. Samtliga 1 461 tidigare ann/eff/tot-värden återskapas exakt. Inga nya FTN-utfall.
 > **Fortsättning enligt användarens uttryckliga instruktion:** kontrollera om koncentrerad handelsdagsvolym motsvarar högre total handel eller omfördelning mellan dagar, med frysta kontroller och enhetskontroll före nya utfall.
 
 <!-- OMXSB_SCALED_ROUND_20261103 -->

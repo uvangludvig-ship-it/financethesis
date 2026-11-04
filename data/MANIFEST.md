@@ -6,6 +6,10 @@ Updated 27 Oct 2026 at the restructuring. **Rule: a new data file gets a row her
 
 `output/omxsb_history_extension_20261103/` contains the source-gated 2002–2026 catalog extension and provisional ED-based 2003–2026 results. The original 2007–2026 inputs/results are unchanged. The user's XLSX (SHA256 `555fce1ee8d7a82965fa178d01db179a531d0813d7946a06d919154b56a41316`) supplies 79 initial-basket rows, 57 early scheduled candidates and 29 other early changes; zero original early announcements were verified. New licensed stock and index supplements reside in its ignored `private/` directory, hashes in `RUN_MANIFEST.json`; full acquisition source/provenance hashes in `prices/SOURCE_HASHES.json`. All 90 requests, empty responses, duplicate coalescing and OMXSBGI's 2006-01-05 gap are documented. Public derived files include `EVENT_METRICS.csv`, `EARLY_TEST_COVERAGE.csv`, `FULL_PERIOD_RESULTS.csv`, `TEST_SCOPE.csv`, baseline replay and source-row verification overlays. Raw vendor history and price payloads remain private. No early ADs, holdings, AUM or weights were imputed.
 
+### Activity accounting followthrough, 3–4 November 2026
+
+`output/omxsb_followthrough_20261103/` reuses the existing stock panel's `TR.Turnover`, fixed 70-event/280-role 2019–2023 cohort, dated Nasdaq ISIN/currency roster and ten original Nasdaq monthly workbooks. No new economic raw provider export was required. 245/250 monthly security checks pass; the same 65 four-stock sets pass all daily and unit checks. Public files contain source flags, review/event normalized components, one primary total45 estimate, nominal review-level uncertainty, exact specifications and independent raw-source validation. Raw daily SEK amounts, monthly numeric reconciliations, full third-party PDFs and HTML remain private. Institutional and literature source hashes/read limits accompany the analysis. The old history report also clarifies that 2002 rows are treated as a seed and that retained legacy source classifications include SECONDARY; no result is changed by that wording clarification.
+
 ## The four layers
 
 | Folder | Meaning | Who writes it |

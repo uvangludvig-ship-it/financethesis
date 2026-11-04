@@ -1,0 +1,72 @@
+OBEROENDE VOLYMGRANSKNING — PASS, 3 NOVEMBER 2026
+Teknisk käll-/aritmetikrapport. Ingen ny hypotes eller uppsatstext.
+
+Huvudmåttet och dess osäkerhet återskapas exakt från ursprungspanelen:
+7,72543; nominellt 95%-intervall [0,07595;15,37491], 65 tillägg och 10 översyner.
+Enheten är respektive akties genomsnittliga dagsomsättning i SEK under sin
+50-dagarsbasperiod. Eventrollen jämförs med medel av exakt tre frysta kontroller.
+Detta är inte 7,7 procent, ett gemensamt SEK-belopp eller nettoköp av aktier.
+Den deskriptiva uppdelningen är 5,52536 på ED−1 och 2,20007 under övriga 44 dagar.
+Ingen ny inferens görs för delarna. Deras gemensamma kovarians bevaras.
+
+Oberoende kontrollkedja
+verify.py importerar inte producentens kod och använder inte producentens
+privata råexport som beräkningskälla. Den återläser originalpanelen och alla tio
+ursprungliga Nasdaq-xls. Den privata exporten kontrolleras därefter mot panelen.
+
+- Alla 250 månadsavstämningar stämmer: 245 passerar och fem faller.
+- Originalrubrikerna visar aktuell månad och On Exchange Turnover, inte YTD,
+  senaste tolv månader eller OTC. Exakt ISIN, Stock, STO och SEK kontrolleras
+  direkt i originaltabellerna; radpekare och månadsfel stämmer med producenten.
+- Samtliga 280 rollgrindar stämmer. Samma fem fyraktieset faller bort och samma
+  65 passerar. Alla datum för 50 basdagar och 45 mätdagar återskapas; perioderna
+  överlappar inte. Ingen ommatchning eller selektion efter utfallet har gjorts.
+- Samtliga 24 700 exporterade råvärden överensstämmer exakt med originalpanelen.
+- Alla 780 rollkomponenter, 195 eventkomponenter och 30 reviewkomponenter stämmer
+  exakt. Huvudmedel, standardfel, df9 och intervall stämmer exakt.
+- Kovariansens största differens är 1,78e−15. Additiv identitet och dess
+  variansidentitet stämmer inom flyttalsavrundning.
+- Input-/kod-/specifikationshashar och tidsordningen källgrind, enhetsgrind,
+  utfallslås, utfall verifieras. Låsta producentfiler har inte ändrats här.
+
+De fem uteslutna eventen är OMXSB-2020H2-09, OMXSB-2020H2-14,
+OMXSB-2021H1-01, OMXSB-2022H2-17 och OMXSB-2023H1-05. Inga har räddats genom
+andra datum, fält, kontrollaktier eller ändrad tolerans efter utfallet.
+
+Bedömning
+Frågan skiljer sig från en volymandel som måste summera till 100: här kan
+45-dagarstotalen avvika från den fasta basperioden och samtida kontroller.
+Punktskattningen visar större samlad relativ bruttoomsättning, inte en full
+bokföringsmässig motpost på de övriga 44 dagarna. Detta är ett smalt nytt
+deskriptivt besked inom det givna urvalet.
+
+Intervallets nedre gräns ligger mycket nära noll. Det är nominell, explorativ
+inferens efter många tidigare analyser och får inte beskrivas som robust
+bekräftelse. T-intervallet förutsätter tillräckligt oberoende översyner trots
+återkommande aktier/kontroller och gemensamma marknadsförhållanden. Resultatet
+gäller tidigare ägartäckta 70 tillägg, varav 65 med komplett omsättningskälla,
+inte alla OMXSB-tillägg eller alla investerare.
+
+Gross SEK-omsättning ändras även av prisnivå, bolagsnyheter och handelsplats.
+Basperiodens aktivitet kan vara ovanlig; peers kan beröras av andra index.
+Förskjutning utanför 45-dagarsfönstret är fortfarande möjlig. Ingen orsak till
+prisutvecklingen, orderdos, fondnetto eller genomförandekostnad identifieras.
+Månadsavstämningen och daterad SEK-identitet bevisar inte varje dags fältbasis.
+
+Kodgranskning och auditkronologi
+Presence-koden använder notna i stället för finite och månadsgrinden tar bort
+saknade källetiketter före set-jämförelse. Detta är latenta skyddsbrister, men
+råkontrollen finner noll infinita värden i samtliga 280 rollfönster och alla
+månadsrader, samt noll källösa månadsrader. run_primary kontrollerar dessutom
+finite/source==tr uttryckligen för alla passerade roller. Ingen faktisk
+urvals- eller resultatändring följer. Framtida kod kan göra grindarna explicita;
+frysta producentutfall ska inte skrivas om tyst.
+
+Första oberoende auditförsöket stannade på en all-NA månad: auditkodens nansum
+gav felaktigt 0. Det rättades till NA före lyckad replay. Producentens hantering
+var redan korrekt. Misslyckad kod/logg/lås bevaras i failed_initial_attempt/.
+Detta var en rättning av granskarens NA-hantering, inte ett nytt estimand.
+
+FINAL_VALIDATION.json är fryst 22:38 UTC. Endast filer i PUBLICATION_ALLOWLIST
+publiceras. Fulla arbetsböcker, priser, råa SEK-belopp och licensierade råexporter
+kopieras inte till detta publiceringspaket.
