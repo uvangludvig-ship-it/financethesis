@@ -1,4 +1,4 @@
-# Updated: 2026-11-04 17:43:19 CET (from date)
+# Updated: 2026-11-04 17:53:40 CET (from date)
 """Build journal-style Word tables from the thesis CSV sources.
 
 Run with Python and the packages pandas and python-docx installed.
@@ -9,6 +9,7 @@ the reference values requested for validation, never table inputs.
 
 from pathlib import Path
 import hashlib
+from html import escape
 import subprocess
 
 import re
@@ -342,6 +343,56 @@ def descriptive_rows(frame):
     return rows
 
 
+def copyable_html(doc, path):
+    """Export actual table text as HTML, suitable for rich-text paste into Word."""
+    table = doc.tables[0]
+    title = escape(doc.paragraphs[0].text)
+    notes = ''.join('<p>' + escape(p.text) + '</p>' for p in doc.paragraphs[1:] if p.text)
+    rows = []
+    for i, row in enumerate(table.rows):
+        unique = []
+        for cell in row.cells:
+            if not any(cell._tc is previous._tc for previous in unique):
+                unique.append(cell)
+        panel = len(unique) == 1
+        cells = []
+        for j, cell in enumerate(unique):
+            tag = 'th' if i == 0 or panel else 'td'
+            borders = ('border-top:0.75pt solid black;border-bottom:0.75pt solid black;' if i == 0
+                       else 'border-bottom:0.75pt solid black;' if i == len(table.rows)-1 else '')
+            align = 'left' if j == 0 or panel else 'right'
+            span = f' colspan="{len(row.cells)}"' if panel else ''
+            content = escape(cell.text).replace('\n', '<br>')
+            cells.append(f'<{tag}{span} style="padding:4pt 6pt;text-align:{align};vertical-align:middle;{borders}">{content}</{tag}>')
+        rows.append('<tr>' + ''.join(cells) + '</tr>')
+    fragment = (f'<div style="font-family:Times New Roman,serif;font-size:10pt;color:black">'
+                f'<p><b>{title}</b></p><table style="border-collapse:collapse;width:100%;font-family:Times New Roman,serif;font-size:10pt">'
+                + ''.join(rows) + '</table>' + notes + '</div>')
+    page = '''<!doctype html><html lang="sv"><meta charset="utf-8">
+<title>Tabell att kopiera till Word</title>
+<style>body{max-width:1200px;margin:32px auto;padding:0 24px;background:white;color:black}
+.tools{font:16px system-ui;margin-bottom:28px;padding:16px;background:#f1f4f6}
+button{font:inherit;padding:9px 16px;cursor:pointer} #status{margin-left:14px}
+@media print{.tools{display:none}}</style>
+<div class="tools"><button id="copy">Kopiera tabellen till Word</button><span id="status" role="status"></span>
+<p>Klicka på knappen och klistra in i ditt Word-dokument med ⌘V.
+Välj <b>Behåll källformatering</b> om Word frågar. Tabell 2 passar på en liggande sida.</p></div>
+<main id="content">''' + fragment + '''</main>
+<script>
+document.getElementById('copy').onclick = () => {
+  const el = document.getElementById('content');
+  const range = document.createRange(); range.selectNodeContents(el);
+  const selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range);
+  let copied = false;
+  try { copied = document.execCommand('copy'); } catch (_) {}
+  document.getElementById('status').textContent = copied
+    ? 'Kopierad. Klistra in i Word med ⌘V.'
+    : 'Tabellen är markerad. Tryck ⌘C och sedan ⌘V i Word.';
+};
+</script></html>'''
+    path.write_text(page, encoding='utf-8')
+
+
 def main():
     timestamp = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
     _, panel_a, panel_b = load_tables()
@@ -375,11 +426,13 @@ def main():
                 p.paragraph_format.space_after = Pt(2)
     note(doc, 'Each cell reports the mean above the median, using available observations. N counts observations with size (k_storlek). Period follows per in the event source. AD is the announcement date; ED is the effective date. Market value: mcap_pre in SEK billion, measured before AD; this source field is company market value, whereas Size uses share-class value at AD−1 as a percentage of pre-review OMXSB value. Turnover: mean daily SEK turnover divided by share-class value over the 21 trading days before AD, less the value-weighted main-list mean, in percentage points. Residual volatility: square root of residual variance from daily percentage returns on OMXSBGI over AD−250 to AD−2 (at least 100 observations; Wurgler and Zhuravskaya, 2002), in percent per day. Analysts: FY1 EPS forecast count in the month before AD. Run-up: summed daily excess returns over OMXSBGI over AD−100 to AD−1, in percent. Panel C uses verified post-review members (status medlem), once per member and review, measured relative to that review’s AD; blank cells denote unavailable data. Source: Nasdaq, LSEG; authors’ calculations.')
     doc.save(OUT / 'table_2.docx')
+    copyable_html(doc, OUT / 'table_2_kopiera.html')
     doc = document('Table A1. Sample construction')
     a_headers = ['', 'Additions', 'Deletions', 'Total']
     make_table(doc, a_headers, ['Panel A. Sample construction', *panel_a, 'Panel B. Events with D by period', *panel_b], [10.1, 2.3, 2.3, 2.3], panels=(1, 6))
     note(doc, "Additions and Deletions count securities added to and removed from OMXSB; Total is their sum. AD and ED denote announcement and effective dates. Panel A uses tab_01_sample.csv for the first three filters and non-missing tot in events_car.csv for the complete window. Panel B counts events with non-missing D_ny and split = False by period (per) in handelser_rattade.csv. D is index funds’ net buying between the report before AD and after ED, as a percentage of the share class’s shares. Panel B rests on the fund classification in data/input/omxsb/tracker_mandates.csv and is rerun when that file is final. Source: Nasdaq, LSEG; authors’ calculations.")
     doc.save(OUT / 'table_A1.docx')
+    copyable_html(doc, OUT / 'table_A1_kopiera.html')
     reports = []
     for label, rows in zip(labels, panels):
         reports.append(terminal_table(label + ' (mean / median)', [h.replace('\n', ' ') for h in headers], [[v.replace('\n', ' / ') for v in row] for row in rows]))
@@ -389,6 +442,7 @@ def main():
     log += 'Units: declaration specifies residual variance; runda3.py constructs returns in percent and runda11.py takes residual variance (ddof=2). sqrt(k_wz) applied observation by observation before aggregation, yielding % per day. Raw variance check remains 6.0.\n'
     log += 'Panel C: status medlem = verified; uncertain/missing statuses excluded; post-review members, prior-review size denominator (current for first review), same panel and missing-data rules as runda11.\n'
     log += 'PASS: reference values; Panel C overlapping measures reproduced.\n'
+    log += 'Copyable HTML companions generated from the same editable Word table cells. DOCX files have no document protection or table images.\n'
     log += '\n'.join(f'SHA256 {p.relative_to(ROOT)}: {hashlib.sha256(p.read_bytes()).hexdigest()}' for p in sources)
     log += '\n\n' + '\n\n'.join(reports) + '\n\nPanel C non-missing counts:\n' + members.groupby('per')[['mcap_pre', 'k_storlek', 'k_oms', 'k_wz', 'k_ana', 'pre100']].count().to_string() + '\n'
     log = '\n'.join(line.rstrip() for line in log.splitlines()) + '\n'
