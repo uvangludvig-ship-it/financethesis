@@ -56,3 +56,12 @@ Tidigare breda stoppbeslut gäller tills faktisk täckning har verifierats.
 Dokumentation: raw_audit/REPORT_SV.txt och documentation/REPORT_SV.txt.
 Reproduktion: raw_audit/inventory.py; rotens kontroll: ROOT_REPLAY.json.
 Alla äldre ekonomiska resultat är oförändrade. Ingen FTN-analys utförd.
+
+ÅTKOMSTUPPDATERING 4 NOVEMBER 10.28 SVENSK TID
+Användarens flyttmeddelande gäller databasens startsida. Via den officiella
+nya webbplatsen, NASDAQ HFT -> Reconstructed Order Book -> Access the dataset,
+öppnades exportformuläret åter på samma databasadress. Inloggning blockerar
+inte längre den rekonstruerade produkten. Inga råproduktmenyer eller nya
+exporter har därmed verifierats. Nya jobb är fortfarande0: fortsatt native
+webbläsarstyrning avbröts upprepade gånger av samtidig användarnavigering.
+Ingen aktivitet i användarens andra dokument; inga nya ekonomiska utfall.
