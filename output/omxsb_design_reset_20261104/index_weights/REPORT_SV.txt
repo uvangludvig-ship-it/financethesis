@@ -1,0 +1,54 @@
+4 november 2026. F33, avgränsad ny källkontroll. Ingen ekonomisk analys.
+
+Ingen ny fungerande historisk viktkälla erhölls. Fyra nya, förhandslåsta
+Desktop-frågor kördes efter jämförelse med de 29 tidigare frågorna. De använde
+LSEG:s dokumenterade odaterade rootchain plus SDate och viktfältets eget datum.
+Detta var en ny exakt frågevariant, inte en ny dataprodukt eller behörighet.
+
+FTSE- och SPX-kontrollerna gav 100 respektive 503 instrument, men noll ifyllda
+vikter, Index Shares eller viktdatum. OMXSBPI gav 111 instrument på både
+2023-11-30 och 2023-12-01. Båda svaren är byte-identiska och medlemsmängden
+matchar exakt den tidigare nutida listan. Mot verifierad historik saknas
+18 medlemmar före och 16 efter ombalanseringen; 24 respektive 23 är extra.
+Historiska referenser har 105/104 medlemmar. Alla vikt-/aktieantals-/datumfält
+är tomma; tomt har inte blivit noll. En separat CSV-kontroll reproducerar
+samtliga 825 rader och medlemsjämförelser. SDK-sessionen stängdes efteråt.
+
+Den här rootchain-varianten är nu uttömd inom de låsta fyra frågorna. Den
+visar inte om orsaken är behörighet, innehåll eller leverantörens fältbeteende.
+Varken historiska vikter eller förhandskända IndexShares kan användas i F33.
+Tidigare verifierat historiskt medlemskap via direkta indexfält kvarstår.
+
+Två konkret dokumenterade andra vägar, utan påstådd faktisk åtkomst:
+
+1. Datastream WTIDX och FNSIDX är indexspecifika vikt-/aktieantalsfält enligt
+LSEG:s support; NOSH/NOSHFF är bolagsfält och ersätter dem inte. DSWS har
+egen auktorisering och är inte samma sak som den fungerande DesktopSession.
+OMXSB-listkod, exakt historik och kontots behörighet är ännu inte verifierade.
+Inga credentials söktes, inga DSWS-anrop gjordes och ingen listkod gissades.
+Källor:
+https://community.developers.lseg.com/discussion/106460/how-to-retrieve-msci-index-constituents-weights-index-shares-weights-in-datastream/p1
+https://developers.lseg.com/en/api-catalog/eikon/datastream-web-service/Quickstart
+
+2. Nasdaq GIFFD:s specifikation v3.1, februari 2025, dokumenterar daterade
+SOD/EOD-filer, Index Shares, PRO/CAUFF och bevarade filversioner. Det är ett
+konkret arkiv-/vintagespår, men kräver auktoriserat konto och IP-setup; inget
+sådant anrop gjordes. OMXSB:s arkivdjup och PRO-täckning är inte bevisade.
+Vissa schemafält, bl.a. Security Shares och Capping Factor, beskrivs som ännu
+inte stödda: en fältrubrik garanterar inte ett levererat värde. De publika
+EMI-katalogerna innehåller andra indexexempel, ingen listad OMXSB-korg.
+https://www.nasdaqtrader.com/content/technicalSupport/specifications/dataproducts/Nasdaq-GIFFD-Global-Index-FlexFile-Delivery.pdf
+https://emi.nasdaq.com/index/GIW_Webservices/
+https://emi.nasdaq.com/index/GIFFD_SFTP/
+
+Dokumenterad frågevariant:
+https://community.developers.lseg.com/discussion/65797/constituent-list-and-weight-for-spx-using-python-api
+LSEG skiljer uttryckligen medlems- och viktbehörighet för SPX; detta är ingen
+diagnos av vårt OMXSB-konto:
+https://community.developers.lseg.com/discussion/72579/eikon-data-api-error-requesting-tr-indexconstituentweightpercent/p1
+
+Det återstående konkreta källkravet är faktisk verifierad DSWS/Datastream-
+export av rätt OMXSB-lista eller auktoriserad GIFFD/GIW-originalleverans för
+det fasta före/efterparet. Produktdokumentation räcker inte som datastöd.
+Inga syntetiska vikter, ETF-proxyvikter, prisutfall, efterfrågeutfall eller
+kontakter med andra har skapats. Raw-svar och primärkällornas fulltext är privata.

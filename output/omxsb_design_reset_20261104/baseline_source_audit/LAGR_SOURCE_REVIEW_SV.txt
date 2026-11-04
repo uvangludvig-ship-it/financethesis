@@ -1,0 +1,78 @@
+SENARE KÄLLGRANSKNING AV LAGRb 2020H2 — 4 NOVEMBER 2026
+Aktuell status efter DESIGN_REVIEW_SV.txt; inga nya q2-utfall.
+
+Splitfelet är förklarat. Den låsta hela-bolagsvärdesnormaliseringen är ännu
+inte certifierad. Därför stoppas beräkning av nya all70-pp-gränser och deras
+källbredd i denna granskning. Varken period, nämnare, skalning, kohort eller
+gammalt q2-stöd har ändrats.
+
+Primära datum och identiteter
+Lagercrantz rapport för 30 september 2020, publicerad 23 oktober, visar
+före split: 3 263 802 A-aktier, 66 256 125 B-aktier och 1 771 637 egna
+B-aktier. Totalt exklusive egna aktier: 67 748 290. Tabellen redovisar både
+före- och eftersplitenheter. Den anger också att spliten skedde efter
+rapportperioden, med avstämningsdag 8 oktober. Se s5–7:
+https://mb.cision.com/Main/995/3221475/1322983.pdf
+
+Nasdaqs notis 132/20, publicerad 5 oktober, anger split 3:1, sista handel
+med SE0007603493 den 6 oktober och första handel med SE0014990966 den
+7 oktober. Dess löptext har ett motsägelsefullt AGM-månadsnamn; vi använder
+den uttryckliga datum-/ISIN-tabellen, inte den uppgiften.
+https://view.news.eu.nasdaq.com/view?id=b18be31da0cacba68b9c519b7582e1c4c&lang=en
+Bolagets separata förändringsnotis bekräftar antalen och splitfaktorn:
+https://www.lagercrantz.com/media/press-archive/2020/change-in-number-of-shares-and-votes-in-lagercrantz-group-ab/
+
+Kontroll mot exakt q0-snapshot, utan prisutfall
+Endast LAGRb.ST den 30 september 2020 lästes från den gamla kurspanelen,
+med fälten date/close/mcap/shares/source. Samma dags ursprungliga FI-pris
+och q0-TR-mcap hämtades ur gamla skalningsfilen. Inga q1/q2-fondantal lästes.
+Det sparade vendor-aktieantalet är exakt tre gånger bolagets B-antal
+exklusive egna B-aktier. Vendor-close gånger tre stämmer med nominellt
+FI-pris inom avrundning. Den gamla klassdiagnosen 2,919782 använder därför
+splitjusterat aktieantal tillsammans med nominellt föresplitpris.
+Med bolagets daterade B-antal exklusive egna aktier blir diagnosen
+0,97326078. Med samtliga emitterade B blir den 1,000000. Båda passerar
+den gamla övre rimlighetsgränsen; detta är en faktisk enhetsförklaring,
+inte en toleranshöjning eller en antagen split från prisförhållandet.
+
+Varför det inte ensamt ger klartecken
+Den sparade q0-mcapen är samtidigt exakt nominellt FI-pris gånger emitterade
+B-aktier. Den är inte samma som pris gånger A+B (kvot 0,95305228) eller
+pris gånger A+B exklusive egna B (kvot 0,97797487). Dessa jämförelser är
+datadiagnostik; vi antar inte att onoterade A har en separat observerad
+marknadskurs eller att något av de två alternativa produkterna automatiskt
+är den rätta nämnaren. Inget alternativ har satts in i analysen.
+
+Lokal insamlingskod begär TR.CompanyMarketCap. LSEG beskriver fältet som
+summering av relevanta aktieslags marknadsvärden och anger att default
+kan avse emitterat, utestående eller noterat antal. Detta garanterar inte
+att alla juridiska A/B-slag omfattas i just denna datapunkt. Fältet kan
+vara korrekt enligt sin leverantörskonvention och ändå inte belägga vår
+starkare tolkning av hela emittentens kapitalvärde.
+https://community.developers.lseg.com/discussion/99807
+https://developers.lseg.com/en/article-catalog/article/peer-analysis
+
+Exakt kvarvarande datakrav
+Det behövs en verifierad tolkning/avstämning av LAGRb:s daterade q0-
+TR.CompanyMarketCap: vilka aktieslag och vilken behandling av egna aktier
+ingår? Alternativt krävs en daterad källa för den ursprungligen avsedda
+hela-emittentnämnaren och en uttrycklig rättelse som bevarar samma ekonomiska
+definition för event och peers. Att endast dela shares med tre reparerar
+rimlighetskontrollen men bevisar inte denna nämnarsemantik. Att efteråt
+döpa om måttet till vendor-normaliserat kapital vore ett separat designval,
+inte en tyst reparation inom den nu låsta hela-bolagsvärdesfrågan.
+
+Räckvidd
+Detta är en smal audit av ett redan underkänt event, inte belägg för att
+alla äldre TR-mcaprader är fel. LAGRb-eventet ingick inte i F35:s 59-event-
+utfall. Den senare event-only-andelen använder q1-vikter där gemensam
+värderingsfaktor tar ut sig inom aktien; detta q0-fynd ändrar inte dess
+83–97-procentsberäkning. Ingen gammal skattning har räknats om här.
+
+Åtkomst och reproduktion
+Tre primära dokument hämtades med HTTP200 och har lokala SHA256. LSEG-
+definitionen lästes via webbsökning; separat direkt nedladdning gav HTTP403
+och inga kringgåendeförsök gjordes. Första lokala parquetläsningen stannade
+på saknad pyarrow. Efter installation i en isolerad venv fungerade exakt-
+datumkontrollen. Försöken finns i ATTEMPT_REGISTER.json. Råsnapshot och
+fullständiga dokument ligger privat och ingår inte i publiceringslistan.
