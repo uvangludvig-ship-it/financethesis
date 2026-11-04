@@ -1,4 +1,4 @@
-# Updated: 2026-11-04 17:53:40 CET (from date)
+# Updated: 2026-11-04 17:56:53 CET (from date)
 """Generate Figure 1 exclusively from G_figur1_figur5.csv; no Word launch."""
 from pathlib import Path
 import hashlib
@@ -58,7 +58,7 @@ def main():
     ax = axes[1]
     ax.plot(x, d.agarandel_pct, color='black', linewidth=1.5)
     ax.set_title('B. OMXSB index fund assets relative to the index', loc='left', pad=34, fontweight='bold')
-    ax.text(0, 1.06, 'Index fund assets divided by OMXSB market value — a measure of funds’ relative size.',
+    ax.text(0, 1.06, 'Index fund assets divided by OMXSB market value, measuring funds’ relative size.',
             transform=ax.transAxes)
     ax.set_ylabel('Fund assets / OMXSB market value (%)')
     ax.set_ylim(bottom=0)
