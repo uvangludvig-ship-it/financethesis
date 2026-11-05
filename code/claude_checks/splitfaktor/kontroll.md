@@ -1,0 +1,670 @@
+# Kontroll av splitfaktorer
+
+Körtid från `date`: 2026-11-05 08:35:41 CET (+0100).
+Deklaration committad före kursförfrågningar och faktorberäkning: `51429b9398085d9536a0b21e0b2f4fc785d18d51`.
+
+**Status: STOPP vid kontroll 1.**
+
+## Underlag och täckning
+
+- Samtliga 468 händelser finns i CSV-filen, i ursprunglig ordning.
+- Faktor kan beräknas för 419; 49 har saknade prispar.
+- Splitflaggade: 123 av 150 med faktor. Osplittade: 296 av 318.
+- 78 fasta datumförfrågningar, totalt 82 försök. Fyra förfrågningar gav först LSEG-fel och lyckades efter ett nytt försök med identiska parametrar. Alla 78 gav till slut svar, men vissa instrument saknar användbara prispar. Befintliga RIC används utan aliasbyte.
+- LSEG-fält: `TR.ClosePrice.date`, `TR.ClosePrice(Adjusted=0)`, `TR.ClosePrice(Adjusted=1)`. Dagligt, från måldatum minus sju kalenderdagar till måldatum; sista gemensamma positiva prispar utan framtida kurs.
+- `asof` är efter-snapshotens historiska datum i Lipperfilen, ED+45 kalenderdagar i samtliga 468 händelser. Det har inte bytts till dagens datum. Före-snapshotens datum används inte som alternativ slutpunkt.
+- Den gamla splitflaggan bestämmer kontrollgrupperna. CSV-kolumnen k är den nya priskvoten; det gamla fältet k i händelsefilen används inte.
+
+## Kontroll 1: osplittade
+
+Krav: samtliga beräkningsbara osplittade har |k−1| ≤ 0,01. N=296. Median=1, min=0.999999933, max=1.07795095. Avvikelser: 2. **UNDERKÄND.**
+
+| event_id | RIC | ED | asof | k |
+|---|---|---|---|---:|
+| OMXSB-2020H2-15 | PEABb.ST | 2020-12-01 | 2021-01-15 | 1.07795094833 |
+| OMXSB-2026H1-06 | LUNG.ST | 2026-06-01 | 2026-07-16 | 1.05524302737 |
+
+## Kontroll 2: FI-jämförelse
+
+Ej genomförd eftersom kontroll 1 underkändes.
+
+## Kontroll 3: tre största k
+
+Ej genomförd enligt den låsta stoppordningen.
+
+## Tolkning och begränsning
+
+CSV-filen innehåller den begärda matematiska kvoten och sh_ed × k. Den är inte en godkänd korrigering av Lippers aktieenheter när kontrollen underkänns. Att samtliga aktier ligger kvar i CSV-filen betyder inte att de får återinföras i huvudanalysen.
+Kvoten kan bara fånga ändrad prisjustering mellan ED och asof. Om en split inträffar efter båda datumen multiplicerar den båda historiska prisjusteringsfaktorerna lika och faller bort ur kvoten. Därför kan dagens justerade fondinnehav fortfarande ha en annan enhet än den nya nämnaren. Inga slutdatum, grupper eller gränser har ändrats för att rädda kontrollen.
+
+Kontroll 1 godkänner 294 av de 296 beräkningsbara osplittade händelserna men underkänner två. Det visar en avvikelse mellan de beräknade prisfaktorerna och den befintliga gruppindelningen; orsaken till avvikelserna är inte fastställd. Den gamla splitflaggan är inte i sig en verifiering av bolagens splitvillkor. FI-korrelation, FI-medelskillnad och de tre största faktorernas bolagsvillkor har inte testats efter stoppet. Ingen slutsats om dessa kontroller ska dras.
+
+En separat kontroll med en annan implementation rekonstruerade samtliga 419 faktorer direkt från leverantörssvaren och verifierade alla 468 CSV-raders identifierare, ordning, historiska aktieantal och omräknade aktieantal. Största absoluta skillnad i k var 4,89 × 10⁻¹⁵. Den återgav också exakt de två avvikelserna i kontroll 1. Detta verifierar beräkningen, inte att kvoten har rätt ekonomisk enhet för Lippers justerade innehav.
+
+## Reproducerbarhet och filgräns
+
+- CSV SHA256: `78f2dc92a7518e26db43fd8ff76a8b37815d69d7f97903fb9a1e05ad6a5b5a5b`.
+- De tre indatahasharna i deklarationen är återkontrollerade och oförändrade.
+- Inga avkastningar eller multiplikatorer räknades och inga tidigare analysfiler ändrades.
+- Privat tekniskt arbetsunderlag (kod, oförändrade leverantörssvar, faktiskt kursdatum och mellanberäkningar): `/private/tmp/financethesis_splitfaktor_20261105_0817`.
+- Ett tekniskt fel före första prisförfrågan (`DataFrame.asof` kolliderade med kolumnnamnet) rättades till kolumnindexering. Ingen data eller utfallsregel ändrades.
+
+### Källhänvisning
+
+- https://community.developers.lseg.com/discussion/121346/query-prices-adjustes-and-unadjusted-for-time-series/p1
+
+### Kod- och källhashar
+
+| Fil i den privata arbetskatalogen | SHA256 |
+|---|---|
+| fetch.py | `0eea15dadaabaebc1c7e3362e821aa2d31dc399c353c4ed668ce8bb299bcd4c5` |
+| analyze.py | `ab0a879df7057ef2f3291494b2404f174507d78c4264cf5d11b4657ca0b2b198` |
+| verify.py | `3a6bbcf2e06d20da204903ac6925789d248e2ff57b0ee20bf94c8cd88cb76cfd` |
+| independent_verification.json | `04e9fefd2fbcf91cee866895460cbede703a46d8ac00ff7798f75242bf3e3d93` |
+| request_plan.json | `71072119c30eaade1a668bd1f2e6451b746b287c79c16e7f8e8aa8c86e8b3809` |
+| fetch_log.json | `962e80e1be3a55510c2e563a0ee49b00447bc5b50e781995457d0238bccf7287` |
+| q000.csv | `08cdbaccf0a032c60cc69b057b92b2aeed24ac7a1981856cc86ca15cebd7cac2` |
+| q001.csv | `c9875194e50b1ded71b5364932a1246e7b6099cd1cfef90042ff5ef8de27ed92` |
+| q002.csv | `b5b4a3398eff427fba4492bb4ea43bd7973e48efba37f24ebc77a18880ce927a` |
+| q003.csv | `5c4ef3c5c2fd7978c5c647b913a69b23bd34d9b40e6fb1081a1e000ca9bd66e5` |
+| q004.csv | `aeab7b4803f912176f87563904aeadc9fb103c3358d06a5bd8d528ca769357d4` |
+| q005.csv | `3401b8e448143818daa29bdb8a1200c81c9fdc213d72cd7a55e685e0dfd95f1a` |
+| q006.csv | `edde8e1adb9d74627cd6f4f818102f907bea92b19cf62ea5288f9eb5e01ab011` |
+| q007.csv | `db36c1d92b300683971a2f9067caeb6677bf368e31fc197d7fb1e22a76ca2eef` |
+| q008.csv | `6f28b26224e004384830dcbf47faaf166f3d19b7e09e6e996acef3fe0bdfb0ce` |
+| q009.csv | `2c1ebfd9cd575ed8b66c194ed1aa0ea7132a802b76a3493141496f31094d704c` |
+| q010.csv | `84767679da7b75a34fe468b1ba6152f2bb22405a55bcf919d15136a6f33eb82d` |
+| q011.csv | `76965ef57f2dced921173ae1d001d77ff5ea6ff3178a0b559b994fbbd8edb966` |
+| q012.csv | `ea19f69011d4c152f5450f2f69acadac1fce06b247497ed9d223f4eafd364b3f` |
+| q013.csv | `0d7dfd4ce96b9d2c0d0b2deda42132ba6cb15aa45f2669c22d02d133abac2895` |
+| q014.csv | `74b89d51ba3cce470576ede545649e1ae298dd8812a69bef350e43e9c92cba43` |
+| q015.csv | `5a7f824897933fed1316ba407ede323743c0c0da5a9e79f02fb01fc7951e2bfd` |
+| q016.csv | `3c8aa5ed3abb4be156c60a3f134c3a0182e4724131e16f3da905486639a83728` |
+| q017.csv | `080581dff4024715a43330867de1d6e52c6bb3929a79fcac05049219b380e0d5` |
+| q018.csv | `e0482148647d741be00b99aeb9977863f3cbd071a9e4c74c97e6520ce03aad96` |
+| q019.csv | `26187ae454343981ebf0a92dd926fdc5cbe3573ad534a4b3c299accf7d175522` |
+| q020.csv | `a2fbfb43eed5068b33d3d996bd8d73723eaab74ba9f545177d7e113e76fcdeba` |
+| q021.csv | `e7d114c8478a866bd6cbc0c1100dac0ee0b5b7e678f76751df16690e1362f1c6` |
+| q022.csv | `99af8c6e185ddf83c25db741db3649c21f52a6b98003b1150a75af5677ec2e5c` |
+| q023.csv | `e97e7e6b156ad35ce18da54e3ec1ca4fdb2243cbc2461e5520a18a43a4cd72fa` |
+| q024.csv | `de1deb4d5865030be2d786220d18d51ffdea8f0abb8fb78acd71d1c0d1c93fb7` |
+| q025.csv | `5d4b161eb9a88fc564259a66f5d9e24f5ad11c927f4334d7be980d0158254f9f` |
+| q026.csv | `4d904dfb81516b4b306191ddbd7d98b0c6596fbcee250d35244a69d46e62f266` |
+| q027.csv | `09198f5b2dacf3e3b7d9fed0d0ec4980fe3c6902392922b8bb3d20ac3b6d521a` |
+| q028.csv | `c643863ea90d8ba3133cb906d832eb77be5a6afb3cf90f717c2ebe2484c0879b` |
+| q030.csv | `b4e4ed12737a47abc5c3ffde468e7ee8e8c006940266d02cc3461ae78b1d5600` |
+| q031.csv | `701057bfc69d707c19761f5fc09261e491b07b2e4ffb7140d2e2a083b81b18e7` |
+| q032.csv | `e38fae33862dcac874cc4bc420e72ea06cc78107d603e1f4dc2be9715bdd4071` |
+| q033.csv | `7f809d1b55f265758d9a4d17ede6e16baef6fcb595b262b4f3824680cbffc2ff` |
+| q034.csv | `3d347a06c124443b388a5209d59de56f20bfec020f29c7e97801cb40a59f8751` |
+| q035.csv | `cb1f9fad6055523c226d14089d2339450c6c97cf45942ca8593f5f401b5bfeb0` |
+| q036.csv | `9486193c677e46953a866bfeb3821a73bdc40ea38f25d6cb3a582fbd72289911` |
+| q037.csv | `48ffa194496a35faf35e3c91230607f59b7f4cef6e0bcd482e58d285601cddb5` |
+| q038.csv | `5a1fefe6c5df1db8561dc1b7bbcf938895c10cb6a0b62f5e3a04967a9bf5f49f` |
+| q039.csv | `3285ede05c70bf145b74cff39cb92fdb16075f5a6c1ef93fc39ef662c01c4a70` |
+| q040.csv | `ff2b2df157786ad9c603144172a7bccf90634960cff9e2e303b6d7f38823a87c` |
+| q041.csv | `1e20d19f17d57994751efdbf1f1e000e179892c50d9060d87dbe481d7c42e0da` |
+| q042.csv | `c472a67837e4b479363eacea259f5d7ab6de846d8300d49d8a598ceb7029b3a3` |
+| q043.csv | `f022421f16b3e67e1e35e074804fa2f833afb3f912a0dde222982b7d26606657` |
+| q044.csv | `12bd27ecece7a72863bf68f100bf06646a7c81c46104716f2a6ead671084b768` |
+| q045.csv | `19e9caae806ffeec9ee6e974fb291ff05f1206acfbf2bb7d0558fc9e0aa7c1ea` |
+| q048.csv | `28d9a2d213a4a0a8456fe798eaaa2f2d62b9ee8d9f39100cb1ef220dcbd7145b` |
+| q049.csv | `4ee9f306b6627c5812a9e1892f5f60f067dc49c1189cbd7970254ca57a5cbc20` |
+| q050.csv | `327cab81fd657d440739105889ca991a76ff043c595106a991ca0cda8a6dfa37` |
+| q051.csv | `8d05a8adecb6efe56c43113642baf9b5294f329b7f37242a8d34abcdaa4c0935` |
+| q052.csv | `9c4f7244975e6b7b3cea2d17f163d81f03018f95f8ceead4ed47bfa78a59a167` |
+| q053.csv | `391827de1f3dfe17860376bd408f506a948aab513a31f7f6f03c368dca6e4c6e` |
+| q054.csv | `84c13d4242eb36b18a06f19a9df1b0afea562912dfb7c91ae8578bca81493ed1` |
+| q055.csv | `b4118ab6aa37c075ebb9c756f7297ab138bf75b86fae6342b8807ec88eada9be` |
+| q056.csv | `39414b502fdfffe482a13c00407c07f315bd4a27c597f17e4a593f210a1c2d2d` |
+| q057.csv | `8ec1658ce9b96d3ad1bea2a6db25ccba229217602e5e4f87b793b27b967c1e34` |
+| q058.csv | `1f3f51a09fa0a40848bac495bfde6c74273120e538e031b13bdda13d78a3c553` |
+| q059.csv | `e4db71a7732cab82dcc4d57ce03c87d9dc771fce1a92e88f013039531116c069` |
+| q060.csv | `e35fbf689ce2e6c60d67df2292a0d08700c8572078c9d57d52af149d198035d6` |
+| q061.csv | `b65f113b9432dbd53c6c36168d861c0a59ac192490472704a4a38f12c9fd23d8` |
+| q062.csv | `f6c225418e722252d719defb57f2b4e4e2dc779e7c89070990e8e5f870cf7a4b` |
+| q063.csv | `b59b807d8da824977f8036f25e70ee0a0e79ccf26465a86b95a9186137e1384a` |
+| q064.csv | `ed889897d5392daad339341b8c49a95a68c864f94c08dc18ed008a8bf3ed4c84` |
+| q065.csv | `0ed6761f971620322a2754d7e8cc67bc8c4ff50bc35786c7fbb5437dec258495` |
+| q066.csv | `b2ab9e8bd397b2830d3c5599d50fb28fada66802e4f102893d0191072cbb65da` |
+| q067.csv | `afb69612924064efd138d9628230d42ac706c90f61c5d554305cae6751379d56` |
+| q068.csv | `6ede18637d05d69703cebef9279d1fd6a6ee05bc9d5a3346198e8e1cc28188e6` |
+| q069.csv | `f30948670dc9efc4fc39055a8861868f62470262c30d23f290255f0e1c43a445` |
+| q070.csv | `53971f49cd585a6e446f02a6bc2854c2e7c60f7104d459996e98e0aef6e1fd6c` |
+| q071.csv | `cf58c65f2287d3078d7d0e559a85ebd95fb2f701e3e10cc3a1677841a2161ba8` |
+| q072.csv | `facf8547cc810024ac2f5936be4bcdda819298669e653a541cc3290cea8a0f09` |
+| q073.csv | `2244dd51273a22b1ffc3c6b88d2a62e668941a9618fe584dda2335678a98e835` |
+| q074.csv | `a0a5a802fe2aa4dbfcde30c9bdb5c0fa6e891ccf2a98afa3667f0334ff009f33` |
+| q075.csv | `1801b193a23d120155e480f966cf2558354dbf53991da6c69bb1f33dd9968ee6` |
+| q076.csv | `42b140cd779c859c3abe080b0aad89ad076ecc8507d3020765e71c5dc455330e` |
+| q077.csv | `ed0db083b438856a54038a82ba524dfe7ff99631b8554323c5205cbc9e7a4980` |
+| q029.csv | `5ab1975712e7e89e3d60dc647e8bbcdb71abea8cb6573f8b5de4662748f42883` |
+| q046.csv | `34173ce72245451bff73ddf880169b98e272edecc03743856d38d9964eb7bca8` |
+| q047.csv | `7940c6e467ee74795f1492df412d853d8d445f3419e37f07a25ed3665d807357` |
+
+### Händelser med saknad faktor
+
+| event_id | RIC | ED-källa | asof-källa |
+|---|---|---|---|
+| OMXSB-2007H2-02 | BOSS.ST^D08 | no_common_positive_dated_price | ok |
+| OMXSB-2007H2-04 | PAR.ST^A16 | no_common_positive_dated_price | ok |
+| OMXSB-2007H2-05 | TYKSsdb.ST^L08 | no_common_positive_dated_price | ok |
+| OMXSB-2007H2-07 | BROb.ST^B08 | no_common_positive_dated_price | ok |
+| OMXSB-2007H2-08 | HUSQa.ST | no_common_positive_dated_price | ok |
+| OMXSB-2007H2-09 | RSOFb.ST^J14 | no_common_positive_dated_price | ok |
+| OMXSB-2007H2-12 | STEr.ST | no_common_positive_dated_price | ok |
+| OMXSB-2008H1-02 | HUSQa.ST | no_common_positive_dated_price | ok |
+| OMXSB-2008H1-03 | SCAa.ST | no_common_positive_dated_price | ok |
+| OMXSB-2009H1-02 | NETb.ST^L20 | no_common_positive_dated_price | no_common_positive_dated_price |
+| OMXSB-2009H1-03 | PAR.ST^A16 | no_common_positive_dated_price | no_common_positive_dated_price |
+| OMXSB-2009H1-04 | TWWsdbb.ST^K14 | no_common_positive_dated_price | no_common_positive_dated_price |
+| OMXSB-2010H1-04 | GUNN.ST^L20 | ok | no_common_positive_dated_price |
+| OMXSB-2010H1-05 | HOGAb.ST^J13 | ok | no_common_positive_dated_price |
+| OMXSB-2010H1-06 | KLOVa.ST^G21 | ok | no_common_positive_dated_price |
+| OMXSB-2010H1-07 | LUMIsdb.ST^F17 | ok | no_common_positive_dated_price |
+| OMXSB-2010H1-11 | PAR.ST^A16 | ok | no_common_positive_dated_price |
+| OMXSB-2014H1-01 | ARISE.ST^A26 | ok | no_common_positive_dated_price |
+| OMXSB-2015H1-01 | HLDX.ST^I22 | ok | no_common_positive_dated_price |
+| OMXSB-2015H1-02 | SAGAb.ST | ok | no_common_positive_dated_price |
+| OMXSB-2015H1-04 | STEr.ST | ok | no_common_positive_dated_price |
+| OMXSB-2015H1-05 | ARISE.ST^A26 | ok | no_common_positive_dated_price |
+| OMXSB-2015H1-06 | KLOVa.ST^G21 | ok | no_common_positive_dated_price |
+| OMXSB-2015H1-07 | LUMIsdb.ST^F17 | ok | no_common_positive_dated_price |
+| OMXSB-2015H1-10 | TETY.ST^A25 | ok | no_common_positive_dated_price |
+| OMXSB-2015H2-01 | FINGb.ST^G26 | ok | no_common_positive_dated_price |
+| OMXSB-2015H2-02 | KLOVb.ST^G21 | ok | no_common_positive_dated_price |
+| OMXSB-2015H2-08 | HLDX.ST^I22 | ok | no_common_positive_dated_price |
+| OMXSB-2015H2-10 | RADH.ST^C19 | ok | no_common_positive_dated_price |
+| OMXSB-2017H2-01 | AHSL.ST^C19 | no_common_positive_dated_price | ok |
+| OMXSB-2017H2-02 | BIOT.ST^G25 | no_common_positive_dated_price | ok |
+| OMXSB-2017H2-06 | KARO.ST^K22 | no_common_positive_dated_price | ok |
+| OMXSB-2017H2-07 | KLOVb.ST^G21 | no_common_positive_dated_price | ok |
+| OMXSB-2017H2-09 | SAS.ST^H24 | no_common_positive_dated_price | ok |
+| OMXSB-2019H1-03 | KLOVb.ST^G21 | no_common_positive_dated_price | ok |
+| OMXSB-2019H1-08 | BONAVb.ST | no_common_positive_dated_price | ok |
+| OMXSB-2019H1-12 | LEOV.ST^I22 | no_common_positive_dated_price | ok |
+| OMXSB-2019H1-13 | SAS.ST^H24 | no_common_positive_dated_price | ok |
+| OMXSB-2019H1-14 | TETY.ST^A25 | no_common_positive_dated_price | ok |
+| OMXSB-2019H2-06 | SWECb.ST | no_common_positive_dated_price | ok |
+| OMXSB-2021H1-02 | BONAVb.ST | ok | no_common_positive_dated_price |
+| OMXSB-2021H1-03 | ETRN.ST^A22 | ok | no_common_positive_dated_price |
+| OMXSB-2021H1-04 | FINGb.ST^G26 | ok | no_common_positive_dated_price |
+| OMXSB-2021H1-14 | STEr.ST | ok | no_common_positive_dated_price |
+| OMXSB-2023H1-05 | SAMPOsdb.ST^B26 | no_common_positive_dated_price | ok |
+| OMXSB-2023H1-07 | TIGOsdb.ST^C25 | no_common_positive_dated_price | ok |
+| OMXSB-2023H1-11 | CINT.ST^H26 | no_common_positive_dated_price | ok |
+| OMXSB-2023H1-14 | KARNO.ST | no_common_positive_dated_price | ok |
+| OMXSB-2023H2-11 | PLAZb.ST | ok | no_common_positive_dated_price |
+
+### Använda kursdagar per händelse
+
+| event_id | ED-prisdag | asof-prisdag |
+|---|---|---|
+| OMXSB-2007H2-02 | saknas | 2007-08-16 |
+| OMXSB-2007H2-04 | saknas | 2007-08-16 |
+| OMXSB-2007H2-05 | saknas | 2007-08-16 |
+| OMXSB-2007H2-07 | saknas | 2007-08-16 |
+| OMXSB-2007H2-08 | saknas | 2007-08-16 |
+| OMXSB-2007H2-09 | saknas | 2007-08-16 |
+| OMXSB-2007H2-10 | 2007-07-02 | 2007-08-16 |
+| OMXSB-2007H2-12 | saknas | 2007-08-16 |
+| OMXSB-2007H2-13 | 2007-07-02 | 2007-08-16 |
+| OMXSB-2008H1-02 | saknas | 2008-02-15 |
+| OMXSB-2008H1-03 | saknas | 2008-02-15 |
+| OMXSB-2008H1-04 | 2008-01-02 | 2008-02-15 |
+| OMXSB-2008H2-01 | 2008-07-01 | 2008-08-15 |
+| OMXSB-2008H2-02 | 2008-07-01 | 2008-08-15 |
+| OMXSB-2008H2-03 | 2008-07-01 | 2008-08-15 |
+| OMXSB-2008H2-04 | 2008-07-01 | 2008-08-15 |
+| OMXSB-2008H2-06 | 2008-07-01 | 2008-08-15 |
+| OMXSB-2008H2-07 | 2008-07-01 | 2008-08-15 |
+| OMXSB-2008H2-08 | 2008-07-01 | 2008-08-15 |
+| OMXSB-2008H2-10 | 2008-07-01 | 2008-08-15 |
+| OMXSB-2008H2-11 | 2008-07-01 | 2008-08-15 |
+| OMXSB-2009JAN-02 | 2009-01-02 | 2009-02-16 |
+| OMXSB-2009JAN-03 | 2009-01-02 | 2009-02-16 |
+| OMXSB-2009JAN-06 | 2009-01-02 | 2009-02-16 |
+| OMXSB-2009JAN-09 | 2009-01-02 | 2009-02-16 |
+| OMXSB-2009JAN-10 | 2009-01-02 | 2009-02-16 |
+| OMXSB-2009JAN-13 | 2009-01-02 | 2009-02-16 |
+| OMXSB-2009H1-01 | 2009-06-01 | 2009-07-16 |
+| OMXSB-2009H1-02 | saknas | saknas |
+| OMXSB-2009H1-03 | saknas | saknas |
+| OMXSB-2009H1-04 | saknas | saknas |
+| OMXSB-2009H2-01 | 2009-12-01 | 2010-01-15 |
+| OMXSB-2009H2-03 | 2009-12-01 | 2010-01-15 |
+| OMXSB-2009H2-04 | 2009-12-01 | 2010-01-15 |
+| OMXSB-2009H2-05 | 2009-12-01 | 2010-01-15 |
+| OMXSB-2009H2-06 | 2009-12-01 | 2010-01-15 |
+| OMXSB-2010H1-01 | 2010-06-01 | 2010-07-16 |
+| OMXSB-2010H1-04 | 2010-06-01 | saknas |
+| OMXSB-2010H1-05 | 2010-06-01 | saknas |
+| OMXSB-2010H1-06 | 2010-06-01 | saknas |
+| OMXSB-2010H1-07 | 2010-06-01 | saknas |
+| OMXSB-2010H1-08 | 2010-06-01 | 2010-07-16 |
+| OMXSB-2010H1-09 | 2010-06-01 | 2010-07-16 |
+| OMXSB-2010H1-11 | 2010-06-01 | saknas |
+| OMXSB-2010H2-02 | 2010-12-01 | 2011-01-14 |
+| OMXSB-2010H2-03 | 2010-12-01 | 2011-01-14 |
+| OMXSB-2010H2-05 | 2010-12-01 | 2011-01-14 |
+| OMXSB-2011H1-01 | 2011-06-01 | 2011-07-15 |
+| OMXSB-2011H1-02 | 2011-06-01 | 2011-07-15 |
+| OMXSB-2011H1-03 | 2011-06-01 | 2011-07-15 |
+| OMXSB-2011H1-04 | 2011-06-01 | 2011-07-15 |
+| OMXSB-2011H1-05 | 2011-06-01 | 2011-07-15 |
+| OMXSB-2011H1-06 | 2011-06-01 | 2011-07-15 |
+| OMXSB-2011H1-07 | 2011-06-01 | 2011-07-15 |
+| OMXSB-2011H1-10 | 2011-06-01 | 2011-07-15 |
+| OMXSB-2011H1-11 | 2011-06-01 | 2011-07-15 |
+| OMXSB-2011H1-12 | 2011-06-01 | 2011-07-15 |
+| OMXSB-2011H1-14 | 2011-06-01 | 2011-07-15 |
+| OMXSB-2011H1-15 | 2011-06-01 | 2011-07-15 |
+| OMXSB-2011H2-01 | 2011-12-01 | 2012-01-13 |
+| OMXSB-2011H2-03 | 2011-12-01 | 2012-01-13 |
+| OMXSB-2011H2-04 | 2011-12-01 | 2012-01-13 |
+| OMXSB-2011H2-05 | 2011-12-01 | 2012-01-13 |
+| OMXSB-2011H2-06 | 2011-12-01 | 2012-01-13 |
+| OMXSB-2011H2-07 | 2011-12-01 | 2012-01-13 |
+| OMXSB-2011H2-08 | 2011-12-01 | 2012-01-13 |
+| OMXSB-2011H2-09 | 2011-12-01 | 2012-01-13 |
+| OMXSB-2011H2-10 | 2011-12-01 | 2012-01-13 |
+| OMXSB-2012H1-01 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-02 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-03 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-04 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-05 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-06 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-07 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-08 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-09 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-10 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-12 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-13 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-14 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-15 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-17 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-18 | 2012-06-01 | 2012-07-13 |
+| OMXSB-2012H1-19 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-20 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-21 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-22 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-24 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-25 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-26 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-27 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-29 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-30 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-31 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-32 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H1-35 | 2012-06-01 | 2012-07-16 |
+| OMXSB-2012H2-01 | 2012-12-03 | 2013-01-17 |
+| OMXSB-2012H2-02 | 2012-12-03 | 2013-01-17 |
+| OMXSB-2012H2-04 | 2012-12-03 | 2013-01-17 |
+| OMXSB-2013H1-01 | 2013-06-03 | 2013-07-18 |
+| OMXSB-2013H1-02 | 2013-06-03 | 2013-07-18 |
+| OMXSB-2013H1-03 | 2013-06-03 | 2013-07-18 |
+| OMXSB-2013H1-04 | 2013-06-03 | 2013-07-18 |
+| OMXSB-2013H1-05 | 2013-06-03 | 2013-07-18 |
+| OMXSB-2013H1-06 | 2013-06-03 | 2013-07-18 |
+| OMXSB-2013H1-07 | 2013-06-03 | 2013-07-18 |
+| OMXSB-2013H2-01 | 2013-12-02 | 2014-01-16 |
+| OMXSB-2013H2-02 | 2013-12-02 | 2014-01-16 |
+| OMXSB-2013H2-03 | 2013-12-02 | 2014-01-16 |
+| OMXSB-2013H2-04 | 2013-12-02 | 2014-01-16 |
+| OMXSB-2013H2-05 | 2013-12-02 | 2014-01-16 |
+| OMXSB-2013H2-06 | 2013-12-02 | 2014-01-16 |
+| OMXSB-2013H2-07 | 2013-12-02 | 2014-01-16 |
+| OMXSB-2014H1-01 | 2014-06-02 | saknas |
+| OMXSB-2014H1-03 | 2014-06-02 | 2014-07-17 |
+| OMXSB-2014H1-04 | 2014-06-02 | 2014-07-17 |
+| OMXSB-2014H2-01 | 2014-12-01 | 2015-01-15 |
+| OMXSB-2014H2-02 | 2014-12-01 | 2015-01-15 |
+| OMXSB-2014H2-03 | 2014-12-01 | 2015-01-15 |
+| OMXSB-2014H2-04 | 2014-12-01 | 2015-01-15 |
+| OMXSB-2014H2-05 | 2014-12-01 | 2015-01-15 |
+| OMXSB-2014H2-06 | 2014-12-01 | 2015-01-15 |
+| OMXSB-2014H2-07 | 2014-12-01 | 2015-01-15 |
+| OMXSB-2014H2-09 | 2014-12-01 | 2015-01-15 |
+| OMXSB-2014H2-10 | 2014-12-01 | 2015-01-15 |
+| OMXSB-2015H1-01 | 2015-06-01 | saknas |
+| OMXSB-2015H1-02 | 2015-06-01 | saknas |
+| OMXSB-2015H1-03 | 2015-06-01 | 2015-07-16 |
+| OMXSB-2015H1-04 | 2015-06-01 | saknas |
+| OMXSB-2015H1-05 | 2015-06-01 | saknas |
+| OMXSB-2015H1-06 | 2015-06-01 | saknas |
+| OMXSB-2015H1-07 | 2015-06-01 | saknas |
+| OMXSB-2015H1-08 | 2015-06-01 | 2015-07-16 |
+| OMXSB-2015H1-09 | 2015-06-01 | 2015-07-16 |
+| OMXSB-2015H1-10 | 2015-06-01 | saknas |
+| OMXSB-2015H1-11 | 2015-06-01 | 2015-07-16 |
+| OMXSB-2015H2-01 | 2015-12-01 | saknas |
+| OMXSB-2015H2-02 | 2015-12-01 | saknas |
+| OMXSB-2015H2-03 | 2015-12-01 | 2016-01-15 |
+| OMXSB-2015H2-04 | 2015-12-01 | 2016-01-15 |
+| OMXSB-2015H2-05 | 2015-12-01 | 2016-01-15 |
+| OMXSB-2015H2-06 | 2015-12-01 | 2016-01-15 |
+| OMXSB-2015H2-07 | 2015-12-01 | 2016-01-15 |
+| OMXSB-2015H2-08 | 2015-12-01 | saknas |
+| OMXSB-2015H2-10 | 2015-12-01 | saknas |
+| OMXSB-2016H1-01 | 2016-06-01 | 2016-07-15 |
+| OMXSB-2016H1-02 | 2016-06-01 | 2016-07-15 |
+| OMXSB-2016H1-03 | 2016-06-01 | 2016-07-15 |
+| OMXSB-2016H1-04 | 2016-06-01 | 2016-07-15 |
+| OMXSB-2016H1-05 | 2016-06-01 | 2016-07-15 |
+| OMXSB-2016H1-06 | 2016-06-01 | 2016-07-15 |
+| OMXSB-2016H1-07 | 2016-06-01 | 2016-07-15 |
+| OMXSB-2016H1-08 | 2016-06-01 | 2016-07-15 |
+| OMXSB-2016H2-02 | 2016-12-01 | 2017-01-13 |
+| OMXSB-2016H2-03 | 2016-12-01 | 2017-01-13 |
+| OMXSB-2016H2-04 | 2016-12-01 | 2017-01-13 |
+| OMXSB-2016H2-05 | 2016-12-01 | 2017-01-13 |
+| OMXSB-2016H2-06 | 2016-12-01 | 2017-01-13 |
+| OMXSB-2016H2-07 | 2016-12-01 | 2017-01-13 |
+| OMXSB-2016H2-08 | 2016-12-01 | 2017-01-13 |
+| OMXSB-2016H2-09 | 2016-12-01 | 2017-01-13 |
+| OMXSB-2016H2-10 | 2016-12-01 | 2017-01-13 |
+| OMXSB-2016H2-11 | 2016-12-01 | 2017-01-13 |
+| OMXSB-2016H2-12 | 2016-12-01 | 2017-01-13 |
+| OMXSB-2016H2-13 | 2016-12-01 | 2017-01-13 |
+| OMXSB-2016H2-14 | 2016-12-01 | 2017-01-13 |
+| OMXSB-2017H1-02 | 2017-06-01 | 2017-07-14 |
+| OMXSB-2017H1-03 | 2017-06-01 | 2017-07-14 |
+| OMXSB-2017H1-04 | 2017-06-01 | 2017-07-14 |
+| OMXSB-2017H1-05 | 2017-06-01 | 2017-07-14 |
+| OMXSB-2017H1-06 | 2017-06-01 | 2017-07-14 |
+| OMXSB-2017H1-07 | 2017-06-01 | 2017-07-14 |
+| OMXSB-2017H1-08 | 2017-06-01 | 2017-07-14 |
+| OMXSB-2017H1-09 | 2017-06-01 | 2017-07-14 |
+| OMXSB-2017H1-10 | 2017-06-01 | 2017-07-14 |
+| OMXSB-2017H2-01 | saknas | 2018-01-15 |
+| OMXSB-2017H2-02 | saknas | 2018-01-15 |
+| OMXSB-2017H2-03 | 2017-12-01 | 2018-01-15 |
+| OMXSB-2017H2-04 | 2017-12-01 | 2018-01-15 |
+| OMXSB-2017H2-05 | 2017-12-01 | 2018-01-15 |
+| OMXSB-2017H2-06 | saknas | 2018-01-15 |
+| OMXSB-2017H2-07 | saknas | 2018-01-15 |
+| OMXSB-2017H2-08 | 2017-12-01 | 2018-01-15 |
+| OMXSB-2017H2-09 | saknas | 2018-01-15 |
+| OMXSB-2017H2-10 | 2017-12-01 | 2018-01-15 |
+| OMXSB-2017H2-12 | 2017-12-01 | 2018-01-15 |
+| OMXSB-2017H2-13 | 2017-12-01 | 2018-01-15 |
+| OMXSB-2017H2-14 | 2017-12-01 | 2018-01-15 |
+| OMXSB-2018H1-01 | 2018-06-01 | 2018-07-16 |
+| OMXSB-2018H1-02 | 2018-06-01 | 2018-07-16 |
+| OMXSB-2018H1-03 | 2018-06-01 | 2018-07-16 |
+| OMXSB-2018H1-04 | 2018-06-01 | 2018-07-16 |
+| OMXSB-2018H1-05 | 2018-06-01 | 2018-07-16 |
+| OMXSB-2018H1-06 | 2018-06-01 | 2018-07-16 |
+| OMXSB-2018H1-07 | 2018-06-01 | 2018-07-16 |
+| OMXSB-2018H1-08 | 2018-06-01 | 2018-07-16 |
+| OMXSB-2018H1-09 | 2018-06-01 | 2018-07-16 |
+| OMXSB-2018H1-10 | 2018-06-01 | 2018-07-16 |
+| OMXSB-2018H1-11 | 2018-06-01 | 2018-07-16 |
+| OMXSB-2018H1-12 | 2018-06-01 | 2018-07-16 |
+| OMXSB-2018H2-01 | 2018-12-03 | 2019-01-17 |
+| OMXSB-2018H2-02 | 2018-12-03 | 2019-01-17 |
+| OMXSB-2018H2-03 | 2018-12-03 | 2019-01-17 |
+| OMXSB-2018H2-04 | 2018-12-03 | 2019-01-17 |
+| OMXSB-2018H2-05 | 2018-12-03 | 2019-01-17 |
+| OMXSB-2018H2-06 | 2018-12-03 | 2019-01-17 |
+| OMXSB-2018H2-07 | 2018-12-03 | 2019-01-17 |
+| OMXSB-2018H2-08 | 2018-12-03 | 2019-01-17 |
+| OMXSB-2018H2-09 | 2018-12-03 | 2019-01-17 |
+| OMXSB-2018H2-10 | 2018-12-03 | 2019-01-17 |
+| OMXSB-2018H2-11 | 2018-12-03 | 2019-01-17 |
+| OMXSB-2018H2-12 | 2018-12-03 | 2019-01-17 |
+| OMXSB-2018H2-13 | 2018-12-03 | 2019-01-17 |
+| OMXSB-2018H2-14 | 2018-12-03 | 2019-01-17 |
+| OMXSB-2018H2-15 | 2018-12-03 | 2019-01-17 |
+| OMXSB-2018H2-16 | 2018-12-03 | 2019-01-17 |
+| OMXSB-2019H1-01 | 2019-06-03 | 2019-07-18 |
+| OMXSB-2019H1-02 | 2019-06-03 | 2019-07-18 |
+| OMXSB-2019H1-03 | saknas | 2019-07-18 |
+| OMXSB-2019H1-04 | 2019-06-03 | 2019-07-18 |
+| OMXSB-2019H1-06 | 2019-06-03 | 2019-07-18 |
+| OMXSB-2019H1-07 | 2019-06-03 | 2019-07-18 |
+| OMXSB-2019H1-08 | saknas | 2019-07-18 |
+| OMXSB-2019H1-09 | 2019-06-03 | 2019-07-18 |
+| OMXSB-2019H1-10 | 2019-06-03 | 2019-07-18 |
+| OMXSB-2019H1-12 | saknas | 2019-07-18 |
+| OMXSB-2019H1-13 | saknas | 2019-07-18 |
+| OMXSB-2019H1-14 | saknas | 2019-07-18 |
+| OMXSB-2019H2-01 | 2019-12-02 | 2020-01-16 |
+| OMXSB-2019H2-02 | 2019-12-02 | 2020-01-16 |
+| OMXSB-2019H2-04 | 2019-12-02 | 2020-01-16 |
+| OMXSB-2019H2-05 | 2019-12-02 | 2020-01-16 |
+| OMXSB-2019H2-06 | saknas | 2020-01-16 |
+| OMXSB-2019H2-07 | 2019-12-02 | 2020-01-16 |
+| OMXSB-2019H2-09 | 2019-12-02 | 2020-01-16 |
+| OMXSB-2019H2-10 | 2019-12-02 | 2020-01-16 |
+| OMXSB-2019H2-11 | 2019-12-02 | 2020-01-16 |
+| OMXSB-2019H2-12 | 2019-12-02 | 2020-01-16 |
+| OMXSB-2019H2-13 | 2019-12-02 | 2020-01-16 |
+| OMXSB-2020H1-01 | 2020-06-01 | 2020-07-16 |
+| OMXSB-2020H1-02 | 2020-06-01 | 2020-07-16 |
+| OMXSB-2020H1-03 | 2020-06-01 | 2020-07-16 |
+| OMXSB-2020H1-04 | 2020-06-01 | 2020-07-16 |
+| OMXSB-2020H1-05 | 2020-06-01 | 2020-07-16 |
+| OMXSB-2020H1-06 | 2020-06-01 | 2020-07-16 |
+| OMXSB-2020H1-07 | 2020-06-01 | 2020-07-16 |
+| OMXSB-2020H1-09 | 2020-06-01 | 2020-07-16 |
+| OMXSB-2020H1-10 | 2020-06-01 | 2020-07-16 |
+| OMXSB-2020H1-11 | 2020-06-01 | 2020-07-16 |
+| OMXSB-2020H2-01 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2020H2-02 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2020H2-03 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2020H2-04 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2020H2-05 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2020H2-06 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2020H2-07 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2020H2-08 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2020H2-09 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2020H2-10 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2020H2-11 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2020H2-12 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2020H2-13 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2020H2-14 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2020H2-15 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2020H2-16 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2020H2-17 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2020H2-18 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2020H2-19 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2020H2-20 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2020H2-21 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2020H2-22 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2020H2-23 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2020H2-24 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2020H2-25 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2020H2-26 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2020H2-27 | 2020-12-01 | 2021-01-15 |
+| OMXSB-2021H1-01 | 2021-06-01 | 2021-07-16 |
+| OMXSB-2021H1-02 | 2021-06-01 | saknas |
+| OMXSB-2021H1-03 | 2021-06-01 | saknas |
+| OMXSB-2021H1-04 | 2021-06-01 | saknas |
+| OMXSB-2021H1-06 | 2021-06-01 | 2021-07-16 |
+| OMXSB-2021H1-07 | 2021-06-01 | 2021-07-16 |
+| OMXSB-2021H1-08 | 2021-06-01 | 2021-07-16 |
+| OMXSB-2021H1-09 | 2021-06-01 | 2021-07-16 |
+| OMXSB-2021H1-10 | 2021-06-01 | 2021-07-16 |
+| OMXSB-2021H1-11 | 2021-06-01 | 2021-07-16 |
+| OMXSB-2021H1-12 | 2021-06-01 | 2021-07-16 |
+| OMXSB-2021H1-13 | 2021-06-01 | 2021-07-16 |
+| OMXSB-2021H1-14 | 2021-06-01 | saknas |
+| OMXSB-2021H2-01 | 2021-12-01 | 2022-01-14 |
+| OMXSB-2021H2-02 | 2021-12-01 | 2022-01-14 |
+| OMXSB-2021H2-03 | 2021-12-01 | 2022-01-14 |
+| OMXSB-2021H2-04 | 2021-12-01 | 2022-01-14 |
+| OMXSB-2021H2-05 | 2021-12-01 | 2022-01-14 |
+| OMXSB-2021H2-06 | 2021-12-01 | 2022-01-14 |
+| OMXSB-2021H2-07 | 2021-12-01 | 2022-01-14 |
+| OMXSB-2021H2-10 | 2021-12-01 | 2022-01-14 |
+| OMXSB-2021H2-11 | 2021-12-01 | 2022-01-14 |
+| OMXSB-2021H2-13 | 2021-12-01 | 2022-01-14 |
+| OMXSB-2021H2-14 | 2021-12-01 | 2022-01-14 |
+| OMXSB-2021H2-15 | 2021-12-01 | 2022-01-14 |
+| OMXSB-2021H2-16 | 2021-12-01 | 2022-01-14 |
+| OMXSB-2021H2-17 | 2021-12-01 | 2022-01-14 |
+| OMXSB-2021H2-18 | 2021-12-01 | 2022-01-14 |
+| OMXSB-2021H2-20 | 2021-12-01 | 2022-01-14 |
+| OMXSB-2021H2-21 | 2021-12-01 | 2022-01-14 |
+| OMXSB-2021H2-23 | 2021-12-01 | 2022-01-14 |
+| OMXSB-2021H2-24 | 2021-12-01 | 2022-01-14 |
+| OMXSB-2022H1-01 | 2022-06-01 | 2022-07-15 |
+| OMXSB-2022H1-02 | 2022-06-01 | 2022-07-15 |
+| OMXSB-2022H1-03 | 2022-06-01 | 2022-07-15 |
+| OMXSB-2022H1-04 | 2022-06-01 | 2022-07-15 |
+| OMXSB-2022H1-05 | 2022-06-01 | 2022-07-15 |
+| OMXSB-2022H1-06 | 2022-06-01 | 2022-07-15 |
+| OMXSB-2022H1-07 | 2022-06-01 | 2022-07-15 |
+| OMXSB-2022H1-08 | 2022-06-01 | 2022-07-15 |
+| OMXSB-2022H1-09 | 2022-06-01 | 2022-07-15 |
+| OMXSB-2022H1-10 | 2022-06-01 | 2022-07-15 |
+| OMXSB-2022H1-11 | 2022-06-01 | 2022-07-15 |
+| OMXSB-2022H1-12 | 2022-06-01 | 2022-07-15 |
+| OMXSB-2022H1-13 | 2022-06-01 | 2022-07-15 |
+| OMXSB-2022H1-14 | 2022-06-01 | 2022-07-15 |
+| OMXSB-2022H1-15 | 2022-06-01 | 2022-07-15 |
+| OMXSB-2022H1-16 | 2022-06-01 | 2022-07-15 |
+| OMXSB-2022H1-17 | 2022-06-01 | 2022-07-15 |
+| OMXSB-2022H1-18 | 2022-06-01 | 2022-07-15 |
+| OMXSB-2022H1-19 | 2022-06-01 | 2022-07-15 |
+| OMXSB-2022H1-20 | 2022-06-01 | 2022-07-15 |
+| OMXSB-2022H1-21 | 2022-06-01 | 2022-07-15 |
+| OMXSB-2022H1-22 | 2022-06-01 | 2022-07-15 |
+| OMXSB-2022H2-01 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2022H2-02 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2022H2-03 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2022H2-04 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2022H2-05 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2022H2-06 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2022H2-07 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2022H2-08 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2022H2-09 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2022H2-10 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2022H2-11 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2022H2-12 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2022H2-13 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2022H2-14 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2022H2-15 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2022H2-16 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2022H2-17 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2022H2-18 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2022H2-19 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2022H2-21 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2022H2-22 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2022H2-23 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2022H2-24 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2022H2-25 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2022H2-26 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2022H2-27 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2022H2-28 | 2022-12-01 | 2023-01-13 |
+| OMXSB-2023H1-01 | 2023-06-01 | 2023-07-14 |
+| OMXSB-2023H1-02 | 2023-06-01 | 2023-07-14 |
+| OMXSB-2023H1-03 | 2023-06-01 | 2023-07-14 |
+| OMXSB-2023H1-04 | 2023-06-01 | 2023-07-14 |
+| OMXSB-2023H1-05 | saknas | 2023-07-14 |
+| OMXSB-2023H1-06 | 2023-06-01 | 2023-07-14 |
+| OMXSB-2023H1-07 | saknas | 2023-07-14 |
+| OMXSB-2023H1-09 | 2023-06-01 | 2023-07-14 |
+| OMXSB-2023H1-11 | saknas | 2023-07-14 |
+| OMXSB-2023H1-12 | 2023-06-01 | 2023-07-14 |
+| OMXSB-2023H1-13 | 2023-06-01 | 2023-07-14 |
+| OMXSB-2023H1-14 | saknas | 2023-07-14 |
+| OMXSB-2023H1-15 | 2023-06-01 | 2023-07-14 |
+| OMXSB-2023H1-16 | 2023-06-01 | 2023-07-14 |
+| OMXSB-2023H1-17 | 2023-06-01 | 2023-07-14 |
+| OMXSB-2023H2-01 | 2023-12-01 | 2024-01-15 |
+| OMXSB-2023H2-02 | 2023-12-01 | 2024-01-15 |
+| OMXSB-2023H2-03 | 2023-12-01 | 2024-01-15 |
+| OMXSB-2023H2-04 | 2023-12-01 | 2024-01-15 |
+| OMXSB-2023H2-05 | 2023-12-01 | 2024-01-15 |
+| OMXSB-2023H2-06 | 2023-12-01 | 2024-01-15 |
+| OMXSB-2023H2-07 | 2023-12-01 | 2024-01-15 |
+| OMXSB-2023H2-08 | 2023-12-01 | 2024-01-15 |
+| OMXSB-2023H2-09 | 2023-12-01 | 2024-01-15 |
+| OMXSB-2023H2-10 | 2023-12-01 | 2024-01-15 |
+| OMXSB-2023H2-11 | 2023-12-01 | saknas |
+| OMXSB-2023H2-12 | 2023-12-01 | 2024-01-15 |
+| OMXSB-2023H2-13 | 2023-12-01 | 2024-01-15 |
+| OMXSB-2024H1-01 | 2024-06-03 | 2024-07-18 |
+| OMXSB-2024H1-02 | 2024-06-03 | 2024-07-18 |
+| OMXSB-2024H1-03 | 2024-06-03 | 2024-07-18 |
+| OMXSB-2024H1-04 | 2024-06-03 | 2024-07-18 |
+| OMXSB-2024H1-05 | 2024-06-03 | 2024-07-18 |
+| OMXSB-2024H1-06 | 2024-06-03 | 2024-07-18 |
+| OMXSB-2024H1-07 | 2024-06-03 | 2024-07-18 |
+| OMXSB-2024H1-08 | 2024-06-03 | 2024-07-18 |
+| OMXSB-2024H1-09 | 2024-06-03 | 2024-07-18 |
+| OMXSB-2024H1-10 | 2024-06-03 | 2024-07-18 |
+| OMXSB-2024H1-11 | 2024-06-03 | 2024-07-18 |
+| OMXSB-2024H1-12 | 2024-06-03 | 2024-07-18 |
+| OMXSB-2024H1-13 | 2024-06-03 | 2024-07-18 |
+| OMXSB-2024H1-14 | 2024-06-03 | 2024-07-18 |
+| OMXSB-2024H1-15 | 2024-06-03 | 2024-07-18 |
+| OMXSB-2024H2-01 | 2024-12-02 | 2025-01-16 |
+| OMXSB-2024H2-02 | 2024-12-02 | 2025-01-16 |
+| OMXSB-2024H2-03 | 2024-12-02 | 2025-01-16 |
+| OMXSB-2024H2-04 | 2024-12-02 | 2025-01-16 |
+| OMXSB-2024H2-05 | 2024-12-02 | 2025-01-16 |
+| OMXSB-2024H2-06 | 2024-12-02 | 2025-01-16 |
+| OMXSB-2024H2-07 | 2024-12-02 | 2025-01-16 |
+| OMXSB-2024H2-08 | 2024-12-02 | 2025-01-16 |
+| OMXSB-2024H2-09 | 2024-12-02 | 2025-01-16 |
+| OMXSB-2024H2-10 | 2024-12-02 | 2025-01-16 |
+| OMXSB-2024H2-11 | 2024-12-02 | 2025-01-16 |
+| OMXSB-2024H2-12 | 2024-12-02 | 2025-01-16 |
+| OMXSB-2024H2-13 | 2024-12-02 | 2025-01-16 |
+| OMXSB-2024H2-14 | 2024-12-02 | 2025-01-16 |
+| OMXSB-2024H2-16 | 2024-12-02 | 2025-01-16 |
+| OMXSB-2025H1-01 | 2025-06-02 | 2025-07-17 |
+| OMXSB-2025H1-03 | 2025-06-02 | 2025-07-17 |
+| OMXSB-2025H1-04 | 2025-06-02 | 2025-07-17 |
+| OMXSB-2025H1-05 | 2025-06-02 | 2025-07-17 |
+| OMXSB-2025H1-06 | 2025-06-02 | 2025-07-17 |
+| OMXSB-2025H1-07 | 2025-06-02 | 2025-07-17 |
+| OMXSB-2025H1-08 | 2025-06-02 | 2025-07-17 |
+| OMXSB-2025H1-09 | 2025-06-02 | 2025-07-17 |
+| OMXSB-2025H1-10 | 2025-06-02 | 2025-07-17 |
+| OMXSB-2025H1-11 | 2025-06-02 | 2025-07-17 |
+| OMXSB-2025H1-12 | 2025-06-02 | 2025-07-17 |
+| OMXSB-2025H1-14 | 2025-06-02 | 2025-07-17 |
+| OMXSB-2025H1-15 | 2025-06-02 | 2025-07-17 |
+| OMXSB-2025H2-01 | 2025-12-01 | 2026-01-15 |
+| OMXSB-2025H2-02 | 2025-12-01 | 2026-01-15 |
+| OMXSB-2025H2-03 | 2025-12-01 | 2026-01-15 |
+| OMXSB-2025H2-04 | 2025-12-01 | 2026-01-15 |
+| OMXSB-2025H2-05 | 2025-12-01 | 2026-01-15 |
+| OMXSB-2025H2-06 | 2025-12-01 | 2026-01-15 |
+| OMXSB-2025H2-07 | 2025-12-01 | 2026-01-15 |
+| OMXSB-2025H2-08 | 2025-12-01 | 2026-01-15 |
+| OMXSB-2025H2-10 | 2025-12-01 | 2026-01-15 |
+| OMXSB-2025H2-11 | 2025-12-01 | 2026-01-15 |
+| OMXSB-2025H2-12 | 2025-12-01 | 2026-01-15 |
+| OMXSB-2025H2-13 | 2025-12-01 | 2026-01-15 |
+| OMXSB-2025H2-14 | 2025-12-01 | 2026-01-15 |
+| OMXSB-2025H2-15 | 2025-12-01 | 2026-01-15 |
+| OMXSB-2025H2-16 | 2025-12-01 | 2026-01-15 |
+| OMXSB-2025H2-17 | 2025-12-01 | 2026-01-15 |
+| OMXSB-2026H1-01 | 2026-06-01 | 2026-07-16 |
+| OMXSB-2026H1-02 | 2026-06-01 | 2026-07-16 |
+| OMXSB-2026H1-03 | 2026-06-01 | 2026-07-16 |
+| OMXSB-2026H1-04 | 2026-06-01 | 2026-07-16 |
+| OMXSB-2026H1-05 | 2026-06-01 | 2026-07-16 |
+| OMXSB-2026H1-06 | 2026-06-01 | 2026-07-16 |
+| OMXSB-2026H1-07 | 2026-06-01 | 2026-07-16 |
+| OMXSB-2026H1-08 | 2026-06-01 | 2026-07-16 |
+| OMXSB-2026H1-09 | 2026-06-01 | 2026-07-16 |
+| OMXSB-2026H1-10 | 2026-06-01 | 2026-07-16 |
+| OMXSB-2026H1-11 | 2026-06-01 | 2026-07-16 |
+| OMXSB-2026H1-12 | 2026-06-01 | 2026-07-16 |
+| OMXSB-2026H1-13 | 2026-06-01 | 2026-07-16 |
+| OMXSB-2026H1-14 | 2026-06-01 | 2026-07-16 |
+| OMXSB-2026H1-15 | 2026-06-01 | 2026-07-16 |
+| OMXSB-2026H1-16 | 2026-06-01 | 2026-07-16 |
+| OMXSB-2026H1-17 | 2026-06-01 | 2026-07-16 |
+| OMXSB-2026H1-18 | 2026-06-01 | 2026-07-16 |
+| OMXSB-2026H1-19 | 2026-06-01 | 2026-07-16 |
+| OMXSB-2026H1-20 | 2026-06-01 | 2026-07-16 |
+| OMXSB-2026H1-21 | 2026-06-01 | 2026-07-16 |
+| OMXSB-2026H1-22 | 2026-06-01 | 2026-07-16 |
+| OMXSB-2026H1-23 | 2026-06-01 | 2026-07-16 |
