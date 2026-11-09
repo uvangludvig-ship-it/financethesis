@@ -15,5 +15,13 @@ for i, p in enumerate(FILES):
     spec = importlib.util.spec_from_file_location(p.stem.replace('-', '_'), p); m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
     if i: doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
     m.build(doc); print('  med:', p.name)
-save(doc, 'all_tables')
+path = save(doc, 'all_tables')
+# PDF-kopia (läsbar direkt på GitHub) om LibreOffice finns; annars hoppas den över
+import shutil, subprocess
+so = shutil.which('soffice')
+if so:
+    subprocess.run([so, '--headless', '--convert-to', 'pdf', str(path), '--outdir', str(path.parent)], capture_output=True, timeout=300)
+    print('skrev', path.with_suffix('.pdf') if path.with_suffix('.pdf').exists() else 'ingen PDF (konverteringen misslyckades)')
+else:
+    print('ingen PDF: LibreOffice (soffice) saknas')
 print('Metod: samlingsdokument, samma innehåll som de enskilda filerna (se varje tabells not för inferens)')
