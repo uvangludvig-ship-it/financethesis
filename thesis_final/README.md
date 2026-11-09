@@ -7,7 +7,7 @@ Allt som behövs för att få fram uppsatsens huvudresultat: datan, koden och en
 Öppna mappen `thesis_final` i VS Code och kör `run_all.py` (Run Python File), eller i terminalen:
 
 ```
-pip install pandas==3.0.5 numpy==2.5.3 scipy==1.18.1 python-docx==1.2.0
+pip install pandas==3.0.5 numpy==2.5.3 scipy==1.18.1 python-docx==1.2.0 matplotlib==3.11.2
 python3 run_all.py
 ```
 
@@ -17,14 +17,16 @@ Det tar cirka tre minuter. Först kontrolleras att de 16 datafilerna är exakt s
 
 | Fil | Vad den gör | Skriver till |
 |---|---|---|
-| `code/01_effect_table.py` | Effekten per period, år och decennium (G&S tabell I), med intervall och wild cluster bootstrap | `results/effect/` |
+| `code/01_effect_table.py` | Effekten per period och decennium (G&S tabell I; årsraderna kommer ur data/comparison), med intervall och wild cluster bootstrap | `results/effect/` |
 | `code/returns.py` | Dagliga överavkastningar mot OMXSBGI, används av 01 | |
 | `code/02_fund_demand.py` | Indexfondernas köp (D), priset per köpt procent (M), vem som köper, ägarandel per år | `results/fund_demand/` |
 | `code/03_fund_demand_fi_check.py` | M med FI:s bredare D, som kontroll | `results/fi_check/` |
 | `code/04_msci_overlap_match.py` | Vilka OMXSB-händelser som sammanfaller med en ändring i MSCI Sweden | `results/msci_overlap/` |
 | `code/05_msci_overlap_results.py` | Effekt och M med och utan de händelserna | `results/msci_overlap/` |
 | `code/06_mde.py` | Minsta påvisbara effekt för huvudtesterna | `results/mde/` |
-| `code/07_word_tables.py` | Effekttabellen och tabellen år för år i Word | `results/tables/` |
+| `code/output/01_…` till `12_…` | En fil per tabell eller figur, i Greenwood och Sammons ordning (figur 1, tabell 1–2, figur 2–4, tabell 3–6, bilaga A2–A3). Varje fil kontrollerar sina siffror mot källfilen och skriver en egen `.docx` (figurer även `.png`) | `results/tables/` |
+| `code/output/_style.py` | Gemensam Word- och figurstil, numreringen av tabeller och figurer (`NUM`) och metodtexterna i noterna | |
+| `code/output/99_all_tables.py` | Alla tabeller och figurer i ett dokument, `all_tables.docx` | `results/tables/` |
 | `code/08_check_numbers.py` | Jämför 58 siffror med väntade värden | `results/check.txt` |
 
 ## Datan

@@ -14,8 +14,8 @@ def ratio(d, dc, B=4999):
     rv = d.review.values; u = np.unique(rv); idx = {k: np.where(rv == k)[0] for k in u}; ks = []
     for b in range(B):
         ii = np.concatenate([idx[k] for k in rng.choice(u, len(u))]); dm = d[dc].values[ii].mean(); cm = d.y_tot.values[ii].mean()
-        ks.append(cm / dm if dm > 0 else np.nan)
-    ks = np.array(ks); return d.y_tot.mean() / d[dc].mean(), np.nanquantile(ks, .025), np.nanquantile(ks, .975)
+        ks.append(cm / dm if dm > 0 else (np.inf if cm >= 0 else -np.inf))   # som 02 och 05: dragningen behålls
+    ks = np.array(ks); return d.y_tot.mean() / d[dc].mean(), np.quantile(ks, .025), np.quantile(ks, .975)
 rows = []
 for ty in ['addition', 'deletion']:
     for split_ok in [False, True]:
@@ -25,4 +25,7 @@ for ty in ['addition', 'deletion']:
         if not split_ok:
             v = ratio(d, 'D_V'); row.update(D_V=d.D_V.mean(), M_V=v[0], lo_V=v[1], hi_V=v[2])
         rows.append(row)
-R = pd.DataFrame(rows); os.makedirs(RES / 'fi_check', exist_ok=True); R.to_csv(RES / 'fi_check' / 'fi_m_kontroll.csv', index=False); print(R.round(2).to_string(index=False))
+METOD = '95 % intervall för M (lo_FI/hi_FI, lo_V/hi_V): parvis klusterbootstrap per översyn, percentil, 4 999 dragningar'
+for r_ in rows: r_['ci_metod'] = METOD
+print('Metod: ' + METOD)
+R = pd.DataFrame(rows); os.makedirs(RES / 'fi_check', exist_ok=True); R.to_csv(RES / 'fi_check' / 'fi_m_kontroll.csv', index=False); print(R.drop(columns=['ci_metod']).round(2).to_string(index=False))
