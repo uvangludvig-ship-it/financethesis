@@ -1,4 +1,4 @@
-# Tabell 1 rättad: stjärnor från wild cluster bootstrap, panel C (decennier, G&S kalenderår, sedan 2010),
+# Tabell 1 rättad: stjärnor och 95 % intervall från wild cluster bootstrap (intervallet genom testinversion, 9 nov), panel C (decennier, G&S kalenderår, sedan 2010),
 # panel D (har effekten minskat), panel E (varje startår). CAR från returns.py, som återskapar replikeringens tot exakt.
 # Ingen ny data, inga nya regler. Körs från thesis_final: python3 code/01_effect_table.py
 import os
@@ -42,20 +42,38 @@ rng = np.random.default_rng(20261103)
 WEBB = np.array([-np.sqrt(1.5), -1, -np.sqrt(.5), np.sqrt(.5), 1, np.sqrt(1.5)])
 def wdraw(B, Gn): return rng.choice([-1., 1.], (B, Gn)) if Gn >= 12 else rng.choice(WEBB, (B, Gn))
 def lin(X, y, g, c, B=9999):
+    # Skattning c'b, klustrat SE (CR1) och restriktiv wild cluster bootstrap (WCR) med samma 9 999 dragningar för p-värdet och
+    # intervallet. Intervallet = alla värden th där WCR-testet av H0: c'b = th inte förkastar på 5 % (testinversion, som boottest).
     X = np.asarray(X, float); y = np.asarray(y, float); c = np.asarray(c, float)
     ok = np.isfinite(y) & np.isfinite(X).all(1); X = X[ok]; y = y[ok]
     codes = pd.factorize(np.asarray(g)[ok])[0]; Gn = codes.max() + 1; n, k = X.shape
     XtXi = np.linalg.pinv(X.T @ X); Am = XtXi @ X.T; q = X @ (XtXi @ c); adj = Gn / (Gn - 1) * (n - 1) / max(n - k, 1)
+    Hq = np.zeros((n, Gn)); Hq[np.arange(n), codes] = q   # summerar residual*q per kluster
     def tse(Y):
-        Bm = Y @ Am.T; Ee = Y - Bm @ X.T
-        sg = np.stack([np.bincount(codes, weights=row, minlength=Gn) for row in Ee * q]); return Bm @ c, np.sqrt((sg ** 2).sum(1) * adj)
+        Bm = Y @ Am.T; Ee = Y - Bm @ X.T; sg = Ee @ Hq; return Bm @ c, np.sqrt((sg ** 2).sum(1) * adj)
     t0, s0 = tse(y[None, :]); t0, s0 = t0[0], s0[0]; qq = tdist.ppf(.975, Gn - 1)
-    b = Am @ y; br = b - XtXi @ c * (c @ b) / (c @ XtXi @ c); fr = X @ br; er = y - fr; ts = []
-    for _ in range(B // 1000 + 1):
-        W = wdraw(1000, Gn); bs, ss = tse(fr[None, :] + er[None, :] * W[:, codes]); ts.append(bs / ss)
-    p = float((np.abs(np.concatenate(ts)[:B]) >= abs(t0 / s0)).mean())
-    e = y - X @ b; se_hc1 = float(np.sqrt((XtXi @ (X.T * (e ** 2)) @ X @ XtXi)[np.ix_(c != 0, c != 0)].sum() * n / (n - k))) if (c != 0).sum() == 1 else np.nan
-    return dict(b=float(t0), se=float(s0), lo=float(t0 - qq * s0), hi=float(t0 + qq * s0), p_cr1=float(2 * tdist.sf(abs(t0 / s0), Gn - 1)), p_wcb=p, se_hc1=se_hc1, n=int(n), G=int(Gn))
+    Wc = np.concatenate([wdraw(1000, Gn) for _ in range(B // 1000 + 1)])[:B][:, codes]
+    v = XtXi @ c / (c @ XtXi @ c)   # förskjutning så att c'b(y - th*Xv) = c'b - th; residualerna och SE är oförändrade
+    def pw(th):
+        ys = y - th * (X @ v); b = Am @ ys; br = b - XtXi @ c * (c @ b) / (c @ XtXi @ c); fr = X @ br; er = ys - fr
+        bs, ss = tse(fr[None, :] + er[None, :] * Wc); return float((np.abs(bs / ss) >= abs((t0 - th) / s0)).mean())
+    def kant(sgn):
+        inne, ute = t0, t0 + sgn * qq * s0
+        while pw(ute) > .05:   # obegränsat om testet inte förkastar inom 20 standardfel (få kluster bakom kontrasten)
+            if abs(ute - t0) >= 20 * s0 * (1 - 1e-9): return sgn * np.inf
+            ute = t0 + sgn * min(2 * abs(ute - t0), 20 * s0)
+        while abs(ute - inne) > 1e-4 * max(s0, 1e-12):
+            m = (inne + ute) / 2
+            if pw(m) > .05: inne = m
+            else: ute = m
+        return (inne + ute) / 2
+    p = pw(0.0)
+    e = y - X @ (Am @ y); se_hc1 = float(np.sqrt((XtXi @ (X.T * (e ** 2)) @ X @ XtXi)[np.ix_(c != 0, c != 0)].sum() * n / (n - k))) if (c != 0).sum() == 1 else np.nan
+    return dict(b=float(t0), se=float(s0), lo=kant(-1), hi=kant(1), lo_cr1=float(t0 - qq * s0), hi_cr1=float(t0 + qq * s0),
+                p_cr1=float(2 * tdist.sf(abs(t0 / s0), Gn - 1)), p_wcb=p, se_hc1=se_hc1, n=int(n), G=int(Gn),
+                vikter='Rademacher' if Gn >= 12 else 'Webb', ci_metod=CI_METOD, p_metod=P_METOD)
+CI_METOD = '95 % intervall: invertering av restriktiv wild cluster bootstrap per översyn (9 999 dragningar)'
+P_METOD = 'p och stjärnor: restriktiv wild cluster bootstrap per översyn (Rademacher om G>=12, annars Webb; 9 999 dragningar)'
 def stars(p): return '***' if p < .01 else '**' if p < .05 else '*' if p < .10 else ''
 def cell(r): return f"{r['b']:.2f}{stars(r['p_wcb'])} ({r['lo']:.2f} till {r['hi']:.2f})"
 ev['ann'] = [wsum(r, a - 1, a + 1) for r, a in zip(ev.RIC, ev.iAD)]
@@ -89,25 +107,28 @@ for ty in ['addition', 'deletion']:
     codes = pd.factorize(g)[0]; G = codes.max() + 1; XtXi = np.linalg.inv(X.T @ X); b = XtXi @ X.T @ y; e = y - X @ b
     S = sum(np.outer(X[codes == k].T @ e[codes == k], X[codes == k].T @ e[codes == k]) for k in range(G)); V = XtXi @ S @ XtXi * G / (G - 1) * (len(y) - 1) / (len(y) - 4)
     Rm = np.array([[1, -1, 0, 0], [0, 1, -1, 0], [0, 0, 1, -1]], float); W = (Rm @ b) @ np.linalg.inv(Rm @ V @ Rm.T) @ (Rm @ b) / 3
-    rows.append(dict(panel='D', typ=ty, fönster='tot', urval='F-test lika medel i fyra perioder', b=float(W), p_cr1=float(fdist.sf(W, 3, G - 1)), n=len(y), G=int(G)))
+    rows.append(dict(panel='D', typ=ty, fönster='tot', urval='F-test lika medel i fyra perioder', b=float(W), p_cr1=float(fdist.sf(W, 3, G - 1)), n=len(y), G=int(G), ci_metod='inget intervall (F-test)', p_metod='analytiskt: Wald med CR1, p från F(3, G-1), ingen bootstrap'))
 T = pd.DataFrame(rows); T.to_csv(f'{OUT}/tabell1_lang.csv', index=False)
 # läsbara tabeller
 with open(f'{OUT}/TABELL1.md', 'w') as f:
-    f.write('# Tabell 1, rättad: stjärnor från wild cluster bootstrap per översyn\n\nCAR i procent mot OMXSBGI, totalavkastning, 95 % intervall klustrat per översyn (t med G−1). Stjärnor: * p<0,10, ** p<0,05, *** p<0,01 från restriktiv wild cluster bootstrap (Rademacher om G≥12, annars Webb; 9 999 dragningar). Källa: 01_effect_table.py, CAR från returns.py som återskapar replikeringens tot exakt.\n\n')
+    f.write('# Tabell 1, rättad: intervall och stjärnor från wild cluster bootstrap per översyn\n\nCAR i procent mot OMXSBGI, totalavkastning. **BOOTSTRAP:** 95 % intervall i parentes = alla värden som restriktiv wild cluster bootstrap per översyn inte förkastar på 5 % (testinversion). Stjärnor: * p<0,10, ** p<0,05, *** p<0,01 från samma bootstrap och samma dragningar (Rademacher om G≥12, annars Webb; 9 999 dragningar), så intervall och stjärnor stämmer alltid överens. **ANALYTISKT (jämförelse):** raderna märkta klustrat = CR1-standardfel per översyn, t med G−1. Källa: 01_effect_table.py, CAR från returns.py som återskapar replikeringens tot exakt.\n\n')
     for ty, nm in [('addition', 'Panel A: Tillägg'), ('deletion', 'Panel B: Borttag')]:
         f.write(f'## {nm}\n\n| Fönster | ' + ' | '.join(PERS) + ' |\n|---|---|---|---|---|\n')
         for w, wl in WIN.items():
             f.write(f'| {wl} | ' + ' | '.join(cell(T[(T.panel == 'A/B') & (T.typ == ty) & (T.fönster == w) & (T.urval == p)].iloc[0]) for p in PERS) + ' |\n')
         a = T[(T.panel == 'A/B') & (T.typ == ty) & (T.fönster == 'tot')].set_index('urval')
         f.write('| Händelser | ' + ' | '.join(str(a.loc[p, 'n']) for p in PERS) + ' |\n| Översyner | ' + ' | '.join(str(a.loc[p, 'G']) for p in PERS) + ' |\n')
-        f.write('| p, klustrat | ' + ' | '.join(f"{a.loc[p, 'p_cr1']:.3f}" for p in PERS) + ' |\n| p, wild bootstrap | ' + ' | '.join(f"{a.loc[p, 'p_wcb']:.3f}" for p in PERS) + ' |\n\n')
-    f.write('## Panel C: sammanslagna perioder, totalt fönster\n\n| Typ | Urval | Händelser | Översyner | Effekt | p, wild bootstrap |\n|---|---|---|---|---|---|\n')
-    for r in T[T.panel == 'C'].itertuples(): f.write(f'| {r.typ} | {r.urval} | {r.n} | {r.G} | {cell(r._asdict())} | {r.p_wcb:.3f} |\n')
+        f.write('| Intervall totalt, klustrat (analytiskt) | ' + ' | '.join(f"{a.loc[p, 'lo_cr1']:.2f} till {a.loc[p, 'hi_cr1']:.2f}" for p in PERS) + ' |\n')
+        f.write('| p totalt, klustrat (analytiskt) | ' + ' | '.join(f"{a.loc[p, 'p_cr1']:.3f}" for p in PERS) + ' |\n| p totalt, wild bootstrap | ' + ' | '.join(f"{a.loc[p, 'p_wcb']:.3f}" for p in PERS) + ' |\n\n')
+    f.write('## Panel C: sammanslagna perioder, totalt fönster\n\n| Typ | Urval | Händelser | Översyner | Effekt (bootstrapintervall) | Intervall, klustrat (analytiskt) | p, wild bootstrap |\n|---|---|---|---|---|---|---|\n')
+    for r in T[T.panel == 'C'].itertuples(): f.write(f'| {r.typ} | {r.urval} | {r.n} | {r.G} | {cell(r._asdict())} | {r.lo_cr1:.2f} till {r.hi_cr1:.2f} | {r.p_wcb:.3f} |\n')
     f.write('\nG&S, USA: tillägg 1990-talet 7,4 %; tillägg 2010-talet under 1 %, inte skild från noll; borttag 2010–2020 −0,6 %.\n\n')
-    f.write('## Panel D: har effekten minskat? Totalt fönster\n\n| Typ | Test | Skattning | Intervall | p, klustrat | p, wild bootstrap | Översyner |\n|---|---|---|---|---|---|---|\n')
+    f.write('## Panel D: har effekten minskat? Totalt fönster\n\n| Typ | Test | Skattning | Intervall, bootstrap | Intervall, klustrat (analytiskt) | p, klustrat (analytiskt) | p, wild bootstrap | Översyner |\n|---|---|---|---|---|---|---|---|\n')
     for r in T[T.panel == 'D'].itertuples():
-        iv = '' if pd.isna(r.lo) else f'{r.lo:.2f} till {r.hi:.2f}'; pw = '' if pd.isna(r.p_wcb) else f'{r.p_wcb:.3f}'
-        f.write(f'| {r.typ} | {r.urval} | {r.b:.2f} | {iv} | {r.p_cr1:.3f} | {pw} | {r.G} |\n')
-    f.write('\n## Panel E: tillägg från varje startår till 2026, totalt fönster\n\n| Från | Händelser | Översyner | Effekt | p, wild bootstrap |\n|---|---|---|---|---|\n')
+        iv = '' if pd.isna(r.lo) else f'{r.lo:.2f} till {r.hi:.2f}'; ia = '' if pd.isna(r.lo_cr1) else f'{r.lo_cr1:.2f} till {r.hi_cr1:.2f}'; pw = '' if pd.isna(r.p_wcb) else f'{r.p_wcb:.3f}'
+        f.write(f'| {r.typ} | {r.urval} | {r.b:.2f} | {iv} | {ia} | {r.p_cr1:.3f} | {pw} | {r.G} |\n')
+    f.write('\n## Panel E: tillägg från varje startår till 2026, totalt fönster\n\n| Från | Händelser | Översyner | Effekt (bootstrapintervall) | p, wild bootstrap |\n|---|---|---|---|---|\n')
     for r in T[T.panel == 'E'].itertuples(): f.write(f'| {r.urval} | {r.n} | {r.G} | {cell(r._asdict())} | {r.p_wcb:.3f} |\n')
+    f.write('\nF-testet i panel D (lika medel i fyra perioder) är analytiskt: Wald med CR1, p från F(3, G−1), ingen bootstrap.\n')
+print('Metod: ' + CI_METOD); print('Metod: ' + P_METOD); print('Metod: analytiska jämförelseintervall (lo_cr1, hi_cr1, p_cr1) = CR1 per översyn, t med G-1; F-testet i panel D är analytiskt')
 print(open(f'{OUT}/TABELL1.md').read())

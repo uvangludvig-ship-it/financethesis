@@ -1,6 +1,9 @@
 # Omräkning med daterad fondklassning (runda 13). Deklaration: fondklassning_omrakning_deklaration.md (4 nov 2026, 17:46:37).
-# Läser tracker_mandates(_kandidat).csv och räknar om D, M (tabell 5 och 6), vem handlar (tabell 7), D per år (figur 1)
+# Läser data/funds/index_fund_list_with_mandates.csv och räknar om D, M (tabell 5 och 6), vem handlar (tabell 7), D per år (figur 1)
 # och SHoF-ägarandelen med tre skikt: B (rena OMXSB-följare), V (B + varianter), C (V + blandfondsdelar).
+# Urval: data/events/omxsb_changes_corrected_2007_2026.csv, 468 händelser. Den saknar 19 borttag som finns i effekttabellen (01):
+# borttag flaggade för uppköp, fusion, nyemission i kris eller stor ändring i aktieantalet (step1_deletion_flags.csv i det gamla repot).
+# 'ar' är här beskedsåret (AD), i 01 och 05 ändringsåret (ED). Ingen periodgräns påverkas; bara årsetiketterna i figur 1.
 # Händelser, CAR, kontroller, urval och inferens är oförändrade från runda 11 och rättelserna 3 nov (handelser_rattade.csv).
 # Körs från thesis_final: python3 code/02_fund_demand.py   (standard: fondlistan i data/funds, resultat i results/fund_demand)
 #   eller: python3 code/02_fund_demand.py <mandatfil> <ignoreras> <utkatalog> [inkl_obelagda=0|1]
@@ -139,6 +142,7 @@ GR = ['OMXSB-B', 'OMXSB-V', 'OMXSB-C', 'OMXS30', 'småbolagsindex', 'övriga pas
 # regel 2: fonden ska rapportera inom 120 dagar före AD och 45 dagar efter ED (i någon aktie); saknat innehav = 0.
 G0 = F[~F.gammal & F.aktier.notna()]
 out, byter, nf = {}, [], {}
+GAMLA_EFTER = []   # fond-händelser där LSEG gav en rad från före beskedet som efter-rad
 ALLA_FONDER = sorted(F.fond.dropna().unique())
 for e, x in G0.groupby('event_id'):
     AD, ED = x.AD.iloc[0], x.ED.iloc[0]
@@ -147,9 +151,14 @@ for e, x in G0.groupby('event_id'):
         if d0 is None or d1 is None: continue
         g0, g1 = grupp(f.lower(), d0), grupp(f.lower(), d1)
         if g0 != g1: byter.append(dict(event_id=e, fond=f, fore=g0, efter=g1, d0=d0.date(), d1=d1.date())); continue
-        out[(e, g0)] = out.get((e, g0), 0.0) + xf[xf.snap == 'efter'].aktier.sum() - xf[xf.snap == 'fore'].aktier.sum()
+        # efter-raden räknas bara om den är rapporterad på eller efter ED: har fonden sålt hela innehavet ger LSEG annars den
+        # senaste raden före beskedet, och då blev nettoförsäljningen 0 i stället för hela innehavet (rättat 9 nov 2026)
+        efter = xf[(xf.snap == 'efter') & (xf.rapport >= ED)].aktier.sum()
+        out[(e, g0)] = out.get((e, g0), 0.0) + efter - xf[xf.snap == 'fore'].aktier.sum()
+        if ((xf.snap == 'efter') & (xf.rapport < ED) & (xf.aktier > 0)).any(): GAMLA_EFTER.append(dict(event_id=e, fond=f))
 NT = pd.Series(out).unstack().reindex(columns=GR).fillna(0.0) if out else pd.DataFrame(columns=GR)
 BY = pd.DataFrame(byter); BY.to_csv(os.path.join(OUT, 'uteslutna_mandatbyte.csv'), index=False)
+log(f'efter-rader från före ED som räknats som 0 (fonden har sålt allt): {len(GAMLA_EFTER)} fond-händelser {GAMLA_EFTER[:10]}')
 log(f'fond-händelser uteslutna för grupp-byte mellan rapporterna: {len(BY)}' + (f" ({BY.fond.nunique()} fonder: {', '.join(sorted(BY.fond.unique())[:12])})" if len(BY) else ''))
 # regel 3: antal fonder per skikt som rapporterar runt händelsen (oavsett innehav), med samma skikt vid båda rapporterna
 KAND = sorted({f for f in ALLA_FONDER if NY.get(f.lower()) in MR}) if not VALID else sorted({f for f in ALLA_FONDER if grupp(f.lower(), pd.Timestamp('2015-01-01')).startswith('OMXSB') or grupp(f.lower(), pd.Timestamp('2025-12-01')).startswith('OMXSB')})
@@ -197,22 +206,41 @@ if VALID:
 rng = np.random.default_rng(20261102)
 WEBB = np.array([-np.sqrt(1.5), -1, -np.sqrt(.5), np.sqrt(.5), 1, np.sqrt(1.5)])
 def wdraw(B, G): return rng.choice([-1., 1.], (B, G)) if G >= 12 else rng.choice(WEBB, (B, G))
+CI_BOOT = '95 % intervall: invertering av restriktiv wild cluster bootstrap per översyn (9 999 dragningar)'
+P_BOOT = 'p: restriktiv wild cluster bootstrap per översyn (Rademacher om G>=12, annars Webb; 9 999 dragningar)'
+CI_ANAL = '95 % intervall: analytiskt, CR1 per översyn, t med G-1 (ingen bootstrap)'
+M_BOOT = '95 % intervall för M: parvis klusterbootstrap (översyner dras med återläggning), percentil, 9 999 dragningar'
 def lin(X, y, g, c, B=9999, boot=True):
+    # boot=True: p och 95 % intervall från samma restriktiva wild cluster bootstrap (intervallet genom testinversion).
+    # boot=False: bara analytiskt CR1-intervall, inget p. lo_cr1/hi_cr1 finns alltid som jämförelse.
     X = np.asarray(X, float); y = np.asarray(y, float); c = np.asarray(c, float)
     ok = np.isfinite(y) & np.isfinite(X).all(1); X = X[ok]; y = y[ok]
     codes = pd.factorize(np.asarray(g)[ok])[0]; G = codes.max() + 1; n, k = X.shape
-    if G < 3 or n <= k: return dict(b=np.nan, se=np.nan, lo=np.nan, hi=np.nan, p=np.nan, n=n, G=G)
+    if G < 3 or n <= k: return dict(b=np.nan, se=np.nan, lo=np.nan, hi=np.nan, p=np.nan, n=n, G=G, ci_metod='för få kluster, ingen inferens')
     XtXi = np.linalg.pinv(X.T @ X); Am = XtXi @ X.T; q = X @ (XtXi @ c); adj = G / (G - 1) * (n - 1) / max(n - k, 1)
+    Hq = np.zeros((n, G)); Hq[np.arange(n), codes] = q
     def tse(Y):
-        Bm = Y @ Am.T; Ee = Y - Bm @ X.T
-        sg = np.stack([np.bincount(codes, weights=row, minlength=G) for row in Ee * q]); return Bm @ c, np.sqrt((sg ** 2).sum(1) * adj)
-    t0, s0 = tse(y[None, :]); t0, s0 = t0[0], s0[0]; qq = tdist.ppf(.975, G - 1); p = np.nan
-    if boot:
-        b = Am @ y; br = b - XtXi @ c * (c @ b) / (c @ XtXi @ c); fr = X @ br; er = y - fr; ts = []
-        for _ in range(B // 1000 + 1):
-            W = wdraw(1000, G); bs, ss = tse(fr[None, :] + er[None, :] * W[:, codes]); ts.append(bs / ss)
-        p = float((np.abs(np.concatenate(ts)[:B]) >= abs(t0 / s0)).mean())
-    return dict(b=float(t0), se=float(s0), lo=float(t0 - qq * s0), hi=float(t0 + qq * s0), p=p, n=int(n), G=int(G))
+        Bm = Y @ Am.T; Ee = Y - Bm @ X.T; sg = Ee @ Hq; return Bm @ c, np.sqrt((sg ** 2).sum(1) * adj)
+    t0, s0 = tse(y[None, :]); t0, s0 = t0[0], s0[0]; qq = tdist.ppf(.975, G - 1)
+    ut = dict(b=float(t0), se=float(s0), lo=float(t0 - qq * s0), hi=float(t0 + qq * s0), lo_cr1=float(t0 - qq * s0), hi_cr1=float(t0 + qq * s0),
+              p=np.nan, n=int(n), G=int(G), ci_metod=CI_ANAL, p_metod='inget p')
+    if not boot: return ut
+    Wc = np.concatenate([wdraw(1000, G) for _ in range(B // 1000 + 1)])[:B][:, codes]
+    v = XtXi @ c / (c @ XtXi @ c)
+    def pw(th):
+        ys = y - th * (X @ v); b = Am @ ys; br = b - XtXi @ c * (c @ b) / (c @ XtXi @ c); fr = X @ br; er = ys - fr
+        bs, ss = tse(fr[None, :] + er[None, :] * Wc); return float((np.abs(bs / ss) >= abs((t0 - th) / s0)).mean())
+    def kant(sgn):
+        inne, ute = t0, t0 + sgn * qq * s0
+        while pw(ute) > .05:   # obegränsat om testet inte förkastar inom 20 standardfel (få kluster bakom kontrasten)
+            if abs(ute - t0) >= 20 * s0 * (1 - 1e-9): return sgn * np.inf
+            ute = t0 + sgn * min(2 * abs(ute - t0), 20 * s0)
+        while abs(ute - inne) > 1e-4 * max(s0, 1e-12):
+            m = (inne + ute) / 2
+            if pw(m) > .05: inne = m
+            else: ute = m
+        return (inne + ute) / 2
+    ut.update(p=pw(0.0), lo=kant(-1), hi=kant(1), ci_metod=CI_BOOT, p_metod=P_BOOT); return ut
 def medel(s, col, boot=False): return lin(np.ones((len(s), 1)), s[col].values, s.review.values, [1.0], boot=boot)
 KC = ['k_oms', 'k_storlek', 'k_wz', 'k_ana']
 def kvot_ci(d, yc, dc, B=9999):   # alla dragningar med; medel-D <= 0 ger ±oändligt (som rättelserna 3 nov)
@@ -230,10 +258,10 @@ for ty in ['addition', 'deletion']:
         for yc in ['y_tot', 'y_lang']:
             for p_ in PERS + list(PER2):
                 d = s0[(s0.per == p_) if p_ in PERS else PER2[p_](s0)]; d = d[d[yc].notna()]
-                if len(d) < 3: rows.append(dict(tabell='5', typ=ty, skikt=dc, fonster=yc, period=p_, n=len(d))); continue
+                if len(d) < 3: rows.append(dict(tabell='5', typ=ty, skikt=dc, fonster=yc, period=p_, n=len(d), ci_metod='för få händelser, ingen inferens')); continue
                 lo, hi, inf = kvot_ci(d, yc, dc)
                 rows.append(dict(tabell='5', typ=ty, skikt=dc, fonster=yc, period=p_, n=len(d), G=d.review.nunique(), car=d[yc].mean(), D=d[dc].mean(),
-                                 M=d[yc].mean() / d[dc].mean() if d[dc].mean() > 0 else np.nan, lo=lo, hi=hi, andel_oandliga=inf, D_noll=int((d[dc] == 0).sum())))
+                                 M=d[yc].mean() / d[dc].mean() if d[dc].mean() > 0 else np.nan, lo=lo, hi=hi, andel_oandliga=inf, D_noll=int((d[dc] == 0).sum()), ci_metod=M_BOOT, p_metod='inget p'))
 # tabell 6: M med och utan kontroller, H11a (2007–11 mot 2022–26) och H11b (2017–21 mot 2022–26), tre skikt
 for ty in ['addition', 'deletion']:
     for dc in ['D_B', 'D_V', 'D_C']:
@@ -337,6 +365,11 @@ for dc in ['D_B', 'D_V', 'D_C', 'r11_D_ny']:
 json.dump(dict(fi_jamforelse=chk, shof_saknas=sk_log, inkl_obelagda=INKL, validering=VALID, uteslutna_mandatbyten=int(len(BY)), logg=LOG), open(os.path.join(OUT, 'kontroller.json'), 'w'), indent=1, ensure_ascii=False)
 pd.set_option('display.width', 250); pd.set_option('display.max_rows', 400)
 print('SHoF saknas:', sk_log); print('FI-jämförelse:', chk)
+print('Metod tabell 5 (M per period): ' + M_BOOT + '.')
 print(T[(T.tabell == '5') & (T.fonster == 'y_tot')][['typ', 'skikt', 'period', 'n', 'G', 'car', 'D', 'M', 'lo', 'hi', 'D_noll']].round(2).to_string(index=False))
-print(T[(T.tabell == '7') & (T.period == '2017–26')][['typ', 'grupp', 'b', 'lo', 'hi', 'p', 'n', 'G']].round(3).to_string(index=False))
+print('Metod tabell 6: M per period (rader "M 20xx") = ' + CI_ANAL + '; skillnader mellan perioder = ' + CI_BOOT + ', ' + P_BOOT + '.')
+print('Metod tabell 7 (vem köper): ' + CI_ANAL + ', utom aktiva fonder 2017–26: ' + CI_BOOT + ', ' + P_BOOT + '.')
+t7 = T[(T.tabell == '7') & (T.period == '2017–26')].copy(); t7['metod'] = np.where(t7.ci_metod == CI_BOOT, 'bootstrap', 'analytiskt')
+print(t7[['typ', 'grupp', 'b', 'lo', 'hi', 'p', 'n', 'G', 'metod']].round(3).to_string(index=False))
+for m_ in sorted(T.ci_metod.dropna().unique()): print(f'Metod: {m_}: {int((T.ci_metod == m_).sum())} rader i omrakning_resultat.csv')
 print(F1[['ar', 'r11_D_addition', 'D_B_addition', 'D_V_addition', 'D_C_addition', 'n_D_V_addition', 'r11_agarandel_pct', 'agarandel_B_pct', 'agarandel_V_pct', 'agarandel_C_pct']].round(3).to_string(index=False))

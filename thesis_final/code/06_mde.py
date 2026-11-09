@@ -31,5 +31,7 @@ r = R13[(R13.tabell == 6) & (R13.typ == 'addition') & (R13.skikt == 'D_V') & (R1
 rader.append(('runda 13 tabell 6', 'addition', 'M 2017–21 minus M 2022–26', r.se, int(r.G), mde(r.se, int(r.G))))
 
 ut = pd.DataFrame(rader, columns=['källa', 'typ', 'test', 'se', 'G', 'mde'])
+ut['metod'] = 'analytiskt: (t_0,975 + t_0,80) * CR1-SE per översyn, G-1 frihetsgrader, ingen bootstrap'
+print('Metod: MDE är analytiskt, (t_0,975 + t_0,80) * CR1-SE per översyn med G-1 frihetsgrader (ingen bootstrap)')
 os.makedirs(RES / 'mde', exist_ok=True); ut.to_csv(RES / 'mde' / 'mde.csv', index=False)
-print(ut.round(3).to_string(index=False))
+print(ut.drop(columns=['metod']).round(3).to_string(index=False))
