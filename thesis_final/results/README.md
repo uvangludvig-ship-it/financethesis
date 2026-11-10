@@ -1,8 +1,8 @@
-# output.v3: alla tabeller och figurer i Greenwood och Sammon, plus robustheten (körning 10 november 2026)
+# results: alla tabeller och figurer i Greenwood och Sammon, plus robustheten
 
-Ögonblicksbild av `results/` från `run_all.py` (**0 FEL**). Uppdateras inte automatiskt.
+Skrivs om av `run_all.py` vid varje körning (allt utom den här filen). Committa bara efter en körning som slutar med **0 FEL** ([`check.txt`](check.txt)). Den här versionen är körningen 10 november 2026; äldre versioner finns i git-historiken (taggen `v3` = denna körning).
 
-Jämfört med output.v1: urvalsregeln för borttag (10 borttag utesluts enligt G&S, se `declarations/`), nyhetsgenomgången som robusthet, och nya tabeller och figurer för G&S tabell II, IV och VIII, figur 7, 8 och 9, volymen kring ändringsdagen och nyemissionerna. Noterna till de nya tabellerna och figurerna är utkast: författarna formulerar om texten.
+Jämfört med körningen 9 november (tidigare `output.v1`): urvalsregeln för borttag (10 borttag utesluts enligt G&S, se `declarations/`), nyhetsgenomgången som robusthet, och nya tabeller och figurer för G&S tabell II, IV och VIII, figur 7, 8 och 9, volymen kring ändringsdagen och nyemissionerna. Noterna till de nya tabellerna och figurerna är utkast: författarna formulerar om texten.
 
 ## Läs här
 

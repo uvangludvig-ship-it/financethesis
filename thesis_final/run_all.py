@@ -35,8 +35,10 @@ STEG = [
 ]
 # Word-tabeller och figurer, en fil per tabell eller figur, i Greenwood och Sammons ordning
 STEG += [(f'output/{f.name}', f.stem) for f in sorted((ROOT / 'code' / 'output').glob('[0-9][0-9]_*.py'))]
-if Path('results').exists():
-    shutil.rmtree('results')
+if Path('results').exists():   # allt byggs om; bara README.md (beskrivningen av mappen, committad) får stå kvar
+    for p in Path('results').iterdir():
+        if p.name != 'README.md':
+            shutil.rmtree(p) if p.is_dir() else p.unlink()
 for fil, namn in STEG:
     t0 = time.time()
     print(f'{fil}: {namn} ...', end=' ', flush=True)
