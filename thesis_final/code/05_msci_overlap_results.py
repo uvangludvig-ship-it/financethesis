@@ -10,6 +10,9 @@ import os, pandas as pd, numpy as np
 from scipy.stats import t as tdist
 HERE = RES / 'msci_overlap'
 ev = pd.read_csv(DATA / 'events' / 'omxsb_changes_with_car_2007_2026.csv', parse_dates=['AD', 'ED'])
+# samma urval som 01 (G&S regel, 10 nov 2026): 10 borttag med bud, fusion, avnoteringsansökan eller avnotering inom 100 handelsdagar utesluts
+_fl = pd.read_csv(DATA / 'events' / 'omxsb_deletion_flags_2007_2026.csv')
+ev = ev[~ev.event_id.isin(set(_fl.loc[_fl.flag_offer.astype(bool) | _fl.flag_delist.astype(bool), 'event_id']))].copy()
 OV = set(pd.read_csv(os.path.join(HERE, 'overlapp_handelser.csv')).event_id)
 ev['ovl'] = ev.event_id.isin(OV); ev['ar'] = ev.ED.dt.year
 ev['per'] = pd.cut(ev.ar, [2006, 2011, 2016, 2021, 2026], labels=['2007–11', '2012–16', '2017–21', '2022–26']).astype(str)

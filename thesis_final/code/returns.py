@@ -13,6 +13,12 @@ def rser(g):
 RET=pd.DataFrame({r:rser(g) for r,g in px.groupby('ric')}).reindex(cal)
 AR=RET.sub(mkt,axis=0)
 ev=pd.read_csv(DATA/'events'/'omxsb_changes_with_car_2007_2026.csv',parse_dates=['AD','ED'])
+# Urval (10 nov 2026, G&S regel): borttag som beror på bud, fusion, köpare eller avnoteringsansökan (flag_offer) eller som
+# avnoterats inom 100 handelsdagar efter ED (flag_delist) utesluts ur alla CAR-tabeller. 10 borttag. Borttag med bara ändrat
+# aktieantal (flag_shares) är kvar här och utesluts bara där D används (02).
+_fl=pd.read_csv(DATA/'events'/'omxsb_deletion_flags_2007_2026.csv')
+GS_UTE=set(_fl.loc[_fl.flag_offer.astype(bool)|_fl.flag_delist.astype(bool),'event_id'])
+ev_alla=ev.copy(); ev=ev[~ev.event_id.isin(GS_UTE)].copy()
 ev['iAD']=ev.AD.map(pos); ev['iED']=ev.ED.map(pos)
 def wsum(ric,a,b,M=AR):
     if ric not in M or pd.isna(a) or pd.isna(b): return np.nan

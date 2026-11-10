@@ -8,7 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import numpy as np, pandas as pd
 from _style import *
 
-STEM = '01_figure1_net_buying'
+STEM = Path(__file__).stem
 F = pd.read_csv(RES / 'fund_demand' / 'figur1_skikt.csv')
 assert F.ar.is_unique and F.ar.min() == 2007
 

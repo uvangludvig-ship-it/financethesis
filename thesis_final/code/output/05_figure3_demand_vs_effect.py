@@ -8,7 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import numpy as np, pandas as pd
 from _style import *
 
-STEM = '05_figure3_demand_vs_effect'
+STEM = Path(__file__).stem
 E = pd.read_csv(RES / 'fund_demand' / 'handelser_omraknade.csv')
 E = E[E.fonddata & ~E.split.astype(bool) & E.D_V.notna() & E.y_tot.notna()].copy()
 assert set(E.s.unique()) <= {1.0, -1.0} and (E.s == np.where(E.type == 'addition', 1.0, -1.0)).all()

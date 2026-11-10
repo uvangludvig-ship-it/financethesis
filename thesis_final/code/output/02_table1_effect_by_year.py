@@ -1,5 +1,5 @@
 # Tabell 1 (G&S Table I): överavkastning år för år, med periodrader.
-# Årsmedel ur data/comparison/replication_effect_by_year.csv; periodrader och stjärnor ur results/effect/tabell1_lang.csv (01).
+# Årsmedel ur results/effect/effect_by_year.csv (räknas i 01 ur händelserna, samma urval); periodrader och stjärnor ur results/effect/tabell1_lang.csv (01).
 # Kontroll: N-viktat medel av årsraderna = periodmedlet i tabell1_lang.csv, och N stämmer.
 # Körs från thesis_final efter 01: python3 code/output/02_table1_effect_by_year.py
 import sys
@@ -9,7 +9,7 @@ import pandas as pd
 from _style import *
 
 T = pd.read_csv(RES / 'effect' / 'tabell1_lang.csv')
-Y = pd.read_csv(DATA / 'comparison' / 'replication_effect_by_year.csv', header=[0, 1], index_col=0)
+Y = pd.read_csv(RES / 'effect' / 'effect_by_year.csv', header=[0, 1], index_col=0)
 Y.columns = [f'{a}_{b}' for a, b in Y.columns]
 YRS = [i for i in Y.index if str(i).isdigit()]
 assert [int(y) for y in YRS] == list(range(2007, 2027)), YRS
@@ -52,5 +52,5 @@ def build(doc):
 
 
 if __name__ == '__main__':
-    run(build, '02_table1_effect_by_year')
+    run(build, Path(__file__).stem)
     print('Metod: årsrader beskrivande (inga standardfel); stjärnor på periodraderna = wild cluster bootstrap per översyn')

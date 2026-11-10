@@ -1,5 +1,5 @@
 # Figur 2 (G&S Figure 2): indexeffekten per år, totalt fönster [AD−1, ED+1].
-# Punkter: årsmedel ur data/comparison/replication_effect_by_year.csv (samma som tabell 1).
+# Punkter: årsmedel ur results/effect/effect_by_year.csv (räknas i 01 ur händelserna, samma urval) (samma som tabell 1).
 # Linje: glidande medel över fem år av årsmedlen (G&S använder tio år på 40 år; vi har 20 år). Bara år med händelser räknas.
 # Körs från thesis_final: python3 code/output/04_figure2_effect_by_year.py
 import sys
@@ -8,8 +8,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import numpy as np, pandas as pd
 from _style import *
 
-STEM = '04_figure2_effect_by_year'
-Y = pd.read_csv(DATA / 'comparison' / 'replication_effect_by_year.csv', header=[0, 1], index_col=0)
+STEM = Path(__file__).stem
+Y = pd.read_csv(RES / 'effect' / 'effect_by_year.csv', header=[0, 1], index_col=0)
 Y.columns = [f'{a}_{b}' for a, b in Y.columns]
 Y = Y.loc[[i for i in Y.index if str(i).isdigit()]]; Y.index = Y.index.astype(int)
 assert list(Y.index) == list(range(2007, 2027))

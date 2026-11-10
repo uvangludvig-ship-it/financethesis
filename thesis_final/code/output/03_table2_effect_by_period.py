@@ -10,7 +10,7 @@ from _style import *
 T = pd.read_csv(RES / 'effect' / 'tabell1_lang.csv')
 assert T[T.panel != 'D'].ci_metod.str.startswith('95 % intervall: invertering').all(), 'tabell1_lang.csv har inte bootstrapintervall'
 assert [int(one(T, panel='A/B', typ='addition', fönster='tot', urval=p).n) for p in PERS] == [33, 54, 82, 87]
-assert [int(one(T, panel='A/B', typ='deletion', fönster='tot', urval=p).n) for p in PERS] == [38, 47, 63, 77]
+assert [int(one(T, panel='A/B', typ='deletion', fönster='tot', urval=p).n) for p in PERS] == [33, 46, 61, 75]   # utan de 10 borttagen enligt G&S regel (returns.py)
 WIN = [('ann', 'Announcement [AD−1, AD+1]'), ('eff', 'Effective [ED−1, ED+1]'), ('tot', 'Total [AD−1, ED+1]')]
 
 
@@ -41,10 +41,12 @@ def build(doc):
          'Gross Index (.OMXSBGI), summed over the window. AD is the announcement date and ED the effective date. Each cell gives the '
          f'mean across events. Inference: {WCR}. Brackets: {WCR_CI}. Stars come from the same bootstrap draws: {STARS}. '
          'Deletions keep their sign. Events are counted for the total window; the announcement and effective windows include up to '
-         'three more events per period. Difference in Panel C: 2017–26 minus 2007–16, same inference. Sample: 481 changes in 39 '
-         'semi-annual reviews with effective dates from 2 July 2007 to 1 June 2026 (Table A1).')
+         'three more events per period. Difference in Panel C: 2017–26 minus 2007–16, same inference. Sample: 471 changes in 39 '
+         'semi-annual reviews with effective dates from 2 July 2007 to 1 June 2026 (Table A1). Ten deletions that follow a takeover '
+         'offer, a merger or acquisition by the firm, a delisting application or a delisting within 100 trading days are excluded, '
+         'as in Greenwood and Sammon (2025).')   # utkast 10 nov: författarna formulerar om
 
 
 if __name__ == '__main__':
-    run(build, '03_table2_effect_by_period')
+    run(build, Path(__file__).stem)
     print('Metod: intervall och stjärnor = wild cluster bootstrap per översyn (intervall genom testinversion)')

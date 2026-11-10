@@ -1,4 +1,4 @@
-# Alla tabeller och figurer i ett Word-dokument, i Greenwood och Sammons ordning (samma ordning som filnamnen 01–12).
+# Alla tabeller och figurer i ett Word-dokument, i Greenwood och Sammons ordning (samma ordning som filnamnen 01–21).
 # Varje del byggs av sin egen fil (build(doc)), så en ändring görs bara på ett ställe.
 # Körs från thesis_final efter 01–06: python3 code/output/99_all_tables.py
 import sys, importlib.util
@@ -9,7 +9,7 @@ from docx.enum.text import WD_BREAK
 from _style import new_document, save
 
 FILES = sorted(p for p in HERE.glob('[0-9][0-9]_*.py') if p.name != Path(__file__).name)
-assert [p.name[:2] for p in FILES] == [f'{i:02d}' for i in range(1, 13)], [p.name for p in FILES]
+assert [p.name[:2] for p in FILES] == [f'{i:02d}' for i in range(1, 22)], [p.name for p in FILES]
 doc = new_document()
 for i, p in enumerate(FILES):
     spec = importlib.util.spec_from_file_location(p.stem.replace('-', '_'), p); m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)

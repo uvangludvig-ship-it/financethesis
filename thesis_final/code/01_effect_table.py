@@ -1,6 +1,6 @@
 # Tabell 1 rättad: stjärnor och 95 % intervall från wild cluster bootstrap (intervallet genom testinversion, 9 nov), panel C (decennier, G&S kalenderår, sedan 2010),
 # panel D (har effekten minskat), panel E (varje startår). CAR från returns.py, som återskapar replikeringens tot exakt.
-# Ingen ny data, inga nya regler. Körs från thesis_final: python3 code/01_effect_table.py
+# Urval: returns.py utesluter 10 borttag enligt G&S regel (10 nov 2026); panel R visar det gamla urvalet. Körs från thesis_final: python3 code/01_effect_table.py
 import os
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
@@ -108,7 +108,18 @@ for ty in ['addition', 'deletion']:
     S = sum(np.outer(X[codes == k].T @ e[codes == k], X[codes == k].T @ e[codes == k]) for k in range(G)); V = XtXi @ S @ XtXi * G / (G - 1) * (len(y) - 1) / (len(y) - 4)
     Rm = np.array([[1, -1, 0, 0], [0, 1, -1, 0], [0, 0, 1, -1]], float); W = (Rm @ b) @ np.linalg.inv(Rm @ V @ Rm.T) @ (Rm @ b) / 3
     rows.append(dict(panel='D', typ=ty, fönster='tot', urval='F-test lika medel i fyra perioder', b=float(W), p_cr1=float(fdist.sf(W, 3, G - 1)), n=len(y), G=int(G), ci_metod='inget intervall (F-test)', p_metod='analytiskt: Wald med CR1, p från F(3, G-1), ingen bootstrap'))
+# robusthet: det gamla urvalet (alla borttag med, även de 10 som G&S regel utesluter). Körs sist, så att dragningarna ovan inte flyttas.
+ea = ev_alla.copy(); ea['iAD'] = ea.AD.map(pos); ea['iED'] = ea.ED.map(pos)
+ea['tot'] = [wsum(r, a - 1, e + 1) for r, a, e in zip(ea.RIC, ea.iAD, ea.iED)]; ea = ea[(ea.type == 'deletion') & ea.tot.notna()]
+for p_ in PERS: medel(ea[ea.period == p_], 'tot', p_, 'R (gammalt urval, alla borttag)', 'deletion', 'tot')
+medel(ea[pd.to_datetime(ea.effective_date).dt.year >= 2017], 'tot', '2017–26', 'R (gammalt urval, alla borttag)', 'deletion', 'tot')
+Xa = np.column_stack([(ea.period == p_).astype(float).values for p_ in PERS]); r = lin(Xa, ea.tot.values, ea.review_cycle.values, [-1, 0, 0, 1])
+rows.append(dict(panel='R (gammalt urval, alla borttag)', typ='deletion', fönster='tot', urval='2022–26 minus 2007–11', **r))
 T = pd.DataFrame(rows); T.to_csv(f'{OUT}/tabell1_lang.csv', index=False)
+# årsmedel (tabell år för år och figur 2): N = händelser med CAR i hela fönstret; medel per fönster över händelser med det fönstret
+BY = pd.concat({ty: pd.DataFrame({'N': s_[s_.tot.notna()].groupby('ar').size(), 'Ann': s_.groupby('ar').ann.mean(), 'Eff': s_.groupby('ar').eff.mean(), 'Total': s_.groupby('ar').tot.mean()}).reindex(range(2007, 2027))
+                for ty, s_ in [('Additions', ev[ev.type == 'addition']), ('Deletions', ev[ev.type == 'deletion'])]}, axis=1)
+BY[[('Additions', 'N'), ('Deletions', 'N')]] = BY[[('Additions', 'N'), ('Deletions', 'N')]].fillna(0).astype(int); BY.index.name = 'Year'; BY.to_csv(f'{OUT}/effect_by_year.csv')
 # läsbara tabeller
 with open(f'{OUT}/TABELL1.md', 'w') as f:
     f.write('# Tabell 1, rättad: intervall och stjärnor från wild cluster bootstrap per översyn\n\nCAR i procent mot OMXSBGI, totalavkastning. **BOOTSTRAP:** 95 % intervall i parentes = alla värden som restriktiv wild cluster bootstrap per översyn inte förkastar på 5 % (testinversion). Stjärnor: * p<0,10, ** p<0,05, *** p<0,01 från samma bootstrap och samma dragningar (Rademacher om G≥12, annars Webb; 9 999 dragningar), så intervall och stjärnor stämmer alltid överens. **ANALYTISKT (jämförelse):** raderna märkta klustrat = CR1-standardfel per översyn, t med G−1. Källa: 01_effect_table.py, CAR från returns.py som återskapar replikeringens tot exakt.\n\n')

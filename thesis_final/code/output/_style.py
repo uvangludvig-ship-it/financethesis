@@ -17,10 +17,13 @@ RES = ROOT / 'results'
 OUT = RES / 'tables'
 FONT, SIZE = 'Times New Roman', 10
 
-# G&S-ordningen: figur 1, tabell I, figur 2, figur 3, (figur 5), tabell V, VI, VII, VIII
+# G&S-ordningen: figur 1, tabell I, figur 2, figur 3, tabell II, (figur 5), figur 7, tabell IV, figur 8, tabell V, VI, figur 9,
+# volym (2.4.3), tabell VII, nyemissioner (2.4.3), tabell VIII; sist MSCI-överlappet och bilagan. Filnamnen 01–21 följer samma ordning.
 NUM = {'fig_net_buying': 'Figure 1', 'tab_by_year': 'Table 1', 'tab_by_period': 'Table 2', 'fig_by_year': 'Figure 2',
-       'fig_scatter': 'Figure 3', 'fig_ownership': 'Figure 4', 'tab_multiplier': 'Table 3', 'tab_controls': 'Table 4',
-       'tab_who_buys': 'Table 5', 'tab_msci': 'Table 6', 'tab_mde': 'Table A2', 'tab_fi': 'Table A3'}
+       'fig_scatter': 'Figure 3', 'tab_car_controls': 'Table 3', 'fig_ownership': 'Figure 4', 'fig_price_path': 'Figure 5',
+       'tab_runup': 'Table 4', 'fig_size_rank': 'Figure 6', 'tab_multiplier': 'Table 5', 'tab_controls': 'Table 6',
+       'fig_spread': 'Figure 7', 'fig_volume': 'Figure 8', 'tab_who_buys': 'Table 7', 'tab_issuance': 'Table 8',
+       'tab_omxs30': 'Table 9', 'tab_msci': 'Table 10', 'tab_mde': 'Table A2', 'tab_fi': 'Table A3', 'tab_news': 'Table A4'}
 
 PERS = ['2007–2011', '2012–2016', '2017–2021', '2022–2026']      # som i tabell1_lang.csv
 PERS_KORT = ['2007–11', '2012–16', '2017–21', '2022–26']         # som i omrakning_resultat.csv och resultat_car.csv
@@ -178,3 +181,5 @@ def lowess(x, y, frac=0.8):
         W = np.sum(w); xm = np.sum(w * x) / W; ym = np.sum(w * y) / W
         b = np.sum(w * (x - xm) * (y - ym)) / max(np.sum(w * (x - xm) ** 2), 1e-12); out[i] = ym + b * (x[i] - xm)
     return out
+# ordnad skala för perioderna 2007–11 ... 2022–26 (en nyans, ljus till mörk; dataviz-validatorn --ordinal: godkänd)
+SEQ = ['#86b6ef', '#3987e5', '#1c5cab', '#0d366b']

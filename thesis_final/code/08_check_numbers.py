@@ -1,5 +1,5 @@
 # Jämför huvudsiffrorna med det skripten skrev. Skriver OK eller FEL per rad, och antal FEL sist.
-# Körs från thesis_final efter 01 till 07: python3 code/08_check_numbers.py
+# Körs från thesis_final efter alla steg: python3 code/08_check_numbers.py
 # Tolerans: 0,001 för skattningar och analytiska intervall, 0,005 för bootstrapintervall (testinversion, 9 nov). För p från wild bootstrap 0,0005, eftersom en
 # dragning av 9 999 kan hamna olika på olika datorer (sett i tabell1 panel E, två rader, ingen stjärna ändras).
 import os
@@ -62,11 +62,15 @@ koll('2022–26 minus 2017–21', r.b, -1.3498); iv(r, -3.8780, 0.9782, -3.5020,
 koll('Decennier, 2017–26 minus 2007–16', rad(T1, panel='D', typ='addition', urval='2017–26 minus 2007–16 (decennier)').b, -1.2353)
 r = T1[(T1.panel == 'D') & (T1.typ == 'addition') & T1.urval.str.startswith('efter minus före brottet')].iloc[0]
 koll('Brottet juni 2010', r.b, -9.6276); koll('  p wild bootstrap', r.p_wcb, 0.0061, 0.0005)
-koll('Borttag 2007–11, totalt fönster', rad(T1, panel='A/B', typ='deletion', fönster='tot', urval='2007–2011').b, -6.6939)
+koll('Borttag 2007–11, totalt fönster', rad(T1, panel='A/B', typ='deletion', fönster='tot', urval='2007–2011').b, -6.1563)
 r = rad(T1, panel='C', typ='deletion', urval='2017–26')
-koll('Borttag 2017–26', r.b, -1.0908); iv(r, -2.9240, 0.8218, -2.8965, 0.7149)
-koll('Borttag, beskedet 2012–16', rad(T1, panel='A/B', typ='deletion', fönster='ann', urval='2012–2016').b, -1.6936)
-koll('Borttag, beskedet 2017–21', rad(T1, panel='A/B', typ='deletion', fönster='ann', urval='2017–2021').b, -1.9705)
+koll('Borttag 2017–26', r.b, -1.0382); iv(r, -2.8811, 0.8954, -2.8574, 0.7810)
+koll('Borttag, beskedet 2012–16', rad(T1, panel='A/B', typ='deletion', fönster='ann', urval='2012–2016').b, -1.7091)
+koll('Borttag, beskedet 2017–21', rad(T1, panel='A/B', typ='deletion', fönster='ann', urval='2017–2021').b, -2.0941)
+# urvalsregeln 10 nov 2026 (G&S): 10 borttag ute ur CAR-tabellerna; panel R är det gamla urvalet
+r = rad(T1, panel='D', typ='deletion', urval='2022–26 minus 2007–11'); koll('Borttag, fall 2007–11 till 2022–26', r.b, 4.6230); koll('  p wild bootstrap', r.p_wcb, 0.0392, 0.0005)
+koll('Borttag i tabell 1 (händelser, totalt fönster)', T1[(T1.panel == 'A/B') & (T1.typ == 'deletion') & (T1.fönster == 'tot')].n.sum(), 215, 0)
+koll('Gammalt urval, borttag 2007–11 (robusthet)', rad(T1, panel='R (gammalt urval, alla borttag)', typ='deletion', urval='2007–2011').b, -6.6939)
 
 # runda 13 (omrakning_fondklassning.py)
 r = rad(R13, tabell=5, typ='addition', skikt='D_V', fonster='y_tot', period='2017–26')
@@ -103,8 +107,32 @@ koll('M_V 2017–26 utan MSCI-överlapp', r.M, 2.2815); koll('  undre', r.lo, 0.
 for test, v in [('2022–26 minus 2017–21', 3.057), ('2017–26 minus 2007–16 (decennier)', 5.234),
                 ('M 2017–21 minus M 2022–26', 5.751)]:
     koll(f'MDE {test}', rad(MDE, test=test).mde, v)
-for typ, test, v in [('addition', '2017–26', 1.622), ('addition', '2022–26', 2.353), ('deletion', '2017–26', 2.547)]:
+for typ, test, v in [('addition', '2017–26', 1.622), ('addition', '2022–26', 2.353), ('deletion', '2017–26', 2.566)]:
     koll(f'MDE {typ} {test}', rad(MDE, typ=typ, test=test).mde, v)
+
+# steg 07, 11 och 12 (10 nov): G&S-test flyttade hit från körningarna 30 okt och 2 nov. Punktskattningarna ska vara desamma som då.
+SP = pd.read_csv(RES / 'liquidity' / 'spread_by_year.csv')
+LQ = pd.read_csv(RES / 'liquidity' / 'liquidity_results.csv')
+OT = pd.read_csv(RES / 'other_tests' / 'issuance_omxs30_results.csv')
+KO = pd.read_csv(RES / 'controls' / 'controls_by_event.csv')
+koll('Spread OMXSB-bolagen 2007 (%)', rad(SP, year=2007).vw_spread_omxsb_members, 0.2701, 0.0001)
+koll('Spread OMXSB-bolagen 2025 (%)', rad(SP, year=2025).vw_spread_omxsb_members, 0.0790, 0.0001)
+koll('Tilläggens CAR på årets spread, lutning', rad(LQ, test='A spread', typ='addition', urval='tabell 1').b, 39.6428)
+koll('Andel av omsättningen ED−1, tillägg 2007–11 (%)', rad(LQ, typ='addition', rad='2007–2011: andel av omsättningen ED±22 som handlas ED−1 (%)').b, 9.4441)
+koll('Andel av omsättningen ED−1, tillägg 2022–26 (%)', rad(LQ, typ='addition', rad='2022–2026: andel av omsättningen ED±22 som handlas ED−1 (%)').b, 15.2364)
+koll('Andel ED−1, borttag 2022–26, gammalt urval (%)', rad(LQ, typ='deletion', urval='gammalt urval', rad='2022–2026: andel av omsättningen ED±22 som handlas ED−1 (%)').b, 14.4356)
+koll('Tilläggens percentil efter omsättning 2007–11', rad(LQ, rad='2007–2011: percentil efter omsättning (1 = högst)').b, 15.7881)
+koll('Tilläggens percentil efter omsättning 2022–26', rad(LQ, rad='2022–2026: percentil efter omsättning (1 = högst)').b, 6.5008)
+r = rad(OT, rad='tillägg minus nästan tillagda, 2007–26, fasta effekter per översyn (procentenheter)')
+koll('Nyemissioner, tillägg minus nästan tillagda', r.b, 0.5018); koll('  antal aktier i jämförelsen', r.n, 2586, 0)
+koll('OMXS30, tillägg, CAR (%)', rad(OT, urval='tabell 1 (10 borttag ute)', rad='OMXS30, addition: CAR [AD−1, ED+1], tecken vänt för borttag (%)').b, 0.2105)
+koll('OMXS30, alla, CAR med vänt tecken för borttag (%)', rad(OT, urval='tabell 1 (10 borttag ute)', rad='OMXS30, alla: CAR [AD−1, ED+1], tecken vänt för borttag (%)').b, 0.4388)
+koll('OMXS30 minus OMXSB, MDE som 2 nov', rad(OT, urval='som 2 nov (19 flaggade borttag ute)', rad='styrka för skillnaden OMXS30 minus OMXSB: MDE (procentenheter), gräns 3').b, 3.6642)
+koll('Händelser med alla fyra kontroller', int(KO[['k_oms', 'k_storlek', 'k_wz', 'k_ana']].notna().all(axis=1).sum()), 440, 0)
+koll('Kontroller: händelser från runda 11 som räknats om', int(KO.kalla.str.startswith('runda 11').sum()), 468, 0)
+for fil in ['liquidity/LIQUIDITY.md', 'other_tests/ISSUANCE_OMXS30.md', 'controls/CONTROLS.md']:
+    txt = (RES / fil).read_text(encoding='utf-8')
+    koll(f'{fil}: avvikelser mot den gamla körningen', int('Avvikelser' in txt), 0, 0)
 
 # intervall och p från samma bootstrap ska alltid stämma: p < 0,05 precis när 0 ligger utanför intervallet
 for namn, df, pc in [('tabell1', T1, 'p_wcb'), ('runda 13', R13, 'p'), ('runda 14', C14, 'p')]:

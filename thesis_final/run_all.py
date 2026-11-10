@@ -1,7 +1,7 @@
 # Kör hela kedjan från data/ till results/ och kontrollerar huvudsiffrorna.
 # Öppna mappen thesis_final i VS Code och kör den här filen (Run Python File), eller i terminalen:
 #   python3 run_all.py
-# Kräver Python 3.13 med pandas 3.0, numpy 2.5, scipy 1.18, python-docx 1.2 och matplotlib 3.11. Tar cirka tre minuter.
+# Kräver Python 3.13 med pandas 3.0, numpy 2.5, scipy 1.18, python-docx 1.2 och matplotlib 3.11. Tar cirka tio minuter.
 # Sista raden "0 FEL" betyder samma siffror som i testet 9 november 2026.
 import csv, hashlib, os, shutil, subprocess, sys, time
 from pathlib import Path
@@ -27,6 +27,11 @@ STEG = [
     ('04_msci_overlap_match.py', 'Vilka händelser som sammanfaller med MSCI'),
     ('05_msci_overlap_results.py', 'Effekt och M med och utan MSCI-överlapp'),
     ('06_mde.py', 'Minsta påvisbara effekt'),
+    ('07_controls_from_prices.py', 'Kontrollvariablerna i G&S tabell 2 räknade ur kurserna (ändrar ingen tabell)'),
+    ('09_news_screen.py', 'Robusthet: utan händelser med egen bolagsnyhet i fönstret'),
+    ('10_composition_runup.py', 'G&S tabell 2 och 4 (metod 5.3 och 5.4) och M på samma händelser'),
+    ('11_liquidity_and_selection.py', 'G&S figur 9 (spread), volym kring ändringen och figur 8 (storleksrang)'),
+    ('12_issuance_and_omxs30.py', 'G&S nyemissioner och tabell 8 (OMXS30)'),
 ]
 # Word-tabeller och figurer, en fil per tabell eller figur, i Greenwood och Sammons ordning
 STEG += [(f'output/{f.name}', f.stem) for f in sorted((ROOT / 'code' / 'output').glob('[0-9][0-9]_*.py'))]
