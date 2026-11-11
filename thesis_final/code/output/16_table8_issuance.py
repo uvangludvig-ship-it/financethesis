@@ -16,6 +16,7 @@ D = one(O, rad=HUV)
 DIFF = [(D, 'Change in shares outstanding'),
         (one(O, rad='andel med ökning över 1 %: tillägg minus nästan tillagda, fasta effekter per översyn (procentenheter)'), 'Share with increase > 1 %'),
         (one(O, rad='andel med ökning över 5 %: tillägg minus nästan tillagda, fasta effekter per översyn (procentenheter)'), 'Share with increase > 5 %'),
+        (one(O, rad=HUV + ', gräns 1,4 utan matchning'), 'Change in shares, factor rule only'),
         (one(O, rad=HUV + ', utan splitjustering'), 'Change in shares, not split-adjusted')]
 assert all(int(r.n) == int(D.n) for r, _ in DIFF)
 cells = {(g, p): one(O, rad=f'{p}: {g}, medel (%)') for g, _ in GR for p in PERS_KORT}
@@ -43,10 +44,12 @@ def build(doc):
          'date. Near-additions are stocks that were close to being added in the same review but were not. "> 1 %" and "> 5 %": '
          'share of stocks whose number of shares rose by more than 1 or 5 per cent. Greenwood and Sammon (2025, Section II.D) ask '
          'whether firms issue shares into the index rebalance. The number of shares is adjusted for splits and reverse splits: when '
-         'the ratio of the unadjusted to the adjusted share price moves by more than a factor 1.4 between the two dates, the change in '
-         'that ratio is removed from the change in shares. The difference rows regress the change, and indicators (× 100) for an '
-         'increase above 1 and 5 per cent, on an addition dummy with review fixed effects; the last row repeats the first without the '
-         f'split adjustment. Inference: {WCR}. Brackets: {WCR_CI}. Stars and p from the same draws: {STARS}.')
+         'the ratio of the unadjusted to the adjusted share price moves by more than a factor 1.4 between the two dates and explains the '
+         'change in shares within 10 per cent, the change in that ratio is removed from the change in shares (48 stocks). The '
+         'difference rows regress the change, and indicators (× 100) for an increase above 1 and 5 per cent, on an addition dummy '
+         'with review fixed effects. Factor rule only: every change in the price ratio above 1.4 is removed, which also removes part '
+         'of rights issues and adjusts stocks whose number of shares did not change. Not split-adjusted: the raw change. All three '
+         f'rules were reported regardless of outcome. Inference: {WCR}. Brackets: {WCR_CI}. Stars and p from the same draws: {STARS}.')
 
 
 if __name__ == '__main__':

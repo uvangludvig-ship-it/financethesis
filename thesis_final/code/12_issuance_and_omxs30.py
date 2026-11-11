@@ -6,6 +6,8 @@
 #      Splitjustering (11 nov 2026, declarations/issuance_split_declaration.md): dlog_just = dlog + 100*ln(faktor(b)/faktor(a)) när
 #      |ln(faktor(b)/faktor(a))| > ln(1,4), annars dlog; faktor = ojusterat/justerat pris som i runda11.py. Huvudrad på dlog_just,
 #      den råa raden kvar som jämförelse ("utan splitjustering"), plus andel med ökning över 1 % och 5 % med samma inferens.
+#      Tillägget samma dag: justera bara när faktorn förklarar aktieändringen inom 10 % (|dlog + 100*ln k| <= 100*ln 1,1); gränsen 1,4
+#      ensam redovisas som känslighetsrad ("gräns 1,4 utan matchning").
 #   B. OMXS30 (G&S tabell 8, andra index): CAR [AD−1, ED+1] vid ändringar i OMXS30, tecknet vänt för borttag. OMXS30-händelser
 #      som överlappar en OMXSB-händelse i samma aktie utesluts. Styrkan räckte inte 2 nov för att testa skillnaden mot OMXSB
 #      (MDE 3,66 mot gränsen 3), så bara medelvärden med intervall redovisas, som då.
@@ -59,15 +61,18 @@ S5 = pd.read_csv(DATA / 'events' / 'additions_and_near_additions_2007_2026.csv')
 S5['dlog'] = [100 * np.log(bolagsaktier(c, b + 60) / bolagsaktier(c, a - 5)) if b + 60 < len(cal) else np.nan for c, a, b in zip(S5.ric, S5.iA, S5.iE)]
 S5['per'] = pd.to_datetime(S5.AD).dt.year.map(PER); S5 = S5.dropna(subset=['dlog'])
 S5['lnk'] = [np.log(faktor(c, b + 60) / faktor(c, a - 5)) for c, a, b in zip(S5.ric, S5.iA, S5.iE)]
-S5['justerad'] = S5.lnk.abs() > np.log(1.4)   # NaN-faktor ger ingen justering
+S5['over_14'] = S5.lnk.abs() > np.log(1.4)   # NaN-faktor ger ingen justering
+S5['dlog_14'] = np.where(S5.over_14, S5.dlog + 100 * S5.lnk, S5.dlog)   # gränsen 1,4 ensam (känslighet)
+S5['justerad'] = S5.over_14 & ((S5.dlog + 100 * S5.lnk).abs() <= 100 * np.log(1.1))   # split: faktorn förklarar aktieändringen
 S5['dlog_just'] = np.where(S5.justerad, S5.dlog + 100 * S5.lnk, S5.dlog)
-S5[['review', 'AD', 'type', 'event', 'ric', 'dlog', 'lnk', 'justerad', 'dlog_just', 'per']].to_csv(OUT / 'issuance_sample.csv', index=False)
+S5[['review', 'AD', 'type', 'event', 'ric', 'dlog', 'lnk', 'over_14', 'dlog_14', 'justerad', 'dlog_just', 'per']].to_csv(OUT / 'issuance_sample.csv', index=False)
 FE = pd.get_dummies(S5.review).astype(float).values; X = np.column_stack([S5.event.values, FE]); c = np.zeros(X.shape[1]); c[0] = 1
 HUV = 'tillägg minus nästan tillagda, 2007–26, fasta effekter per översyn (procentenheter)'
 rec('A nyemissioner', HUV, lin(X, S5.dlog_just.values, S5.review.values, c), n_justerade=int(S5.justerad.sum()))
 for k in [1, 5]:
     rec('A nyemissioner', f'andel med ökning över {k} %: tillägg minus nästan tillagda, fasta effekter per översyn (procentenheter)',
         lin(X, 100.0 * (S5.dlog_just > k).values, S5.review.values, c))
+rec('A nyemissioner', HUV + ', gräns 1,4 utan matchning', lin(X, S5.dlog_14.values, S5.review.values, c))
 rec('A nyemissioner', HUV + ', utan splitjustering', lin(X, S5.dlog.values, S5.review.values, c))
 OLDF = pd.read_csv(CMP / 'previous_run_issuance.csv')   # körningen 2 nov var utan splitjustering
 jfr('A skillnad utan splitjustering', rows[-1]['b'], OLDF[OLDF.del_.str.startswith('tillägg minus')].b.iloc[0]); jfr('A antal', rows[-1]['n'], OLDF[OLDF.del_.str.startswith('tillägg minus')].n.iloc[0])
@@ -124,10 +129,13 @@ with open(OUT / 'ISSUANCE_OMXS30.md', 'w', encoding='utf-8') as fh:
     fh.write('## A. Nyemissioner: förändring i log antal aktier, AD−5 till ED+60 (G&S avsnitt 2.4.3)\n\n| Rad | Medel (%) | 95 % intervall | p | N | Andel över 1 % | Andel över 5 % |\n|---|---|---|---|---|---|---|\n')
     for r in R[R.test == 'A nyemissioner'].itertuples():
         fh.write(f'| {r.rad} | {f(r.b)}{stars(r.p_wcb) if pd.notna(r.p_wcb) else ""} | {f(r.lo) + " till " + f(r.hi) if pd.notna(r.lo) else ""} | {f(r.p_wcb, 3)} | {int(r.n)} | {f(r.andel_over_1)} | {f(r.andel_over_5)} |\n')
-    fh.write(f'\nSplitjusterade rader: {int(S5.justerad.sum())} av {len(S5)} (|ln(faktor(b)/faktor(a))| > ln 1,4). Rader med |dlog| > 30 före justering: {int((S5.dlog.abs() > 30).sum())}, efter: {int((S5.dlog_just.abs() > 30).sum())}.\n')
+    fh.write(f'\nSplitjusterade rader: {int(S5.justerad.sum())} av {len(S5)} (|ln k| > ln 1,4 och faktorn förklarar aktieändringen inom 10 %); med gränsen 1,4 ensam: {int(S5.over_14.sum())}. Rader med |dlog| > 30 före justering: {int((S5.dlog.abs() > 30).sum())}, efter: {int((S5.dlog_just.abs() > 30).sum())}.\n')
     fh.write('\n### De 20 största |dlog_just| (kontrollera mot pressmeddelanden)\n\n| Bolag (RIC) | Översyn | Grupp | dlog utan justering | dlog_just | justerad |\n|---|---|---|---|---|---|\n')
     for r in S5.reindex(S5.dlog_just.abs().sort_values(ascending=False).index).head(20).itertuples():
         fh.write(f'| {r.ric} | {r.review} | {"tillägg" if r.event else "nästan tillagd"} | {f(r.dlog)} | {f(r.dlog_just)} | {"ja" if r.justerad else "nej"} |\n')
+    fh.write('\n### Över gränsen 1,4 men inte justerade (faktorn förklarar inte aktieändringen; kontrollera för hand)\n\n| Bolag (RIC) | Översyn | Grupp | dlog (räknas) | 100·ln k | dlog med gränsen 1,4 |\n|---|---|---|---|---|---|\n')
+    for r in S5[S5.over_14 & ~S5.justerad].sort_values('dlog', key=abs, ascending=False).itertuples():
+        fh.write(f'| {r.ric} | {r.review} | {"tillägg" if r.event else "nästan tillagd"} | {f(r.dlog)} | {f(100 * r.lnk)} | {f(r.dlog_14)} |\n')
     fh.write('\n## B. OMXS30 jämfört med OMXSB (G&S tabell 8)\n\n| Urval | Rad | Medel | 95 % intervall | N | Kluster |\n|---|---|---|---|---|---|\n')
     for r in R[R.test == 'B OMXS30'].itertuples():
         fh.write(f'| {r.urval} | {r.rad} | {f(r.b)} | {f(r.lo) + " till " + f(r.hi) if pd.notna(r.lo) else ""} | {int(r.n)} | {int(r.G)} |\n')

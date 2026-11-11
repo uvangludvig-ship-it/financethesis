@@ -137,10 +137,12 @@ koll('Tilläggens percentil efter omsättning 2007–11', rad(LQ, rad='2007–20
 koll('Tilläggens percentil efter omsättning 2022–26', rad(LQ, rad='2022–2026: percentil efter omsättning (1 = högst)').b, 6.5008)
 # 11 nov 2026: splitjusterat aktieantal (declarations/issuance_split_declaration.md). Före: 0,5018 (nu raden utan splitjustering).
 r = rad(OT, rad='tillägg minus nästan tillagda, 2007–26, fasta effekter per översyn (procentenheter)')
-koll('Nyemissioner, tillägg minus nästan tillagda (splitjusterat)', r.b, 1.0079); koll('  antal aktier i jämförelsen', r.n, 2586, 0)
-koll('  p wild bootstrap', r.p_wcb, 0.0633, 0.0005); koll('  undre', r.lo, -0.0525, TOL_IV); koll('  övre', r.hi, 2.1129, TOL_IV)
-koll('Nyemissioner, andel ökning > 1 %, skillnad (pp)', rad(OT, rad='andel med ökning över 1 %: tillägg minus nästan tillagda, fasta effekter per översyn (procentenheter)').b, 5.8396)
-koll('Nyemissioner, andel ökning > 5 %, skillnad (pp)', rad(OT, rad='andel med ökning över 5 %: tillägg minus nästan tillagda, fasta effekter per översyn (procentenheter)').b, 3.7202)
+# Tillägget samma kväll (split = faktorn förklarar aktieändringen inom 10 %): gränsen 1,4 ensam gav 1,0079 (p 0,0633), andelar 5,8396 och 3,7202.
+koll('Nyemissioner, tillägg minus nästan tillagda (splitjusterat)', r.b, 0.5734); koll('  antal aktier i jämförelsen', r.n, 2586, 0)
+koll('  p wild bootstrap', r.p_wcb, 0.2841, 0.0005); koll('  undre', r.lo, -0.4723, TOL_IV); koll('  övre', r.hi, 1.6512, TOL_IV)
+koll('Nyemissioner, andel ökning > 1 %, skillnad (pp)', rad(OT, rad='andel med ökning över 1 %: tillägg minus nästan tillagda, fasta effekter per översyn (procentenheter)').b, 5.7695)
+koll('Nyemissioner, andel ökning > 5 %, skillnad (pp)', rad(OT, rad='andel med ökning över 5 %: tillägg minus nästan tillagda, fasta effekter per översyn (procentenheter)').b, 3.6690)
+koll('Nyemissioner, gräns 1,4 utan matchning (känslighet)', rad(OT, rad='tillägg minus nästan tillagda, 2007–26, fasta effekter per översyn (procentenheter), gräns 1,4 utan matchning').b, 1.0079)
 koll('Nyemissioner utan splitjustering (som 2 nov)', rad(OT, rad='tillägg minus nästan tillagda, 2007–26, fasta effekter per översyn (procentenheter), utan splitjustering').b, 0.5018)
 koll('OMXS30, tillägg, CAR (%)', rad(OT, urval='tabell 1 (10 borttag ute)', rad='OMXS30, addition: CAR [AD−1, ED+1], tecken vänt för borttag (%)').b, 0.2105)
 koll('OMXS30, alla, CAR med vänt tecken för borttag (%)', rad(OT, urval='tabell 1 (10 borttag ute)', rad='OMXS30, alla: CAR [AD−1, ED+1], tecken vänt för borttag (%)').b, 0.4388)

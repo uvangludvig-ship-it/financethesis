@@ -28,16 +28,18 @@ fondmåtten. Uppsatstexten ligger inte i repot, så siffror i löptexten måste 
 Tabell 5 har en ny panel C (M med B och V), och tabell 7 visar C med B, varianter och blandfonder som delrader.
 Figur 1 och 3 ritar nu D_C; figur 4 har samma tre linjer, men C är huvudmåttet.
 
-## Tabell 8: splitjusterat aktieantal (declarations/issuance_split_declaration.md)
+## Tabell 8: splitjusterat aktieantal (declarations/issuance_split_declaration.md, med tillägget samma kväll)
 
-| | Före | Efter |
+| Tillägg minus nästan tillagda | Före (rådata) | Efter (split = faktorn förklarar aktieändringen inom 10 %) |
 |---|---|---|
-| Tillägg minus nästan tillagda, ändring i aktieantal (pp) | 0.50 [−1.63, 2.76], p 0.70 | 1.01* [−0.05, 2.11], p 0.063 |
-| Andel med ökning > 1 %, skillnad (pp) | – | 5.84** [0.34, 11.30], p 0.039 |
-| Andel med ökning > 5 %, skillnad (pp) | – | 3.72* [−0.46, 8.27], p 0.086 |
+| Ändring i aktieantal (pp) | 0.50 [−1.63, 2.76], p 0.70 | 0.57 [−0.47, 1.65], p 0.28 |
+| Andel med ökning > 1 %, skillnad (pp) | – | 5.77** [0.27, 11.24], p 0.042 |
+| Andel med ökning > 5 %, skillnad (pp) | – | 3.67* [−0.51, 8.19], p 0.091 |
+| Känslighet: gränsen 1,4 utan matchning | – | 1.01* [−0.04, 2.09], p 0.059 |
 
-Periodcellerna i tabell 8 är också splitjusterade (t.ex. tillägg 2022–26: 3.03 → 0.43; nästan tillagda 2017–21: 3.60 → 1.26).
-Med full justering (alla rader, utan gränsen 1,4) blir skillnaden 0.99 (p 0.044), som i den utforskande körningen.
+Periodcellerna (medel %, rådata → splitjusterat): 2007–11 tillägg: 0.69 → 0.69; 2007–11 nästan tillagda: 1.26 → 1.55; 2012–16 tillägg: 2.92 → 2.92; 2012–16 nästan tillagda: 2.14 → 0.34; 2017–21 tillägg: 3.29 → 2.40; 2017–21 nästan tillagda: 3.60 → 1.74; 2022–26 tillägg: 3.03 → 0.43; 2022–26 nästan tillagda: 1.49 → 0.74.
+Med full justering (alla rader) blir skillnaden 0.99 (p 0.044), som i den utforskande körningen. NCAB 2021H2 och Cherry 2017H1
+räknas med rådata (faktorn förklarar inte aktieändringen inom 10 %) och bör kontrolleras mot pressmeddelanden.
 
 ## Känslighetskörningen (INKL)
 
