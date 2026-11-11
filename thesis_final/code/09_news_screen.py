@@ -35,6 +35,16 @@ for v, d0 in {'Alla (tabell 1)': ev, 'Utan egen bolagsnyhet': ev[~ev.event_id.is
         X = np.column_stack([(d.period == p).astype(float).values for p in PERS])
         for lab, c in [('2022–26 minus 2007–11', [-1, 0, 0, 1]), ('2022–26 minus 2017–21', [0, 0, -1, 1])]:
             rows.append(dict(variant=v, typ=ty, test=lab, **lin(X, d.tot.values, d.review_cycle.values, c)))
+# samma perioder som tabell 2 (11 nov 2026): 2012–16, 2007–16 och decennieskillnaden. Läggs efter de deklarerade testerna så att
+# deras dragningar inte flyttas. Se tillägget i declarations/news_screen_declaration.md.
+for v, d0 in {'Alla (tabell 1)': ev, 'Utan egen bolagsnyhet': ev[~ev.event_id.isin(ut)]}.items():
+    for ty in ['addition', 'deletion']:
+        d = d0[d0.type == ty]
+        for lab, q in [('2012–16', d.period == '2012–2016'), ('2007–16', d.ar <= 2016)]:
+            x = d[q]
+            rows.append(dict(variant=v, typ=ty, test=lab, **lin(np.ones((len(x), 1)), x.tot.values, x.review_cycle.values, [1.])))
+        X = np.column_stack([np.ones(len(d)), (d.ar >= 2017).astype(float).values])
+        rows.append(dict(variant=v, typ=ty, test='2017–26 minus 2007–16', **lin(X, d.tot.values, d.review_cycle.values, [0, 1])))
 R = pd.DataFrame(rows); R['stars'] = R.p_wcb.map(stars)
 R.to_csv(OUT / 'news_screen_results.csv', index=False)
 
@@ -49,7 +59,7 @@ L += ['', '## Resultat', '', 'Effekt i procent, p från wild cluster bootstrap.'
 for ty in ['addition', 'deletion']:
     t = R[R.typ == ty].assign(cell=lambda d: d.apply(lambda r: f'{r.b:.2f}{r.stars} (p {r.p_wcb:.3f}, n {r.n})', axis=1))
     p = t.pivot(index='test', columns='variant', values='cell').reindex(
-        ['2007–11', '2017–21', '2022–26', '2017–26', '2022–26 minus 2007–11', '2022–26 minus 2017–21'])
+        ['2007–11', '2012–16', '2017–21', '2022–26', '2007–16', '2017–26', '2017–26 minus 2007–16', '2022–26 minus 2007–11', '2022–26 minus 2017–21'])
     L += [f'**{"Tillägg" if ty == "addition" else "Borttag"}**', '', '| Test | ' + ' | '.join(p.columns) + ' |', '|---' * (len(p.columns) + 1) + '|']
     L += [f'| {i} | ' + ' | '.join(p.loc[i]) + ' |' for i in p.index] + ['']
 (OUT / 'REASONS.md').write_text('\n'.join(L), encoding='utf-8')

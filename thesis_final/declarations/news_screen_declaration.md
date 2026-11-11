@@ -31,3 +31,7 @@ Källor: bolagets egna pressmeddelanden (Cision, MFN, GlobeNewswire, bolagets we
 
 - Huvudtabellen ändras inte. Resultatet redovisas som en kolumn i robusthetstabellen ("utan händelser med egen bolagsnyhet i fönstret").
 - Ändras stjärnnivån för något test jämfört med tabell 1 skrivs det ut i robusthetskapitlet.
+
+## Tillägg 11 november 2026 (efter att resultaten var kända)
+
+Robusthetstabellen ska ha samma perioder som tabell 2. Steg 09 räknar därför också 2012–16, decennierna 2007–16 och 2017–26 och skillnaden 2017–26 minus 2007–16, med samma inferens. Panel R (alla borttag) i steg 01 får 2007–16 och samma decennieskillnad. Regeln för vilka händelser som tas bort ändras inte, och de 12 borttagna är desamma. De nya raderna räknas efter de deklarerade, så de deklarerade testernas bootstrapdragningar och siffror är oförändrade. Tillägget gjordes efter att resultaten för de deklarerade testerna var kända.

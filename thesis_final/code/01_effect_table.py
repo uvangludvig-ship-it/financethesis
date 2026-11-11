@@ -115,6 +115,10 @@ for p_ in PERS: medel(ea[ea.period == p_], 'tot', p_, 'R (gammalt urval, alla bo
 medel(ea[pd.to_datetime(ea.effective_date).dt.year >= 2017], 'tot', '2017–26', 'R (gammalt urval, alla borttag)', 'deletion', 'tot')
 Xa = np.column_stack([(ea.period == p_).astype(float).values for p_ in PERS]); r = lin(Xa, ea.tot.values, ea.review_cycle.values, [-1, 0, 0, 1])
 rows.append(dict(panel='R (gammalt urval, alla borttag)', typ='deletion', fönster='tot', urval='2022–26 minus 2007–11', **r))
+# samma perioder som tabell 2 (11 nov 2026): 2007–16 och decennieskillnaden. Läggs sist så att dragningarna ovan inte flyttas.
+medel(ea[pd.to_datetime(ea.effective_date).dt.year <= 2016], 'tot', '2007–16', 'R (gammalt urval, alla borttag)', 'deletion', 'tot')
+Xa = np.column_stack([np.ones(len(ea)), (pd.to_datetime(ea.effective_date).dt.year >= 2017).astype(float).values]); r = lin(Xa, ea.tot.values, ea.review_cycle.values, [0, 1])
+rows.append(dict(panel='R (gammalt urval, alla borttag)', typ='deletion', fönster='tot', urval='2017–26 minus 2007–16 (decennier)', **r))
 T = pd.DataFrame(rows); T.to_csv(f'{OUT}/tabell1_lang.csv', index=False)
 # årsmedel (tabell år för år och figur 2): N = händelser med CAR i hela fönstret; medel per fönster över händelser med det fönstret
 BY = pd.concat({ty: pd.DataFrame({'N': s_[s_.tot.notna()].groupby('ar').size(), 'Ann': s_.groupby('ar').ann.mean(), 'Eff': s_.groupby('ar').eff.mean(), 'Total': s_.groupby('ar').tot.mean()}).reindex(range(2007, 2027))
