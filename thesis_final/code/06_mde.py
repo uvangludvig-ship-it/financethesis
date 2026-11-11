@@ -26,7 +26,7 @@ for typ, urval in [('addition', '2022–26 minus 2017–21'), ('addition', '2017
 for typ, urval in [('addition', '2017–26'), ('addition', '2022–26'), ('deletion', '2017–26')]:
     r = R14[(R14.typ == typ) & (R14.urval == urval) & (R14.variant == 'alla')].iloc[0]
     rader.append(('runda 14, alla', typ, urval, float('nan'), int(r.G), r.mde))
-r = R13[(R13.tabell == 6) & (R13.typ == 'addition') & (R13.skikt == 'D_V') & (R13.fonster == 'y_tot')
+r = R13[(R13.tabell == 6) & (R13.typ == 'addition') & (R13.skikt == 'D_C') & (R13.fonster == 'y_tot')
         & (R13.period == 'M 2017–21 − M 2022–26')].iloc[0]          # första förekomsten: alla händelser utan split
 rader.append(('runda 13 tabell 6', 'addition', 'M 2017–21 minus M 2022–26', r.se, int(r.G), mde(r.se, int(r.G))))
 

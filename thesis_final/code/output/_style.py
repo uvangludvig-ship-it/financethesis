@@ -37,6 +37,9 @@ WCR_CI = ('95 per cent confidence intervals obtained by inverting the bootstrap 
           '5 per cent level; ∞ means that no value within 20 standard errors of the estimate is rejected')
 PAIRS = ('pairs cluster bootstrap by review (reviews drawn with replacement; 9,999 draws), percentile 95 per cent confidence '
          'intervals')
+# huvudmåttet för indexfondernas köp (C sedan 11 nov 2026): fonder vars innehav visar minst hälften av indexaffärerna, som G&S
+TRACKERS = ('OMXSB index trackers (pure index funds, tracker variants and the OMXSB share of balanced funds; a fund counts while its '
+            'holdings show at least half of the index trades, as in Greenwood and Sammon)')
 CR1 = 'standard errors clustered by review and t critical values with G − 1 degrees of freedom (no bootstrap)'
 STARS = '* p < 0.10, ** p < 0.05, *** p < 0.01'
 

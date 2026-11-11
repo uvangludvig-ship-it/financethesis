@@ -59,17 +59,17 @@ H = pd.read_csv(RES / 'fund_demand' / 'handelser_omraknade.csv'); H['ovl'] = H.e
 def kvot(d, B=9999):
     rv = d.review.values; u = np.unique(rv); idx = {k: np.where(rv == k)[0] for k in u}; ks = np.empty(B)
     for b in range(B):
-        ii = np.concatenate([idx[k] for k in rng.choice(u, len(u))]); dm = d.D_V.values[ii].mean(); cm = d.y_tot.values[ii].mean()
+        ii = np.concatenate([idx[k] for k in rng.choice(u, len(u))]); dm = d.D_C.values[ii].mean(); cm = d.y_tot.values[ii].mean()
         ks[b] = cm / dm if dm > 0 else (np.inf if cm >= 0 else -np.inf)
-    return d.y_tot.mean() / d.D_V.mean(), np.quantile(ks, .025), np.quantile(ks, .975)
+    return d.y_tot.mean() / d.D_C.mean(), np.quantile(ks, .025), np.quantile(ks, .975)
 mr = []
 for ty in ['addition', 'deletion']:
-    s0 = H[(H.type == ty) & ~H.split.astype(bool) & H.D_V.notna() & H.y_tot.notna()]
+    s0 = H[(H.type == ty) & ~H.split.astype(bool) & H.D_C.notna() & H.y_tot.notna()]
     for lab, sub in [('2017–21', s0[s0.per == '2017–21']), ('2022–26', s0[s0.per == '2022–26']), ('2017–26', s0[s0.ar >= 2017])]:
         for var, d in [('alla', sub), ('utan överlapp', sub[~sub.ovl])]:
             if ty == 'deletion' and var != 'alla' and lab != '2017–26': continue
             m, lo, hi = kvot(d)
-            mr.append(dict(typ=ty, urval=lab, variant=var, n=len(d), n_overlapp=int(sub.ovl.sum()), car=d.y_tot.mean(), D_V=d.D_V.mean(), M=m, lo=lo, hi=hi, ci_metod=M_METOD))
+            mr.append(dict(typ=ty, urval=lab, variant=var, n=len(d), n_overlapp=int(sub.ovl.sum()), car=d.y_tot.mean(), D_C=d.D_C.mean(), M=m, lo=lo, hi=hi, ci_metod=M_METOD))
 MR = pd.DataFrame(mr)
 T.to_csv(os.path.join(HERE, 'resultat_car.csv'), index=False); MR.to_csv(os.path.join(HERE, 'resultat_m.csv'), index=False)
 pd.set_option('display.width', 250)

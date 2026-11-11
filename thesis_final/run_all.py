@@ -23,6 +23,7 @@ if fel:
 STEG = [
     ('01_effect_table.py', 'Effekten per period, år och decennium'),
     ('02_fund_demand.py', 'Fondernas köp (D), priset per köpt procent (M), vem som köper'),
+    ('02b_indexaffarer.py', 'Indexaffärstestet: andel indexaffärer per fond och år (G&S regel för följare)'),
     ('03_fund_demand_fi_check.py', 'M med FI:s D (kontroll)'),
     ('04_msci_overlap_match.py', 'Vilka händelser som sammanfaller med MSCI'),
     ('05_msci_overlap_results.py', 'Effekt och M med och utan MSCI-överlapp'),

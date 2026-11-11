@@ -1,5 +1,5 @@
 # Tabell 5 (G&S Table V): multiplikatorn M = medel-CAR / medel-D och elasticiteten −1/M, per period.
-# Ur results/fund_demand/omrakning_resultat.csv, tabell 5 (02), skikt D_V (OMXSB-följare inklusive varianter), utan split.
+# Ur results/fund_demand/omrakning_resultat.csv, tabell 5 (02), skikt D_C (huvudmåttet: följare, varianter och blandfondernas OMXSB-del); panel C: D_B och D_V, utan split.
 # Intervall för M: parvis klusterbootstrap per översyn, percentil (02, kvot_ci). CAR och D visas med eget tecken som hos G&S
 # (negativa vid borttag); filen har dem i indexfondernas riktning (y = s*CAR, D > 0), så de multipliceras med s här.
 # Körs från thesis_final efter 02: python3 code/output/11_table5_multiplier.py
@@ -10,9 +10,13 @@ import numpy as np, pandas as pd
 from _style import *
 
 R = pd.read_csv(RES / 'fund_demand' / 'omrakning_resultat.csv')
-R5 = R[(R.tabell == 5) & (R.skikt == 'D_V')]
+R5 = R[(R.tabell == 5) & (R.skikt == 'D_C')]
+RBV = R[(R.tabell == 5) & R.skikt.isin(['D_B', 'D_V']) & (R.fonster == 'y_tot')]
 assert R5.ci_metod.dropna().str.startswith('95 % intervall för M: parvis klusterbootstrap').all()
 SAMPLES = PERS_KORT + ['2007–16', '2017–26']
+for t in ['addition', 'deletion']:
+    for k in ['D_B', 'D_V']:
+        for p in PERS_KORT + ['2007–16', '2017–26']: assert one(RBV, typ=t, skikt=k, period=p).n == one(R[(R.tabell == 5) & (R.skikt == 'D_C') & (R.fonster == 'y_tot')], typ=t, period=p).n
 WINS = [('y_tot', 'Baseline window [AD−1, ED+1]'), ('y_lang', 'Extended window [AD−20, ED+1]')]
 for w, _ in WINS:
     for typ in ['addition', 'deletion']:
@@ -34,15 +38,24 @@ def build(doc):
             cis.append(len(rows)); rows.append(['', '', '', '', ci(a.lo, a.hi), '', '', '', ci(d.lo, d.hi)])
     table(doc, ['Period', 'N', 'CAR', 'D̄', 'M', 'N', 'CAR', 'D̄', 'M'], rows, [1.7, 0.9, 1.3, 1.2, 3.4, 0.9, 1.3, 1.2, 3.4],
           ci_rows=cis, group_header=[('Additions', 1, 4), ('Deletions', 5, 8)])
+    subhead(doc, 'Panel C. M with narrower tracker definitions, baseline window')
+    rows, cis = [], []
+    for p in SAMPLES:
+        rs = [one(RBV, typ=t, skikt=k, period=p) for t in ['addition', 'deletion'] for k in ['D_B', 'D_V']]
+        rows.append([p] + [num(r.M) for r in rs]); cis.append(len(rows)); rows.append([''] + [ci(r.lo, r.hi) for r in rs])
+    table(doc, ['Period', 'B', 'V', 'B', 'V'], rows, [1.7, 3.6, 3.6, 3.6, 3.6], ci_rows=cis,
+          group_header=[('Additions', 1, 2), ('Deletions', 3, 4)])
+    # utkast: författarna formulerar om noten
     note(doc, 'Following Greenwood and Sammon (2025, Table V), M is the mean cumulative abnormal return divided by the mean net '
          'demand of index trackers, CAR = M × D̄, estimated separately for additions and deletions and by period; the implied demand elasticity is '
-         'ε = −1/M. CAR in per cent. D̄: mean net purchases (negative: net sales) by OMXSB index trackers including variants, in per '
+         'ε = −1/M. CAR in per cent. D̄: mean net purchases (negative: net sales) by ' + TRACKERS + ', in per '
          'cent of shares outstanding, between the fund report before the announcement and the report after the effective date. '
          'CAR keeps its sign (negative for deletions), so M is positive when prices move with index demand. Events with fund '
          f'holdings data and no share split between the fund reports. Brackets: {PAIRS}. No draw had a mean D of zero or below. '
          'Extended window: from 20 trading days before the announcement to the day after the effective date, as in their Table V.'
          + ' Deletions caused by a takeover, merger, distressed share issue or a large change in shares outstanding (19 events) are '
-         'excluded from the fund demand sample.')
+         'excluded from the fund demand sample. Panel C: the same ratio with D̄ from pure OMXSB index funds only (B) and from pure '
+         'index funds plus tracker variants (V), on the same events.')
 
 
 if __name__ == '__main__':

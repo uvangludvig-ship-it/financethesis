@@ -281,7 +281,7 @@ for ty in ['addition', 'deletion']:
                     rows.append(dict(tabell='6', typ=ty, skikt=dc, fonster=yc, kontroller=kontroller, period=lab, **r))
 # tabell 7: vem handlar, utan split, per period och 2017–26 (tecken: positivt = i indexfondernas riktning, som runda 11)
 for ty in ['addition', 'deletion']:
-    s0 = E[(E.type == ty) & ~E.split & E.fonddata & E.D_V.notna()]
+    s0 = E[(E.type == ty) & ~E.split & E.fonddata & E.D_C.notna()]   # huvudmåttet C (11 nov); samma händelser som D_V
     for p_ in PERS + ['2017–26']:
         s = s0[s0.ar >= 2017] if p_ == '2017–26' else s0[s0.per == p_]
         if len(s) < 3: continue

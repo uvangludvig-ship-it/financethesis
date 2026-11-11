@@ -12,18 +12,19 @@ from _style import *
 R = pd.read_csv(RES / 'fund_demand' / 'omrakning_resultat.csv')
 R7 = R[R.tabell == 7]
 SAMPLES = PERS_KORT + ['2017–26']
-GROUPS = [('D_V', 'OMXSB index trackers'), ('C_bara', 'Balanced funds, OMXSB share'), ('passiva_ovriga', 'Other passive funds'),
+GROUPS = [('D_C', 'OMXSB index trackers (C)'), ('D_B', '  Pure index funds (B)'), ('V_bara', '  Tracker variants'),
+          ('C_bara', '  Balanced funds, OMXSB share'), ('passiva_ovriga', 'Other passive funds'),
           ('aktiva', 'Active funds'), ('alla_fonder', 'All funds')]
-SUB = ['B_bara', 'V_bara', 'n_övriga passiva, svenska', 'n_övriga passiva, utländska', 'n_OMXS30', 'n_småbolagsindex']   # i CSV, inte i tabellen
+SUB = ['B_bara', 'n_övriga passiva, svenska', 'n_övriga passiva, utländska', 'n_OMXS30', 'n_småbolagsindex']   # i CSV, inte i tabellen
 BOOT = R7.ci_metod.str.startswith('95 % intervall: invertering')
 assert set(map(tuple, R7[BOOT][['period', 'grupp']].values)) == {('2017–26', 'aktiva')}, 'bootstrap bara för aktiva 2017–26'
 for t in ['addition', 'deletion']:
     for p in SAMPLES:
         g = {k: one(R7, typ=t, period=p, grupp=k).b for k in [k for k, _ in GROUPS] + SUB}
-        assert abs(g['D_V'] - g['B_bara'] - g['V_bara']) < 1e-9, (t, p, 'D_V = B + V')
+        assert abs(g['D_C'] - g['B_bara'] - g['V_bara'] - g['C_bara']) < 1e-9 and abs(g['D_B'] - g['B_bara']) < 1e-9, (t, p, 'D_C = B + V + C')
         assert abs(g['passiva_ovriga'] - g['n_övriga passiva, svenska'] - g['n_övriga passiva, utländska']
                    - one(R7, typ=t, period=p, grupp='n_OMXS30').b - one(R7, typ=t, period=p, grupp='n_småbolagsindex').b) < 1e-9, (t, p)
-        assert abs(g['alla_fonder'] - g['D_V'] - g['C_bara'] - g['passiva_ovriga'] - g['aktiva']) < 1e-6, (t, p, 'summan')
+        assert abs(g['alla_fonder'] - g['D_C'] - g['passiva_ovriga'] - g['aktiva']) < 1e-6, (t, p, 'summan')
 
 
 def build(doc):
@@ -35,13 +36,13 @@ def build(doc):
             rs = [one(R7, typ=t, period=p, grupp=k) for p in SAMPLES]
             rows.append([kl] + [num(r.b) + ('†' if r.ci_metod.startswith('95 % intervall: invertering') else '') for r in rs])
             cis.append(len(rows)); rows.append([''] + [ci(r.lo, r.hi) for r in rs])
-        rows.append(['Events'] + [str(int(one(R7, typ=t, period=p, grupp='D_V').n)) for p in SAMPLES])
-        rows.append(['Reviews'] + [str(int(one(R7, typ=t, period=p, grupp='D_V').G)) for p in SAMPLES])
+        rows.append(['Events'] + [str(int(one(R7, typ=t, period=p, grupp='D_C').n)) for p in SAMPLES])
+        rows.append(['Reviews'] + [str(int(one(R7, typ=t, period=p, grupp='D_C').G)) for p in SAMPLES])
     table(doc, [''] + SAMPLES, rows, [5.5, 2.25, 2.25, 2.25, 2.25, 2.25], ci_rows=cis)
     note(doc, 'Mean change in shares held by each fund group between the fund report before the announcement and the report after '
          'the effective date, in per cent of shares outstanding, signed in the direction of index trading: positive numbers are '
          'purchases at additions and sales at deletions. Fund holdings from LSEG Lipper; events with a share split between the '
-         'reports are excluded. OMXSB index trackers = pure index funds plus tracker variants. Balanced funds count with the OMXSB '
+         f'reports are excluded. {TRACKERS[0].upper() + TRACKERS[1:]}; the indented rows split them into their three parts. Balanced funds count with the OMXSB '
          'weight in their benchmark. Other passive funds are index funds that do not track the OMXSB, Swedish and foreign-domiciled. '
          'All funds is '
          f'the sum of the groups. Brackets: 95 per cent confidence intervals from {CR1}, except † where the interval is from a '

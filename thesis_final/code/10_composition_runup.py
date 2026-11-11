@@ -62,15 +62,15 @@ for ty in ['addition', 'deletion']:
 
 # M-regressionen (5.5, tabell 6 i 02) utan kontroller på samma händelser som med kontroller. 02 rörs inte.
 H = pd.read_csv(RES / 'fund_demand' / 'handelser_omraknade.csv'); H['split'] = H.split.astype(bool)
-R6 = pd.read_csv(RES / 'fund_demand' / 'omrakning_resultat.csv'); R6 = R6[(R6.tabell.astype(str) == '6') & (R6.skikt == 'D_V')]
+R6 = pd.read_csv(RES / 'fund_demand' / 'omrakning_resultat.csv'); R6 = R6[(R6.tabell.astype(str) == '6') & (R6.skikt == 'D_C')]
 for ty in ['addition', 'deletion']:
     for yc, fn in [('y_tot', '[AD−1, ED+1]'), ('y_lang', '[AD−20, ED+1]')]:
-        s = H[(H.type == ty) & ~H.split & H.D_V.notna() & H[yc].notna()].dropna(subset=KC).copy()
+        s = H[(H.type == ty) & ~H.split & H.D_C.notna() & H[yc].notna()].dropna(subset=KC).copy()
         for kontroller in [True, False]:
             sk = s.copy()
             if kontroller:
                 for c in KC: sk[c] = sk[c] - sk[c].mean()
-            Db = sk.groupby('per').D_V.mean().reindex(PERS)
+            Db = sk.groupby('per').D_C.mean().reindex(PERS)
             X = np.column_stack([((sk.per == p).astype(float) * Db[p]).values for p in PERS] + ([sk[c].values for c in KC] if kontroller else []))
             v = 'med kontroller' if kontroller else 'utan kontroller, samma händelser som med'
             for j, p in enumerate(PERS):
@@ -109,7 +109,7 @@ for ty in ['addition', 'deletion']:
     for p in PERS:
         d = R[(R.tabell == 'tabell 4') & (R.typ == ty) & (R.rad == p)].set_index('variant')
         L.append(f'| {ty} | {p} | ' + ' | '.join(cell(d.loc[f'[AD−{n_}, AD−1]']) for n_ in PRE) + ' |')
-L += ['', '## M (D_V) med kontroller och utan kontroller på samma händelser', '',
+L += ['', '## M (D_C) med kontroller och utan kontroller på samma händelser', '',
       '| Typ | Fönster | Variant | ' + ' | '.join(PERS) + ' | 2007–11 minus 2022–26 | 2017–21 minus 2022–26 |', '|---|---|---|' + '---|' * 6]
 for (tb, ty, v), d in R[R.tabell.str.startswith('M ')].groupby(['tabell', 'typ', 'variant'], sort=False):
     d = d.set_index('rad')

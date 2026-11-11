@@ -19,7 +19,8 @@ Det tar cirka tio minuter. Först kontrolleras att datafilerna är exakt samma s
 |---|---|---|
 | `code/01_effect_table.py` | Effekten per period och decennium (G&S tabell I; årsraderna kommer ur data/comparison), med intervall och wild cluster bootstrap | `results/effect/` |
 | `code/returns.py` | Dagliga överavkastningar mot OMXSBGI, används av 01 | |
-| `code/02_fund_demand.py` | Indexfondernas köp (D), priset per köpt procent (M), vem som köper, ägarandel per år | `results/fund_demand/` |
+| `code/02_fund_demand.py` | Indexfondernas köp (D), priset per köpt procent (M), vem som köper, ägarandel per år. Huvudmått sedan 11 nov 2026: C (B + V + blandfondernas OMXSB-del); B och V visas bredvid | `results/fund_demand/` |
+| `code/02b_indexaffarer.py` | Indexaffärstestet (G&S regel: en fond räknas som följare om den gör minst hälften av indexaffärerna), per fond och år | `results/fund_demand/indexaffarer_fond_ar.csv` |
 | `code/03_fund_demand_fi_check.py` | M med FI:s bredare D, som kontroll | `results/fi_check/` |
 | `code/04_msci_overlap_match.py` | Vilka OMXSB-händelser som sammanfaller med en ändring i MSCI Sweden | `results/msci_overlap/` |
 | `code/05_msci_overlap_results.py` | Effekt och M med och utan de händelserna | `results/msci_overlap/` |
@@ -28,7 +29,7 @@ Det tar cirka tio minuter. Först kontrolleras att datafilerna är exakt samma s
 | `code/09_news_screen.py` | Robusthet: effekten utan händelser med egen bolagsnyhet i fönstret | `results/news_screen/` |
 | `code/10_composition_runup.py` | G&S tabell 2 (sammansättning) och tabell 4 (uppgång före beskedet), kursbanan till figur 7, M på samma händelser | `results/composition/` |
 | `code/11_liquidity_and_selection.py` | G&S figur 9 (spread per år), volymens fördelning kring ändringsdagen, figur 8 (tilläggens storleksrang) | `results/liquidity/` |
-| `code/12_issuance_and_omxs30.py` | G&S nyemissioner kring ändringen och tabell 8 (OMXS30) | `results/other_tests/` |
+| `code/12_issuance_and_omxs30.py` | G&S nyemissioner kring ändringen (aktieantalet splitjusterat sedan 11 nov 2026) och tabell 8 (OMXS30) | `results/other_tests/` |
 | `code/13_extreme_values.py` | Robusthet för extremvärden: tabell 2:s rader winsoriserade 1/99, utan \|CAR\| > 20 och utan Sivers, median, och M utan de 12 nyhetshändelserna | `results/extreme_values/` |
 | `code/14_near_additions_control.py` | Tillägg och borttag mot nästan tillagda och nästan borttagna (T5v ur runda 2) | `results/near_additions/` |
 | `code/15_reversal.py` | Återgången efter ändringen, CAR [ED, ED+10] och [ED, ED+20], och uppgången [AD, ED−1] (ur del1.py) | `results/reversal/` |

@@ -4,6 +4,8 @@ Skrivs om av `run_all.py` vid varje körning (allt utom den här filen). Committ
 
 Jämfört med körningen 9 november (tidigare `output.v1`): urvalsregeln för borttag (10 borttag utesluts enligt G&S, se `declarations/`), nyhetsgenomgången som robusthet, och nya tabeller och figurer för G&S tabell II, IV och VIII, figur 7, 8 och 9, volymen kring ändringsdagen och nyemissionerna. Från 11 november också nästan tillagda, återgången, tvillingarna och extremvärdena (steg 13–16). Noterna till de nya tabellerna och figurerna är utkast: författarna formulerar om texten.
 
+11 november 2026, senare: fondlistan följer G&S regel (en fond räknas om innehaven visar minst hälften av indexaffärerna, se `results/fund_demand/indexaffarer_fond_ar.csv`), och huvudmåttet för indexfondernas köp är nu C (B + V + blandfondernas OMXSB-del) i M, tabellerna, figurerna och ägarandelen. B och V står bredvid (tabell 5 panel C, tabell 7, figur 4). Nyemissionstestet (tabell 8) använder splitjusterat aktieantal; raden utan justering står kvar som jämförelse.
+
 ## Läs här
 
 **[Alla tabeller och figurer som PDF](tables/all_tables.pdf)**: öppnas direkt på GitHub, i Greenwood och Sammons ordning.

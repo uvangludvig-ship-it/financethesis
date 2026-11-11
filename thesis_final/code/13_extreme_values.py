@@ -5,7 +5,7 @@
 #     utan |CAR| > 20 = händelser med |CAR| över 20 % borttagna
 #     utan Sivers     = utan OMXSB-2026H1-10 (CAR +77 %)
 #   Median per period och variant (beskrivande, ingen inferens).
-#   M för tillägg (D_V, [AD−1, ED+1], utan split) 2017–21, 2022–26 och 2017–26: alla, och utan de 12 händelserna med "ja" i
+#   M för tillägg (D_C, huvudmåttet sedan 11 nov 2026, [AD−1, ED+1], utan split) 2017–21, 2022–26 och 2017–26: alla, och utan de 12 händelserna med "ja" i
 #   data/events/news_screen_extreme_events.csv. Kvoten och den parvisa klusterbootstrapen som i steg 02 (tabell 5).
 # Inferens för CAR: som tabell 1 (lin(): klustrat per översyn, restriktiv wild cluster bootstrap, intervall genom testinversion).
 # Körs från thesis_final efter 02: python3 code/13_extreme_values.py
@@ -65,12 +65,12 @@ def kvot_ci(d, yc, dc, B=9999):   # samma som 02: alla dragningar med; medel-D <
 E = pd.read_csv(RES / 'fund_demand' / 'handelser_omraknade.csv'); E['split'] = E.split.astype(bool)
 NS = pd.read_csv(DATA / 'events' / 'news_screen_extreme_events.csv', dtype=str).fillna('')
 JA = set(NS.loc[NS.contaminated.str.strip().str.lower() == 'ja', 'event_id']); assert len(JA) == 12, len(JA)
-s0 = E[(E.type == 'addition') & ~E.split & E.D_V.notna() & E.y_tot.notna()]
+s0 = E[(E.type == 'addition') & ~E.split & E.D_C.notna() & E.y_tot.notna()]
 for v, s in [('alla', s0), ('utan egen bolagsnyhet', s0[~s0.event_id.isin(JA)])]:
     for lab, q in [('2017–21', s.per == '2017–21'), ('2022–26', s.per == '2022–26'), ('2017–26', s.ar >= 2017)]:   # som PER2 i 02
-        d = s[q]; lo, hi = kvot_ci(d, 'y_tot', 'D_V')
-        rows.append(dict(matt='M', variant=v, typ='addition', test=lab, b=d.y_tot.mean() / d.D_V.mean(), lo=lo, hi=hi, n=len(d), G=d.review.nunique(),
-                         car=d.y_tot.mean(), D=d.D_V.mean(), ci_metod=M_BOOT, p_metod='inget p'))
+        d = s[q]; lo, hi = kvot_ci(d, 'y_tot', 'D_C')
+        rows.append(dict(matt='M', variant=v, typ='addition', test=lab, b=d.y_tot.mean() / d.D_C.mean(), lo=lo, hi=hi, n=len(d), G=d.review.nunique(),
+                         car=d.y_tot.mean(), D=d.D_C.mean(), ci_metod=M_BOOT, p_metod='inget p'))
 R = pd.DataFrame(rows)
 R.to_csv(OUT / 'extreme_values_results.csv', index=False)
 
@@ -81,12 +81,13 @@ for ty in ['addition', 'deletion']:
         a = R[(R.matt == 'CAR') & (R.variant == 'alla') & (R.typ == ty) & (R.test == lab)].iloc[0]
         b = T1[(T1.panel == 'A/B') & (T1.typ == ty) & (T1.fönster == 'tot') & (T1.urval == full)].iloc[0]
         jfr(f'alla = tabell 1, {ty} {lab}', a.b, b.b, 1e-9); jfr(f'alla = tabell 1, {ty} {lab}, antal', a.n, b.n, 0)
-R5 = pd.read_csv(RES / 'fund_demand' / 'omrakning_resultat.csv'); R5 = R5[(R5.tabell.astype(str) == '5') & (R5.skikt == 'D_V') & (R5.fonster == 'y_tot') & (R5.typ == 'addition')]
+R5 = pd.read_csv(RES / 'fund_demand' / 'omrakning_resultat.csv'); R5 = R5[(R5.tabell.astype(str) == '5') & (R5.skikt == 'D_C') & (R5.fonster == 'y_tot') & (R5.typ == 'addition')]
 for lab in ['2017–21', '2022–26', '2017–26']:
     a = R[(R.matt == 'M') & (R.variant == 'alla') & (R.test == lab)].iloc[0]; b = R5[R5.period == lab].iloc[0]
     jfr(f'M alla = tabell 5, {lab}', a.b, b.M, 1e-9); jfr(f'M alla = tabell 5, {lab}, antal', a.n, b.n, 0)
 PR = pd.read_csv(DATA / 'comparison' / 'previous_run_extreme_values.csv')
-for r in PR.itertuples():
+# M-raderna i jämförelsefilen gäller D_V med fondlistan före 11 nov 2026 och jämförs inte längre; M kontrolleras mot tabell 5 ovan
+for r in PR[PR.matt != 'M'].itertuples():
     tol = 0.5 * 10 ** -r.decimaler
     if r.variant == 'gränser': nytt = LO if r.test.startswith('1:a') else HI
     else: nytt = R[(R.matt == r.matt) & (R.variant == r.variant) & (R.typ == r.typ) & (R.test == r.test)].iloc[0].b
@@ -106,7 +107,7 @@ for ty, namn in [('addition', 'Tillägg'), ('deletion', 'Borttag')]:
     for t in TEST[:6]:
         L.append(f'| {t} | ' + ' | '.join(f(R[(R.matt == "CAR") & (R.variant == v) & (R.typ == ty) & (R.test == t)].iloc[0]['median']) for v in VAR) + ' |')
     L.append('')
-L += ['## M för tillägg (D_V, [AD−1, ED+1], utan split)', '', '| Period | alla | utan egen bolagsnyhet |', '|---|---|---|']
+L += ['## M för tillägg (D_C, [AD−1, ED+1], utan split)', '', '| Period | alla | utan egen bolagsnyhet |', '|---|---|---|']
 for t in ['2017–21', '2022–26', '2017–26']:
     L.append(f'| {t} | ' + ' | '.join(cellt(R[(R.matt == "M") & (R.variant == v) & (R.test == t)].iloc[0]) for v in ['alla', 'utan egen bolagsnyhet']) + ' |')
 (OUT / 'EXTREME_VALUES.md').write_text('\n'.join(L) + '\n', encoding='utf-8')

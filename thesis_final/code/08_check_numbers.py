@@ -73,21 +73,33 @@ koll('Borttag i tabell 1 (händelser, totalt fönster)', T1[(T1.panel == 'A/B') 
 koll('Gammalt urval, borttag 2007–11 (robusthet)', rad(T1, panel='R (gammalt urval, alla borttag)', typ='deletion', urval='2007–2011').b, -6.6939)
 
 # runda 13 (omrakning_fondklassning.py)
+# 11 nov 2026: fondlistan efter G&S regel (minst hälften av indexaffärerna) och huvudmåttet C. Före: D_V 2017–26 0,8723, M_V 3,1104
+# [1,4450, 5,1431], D_V 2007–11 0,1034, p (M 2007–11 − M 2022–26, D_V) 0,1140.
+r = rad(R13, tabell=5, typ='addition', skikt='D_C', fonster='y_tot', period='2017–26')
+koll('D_C tillägg 2017–26 (% av aktierna)', r.D, 1.0301)
+koll('M_C tillägg 2017–26', r.M, 2.6341); koll('  undre', r.lo, 1.2448); koll('  övre', r.hi, 4.3060)
+koll('M_C tillägg 2017–21', rad(R13, tabell=5, typ='addition', skikt='D_C', fonster='y_tot', period='2017–21').M, 2.9706, 0.005)
+koll('M_C tillägg 2022–26', rad(R13, tabell=5, typ='addition', skikt='D_C', fonster='y_tot', period='2022–26').M, 2.3478, 0.005)
+HO = pd.read_csv(RES / 'fund_demand' / 'handelser_omraknade.csv')
+koll('D_C borttag 2017–26 (alla utan split)', HO[(HO.type == 'deletion') & ~HO.split.astype(bool) & (HO.ar >= 2017)].D_C.mean(), 1.107)
+koll('D_C borttag 2017–26 (tabell 5: också med CAR)', rad(R13, tabell=5, typ='deletion', skikt='D_C', fonster='y_tot', period='2017–26').D, 1.1093)
 r = rad(R13, tabell=5, typ='addition', skikt='D_V', fonster='y_tot', period='2017–26')
-koll('D_V tillägg 2017–26 (% av aktierna)', r.D, 0.8723)
-koll('M_V tillägg 2017–26', r.M, 3.1104); koll('  undre', r.lo, 1.4450); koll('  övre', r.hi, 5.1431)
-koll('D_V tillägg 2007–11', rad(R13, tabell=5, typ='addition', skikt='D_V', fonster='y_tot', period='2007–11').D, 0.1034)
-r = rad(R13, tabell=6, typ='addition', skikt='D_V', fonster='y_tot', period='M 2007–11 − M 2022–26')
-koll('M 2007–11 minus M 2022–26, p', r.p, 0.1140, 0.0005)
+koll('D_V tillägg 2017–26 (% av aktierna)', r.D, 0.8808); koll('M_V tillägg 2017–26', r.M, 3.0806)
+koll('D_V tillägg 2007–11', rad(R13, tabell=5, typ='addition', skikt='D_V', fonster='y_tot', period='2007–11').D, 0.1518)
+r = rad(R13, tabell=6, typ='addition', skikt='D_C', fonster='y_tot', period='M 2007–11 − M 2022–26')
+koll('M 2007–11 minus M 2022–26 (D_C), p', r.p, 0.1376, 0.0005)
 r = rad(R13, tabell=7, typ='addition', period='2017–26', grupp='alla_fonder')
 # 9 nov: efter-rader rapporterade före ED räknas som 0 (fond som sålt allt). Före: 1,2044 [0,7630, 1,6457]; aktiva −0,1505.
-koll('Alla fonder, köp vid tillägg 2017–26', r.b, 1.1923); koll('  undre', r.lo, 0.7585); koll('  övre', r.hi, 1.6261)
+# 11 nov (fondlistan efter G&S regel): före 1,1923 [0,7585, 1,6261]; aktiva −0,1624 [−0,4694, 0,1565], CR1 [−0,4683, 0,1434]
+koll('Alla fonder, köp vid tillägg 2017–26', r.b, 1.1869); koll('  undre', r.lo, 0.7508); koll('  övre', r.hi, 1.6230)
 r = rad(R13, tabell=7, typ='addition', period='2017–26', grupp='aktiva')
-koll('Aktiva fonder, köp vid tillägg 2017–26', r.b, -0.1624); iv(r, -0.4694, 0.1565, -0.4683, 0.1434)
+koll('Aktiva fonder, köp vid tillägg 2017–26', r.b, -0.2398); iv(r, -0.5227, 0.0544, -0.5227, 0.0432)
 koll('Ägarandel V 2007 (%)', rad(F1, ar=2007).agarandel_V_pct, 0.0600)
 koll('Ägarandel V 2025 (%)', rad(F1, ar=2025).agarandel_V_pct, 1.1360)
+koll('Ägarandel C 2025 (%, huvudmåttet)', rad(F1, ar=2025).agarandel_C_pct, 1.6288)
+koll('Korrelation D_C mot FI', KJ['fi_jamforelse']['D_C']['korr'], 0.842)
 koll('Korrelation D_V mot FI', KJ['fi_jamforelse']['D_V']['korr'], 0.809)
-koll('Uteslutna fond-händelser (grupp-byte)', KJ['uteslutna_mandatbyten'], 93, 0)
+koll('Uteslutna fond-händelser (grupp-byte)', KJ['uteslutna_mandatbyten'], 222, 0)   # före 11 nov 93; +129 = LF Sparmål (6 fonder) som blir C 2025-06-16
 
 # fi_m_kontroll.py (inte deklarerad)
 r = FI[(FI.typ == 'addition') & (FI.splittade == False)].iloc[0]
@@ -101,11 +113,11 @@ koll('  p wild bootstrap', r.p, 0.0073, 0.0005)
 koll('Tillägg 2022–26 utan MSCI-överlapp', rad(C14, typ='addition', urval='2022–26', variant='utan överlapp').b, 0.7258)
 koll('Överlappande tillägg 2017–26, medel (beskrivande)', rad(C14, typ='addition', urval='2017–26', variant='bara överlapp (beskrivande)').b, 11.2487)
 r = rad(M14, typ='addition', urval='2017–26', variant='utan överlapp')
-koll('M_V 2017–26 utan MSCI-överlapp', r.M, 2.2815); koll('  undre', r.lo, 0.9805); koll('  övre', r.hi, 3.9690)
+koll('M_C 2017–26 utan MSCI-överlapp', r.M, 1.9213); koll('  undre', r.lo, 0.8335); koll('  övre', r.hi, 3.3721)   # före (M_V): 2,2815 [0,9805, 3,9690]
 
 # mde.py
 for test, v in [('2022–26 minus 2017–21', 3.057), ('2017–26 minus 2007–16 (decennier)', 5.234),
-                ('M 2017–21 minus M 2022–26', 5.751)]:
+                ('M 2017–21 minus M 2022–26', 4.939)]:   # före (D_V): 5,751
     koll(f'MDE {test}', rad(MDE, test=test).mde, v)
 for typ, test, v in [('addition', '2017–26', 1.622), ('addition', '2022–26', 2.353), ('deletion', '2017–26', 2.566)]:
     koll(f'MDE {typ} {test}', rad(MDE, typ=typ, test=test).mde, v)
@@ -123,8 +135,13 @@ koll('Andel av omsättningen ED−1, tillägg 2022–26 (%)', rad(LQ, typ='addit
 koll('Andel ED−1, borttag 2022–26, gammalt urval (%)', rad(LQ, typ='deletion', urval='gammalt urval', rad='2022–2026: andel av omsättningen ED±22 som handlas ED−1 (%)').b, 14.4356)
 koll('Tilläggens percentil efter omsättning 2007–11', rad(LQ, rad='2007–2011: percentil efter omsättning (1 = högst)').b, 15.7881)
 koll('Tilläggens percentil efter omsättning 2022–26', rad(LQ, rad='2022–2026: percentil efter omsättning (1 = högst)').b, 6.5008)
+# 11 nov 2026: splitjusterat aktieantal (declarations/issuance_split_declaration.md). Före: 0,5018 (nu raden utan splitjustering).
 r = rad(OT, rad='tillägg minus nästan tillagda, 2007–26, fasta effekter per översyn (procentenheter)')
-koll('Nyemissioner, tillägg minus nästan tillagda', r.b, 0.5018); koll('  antal aktier i jämförelsen', r.n, 2586, 0)
+koll('Nyemissioner, tillägg minus nästan tillagda (splitjusterat)', r.b, 1.0079); koll('  antal aktier i jämförelsen', r.n, 2586, 0)
+koll('  p wild bootstrap', r.p_wcb, 0.0633, 0.0005); koll('  undre', r.lo, -0.0525, TOL_IV); koll('  övre', r.hi, 2.1129, TOL_IV)
+koll('Nyemissioner, andel ökning > 1 %, skillnad (pp)', rad(OT, rad='andel med ökning över 1 %: tillägg minus nästan tillagda, fasta effekter per översyn (procentenheter)').b, 5.8396)
+koll('Nyemissioner, andel ökning > 5 %, skillnad (pp)', rad(OT, rad='andel med ökning över 5 %: tillägg minus nästan tillagda, fasta effekter per översyn (procentenheter)').b, 3.7202)
+koll('Nyemissioner utan splitjustering (som 2 nov)', rad(OT, rad='tillägg minus nästan tillagda, 2007–26, fasta effekter per översyn (procentenheter), utan splitjustering').b, 0.5018)
 koll('OMXS30, tillägg, CAR (%)', rad(OT, urval='tabell 1 (10 borttag ute)', rad='OMXS30, addition: CAR [AD−1, ED+1], tecken vänt för borttag (%)').b, 0.2105)
 koll('OMXS30, alla, CAR med vänt tecken för borttag (%)', rad(OT, urval='tabell 1 (10 borttag ute)', rad='OMXS30, alla: CAR [AD−1, ED+1], tecken vänt för borttag (%)').b, 0.4388)
 koll('OMXS30 minus OMXSB, MDE som 2 nov', rad(OT, urval='som 2 nov (19 flaggade borttag ute)', rad='styrka för skillnaden OMXS30 minus OMXSB: MDE (procentenheter), gräns 3').b, 3.6642)
@@ -144,8 +161,8 @@ koll('Winsoriserad 1/99, tillägg 2017–26', rad(EV, matt='CAR', variant='winso
 koll('Winsoriserad 1/99, tillägg 2022–26', rad(EV, matt='CAR', variant='winsoriserad 1/99', typ='addition', test='2022–26').b, 1.036)
 koll('Utan Sivers, tillägg 2022–26', rad(EV, matt='CAR', variant='utan Sivers', typ='addition', test='2022–26').b, 0.619)
 koll('Utan |CAR| > 20, tillägg 2017–26', rad(EV, matt='CAR', variant='utan |CAR| > 20', typ='addition', test='2017–26').b, 1.763)
-koll('M tillägg 2017–26 utan egen bolagsnyhet', rad(EV, matt='M', variant='utan egen bolagsnyhet', test='2017–26').b, 2.272)
-koll('M tillägg 2017–26, alla (= tabell 5)', rad(EV, matt='M', variant='alla', test='2017–26').b, 3.1104)
+koll('M tillägg 2017–26 utan egen bolagsnyhet', rad(EV, matt='M', variant='utan egen bolagsnyhet', test='2017–26').b, 1.9205)   # före (D_V): 2,272
+koll('M tillägg 2017–26, alla (= tabell 5)', rad(EV, matt='M', variant='alla', test='2017–26').b, 2.6341)   # före (D_V): 3,1104
 koll('Alla, tillägg 2022–26 (= tabell 1)', rad(EV, matt='CAR', variant='alla', typ='addition', test='2022–26').b, 1.4976)
 r = rad(NA, typ='addition', urval='alla', period='efter', variant='CAR [AD-1,ED+1] mot nästan')
 koll('Nästan tillagda, tillägg från 2017', r.b, 1.5252); koll('  N', r.n, 1768, 0)

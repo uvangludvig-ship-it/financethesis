@@ -194,3 +194,18 @@ Fastställt: enhanced/aktiv med OMXSB ESG Cap GI som jämförelseindex (2022). L
 | | Custom OMX Stockholm Benchmark via LF Sverige Index | 2025-06-16 | pågår | DELVIS BELAGD (innehav ej verifierat) | LF kundbrev 2025-06-16 |
 | 11. Swedbank Robur Access Mix | 50 % OMX Stockholm Benchmark Cap GI (indexnära) | ej daterat (fond 1988-11-14) | pågår | DELVIS BELAGD | Robur fondlista |
 | 12. Nordea 2 BetaPlus Enhanced Swedish Sust. Eq. | OMXSB ESG Responsible Capped GI (enhanced/aktiv) | senast 2022 | pågår | DELVIS BELAGD | Nordea 2 prospekt aug 2022 |
+
+---
+
+## Nedlagda fonder som saknas i Lipper-innehaven
+
+De här fonderna följde OMXSB men finns inte i Lipper-innehaven som vi har (fund_holdings_lipper_around_events_2007_2026.csv.gz). Därför ingår de inte i fondlistan (index_fund_list_with_mandates.csv) och inte i D.
+
+| Fond | Lipper-id | ISIN | Från | Till | Index enligt Lipper |
+|---|---|---|---|---|---|
+| Swedbank Robur Indexfond Sverige | LP65067728 | SE0001860503 | 2007-04-24 | 2015-09-08 | saknas i Lipper |
+| Öhman Index Sverige A | LP68153831 | SE0004578623 | 2012-05-09 | 2016-12-07 | OMX Stockholm Benchmark TR |
+| Öhman Sverige Marknad A | LP68245913 | SE0005621372 | 2014-01-22 | 2016-08-25 | OMX Stockholm Benchmark TR |
+| Danske Invest Sverige Beta utd | LP68168690 | SE0002374751 | 2008-03-10 | 2017-11-10 | OMX Stockholm Benchmark Cap TR |
+
+Källa: Lipper, hämtad 2026-11-11. Exporten ligger inte i repot.

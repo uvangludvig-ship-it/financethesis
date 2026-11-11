@@ -33,15 +33,15 @@ CAR i procent mot OMXSBGI. 95 % intervall: invertering av restriktiv wild cluste
 | deletion | 2017–21 | 1.60 (-2.90 till 5.84) | 0.54 (-4.94 till 6.78) | -5.99* (-11.28 till 0.33) | -10.26* (-19.08 till 0.46) |
 | deletion | 2022–26 | 0.73 (-1.51 till 2.89) | -0.48 (-4.45 till 5.17) | -8.48** (-14.54 till -1.80) | -21.80*** (-30.34 till -10.49) |
 
-## M (D_V) med kontroller och utan kontroller på samma händelser
+## M (D_C) med kontroller och utan kontroller på samma händelser
 
 | Typ | Fönster | Variant | 2007–11 | 2012–16 | 2017–21 | 2022–26 | 2007–11 minus 2022–26 | 2017–21 minus 2022–26 |
 |---|---|---|---|---|---|---|---|---|
-| addition | [AD−1, ED+1] | med kontroller | 79.68 (n 7) | -1.96 (n 24) | 2.88 (n 55) | 2.57 (n 77) | 77.11 (-inf till 544.58), p 0.187 | 0.31 (-3.57 till 4.94), p 0.874 |
-| addition | [AD−1, ED+1] | utan kontroller, samma händelser som med | 68.13 (n 7) | -4.26 (n 24) | 3.03 (n 55) | 2.98 (n 77) | 65.15 (-41.95 till 155.04), p 0.184 | 0.05 (-4.40 till 4.87), p 0.983 |
-| addition | [AD−20, ED+1] | med kontroller | 100.72 (n 7) | 5.71 (n 24) | 3.73 (n 55) | 7.29 (n 74) | 93.43** (39.79 till 127.84), p 0.024 | -3.56 (-9.24 till 2.56), p 0.221 |
-| addition | [AD−20, ED+1] | utan kontroller, samma händelser som med | 75.98 (n 7) | -0.85 (n 24) | 4.17 (n 55) | 8.36 (n 74) | 67.61* (-140.24 till inf), p 0.054 | -4.20 (-11.47 till 3.15), p 0.260 |
-| deletion | [AD−1, ED+1] | med kontroller | 2.17 (n 7) | 4.49 (n 23) | -0.02 (n 36) | 1.93 (n 65) | 0.24 (-inf till inf), p 0.970 | -1.95 (-7.76 till 3.01), p 0.448 |
-| deletion | [AD−1, ED+1] | utan kontroller, samma händelser som med | -0.93 (n 7) | 4.24 (n 23) | 0.53 (n 36) | 1.72 (n 65) | -2.65 (-inf till inf), p 0.868 | -1.19 (-7.15 till 3.61), p 0.628 |
-| deletion | [AD−20, ED+1] | med kontroller | 3.53 (n 7) | 11.79 (n 23) | 3.55 (n 36) | 1.58 (n 65) | 1.95 (-inf till inf), p 0.888 | 1.98 (-8.00 till 11.02), p 0.661 |
-| deletion | [AD−20, ED+1] | utan kontroller, samma händelser som med | 16.75 (n 7) | 15.20 (n 23) | -0.42 (n 36) | 3.06 (n 65) | 13.68 (-inf till inf), p 0.372 | -3.48 (-13.27 till 7.57), p 0.495 |
+| addition | [AD−1, ED+1] | med kontroller | 54.85 (n 7) | -1.57 (n 24) | 2.60 (n 55) | 2.05 (n 77) | 52.80 (-inf till 362.35), p 0.187 | 0.56 (-2.85 till 4.79), p 0.746 |
+| addition | [AD−1, ED+1] | utan kontroller, samma händelser som med | 46.90 (n 7) | -3.40 (n 24) | 2.74 (n 55) | 2.38 (n 77) | 44.53 (-27.21 till 97.95), p 0.205 | 0.36 (-3.41 till 4.66), p 0.849 |
+| addition | [AD−20, ED+1] | med kontroller | 69.33 (n 7) | 4.56 (n 24) | 3.38 (n 55) | 5.82 (n 74) | 63.51** (26.38 till 87.53), p 0.025 | -2.44 (-7.30 till 2.96), p 0.327 |
+| addition | [AD−20, ED+1] | utan kontroller, samma händelser som med | 52.30 (n 7) | -0.68 (n 24) | 3.77 (n 55) | 6.68 (n 74) | 45.62* (-76.51 till inf), p 0.054 | -2.91 (-8.93 till 3.37), p 0.347 |
+| deletion | [AD−1, ED+1] | med kontroller | 1.68 (n 7) | 3.10 (n 23) | -0.02 (n 36) | 1.52 (n 65) | 0.16 (-inf till inf), p 0.976 | -1.54 (-6.82 till 2.78), p 0.494 |
+| deletion | [AD−1, ED+1] | utan kontroller, samma händelser som med | -0.72 (n 7) | 2.93 (n 23) | 0.49 (n 36) | 1.36 (n 65) | -2.08 (-inf till inf), p 0.868 | -0.87 (-6.45 till 3.37), p 0.684 |
+| deletion | [AD−20, ED+1] | med kontroller | 2.74 (n 7) | 8.14 (n 23) | 3.26 (n 36) | 1.24 (n 65) | 1.49 (-inf till inf), p 0.889 | 2.02 (-6.74 till 9.68), p 0.602 |
+| deletion | [AD−20, ED+1] | utan kontroller, samma händelser som med | 12.98 (n 7) | 10.49 (n 23) | -0.39 (n 36) | 2.42 (n 65) | 10.56 (-inf till inf), p 0.371 | -2.81 (-11.33 till 6.95), p 0.533 |

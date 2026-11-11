@@ -21,8 +21,8 @@ def build(doc):
         for sp in [False, True]:
             r = one(F, typ=t, splittade=sp)
             rows.append([f'{tl}, ' + ('incl. split events' if sp else 'excl. split events'), str(int(r.n)), str(int(r.G)), num(s * r.car),
-                         num(s * r.D_FI), num(r.M_FI), num(s * r.D_V) if not sp else '', num(r.M_V) if not sp else ''])
-            cis.append(len(rows)); rows.append(['', '', '', '', '', ci(r.lo_FI, r.hi_FI), '', ci(r.lo_V, r.hi_V) if not sp else ''])
+                         num(s * r.D_FI), num(r.M_FI), num(s * r.D_C) if not sp else '', num(r.M_C) if not sp else ''])
+            cis.append(len(rows)); rows.append(['', '', '', '', '', ci(r.lo_FI, r.hi_FI), '', ci(r.lo_C, r.hi_C) if not sp else ''])
     table(doc, ['Sample', 'N', 'Reviews', 'CAR (%)', 'D̄ (%)', 'M', 'D̄ (%)', 'M'], rows, [4.6, 1.2, 1.6, 1.8, 1.8, 2.6, 1.8, 2.6],
           ci_rows=cis, group_header=[('Finansinspektionen', 4, 5), ('LSEG Lipper', 6, 7)])
     note(doc, 'Not declared in advance; a check on the fund demand measure. Finansinspektionen: net purchases by funds classified '

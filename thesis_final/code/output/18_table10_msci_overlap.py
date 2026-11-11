@@ -39,7 +39,7 @@ def build(doc):
     rows, cis = [], []
     for _, r in M.iterrows():
         lab = ('Additions' if r.typ == 'addition' else 'Deletions') + f', {r.urval}, ' + ('all events' if r.variant == 'alla' else 'excluding overlap')
-        rows.append([lab, str(int(r.n)), num(r.car * (1 if r.typ == 'addition' else -1)), num(r.D_V * (1 if r.typ == 'addition' else -1)), num(r.M)])
+        rows.append([lab, str(int(r.n)), num(r.car * (1 if r.typ == 'addition' else -1)), num(r.D_C * (1 if r.typ == 'addition' else -1)), num(r.M)])
         cis.append(len(rows)); rows.append(['', '', '', '', ci(r.lo, r.hi)])
     table(doc, ['', 'N', 'CAR (%)', 'D̄ (%)', 'M'], rows, [7.4, 1.6, 2.4, 2.4, 3.0], ci_rows=cis)
     note(doc, 'An event overlaps when the same company is added to or deleted from the MSCI Sweden index within ten trading days of '

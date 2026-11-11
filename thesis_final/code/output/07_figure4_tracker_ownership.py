@@ -32,7 +32,7 @@ def build(doc):
     note(doc, 'Assets of funds that track the OMXSB index at the end of each year (SHoF fund database), divided by the market value '
          'of the OMXSB index. The three lines are cumulative: B counts pure OMXSB index funds, V adds tracker variants, and C adds '
          'the OMXSB share of balanced funds, weighted by the OMXSB weight in their benchmark (Finansinspektionen). A fund counts '
-         'only while its mandate documents show it tracking the index. Comparable to Greenwood and Sammon (2025, Figure 5). '
+         'only while its mandate documents or its holdings (at least half of the index trades) show it tracking the index. C is the main measure. Comparable to Greenwood and Sammon (2025, Figure 5). '
          f'{int(D.ar.min())}–{int(D.ar.max())}. Descriptive; no inference.')
 
 

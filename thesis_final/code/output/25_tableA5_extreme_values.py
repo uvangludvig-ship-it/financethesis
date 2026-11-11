@@ -23,7 +23,7 @@ for t in ['addition', 'deletion']:
     for k, full in FULL.items():
         a, b = one(C, variant='alla', typ=t, test=k), one(T, panel='A/B', typ=t, fönster='tot', urval=full)
         assert abs(a.b - b.b) < 1e-9 and int(a.n) == int(b.n), (t, k)
-R5 = R5[(R5.tabell.astype(str) == '5') & (R5.skikt == 'D_V') & (R5.fonster == 'y_tot') & (R5.typ == 'addition')]
+R5 = R5[(R5.tabell.astype(str) == '5') & (R5.skikt == 'D_C') & (R5.fonster == 'y_tot') & (R5.typ == 'addition')]
 for k in ['2017–21', '2022–26', '2017–26']:
     assert abs(one(M, variant='alla', test=k).b - one(R5, period=k).M) < 1e-9
 
@@ -57,7 +57,7 @@ def build(doc):
          'excluded by the sample rule. |CAR| ≤ 20 %: events with an absolute CAR above 20 per cent dropped. Without Sivers: the '
          'Sivers Semiconductors addition in June 2026 (CAR +77 per cent) dropped. Inference: ' + WCR + '. Brackets: ' + WCR_CI + '. '
          f'Stars from the same draws: {STARS}. Panels C and D: median CAR, descriptive. Panel E: M as in {NUM["tab_multiplier"]} '
-         '(net demand by OMXSB trackers including variants, total window, events without a share split), with and without the twelve '
+         f'(net demand by {TRACKERS}, total window, events without a share split), with and without the twelve '
          f'events with company news in the window ({NUM["tab_news"]}). Brackets in Panel E: {PAIRS}.')
 
 

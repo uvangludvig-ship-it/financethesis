@@ -1,6 +1,6 @@
 # Tabell 6 (G&S Table VI): M per period i en regression, utan och med kontroller.
 # CAR_i = sum_k M_k * 1{period k} * D̄_k + b' kontroller + e (kontroller centrerade: omsättning, storlek, Wurgler-Zhuravskaya, analytiker).
-# Ur results/fund_demand/omrakning_resultat.csv, tabell 6 (02), skikt D_V, fönster [AD−1, ED+1], utan split.
+# Ur results/fund_demand/omrakning_resultat.csv, tabell 6 (02), skikt D_C (huvudmåttet), fönster [AD−1, ED+1], utan split.
 # Intervall: M per period = analytiskt (CR1 per översyn, t med G−1); skillnader = wild cluster bootstrap (testinversion), stjärnor därifrån.
 # Körs från thesis_final efter 02: python3 code/output/12_table6_multiplier_controls.py
 import sys
@@ -10,7 +10,7 @@ import numpy as np, pandas as pd
 from _style import *
 
 R = pd.read_csv(RES / 'fund_demand' / 'omrakning_resultat.csv')
-R6 = R[(R.tabell == 6) & (R.skikt == 'D_V') & (R.fonster == 'y_tot')].copy()
+R6 = R[(R.tabell == 6) & (R.skikt == 'D_C') & (R.fonster == 'y_tot')].copy()
 R6['kontroller'] = R6.kontroller.astype(str).str.lower().map({'true': True, 'false': False})
 DIFFS = [('M 2007–11 − M 2022–26', '2007–11 − 2022–26'), ('M 2012–16 − M 2022–26', '2012–16 − 2022–26'),
          ('M 2017–21 − M 2022–26', '2017–21 − 2022–26')]
@@ -19,7 +19,7 @@ for t, k in COLS:
     for p in PERS_KORT: assert one(R6, typ=t, kontroller=k, period=f'M {p}').ci_metod.startswith('95 % intervall: analytiskt')
     for d, _ in DIFFS: assert one(R6, typ=t, kontroller=k, period=d).ci_metod.startswith('95 % intervall: invertering')
 # tabell 3 och tabell 4 utan kontroller ska ge samma M per period (kvoten och regressionen är samma skattning när D̄ per period används)
-R5 = R[(R.tabell == 5) & (R.skikt == 'D_V') & (R.fonster == 'y_tot')]
+R5 = R[(R.tabell == 5) & (R.skikt == 'D_C') & (R.fonster == 'y_tot')]
 for t in ['addition', 'deletion']:
     for p in PERS_KORT:
         a, b = one(R5, typ=t, period=p).M, one(R6, typ=t, kontroller=False, period=f'M {p}').b
