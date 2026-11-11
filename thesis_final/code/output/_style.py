@@ -25,7 +25,7 @@ NUM = {'fig_net_buying': 'Figure 1', 'tab_by_year': 'Table 1', 'tab_by_period': 
        'tab_runup': 'Table 4', 'fig_size_rank': 'Figure 6', 'tab_multiplier': 'Table 5', 'tab_controls': 'Table 6',
        'fig_spread': 'Figure 7', 'fig_volume': 'Figure 8', 'tab_who_buys': 'Table 7', 'tab_issuance': 'Table 8',
        'tab_omxs30': 'Table 9', 'tab_msci': 'Table 10', 'tab_near': 'Table 11', 'tab_reversal': 'Table 12',
-       'tab_twins': 'Table 13', 'tab_mde': 'Table A2', 'tab_fi': 'Table A3', 'tab_news': 'Table A4', 'tab_extreme': 'Table A5'}
+       'tab_twins': 'Table 13', 'tab_mde': 'Table A2', 'tab_fi': 'Table A3', 'tab_news': 'Table A4', 'tab_extreme': 'Table A5', 'tab_funds': 'Table A6'}
 
 PERS = ['2007–2011', '2012–2016', '2017–2021', '2022–2026']      # som i tabell1_lang.csv
 PERS_KORT = ['2007–11', '2012–16', '2017–21', '2022–26']         # som i omrakning_resultat.csv och resultat_car.csv
@@ -99,9 +99,10 @@ def _rule(cell, edge):
     b.append(line)
 
 
-def table(doc, headers, rows, widths, panels=(), ci_rows=(), header_rows=1, group_header=None):
+def table(doc, headers, rows, widths, panels=(), ci_rows=(), header_rows=1, group_header=None, left=(0,)):
     """rows: lista av listor (en cell per kolumn) eller en sträng (panelrubrik över hela bredden).
-    ci_rows: index i rows för intervallrader (mindre text). group_header: [(text, första kolumn, sista kolumn), ...] ovanför headers."""
+    ci_rows: index i rows för intervallrader (mindre text). group_header: [(text, första kolumn, sista kolumn), ...] ovanför headers.
+    left: kolumner som vänsterjusteras (textkolumner); övriga högerjusteras."""
     extra = 1 if group_header else 0
     t = doc.add_table(rows=1 + extra, cols=len(headers)); t.alignment = WD_TABLE_ALIGNMENT.CENTER; t.autofit = False
     bs = OxmlElement('w:tblBorders')
@@ -133,7 +134,7 @@ def table(doc, headers, rows, widths, panels=(), ci_rows=(), header_rows=1, grou
             if not isp: c.width = Cm(widths[j])
             for p in c.paragraphs:
                 if ishead and i < extra: p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-                else: p.alignment = WD_ALIGN_PARAGRAPH.LEFT if j == 0 or isp else WD_ALIGN_PARAGRAPH.RIGHT
+                else: p.alignment = WD_ALIGN_PARAGRAPH.LEFT if j in left or isp else WD_ALIGN_PARAGRAPH.RIGHT
                 p.paragraph_format.space_before = Pt(0 if isci else 3); p.paragraph_format.space_after = Pt(3 if isci else 0)
                 # håll ihop: rubrikrader, panelrubrik med första raden, skattning med sitt intervall. Annars får tabellen brytas.
                 p.paragraph_format.keep_with_next = i < len(t.rows) - 1 and (i <= extra or isp or (i + 1) in ci_idx)

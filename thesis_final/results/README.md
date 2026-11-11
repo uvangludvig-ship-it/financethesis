@@ -38,6 +38,7 @@ Samma innehåll i Word: [`tables/all_tables.docx`](tables/all_tables.docx), och 
 | Tabell A3, `23_tableA3_fi_check.docx` | M med Finansinspektionens fonddata | – |
 | Tabell A4, `24_tableA4_news_screen.docx` **ny** | Robusthet: utan egen bolagsnyhet, och alla borttag | – |
 | Tabell A5, `25_tableA5_extreme_values.docx` **ny** | Robusthet: winsoriserat, utan \|CAR\| > 20, utan Sivers, median, M utan nyhetshändelserna | – |
+| Tabell A6, `26_tableA6_fund_list.docx` **ny** | Fonderna i fondlistan: cirkel per period, förmögenhet 2015, 2020, 2025, tillväxt, del som räknas; rangordnade. Samma tabell som csv: [`26_tableA6_fund_list.csv`](tables/26_tableA6_fund_list.csv) | – |
 
 Varje tabells not anger inferensen: wild cluster bootstrap (intervall genom testinversion), parvis klusterbootstrap för M eller analytiska CR1-intervall. Inga nya test: tabellerna och figurerna formaterar bara siffror som steg 01–12 redan räknat, och varje fil kontrollerar dem mot källfilen.
 

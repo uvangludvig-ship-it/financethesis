@@ -348,6 +348,28 @@ for r in M[M.skikt0.isin(['B', 'V', 'C'])].itertuples():
             vikt_log.append(dict(fond=fn, vikt_2019=w.get(pd.Period('2019-12', 'M')), vikt_2022=w.get(pd.Period('2022-12', 'M')), vikt_2025=w.get(pd.Period('2025-12', 'M'))))
             ser['C'] += AUM[fn].where(galler, 0.0) * w
         else: ser[r.skikt0] += AUM[fn].where(galler, 0.0)
+# fondtabell (tabell A6, 11 nov 2026): varje fond i fondlistan, cirkel per period, hela fondens förmögenhet och den del som räknas i
+# ägarandelen (blandfonder vägda med OMXSB-andelen, bara inom följarperioden). Ändrar inga andra siffror.
+ALLA_M = pd.read_csv(MAND, dtype=str).fillna(''); ALLA_M = ALLA_M[ALLA_M.skikt != 'OMXS30']
+SIST = idx[-1]; DAGAR = [pd.Period(x, 'M') for x in ['2015-12', '2020-12', '2025-12']] + [SIST]
+ft = []
+for k in dict.fromkeys(M.nyckel):
+    rr = M[M.nyckel == k]; namn = [fn for fn in ALIAS[k][1] if fn in AUM]
+    hel = sum((AUM[fn] for fn in namn), pd.Series(0.0, index=idx)) if namn else None
+    rakn = pd.Series(0.0, index=idx)
+    for r in rr[rr.skikt0.isin(['B', 'V', 'C'])].itertuples():
+        for fn in namn:
+            galler = pd.Series([(pd.isna(r.start) or r.start <= MSLUT[m]) and (pd.isna(r.slut) or m.to_timestamp() <= r.slut) for m in idx], index=idx)
+            w = fi_andel_serie(r.nyckel, fn) if r.skikt0 == 'C' else pd.Series(1.0, index=idx)
+            if w is not None: rakn += AUM[fn].where(galler, 0.0) * w
+    per_ = [f"{x.skikt0} {x.start.year if pd.notna(x.start) else '…'}–{x.slut.year if pd.notna(x.slut) else ''}" for x in rr.itertuples()]
+    rad = dict(nyckel=k, fond=rr.fond.iloc[0], cirklar='; '.join(per_), cirkel_nu=next((x.skikt0 for x in rr.itertuples() if pd.isna(x.slut)), 'ingen'),
+               shof_namn='; '.join(namn), i_shof=bool(namn), status=rr.status.iloc[0])
+    for d_ in DAGAR:
+        rad[f'aum_{d_}'] = float(hel[d_]) if hel is not None else np.nan; rad[f'raknas_{d_}'] = float(rakn[d_]) if namn else np.nan
+    ft.append(rad)
+FT6 = pd.DataFrame(ft); FT6['sista_manad'] = str(SIST)
+FT6.to_csv(os.path.join(OUT, 'fondtabell_aum.csv'), index=False)
 S = pd.DataFrame({'manad': idx.astype(str), 'B_mdkr': ser['B'].values, 'V_mdkr': (ser['B'] + ser['V']).values, 'C_mdkr': (ser['B'] + ser['V'] + ser['C']).values})
 S.to_csv(os.path.join(OUT, 'shof_aum_skikt.csv'), index=False); pd.DataFrame(vikt_log).to_csv(os.path.join(OUT, 'blandfond_vikter.csv'), index=False)
 G = pd.read_csv(DATA / 'comparison' / 'previous_run_demand_and_ownership_by_year.csv')[['ar', 'D_addition', 'D_deletion', 'omxsb_mdkr', 'fonder_mdkr', 'agarandel_pct']].rename(columns={'D_addition': 'r11_D_addition', 'D_deletion': 'r11_D_deletion', 'fonder_mdkr': 'r11_fonder_mdkr', 'agarandel_pct': 'r11_agarandel_pct'})
