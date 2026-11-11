@@ -2,7 +2,7 @@
 # Panel A och B ur results/news_screen/news_screen_results.csv (steg 09). Panel C ur results/effect/tabell1_lang.csv (01): panel R
 # (alla borttag, även de 10 som G&S regel utesluter) bredvid huvudurvalet (panel A/B, C och D).
 # Kontroll: "Alla" i steg 09 = tabell 1 (samma medel och antal), och antalet borttagna = antalet i results/news_screen/REASONS.md.
-# Körs från thesis_final efter 09: python3 code/output/21_tableA4_news_screen.py
+# Körs från thesis_final efter 09: python3 code/output/24_tableA4_news_screen.py
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))

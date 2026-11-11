@@ -18,12 +18,14 @@ OUT = RES / 'tables'
 FONT, SIZE = 'Times New Roman', 10
 
 # G&S-ordningen: figur 1, tabell I, figur 2, figur 3, tabell II, (figur 5), figur 7, tabell IV, figur 8, tabell V, VI, figur 9,
-# volym (2.4.3), tabell VII, nyemissioner (2.4.3), tabell VIII; sist MSCI-överlappet och bilagan. Filnamnen 01–21 följer samma ordning.
+# volym (2.4.3), tabell VII, nyemissioner (2.4.3), tabell VIII; sedan MSCI-överlappet, nästan tillagda, återgången och tvillingarna,
+# sist bilagan. Filnamnen 01–25 följer samma ordning.
 NUM = {'fig_net_buying': 'Figure 1', 'tab_by_year': 'Table 1', 'tab_by_period': 'Table 2', 'fig_by_year': 'Figure 2',
        'fig_scatter': 'Figure 3', 'tab_car_controls': 'Table 3', 'fig_ownership': 'Figure 4', 'fig_price_path': 'Figure 5',
        'tab_runup': 'Table 4', 'fig_size_rank': 'Figure 6', 'tab_multiplier': 'Table 5', 'tab_controls': 'Table 6',
        'fig_spread': 'Figure 7', 'fig_volume': 'Figure 8', 'tab_who_buys': 'Table 7', 'tab_issuance': 'Table 8',
-       'tab_omxs30': 'Table 9', 'tab_msci': 'Table 10', 'tab_mde': 'Table A2', 'tab_fi': 'Table A3', 'tab_news': 'Table A4'}
+       'tab_omxs30': 'Table 9', 'tab_msci': 'Table 10', 'tab_near': 'Table 11', 'tab_reversal': 'Table 12',
+       'tab_twins': 'Table 13', 'tab_mde': 'Table A2', 'tab_fi': 'Table A3', 'tab_news': 'Table A4', 'tab_extreme': 'Table A5'}
 
 PERS = ['2007–2011', '2012–2016', '2017–2021', '2022–2026']      # som i tabell1_lang.csv
 PERS_KORT = ['2007–11', '2012–16', '2017–21', '2022–26']         # som i omrakning_resultat.csv och resultat_car.csv
@@ -119,6 +121,7 @@ def table(doc, headers, rows, widths, panels=(), ci_rows=(), header_rows=1, grou
             for c, x in zip(cs, v): c.text = x
         if i in ci_rows: ci_idx.add(ti)
     for c in t.rows[-1].cells: _rule(c, 'bottom')
+    for gc, w in zip(t._tbl.tblGrid.findall(qn('w:gridCol')), widths): gc.set(qn('w:w'), str(int(Cm(w).twips)))   # LibreOffice läser bredderna härifrån
     for i, row in enumerate(t.rows):
         row._tr.get_or_add_trPr().append(OxmlElement('w:cantSplit'))
         isp, isci, ishead = i in panel_idx, i in ci_idx, i <= extra

@@ -1,6 +1,6 @@
 # Tabell A3: M med Finansinspektionens bredare mått på indexfondernas köp, som kontroll av D från LSEG Lipper.
 # Ur results/fi_check/fi_m_kontroll.csv (03). Inte deklarerad i förväg. Intervall: parvis klusterbootstrap, percentil, 4 999 dragningar.
-# Körs från thesis_final efter 03: python3 code/output/20_tableA3_fi_check.py
+# Körs från thesis_final efter 03: python3 code/output/23_tableA3_fi_check.py
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))

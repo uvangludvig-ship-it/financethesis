@@ -1,8 +1,8 @@
 # results: alla tabeller och figurer i Greenwood och Sammon, plus robustheten
 
-Skrivs om av `run_all.py` vid varje körning (allt utom den här filen). Committa bara efter en körning som slutar med **0 FEL** ([`check.txt`](check.txt)). Den här versionen är körningen 10 november 2026; äldre versioner finns i git-historiken (taggen `v3` = denna körning).
+Skrivs om av `run_all.py` vid varje körning (allt utom den här filen). Committa bara efter en körning som slutar med **0 FEL** ([`check.txt`](check.txt)). Den här versionen är körningen 11 november 2026; äldre versioner finns i git-historiken (taggen `v3` = körningen 10 november).
 
-Jämfört med körningen 9 november (tidigare `output.v1`): urvalsregeln för borttag (10 borttag utesluts enligt G&S, se `declarations/`), nyhetsgenomgången som robusthet, och nya tabeller och figurer för G&S tabell II, IV och VIII, figur 7, 8 och 9, volymen kring ändringsdagen och nyemissionerna. Noterna till de nya tabellerna och figurerna är utkast: författarna formulerar om texten.
+Jämfört med körningen 9 november (tidigare `output.v1`): urvalsregeln för borttag (10 borttag utesluts enligt G&S, se `declarations/`), nyhetsgenomgången som robusthet, och nya tabeller och figurer för G&S tabell II, IV och VIII, figur 7, 8 och 9, volymen kring ändringsdagen och nyemissionerna. Från 11 november också nästan tillagda, återgången, tvillingarna och extremvärdena (steg 13–16). Noterna till de nya tabellerna och figurerna är utkast: författarna formulerar om texten.
 
 ## Läs här
 
@@ -29,9 +29,13 @@ Samma innehåll i Word: [`tables/all_tables.docx`](tables/all_tables.docx), och 
 | Tabell 8, `16_table8_issuance.docx` **ny** | Nyemissioner, tillägg mot nästan tillagda | avsnitt II.D |
 | Tabell 9, `17_table9_omxs30.docx` **ny** | OMXS30 mot OMXSB | Table VIII |
 | Tabell 10, `18_table10_msci_overlap.docx` | Med och utan händelser som sammanfaller med MSCI Sweden | jfr Table VIII |
-| Tabell A2, `19_tableA2_mde.docx` | Minsta påvisbara effekt | – |
-| Tabell A3, `20_tableA3_fi_check.docx` | M med Finansinspektionens fonddata | – |
-| Tabell A4, `21_tableA4_news_screen.docx` **ny** | Robusthet: utan egen bolagsnyhet, och alla borttag | – |
+| Tabell 11, `19_table11_near_additions.docx` **ny** | Tillägg och borttag mot nästan tillagda | – |
+| Tabell 12, `20_table12_reversal.docx` **ny** | Uppgång före och återgång efter ändringen | – |
+| Tabell 13, `21_table13_twins.docx` **ny** | Tvillingar: indexslaget mot systerslaget | – |
+| Tabell A2, `22_tableA2_mde.docx` | Minsta påvisbara effekt | – |
+| Tabell A3, `23_tableA3_fi_check.docx` | M med Finansinspektionens fonddata | – |
+| Tabell A4, `24_tableA4_news_screen.docx` **ny** | Robusthet: utan egen bolagsnyhet, och alla borttag | – |
+| Tabell A5, `25_tableA5_extreme_values.docx` **ny** | Robusthet: winsoriserat, utan \|CAR\| > 20, utan Sivers, median, M utan nyhetshändelserna | – |
 
 Varje tabells not anger inferensen: wild cluster bootstrap (intervall genom testinversion), parvis klusterbootstrap för M eller analytiska CR1-intervall. Inga nya test: tabellerna och figurerna formaterar bara siffror som steg 01–12 redan räknat, och varje fil kontrollerar dem mot källfilen.
 
@@ -50,7 +54,7 @@ Varje tabells not anger inferensen: wild cluster bootstrap (intervall genom test
 
 - [`effect/TABELL1.md`](effect/TABELL1.md): effekttabellen som läsbar text, med både bootstrapintervall och analytiska intervall.
 - [`news_screen/REASONS.md`](news_screen/REASONS.md): bedömningen av varje händelse i nyhetsgenomgången, med källa.
-- `effect/`, `fund_demand/`, `msci_overlap/`, `mde/`, `fi_check/`, `controls/`, `composition/`, `liquidity/`, `other_tests/`, `news_screen/`: alla siffror som CSV. Kolumnen `ci_metod` säger hur varje intervall är framtaget.
+- `effect/`, `fund_demand/`, `msci_overlap/`, `mde/`, `fi_check/`, `controls/`, `composition/`, `liquidity/`, `other_tests/`, `news_screen/`, `extreme_values/`, `near_additions/`, `reversal/`, `twins/`: alla siffror som CSV. Kolumnen `ci_metod` säger hur varje intervall är framtaget.
 - `logs/`: hela utskriften från varje steg. [`check.txt`](check.txt): kontrollen av huvudsiffrorna.
 
 Koden finns i `thesis_final/code/` (analys) och `thesis_final/code/output/` (en fil per tabell och figur).

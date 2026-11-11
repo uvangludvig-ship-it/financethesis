@@ -134,8 +134,38 @@ for fil in ['liquidity/LIQUIDITY.md', 'other_tests/ISSUANCE_OMXS30.md', 'control
     txt = (RES / fil).read_text(encoding='utf-8')
     koll(f'{fil}: avvikelser mot den gamla körningen', int('Avvikelser' in txt), 0, 0)
 
+# steg 13 till 16 (11 nov): flyttade test, kontrollsiffror enligt declarations/step13_16_declaration.md
+EV = pd.read_csv(RES / 'extreme_values' / 'extreme_values_results.csv')
+NA = pd.read_csv(RES / 'near_additions' / 'near_additions_results.csv')
+RV = pd.read_csv(RES / 'reversal' / 'reversal_results.csv')
+TW = pd.read_csv(RES / 'twins' / 'twin_results_summary.csv')
+AB = pd.read_csv(RES / 'twins' / 'ab_revision_results.csv')
+koll('Winsoriserad 1/99, tillägg 2017–26', rad(EV, matt='CAR', variant='winsoriserad 1/99', typ='addition', test='2017–26').b, 1.920)
+koll('Winsoriserad 1/99, tillägg 2022–26', rad(EV, matt='CAR', variant='winsoriserad 1/99', typ='addition', test='2022–26').b, 1.036)
+koll('Utan Sivers, tillägg 2022–26', rad(EV, matt='CAR', variant='utan Sivers', typ='addition', test='2022–26').b, 0.619)
+koll('Utan |CAR| > 20, tillägg 2017–26', rad(EV, matt='CAR', variant='utan |CAR| > 20', typ='addition', test='2017–26').b, 1.763)
+koll('M tillägg 2017–26 utan egen bolagsnyhet', rad(EV, matt='M', variant='utan egen bolagsnyhet', test='2017–26').b, 2.272)
+koll('M tillägg 2017–26, alla (= tabell 5)', rad(EV, matt='M', variant='alla', test='2017–26').b, 3.1104)
+koll('Alla, tillägg 2022–26 (= tabell 1)', rad(EV, matt='CAR', variant='alla', typ='addition', test='2022–26').b, 1.4976)
+r = rad(NA, typ='addition', urval='alla', period='efter', variant='CAR [AD-1,ED+1] mot nästan')
+koll('Nästan tillagda, tillägg från 2017', r.b, 1.5252); koll('  N', r.n, 1768, 0)
+koll('Nästan tillagda, tillägg före 2017', rad(NA, typ='addition', urval='alla', period='före', variant='CAR [AD-1,ED+1] mot nästan').b, 3.9002)
+koll('Nästan borttagna, borttag från 2017, alla', rad(NA, typ='deletion', urval='alla', period='efter', variant='CAR [AD-1,ED+1] mot nästan').b, -1.4184)
+r = rad(RV, typ='addition', urval='alla', period='all', matt='car_e10')
+koll('Återgång [ED, ED+10], tillägg', r.b, -1.416); koll('  N', r.n, 260, 0)
+koll('Återgång [ED, ED+10], tillägg 2007–11', rad(RV, typ='addition', urval='alla', period='2007–2011', matt='car_e10').b, -5.326)
+koll('Återgång [ED, ED+10], tillägg 2022–26', rad(RV, typ='addition', urval='alla', period='2022–2026', matt='car_e10').b, 0.633)
+koll('Återgångsandel 20 dagar, tillägg (%)', round(100 * rad(RV, typ='addition', urval='alla', matt='återgångsandel 20 dagar').b), 17, 0)
+r = rad(TW, fönster='primär [AD-1,ED+1]')
+koll('Tvillingar, primärt', r.medel_händelse, 0.33, 0); koll('  p', r.p_händelse, 0.4074, 0); koll('  N', r.N, 39, 0); koll('  bolag', r.bolag, 13, 0)
+r = rad(AB, urval='alla rensade')
+koll('Tvillingar efter revisionen', r.skattning, 0.33, 0); koll('  undre', r.ci_lo, -0.47, 0); koll('  övre', r.ci_hi, 1.16, 0)
+for fil in ['extreme_values/EXTREME_VALUES.md', 'near_additions/NEAR_ADDITIONS.md', 'reversal/REVERSAL.md', 'twins/TWINS.md']:
+    txt = (RES / fil).read_text(encoding='utf-8')
+    koll(f'{fil}: avvikelser mot den gamla körningen', int('Avvikelser' in txt), 0, 0)
+
 # intervall och p från samma bootstrap ska alltid stämma: p < 0,05 precis när 0 ligger utanför intervallet
-for namn, df, pc in [('tabell1', T1, 'p_wcb'), ('runda 13', R13, 'p'), ('runda 14', C14, 'p')]:
+for namn, df, pc in [('tabell1', T1, 'p_wcb'), ('runda 13', R13, 'p'), ('runda 14', C14, 'p'), ('extremvärden', EV, 'p_wcb'), ('nästan tillagda', NA, 'p_wcb'), ('återgång', RV, 'p_wcb')]:
     d = df[df.ci_metod.astype(str).str.startswith('95 % intervall: invertering')]
     n_fel = int(((d[pc] < .05) != ((d.lo > 0) | (d.hi < 0))).sum())
     koll(f'{namn}: bootstrapintervall som inte stämmer med p ({len(d)} rader)', n_fel, 0, 0)

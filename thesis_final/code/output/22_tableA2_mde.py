@@ -1,6 +1,6 @@
 # Tabell A2: minsta påvisbara effekt (MDE) för huvudtesterna. Ur results/mde/mde.csv (06).
 # MDE = (t_0,975 + t_0,80) * SE med G−1 frihetsgrader: 5 % test, 80 % styrka. Analytiskt, ingen bootstrap.
-# Körs från thesis_final efter 06: python3 code/output/19_tableA2_mde.py
+# Körs från thesis_final efter 06: python3 code/output/22_tableA2_mde.py
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))

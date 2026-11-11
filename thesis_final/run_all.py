@@ -32,6 +32,10 @@ STEG = [
     ('10_composition_runup.py', 'G&S tabell 2 och 4 (metod 5.3 och 5.4) och M på samma händelser'),
     ('11_liquidity_and_selection.py', 'G&S figur 9 (spread), volym kring ändringen och figur 8 (storleksrang)'),
     ('12_issuance_and_omxs30.py', 'G&S nyemissioner och tabell 8 (OMXS30)'),
+    ('13_extreme_values.py', 'Robusthet: extremvärden (winsorisering, utan |CAR| > 20, utan Sivers, median) och M utan nyhetshändelserna'),
+    ('14_near_additions_control.py', 'Tillägg och borttag mot nästan tillagda (T5v)'),
+    ('15_reversal.py', 'Återgång efter ändringen'),
+    ('16_twins.py', 'Tvillingar: indexslaget mot systerslaget'),
 ]
 # Word-tabeller och figurer, en fil per tabell eller figur, i Greenwood och Sammons ordning
 STEG += [(f'output/{f.name}', f.stem) for f in sorted((ROOT / 'code' / 'output').glob('[0-9][0-9]_*.py'))]
