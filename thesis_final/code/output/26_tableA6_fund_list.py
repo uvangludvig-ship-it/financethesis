@@ -11,9 +11,13 @@ import numpy as np, pandas as pd
 from _style import *
 
 F = pd.read_csv(RES / 'fund_demand' / 'fondtabell_aum.csv')
+# bara fonder som någon gång räknas som följare (B, V eller C); fonder som bara är X (bedömda och uteslutna) nämns i noten
+FOLJ = F.cirklar.str.contains(r'(?:^|; )[BVC] ', regex=True)
+UTE = F[~FOLJ].fond.tolist()
 S = pd.read_csv(RES / 'fund_demand' / 'shof_aum_skikt.csv')
 SIST = F.sista_manad.iloc[0]
 assert abs(F['raknas_2025-12'].sum() - one(S, manad='2025-12').C_mdkr) < 1e-6, 'räknad förmögenhet ska summera till C'
+assert (F[~FOLJ]['raknas_2025-12'].fillna(0) == 0).all(); F = F[FOLJ].copy()
 CIRKEL = {'B': 'B', 'V': 'V', 'C': 'C', 'X': 'X'}
 
 
@@ -42,25 +46,29 @@ OUT.mkdir(parents=True, exist_ok=True); UT.to_csv(OUT / f'{Path(__file__).stem}.
 
 
 def build(doc):
-    title(doc, 'tab_funds', 'The funds in the tracker list: circle, assets and growth')
+    title(doc, 'tab_funds', 'OMXSB index trackers: circle, assets and growth')
     pc = lambda v: '' if pd.isna(v) else num(v, 0)
     rows = []
-    for _, r in F.iterrows():
-        rows.append([str(int(r['rank'])) if pd.notna(r['rank']) else '', r.Fund, r.Circles, num(r['aum_2015-12'], 1), num(r['aum_2020-12'], 1),
-                     num(r['aum_2025-12'], 1), pc(r.growth_2020_25), num(r['raknas_2025-12'], 1)])
+    for lab, d in [('Panel A. Trackers today', F[F.cirkel_nu.isin(['B', 'V', 'C'])]), ('Panel B. Former trackers', F[~F.cirkel_nu.isin(['B', 'V', 'C'])])]:
+        rows.append(lab)
+        for i, (_, r) in enumerate(d.iterrows(), 1):
+            rows.append([str(i) if pd.notna(r['aum_2025-12']) else '', r.Fund, r.Circles, num(r['aum_2015-12'], 1), num(r['aum_2020-12'], 1),
+                         num(r['aum_2025-12'], 1), pc(r.growth_2020_25), num(r['raknas_2025-12'], 1)])
     rows.append(['', 'Total counted in the ownership share', '', '', '', '', '', num(F['raknas_2025-12'].sum(), 1)])
     table(doc, ['', 'Fund', 'Circle', '2015', '2020', '2025', 'Growth 2020–25 (%)', 'Counted, 2025'], rows,
           [0.8, 4.6, 3.3, 1.2, 1.2, 1.2, 1.8, 1.8], group_header=[('Assets, SEK bn (December)', 3, 5)], left=(0, 1, 2))
     # utkast: författarna formulerar om noten
-    note(doc, 'All funds in the tracker list, ranked by total assets in December 2025 (SHoF fund database, SEK billion, all share '
+    note(doc, 'Funds that track the OMXSB in at least one period, ranked within each panel by total assets in December 2025 (SHoF fund database, SEK billion, all share '
          'classes). Circle: B = pure OMXSB index funds, V = B plus tracker variants, C = V plus the OMXSB share of balanced funds, '
-         'X = indexed or close to the index but not a tracker, with the years the fund belongs to each circle. A fund counts as a '
+         'X = not a tracker in that period, with the years the fund belongs to each circle. A fund counts as a '
          'tracker while its documents or its holdings (at least half of the index trades) show it tracking the OMXSB. '
+         f'{len(UTE)} funds that are indexed or close to the index were assessed and excluded in all years (fewer than half of the '
+         'index trades or no OMXSB mandate). '
          'Counted 2025: the part of the assets that enters the ownership share in ' + NUM['fig_ownership'] + ' (main measure C): '
          'zero outside the tracker period, and for balanced funds the assets times the OMXSB weight in their benchmark. Growth: '
          'change in total assets, not shown when the fund had less than SEK 50 million at the start. Funds without assets are '
-         'foreign-domiciled and not in the SHoF database (they count in the net buying D from LSEG Lipper, but not in the '
-         f'ownership share). Assets for the latest month ({SIST}) are in the CSV file next to this table.')
+         'domiciled outside Sweden and not in the SHoF database (they count in the net buying D from LSEG Lipper, but not yet in '
+         f'the ownership share). Assets for the latest month ({SIST}) are in the CSV file next to this table.')
 
 
 if __name__ == '__main__':
