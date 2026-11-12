@@ -12,6 +12,8 @@ The complete input inventory is `replication/thesis_final/data/FILES.csv`. Origi
 | Market return | Daily percentage change in OMXSBGI | LSEG index panel | Unit-beta market adjustment |
 | CAR | Sum of daily stock minus market returns, percentage points | `returns.py`; independent reconstruction | Arithmetic, not compounded; not causal |
 | Main CAR | CAR from AD-1 to ED+1, inclusive | Main event table | Complete-window requirement changes sample |
+| Initial seven-day CAR | CAR from AD-1 through AD+5; seven daily returns, same complete events as main CAR | `return_definition_checks.py`; independently checked by `fixed_window_decomposition.py` | Exploratory; ends before ED for every event; not proof of equal responses across periods |
+| Remaining CAR | CAR from AD+6 through ED+1; adds exactly to the initial seven-day CAR to give the main CAR | `fixed_window_decomposition.py` | Varying duration and composition; not a causal calendar decomposition |
 | Announcement CAR | AD-1 to AD+1 | Main event table | Includes pre-announcement day |
 | Implementation CAR | ED-1 to ED+1 | Main event table | Not an intraday execution measure |
 | Extended CAR | AD-1 to ED+20 on fixed complete cases | Independent audit | Exploratory; finite horizon |
@@ -20,12 +22,13 @@ The complete input inventory is `replication/thesis_final/data/FILES.csv`. Origi
 | V | B plus benchmark variants | Dated fund mandates | Broader covered investor definition |
 | C | V plus relevant mixed-fund exposure | Dated mandates and allocation weights | Main measure; incomplete passive population |
 | D | Sign-adjusted change in covered holdings divided by shares outstanding, multiplied by 100 | LSEG/Lipper reports; `02_fund_demand.py` | Report completeness, zero-position and share-adjustment assumptions |
-| M | Mean Y divided by mean D on identical non-split complete cases | Fund-demand aggregates | Ratio of means; not structural elasticity |
+| M | Mean Y divided by mean D on identical adjustment-screened complete cases | Fund-demand aggregates | Ratio of means; not structural elasticity |
+| Adjustment screen | Ratio of market-cap/share-count/adjusted-price proxy at ED to the proxy at the last available price date; retain [1/1.4, 1.4] | Original `runda11.py`; independently checked by `share_adjustment_dd.py` | Not an event-window split screen; time-dependent attrition and vendor adjustment conventions matter |
 | FI check | Holdings measure derived from quarterly FI data, on matched events | `03_fund_demand_fi_check.py` | Overlap comparison, not full historical coverage |
 | Volume share | Daily volume divided by volume over ED±22, multiplied by 100 | Broad stock panel | Missing volume set to zero; not auction volume |
 | Quoted spread | Closing ask minus bid divided by midpoint, percent | Broad stock panel | Not effective spread; >20% quotes excluded |
 | Relative size | Capitalization relative to available universe | Composition controls | Historical denominator and class mapping matter |
-| Comparison group | Available securities passing inherited size screens | `14_near_additions_control.py` | Not Nasdaq threshold assignment; pre-return overlaps AD-1 |
+| Comparison group | Available securities passing inherited size screens | Original `14_near_additions_control.py`; revised `comparison_repair.py` | Not Nasdaq threshold assignment; revised pre-return ends at AD-2, removing the inherited AD-1 overlap |
 | MSCI overlap | Inherited matched OMXSB/MSCI event status | MSCI changes via LSEG | Exclusion changes population, not causal attribution |
 | News exclusion | Flags from review of 24 extreme inherited events | Targeted source-based screen | Outcome-informed and incomplete |
 | Twin return | Sign-adjusted relative log return of indexed and sibling class | Share-class panel and supplementary sources | Different outcome from main CAR; possible spillovers |

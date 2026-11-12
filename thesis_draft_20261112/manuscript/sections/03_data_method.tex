@@ -1,0 +1,89 @@
+\section{Data and methodology}\label{sec:data}
+\subsection{The Swedish setting}
+
+OMX Stockholm Benchmark (OMXSB) provides a setting for examining the question in \citet{greenwood2025}: how do returns around index changes evolve alongside the associated trading? The index represents a selection of large and actively traded Stockholm-listed securities. Selection combines liquidity and industry representation, rather than a single market-capitalization cutoff. The current rules use turnover eligibility and free-float capitalization within industry supersectors; the index is weighted by free-float capitalization \citep{nasdaq2026}. A size screen alone therefore does not reproduce the assignment rule.
+
+The distinction between announcement and implementation is central. The announcement identifies the revised portfolio; implementation is when it becomes effective. We call their recorded trading dates AD and ED. When effectiveness is at the opening of ED, ED-1 is the last trading day under the old composition and a natural day for portfolio adjustment. Small returns around ED can therefore coexist with substantial trading on ED-1 if prices have already adjusted.
+
+Several securities enter or leave at each scheduled review. Historical dates come from the individual notices. Early observations include January and July implementations; later ones mainly use June and December. The current rules announce changes after the close on the sixth trading day before effectiveness. That calendar is not imposed retrospectively on earlier events \citep{nasdaq2013,nasdaq2026}.
+
+The announcement-to-implementation interval was generally longer early in the sample than recently. A return between those dates consequently covers different numbers of trading days over time. We report that interval and supplement the full event window with a fixed seven-day announcement window. The full window measures the whole episode; the fixed window compares the same amount of time immediately around the news.
+
+Selection rules also change. The May 2012 notice introduced revised industry-diversification criteria and announced 11 additions and 24 removals \citep{nasdaq2012review}. That large review motivates checks of review influence. It is not treated as a natural experiment, because its effect is not isolated from contemporaneous conditions.
+
+\subsection{Sample and sources}
+
+The event inventory contains 536 changes: 284 additions and 252 deletions across 39 reviews, with effective dates from July 2007 through June 2026. Each event has a security identifier, announcement date, effective date and source reference. LSEG supplies security returns, prices, volume, capitalization, shares outstanding and closing quotes. The market benchmark is the OMXSB gross total-return index, OMXSBGI. Historical identifier matching and price availability reduce the imported return panel to 487 candidates.
+
+\input{generated/sample}
+
+Ten deletions flagged for offers or delisting-related circumstances are excluded. Six further candidates lack a complete main return window. The final sample contains 256 additions and 215 deletions. Each type appears in 38 reviews; their union covers all 39. Missing historical observations may differ from observed securities, so availability is not assumed to be random.
+
+We report four calendar blocks: 2007--2011, 2012--2016, 2017--2021 and 2022--2026. The first and last calendar years are incomplete. We also pool 2007--2016 and 2017--2026 to distinguish a broad later-period pattern from the less precise latest block. Granular and pooled results are both retained. These divisions and the supplementary analyses are retrospective, not registered before the original results were known.
+
+\input{generated/sample_by_period}
+
+Table~\ref{tab:sample_by_period} shows why coverage matters for comparisons over time. The return and holdings columns answer different questions and should not be combined as if their populations were identical. A smaller holdings sample can change its mean return as well as its measured purchases. We therefore show counts with the component means whenever demand is used, and retain the full available return sample for the baseline event study. The appendix traces the especially restrictive early adjustment screen.
+
+Security returns use the vendor's total-return field where available and a closing-price return fallback otherwise. The fallback affects seven imported events and 104 event-day observations in the main windows. Removing implicit price forward filling leaves the main CARs unchanged. This arithmetic agreement does not authenticate every historical corporate action or dividend. Appendix~\ref{app:data} records the remaining source checks.
+
+Fund positions come from LSEG/Lipper extracts and a dated list of benchmark mandates. The main population includes strict OMXSB followers, related benchmark variants, and the OMXSB-linked component of mixed funds. We call it the broad benchmark-linked group. Narrower definitions accompany it. A separate Finansinspektionen (FI) reporting channel permits an overlapping-sample check for 2019--2026. Neither source is a comprehensive record of all passive capital or implementation-day orders.
+
+Closing bid and ask quotes and daily volume describe trading conditions. The quoted spread is the bid--ask difference divided by the midpoint; the annual series uses capitalization weights among index members. Daily volume concentration divides each day's volume by the event's total over ED-22 through ED+22, holding the denominator at 45 trading days. These variables do not directly measure closing-auction activity or the execution cost of a large order.
+
+\subsection{What is replicated and what is adapted}
+
+The analysis follows Greenwood and Sammon's economic sequence: document returns, examine changing firm characteristics, consider overlapping index activity and anticipation, and relate returns to measured index demand and trading conditions. Table~\ref{tab:replication_map} states the correspondence. This is a replication of their empirical approach in a new setting, with explicit adaptations, rather than a reproduction of their US estimates.
+
+\input{generated/replication_map}
+
+Three differences are especially consequential. First, the Swedish return sample is larger than the holdings sample. Every demand-scaled estimate therefore uses identical events in numerator and denominator. Second, the production fund classification uses dated mandates, whereas Greenwood and Sammon identify trackers by their propensity to undertake index-tracking trades. The trading-based Swedish classification is a separate diagnostic. Third, coincident MSCI changes are not equivalent to migration between S\&P index families. Excluding them tests whether the Swedish return pattern is also present without that overlap; it does not reproduce the US migration decomposition.
+
+Appendix~\ref{app:replication} records the detailed correspondence and source versions.\footnote{Published US headline estimates are taken from the 2025 abstract. Available full author manuscripts contain some different numerical results. Original US code was not recovered, so implementation equivalence is not asserted where the return conventions remain ambiguous.}
+
+\subsection{Returns and changes over time}
+
+The Swedish primary measure sums daily stock returns in excess of the benchmark:
+\begin{equation}
+ CAR_i[a,b]=\sum_{t=a}^{b}(r_{it}-r_{mt}),
+ \label{eq:car}
+\end{equation}
+where $r_{it}$ is the stock's daily return and $r_{mt}$ is the OMXSBGI return, both in percent. The full window includes daily returns from AD-1 through ED+1. Announcement and implementation windows include AD-1 through AD+1 and ED-1 through ED+1, respectively. Endpoints are trading days; every required daily return must be available.
+
+Greenwood and Sammon express abnormal performance as cumulative stock return minus cumulative market return. The Swedish implementation uses the arithmetic daily sum in Equation~\eqref{eq:car}. We also compute compounded stock return minus compounded index return over identical included days, and a closing-price-endpoint alternative. These are definition checks rather than silent changes to the primary measure. Announcement and implementation means should not be added: the full window includes intervening days, and completeness requirements can select different observations.
+
+Period means are estimated separately for additions and deletions. To examine whether observable firm characteristics explain their differences, we follow the structure of the anchor's composition regression:
+\begin{equation}
+ CAR_i=\sum_p\alpha_p\mathbf{1}\{i\in p\}
+       +\boldsymbol{\beta}'(X_i-\overline X)+\varepsilon_i.
+ \label{eq:composition}
+\end{equation}
+Period indicators replace the intercept. $X_i$ contains abnormal turnover, relative size, residual return variance and analyst coverage. Centering makes the period coefficients interpretable at the common-sample average characteristics. We show unadjusted and adjusted estimates for the same events, separating adjustment from the loss of observations with missing controls.
+
+The Swedish controls approximate the US variables. Turnover is measured before announcement, relative capitalization at AD-1, residual variance over an earlier return history, and coverage from the preceding month's forecasts. A forecast count need not equal the number of unique analysts at the last earnings announcement. Capitalization conventions can differ across share classes. These controls describe composition; they do not reproduce every selection criterion or establish causal assignment.
+
+Direct contrasts compare the first and last blocks, the two latest blocks and the two pooled decades. A separate linear annual trend checks whether the result depends on period boundaries. A significant mean in one period and an insignificant mean in another do not themselves establish a difference. The fixed announcement window, AD-1 through AD+5, contains seven daily returns and ends before ED for every observed event. It was selected after inspecting timing metadata and is a supplementary diagnostic, not a replacement chosen for its significance.
+
+\subsection{Fund demand and the multiplier}
+
+Greenwood and Sammon relate returns to the fraction of shares bought or sold by trackers. Their multiplier $M$ expresses the return associated with one percentage point of measured demand. We retain these economic units. Measured demand for an addition is covered funds' net purchases divided by shares outstanding. For deletions, sales and negative returns are sign-adjusted so that index-directed movements have positive signs:
+\begin{samepage}
+\begin{equation}
+ D_i=100s_i\frac{\sum_f\Delta H_{if}}{S_i},
+ \qquad M_p=\frac{\overline{s_iCAR_i}_p}{\overline D_p},
+ \label{eq:demand}
+\end{equation}
+where $s_i$ is $+1$ for additions and $-1$ for deletions, $\Delta H_{if}$ is the change in shares reported by fund $f$, and $S_i$ is shares outstanding. For example, a mean return of 2.71\% divided by measured purchases of 1.03\% gives approximately 2.63. This is a ratio of means, not an average of event-specific ratios.
+\end{samepage}
+
+The holdings calculation uses a pre-announcement report within 120 calendar days and a post-event report no later than 45 days after ED. Missing security positions can be assigned zero when the fund is otherwise classified as reporting. A security extract alone cannot verify that every absent position is genuinely zero. An adjustment-factor screen and the available shares-outstanding denominator further restrict the sample. Appendix~\ref{app:holdings} states their exact operation. The screen is not simply an exclusion of splits occurring during the event window.
+
+Coverage affects interpretation. Observing more funds can raise measured purchases without a commensurate increase in total demand. A small denominator can also make $M$ large and imprecise. We report the component means and event counts, compare fund definitions and use FI as a separate reporting check. The ratio remains descriptive; we do not convert it into an identified demand elasticity. Its uncertainty accounts jointly for the numerator and denominator, with technical details in the appendix.
+
+\subsection{Uncertainty}
+
+Securities in a review share dates and market conditions. Main return inference therefore clusters by review, an adaptation to a setting with many events but only 39 review cycles. The baseline return table and return-exclusion checks report 95\% intervals from a restricted wild cluster bootstrap with 9,999 draws. The latest block has nine clusters per event type, so precision remains limited. Appendix~\ref{app:inference} documents the implementation and dependence sensitivities \citep{petersen2009,mackinnon2023}.
+
+We interpret magnitudes and intervals before significance. An interval containing both zero and returns above 3\% cannot establish economic disappearance. A limited adjustment for ten related return tests and a clearly labeled practical-equivalence check appear in the appendix. They describe uncertainty in an exploratory study rather than create a preregistered design.
+
+\FloatBarrier
