@@ -114,3 +114,8 @@ The raw-data limitations cannot be repaired by more elaborate prose or a stronge
 Audit: Python 3.12.4; NumPy 1.26.4; pandas 2.2.3; SciPy 1.15.2; matplotlib 3.10.1; python-docx 1.2.0. PDF: TeX Live 2025, pdfLaTeX, newtx fonts. The inherited README records different package versions; those claims are preserved as historical metadata, not asserted to describe this rerun.
 
 This is a complete working-draft audit package with material open issues, not a guarantee of prize outcomes, causal identification or error-free underlying data.
+
+
+## Final narrative and criteria review
+
+The supplied narrative draft was audited claim by claim against the actual implementation. Verified additions to the presentation include the low simple demand/return R-squared values and the disjoint observed-fund purchase groups on 136 later additions. The new portable `verify_claude_aggregates.py` checks those values by alternative implementations. Balanced-fund security holdings are included at reported amounts; the benchmark weight belongs to the separate AUM measure. The final narrative no longer asserts an automatic production 50% trading classifier, a mathematical lower bound on total net demand, a verified absence of all Swedish migrations, or a causal class-specific upper bound. The separate criteria audit records the documented course requirements and the limits of available prize criteria.

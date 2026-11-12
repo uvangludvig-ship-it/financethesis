@@ -35,6 +35,13 @@ table('sample_by_period','Coverage across periods',['Type','Period','Source even
  r'The source inventory precedes security matching, exclusions and return requirements. Return sample requires complete AD-1 through ED+1 returns after the stated deletion exclusions. Holdings sample additionally requires the broad demand measure and retention under the share-adjustment screen, with a nonmissing matching return. Reviews counts distinct review cycles in the return sample. The figures describe coverage, not random attrition.','llrrrr')
 record('sample_by_period','audit/results/sample_by_period.csv','four periods and both types; source/return/holdings counts')
 
+of=pd.read_csv(A/'observed_fund_net_buying_2017_2026.csv');rows=[]
+for z in of.itertuples():
+ rows.append([esc(z.label),n(z.mean),f'[{n(z.analytical_lo)}, {n(z.analytical_hi)}]'])
+table('observed_funds','Reported fund trading around later additions',['Investor group','Mean purchase',r'95\% interval'],rows,
+ r'Net purchases as a percentage of shares outstanding on identical 136 additions in 19 reviews, 2017--2026. The first three rows partition included holdings; the final row is their within-event sum. Mixed-fund security holdings are included at their reported amounts, without the benchmark weights used in the separate AUM measure. Intervals use analytical CR1 by review and $t_{G-1}$. These are covered fund positions, not the complete investor population or observed implementation-day orders.',r'p{8.2cm}rl')
+record('observed_funds','audit/results/observed_fund_net_buying_2017_2026.csv','common 136 later additions; four disjoint/sum rows; analytical CR1 intervals')
+
 f=pd.read_csv(R/'fund_demand/omrakning_resultat.csv');fi=pd.read_csv(A/'fieller_ratios.csv')
 rows=[]
 for ty in ['addition','deletion']:

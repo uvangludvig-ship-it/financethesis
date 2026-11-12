@@ -115,7 +115,7 @@ for ax,ty in zip(axs,['addition','deletion']):
  ax.axvline(-1,color=red,lw=.7,ls=':');ax.set(title=ty.title()+'s',xlabel='Trading days from ED',xlim=(-12,12))
 axs[0].set_ylabel('Share of 45 day volume (%)');axs[1].legend(frameon=False);fig.tight_layout();fig.savefig(FIG/'volume_concentration.pdf');plt.close(fig)
 s=pd.read_csv(R/'liquidity/spread_by_year.csv');fig,ax=plt.subplots(figsize=(6.5,3.1));ax.plot(s.year,s.vw_spread_omxsb_members,color=navy,marker='o',ms=3)
-ax.set(xlabel='Calendar year',ylabel='Value weighted quoted closing spread (%)',xticks=[2007,2010,2015,2020,2025]);fig.tight_layout();fig.savefig(FIG/'quoted_spread.pdf');plt.close(fig)
+ax.set(xlabel='Calendar year',ylabel='Quoted closing spread (%)',xticks=[2007,2010,2015,2020,2025]);fig.tight_layout();fig.savefig(FIG/'quoted_spread.pdf');plt.close(fig)
 
 # Explicit source paths and selectors accompany the self-contained captions.
 mapping={

@@ -18,9 +18,9 @@ The complete input inventory is `replication/thesis_final/data/FILES.csv`. Origi
 | Implementation CAR | ED-1 to ED+1 | Main event table | Not an intraday execution measure |
 | Extended CAR | AD-1 to ED+20 on fixed complete cases | Independent audit | Exploratory; finite horizon |
 | Y | Main CAR multiplied by +1 for additions or -1 for deletions | Fund-demand calculation | Sign convention does not identify demand impact |
-| B | Strict OMXSB follower group | Dated fund mandates | Not a mechanically applied diagnostic threshold |
-| V | B plus benchmark variants | Dated fund mandates | Broader covered investor definition |
-| C | V plus relevant mixed-fund exposure | Dated mandates and allocation weights | Main measure; incomplete passive population |
+| B | Strict OMXSB follower group | Curated, dated fund classifications | Not a mechanically applied diagnostic threshold |
+| V | B plus benchmark variants | Curated, dated fund classifications | Broader covered investor definition |
+| C | V plus relevant mixed-fund exposure | Dated classifications; actual security holdings (benchmark weights apply only to the separate AUM measure) | Main measure; incomplete passive population |
 | D | Sign-adjusted change in covered holdings divided by shares outstanding, multiplied by 100 | LSEG/Lipper reports; `02_fund_demand.py` | Report completeness, zero-position and share-adjustment assumptions |
 | M | Mean Y divided by mean D on identical adjustment-screened complete cases | Fund-demand aggregates | Ratio of means; not structural elasticity |
 | Adjustment screen | Ratio of market-cap/share-count/adjusted-price proxy at ED to the proxy at the last available price date; retain [1/1.4, 1.4] | Original `runda11.py`; independently checked by `share_adjustment_dd.py` | Not an event-window split screen; time-dependent attrition and vendor adjustment conventions matter |
