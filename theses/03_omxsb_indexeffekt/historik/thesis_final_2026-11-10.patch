@@ -1,0 +1,183 @@
+diff --git a/thesis_final/code/01_effect_table.py b/thesis_final/code/01_effect_table.py
+index 317ac4a..c751b50 100644
+--- a/thesis_final/code/01_effect_table.py
++++ b/thesis_final/code/01_effect_table.py
+@@ -1,6 +1,6 @@
+ # Tabell 1 rättad: stjärnor och 95 % intervall från wild cluster bootstrap (intervallet genom testinversion, 9 nov), panel C (decennier, G&S kalenderår, sedan 2010),
+ # panel D (har effekten minskat), panel E (varje startår). CAR från returns.py, som återskapar replikeringens tot exakt.
+-# Ingen ny data, inga nya regler. Körs från thesis_final: python3 code/01_effect_table.py
++# Urval: returns.py utesluter 10 borttag enligt G&S regel (10 nov 2026); panel R visar det gamla urvalet. Körs från thesis_final: python3 code/01_effect_table.py
+ import os
+ from pathlib import Path
+ ROOT = Path(__file__).resolve().parents[1]
+@@ -108,7 +108,18 @@ for ty in ['addition', 'deletion']:
+     S = sum(np.outer(X[codes == k].T @ e[codes == k], X[codes == k].T @ e[codes == k]) for k in range(G)); V = XtXi @ S @ XtXi * G / (G - 1) * (len(y) - 1) / (len(y) - 4)
+     Rm = np.array([[1, -1, 0, 0], [0, 1, -1, 0], [0, 0, 1, -1]], float); W = (Rm @ b) @ np.linalg.inv(Rm @ V @ Rm.T) @ (Rm @ b) / 3
+     rows.append(dict(panel='D', typ=ty, fönster='tot', urval='F-test lika medel i fyra perioder', b=float(W), p_cr1=float(fdist.sf(W, 3, G - 1)), n=len(y), G=int(G), ci_metod='inget intervall (F-test)', p_metod='analytiskt: Wald med CR1, p från F(3, G-1), ingen bootstrap'))
++# robusthet: det gamla urvalet (alla borttag med, även de 10 som G&S regel utesluter). Körs sist, så att dragningarna ovan inte flyttas.
++ea = ev_alla.copy(); ea['iAD'] = ea.AD.map(pos); ea['iED'] = ea.ED.map(pos)
++ea['tot'] = [wsum(r, a - 1, e + 1) for r, a, e in zip(ea.RIC, ea.iAD, ea.iED)]; ea = ea[(ea.type == 'deletion') & ea.tot.notna()]
++for p_ in PERS: medel(ea[ea.period == p_], 'tot', p_, 'R (gammalt urval, alla borttag)', 'deletion', 'tot')
++medel(ea[pd.to_datetime(ea.effective_date).dt.year >= 2017], 'tot', '2017–26', 'R (gammalt urval, alla borttag)', 'deletion', 'tot')
++Xa = np.column_stack([(ea.period == p_).astype(float).values for p_ in PERS]); r = lin(Xa, ea.tot.values, ea.review_cycle.values, [-1, 0, 0, 1])
++rows.append(dict(panel='R (gammalt urval, alla borttag)', typ='deletion', fönster='tot', urval='2022–26 minus 2007–11', **r))
+ T = pd.DataFrame(rows); T.to_csv(f'{OUT}/tabell1_lang.csv', index=False)
++# årsmedel (tabell år för år och figur 2): N = händelser med CAR i hela fönstret; medel per fönster över händelser med det fönstret
++BY = pd.concat({ty: pd.DataFrame({'N': s_[s_.tot.notna()].groupby('ar').size(), 'Ann': s_.groupby('ar').ann.mean(), 'Eff': s_.groupby('ar').eff.mean(), 'Total': s_.groupby('ar').tot.mean()}).reindex(range(2007, 2027))
++                for ty, s_ in [('Additions', ev[ev.type == 'addition']), ('Deletions', ev[ev.type == 'deletion'])]}, axis=1)
++BY[[('Additions', 'N'), ('Deletions', 'N')]] = BY[[('Additions', 'N'), ('Deletions', 'N')]].fillna(0).astype(int); BY.index.name = 'Year'; BY.to_csv(f'{OUT}/effect_by_year.csv')
+ # läsbara tabeller
+ with open(f'{OUT}/TABELL1.md', 'w') as f:
+     f.write('# Tabell 1, rättad: intervall och stjärnor från wild cluster bootstrap per översyn\n\nCAR i procent mot OMXSBGI, totalavkastning. **BOOTSTRAP:** 95 % intervall i parentes = alla värden som restriktiv wild cluster bootstrap per översyn inte förkastar på 5 % (testinversion). Stjärnor: * p<0,10, ** p<0,05, *** p<0,01 från samma bootstrap och samma dragningar (Rademacher om G≥12, annars Webb; 9 999 dragningar), så intervall och stjärnor stämmer alltid överens. **ANALYTISKT (jämförelse):** raderna märkta klustrat = CR1-standardfel per översyn, t med G−1. Källa: 01_effect_table.py, CAR från returns.py som återskapar replikeringens tot exakt.\n\n')
+diff --git a/thesis_final/code/05_msci_overlap_results.py b/thesis_final/code/05_msci_overlap_results.py
+index 5c4b126..e834b48 100644
+--- a/thesis_final/code/05_msci_overlap_results.py
++++ b/thesis_final/code/05_msci_overlap_results.py
+@@ -10,6 +10,9 @@ import os, pandas as pd, numpy as np
+ from scipy.stats import t as tdist
+ HERE = RES / 'msci_overlap'
+ ev = pd.read_csv(DATA / 'events' / 'omxsb_changes_with_car_2007_2026.csv', parse_dates=['AD', 'ED'])
++# samma urval som 01 (G&S regel, 10 nov 2026): 10 borttag med bud, fusion, avnoteringsansökan eller avnotering inom 100 handelsdagar utesluts
++_fl = pd.read_csv(DATA / 'events' / 'omxsb_deletion_flags_2007_2026.csv')
++ev = ev[~ev.event_id.isin(set(_fl.loc[_fl.flag_offer.astype(bool) | _fl.flag_delist.astype(bool), 'event_id']))].copy()
+ OV = set(pd.read_csv(os.path.join(HERE, 'overlapp_handelser.csv')).event_id)
+ ev['ovl'] = ev.event_id.isin(OV); ev['ar'] = ev.ED.dt.year
+ ev['per'] = pd.cut(ev.ar, [2006, 2011, 2016, 2021, 2026], labels=['2007–11', '2012–16', '2017–21', '2022–26']).astype(str)
+diff --git a/thesis_final/code/08_check_numbers.py b/thesis_final/code/08_check_numbers.py
+index 6cd2f92..fe1b42b 100644
+--- a/thesis_final/code/08_check_numbers.py
++++ b/thesis_final/code/08_check_numbers.py
+@@ -62,11 +62,15 @@ koll('2022–26 minus 2017–21', r.b, -1.3498); iv(r, -3.8780, 0.9782, -3.5020,
+ koll('Decennier, 2017–26 minus 2007–16', rad(T1, panel='D', typ='addition', urval='2017–26 minus 2007–16 (decennier)').b, -1.2353)
+ r = T1[(T1.panel == 'D') & (T1.typ == 'addition') & T1.urval.str.startswith('efter minus före brottet')].iloc[0]
+ koll('Brottet juni 2010', r.b, -9.6276); koll('  p wild bootstrap', r.p_wcb, 0.0061, 0.0005)
+-koll('Borttag 2007–11, totalt fönster', rad(T1, panel='A/B', typ='deletion', fönster='tot', urval='2007–2011').b, -6.6939)
++koll('Borttag 2007–11, totalt fönster', rad(T1, panel='A/B', typ='deletion', fönster='tot', urval='2007–2011').b, -6.1563)
+ r = rad(T1, panel='C', typ='deletion', urval='2017–26')
+-koll('Borttag 2017–26', r.b, -1.0908); iv(r, -2.9240, 0.8218, -2.8965, 0.7149)
+-koll('Borttag, beskedet 2012–16', rad(T1, panel='A/B', typ='deletion', fönster='ann', urval='2012–2016').b, -1.6936)
+-koll('Borttag, beskedet 2017–21', rad(T1, panel='A/B', typ='deletion', fönster='ann', urval='2017–2021').b, -1.9705)
++koll('Borttag 2017–26', r.b, -1.0382); iv(r, -2.8811, 0.8954, -2.8574, 0.7810)
++koll('Borttag, beskedet 2012–16', rad(T1, panel='A/B', typ='deletion', fönster='ann', urval='2012–2016').b, -1.7091)
++koll('Borttag, beskedet 2017–21', rad(T1, panel='A/B', typ='deletion', fönster='ann', urval='2017–2021').b, -2.0941)
++# urvalsregeln 10 nov 2026 (G&S): 10 borttag ute ur CAR-tabellerna; panel R är det gamla urvalet
++r = rad(T1, panel='D', typ='deletion', urval='2022–26 minus 2007–11'); koll('Borttag, fall 2007–11 till 2022–26', r.b, 4.6230); koll('  p wild bootstrap', r.p_wcb, 0.0392, 0.0005)
++koll('Borttag i tabell 1 (händelser, totalt fönster)', T1[(T1.panel == 'A/B') & (T1.typ == 'deletion') & (T1.fönster == 'tot')].n.sum(), 215, 0)
++koll('Gammalt urval, borttag 2007–11 (robusthet)', rad(T1, panel='R (gammalt urval, alla borttag)', typ='deletion', urval='2007–2011').b, -6.6939)
+ 
+ # runda 13 (omrakning_fondklassning.py)
+ r = rad(R13, tabell=5, typ='addition', skikt='D_V', fonster='y_tot', period='2017–26')
+@@ -103,7 +107,7 @@ koll('M_V 2017–26 utan MSCI-överlapp', r.M, 2.2815); koll('  undre', r.lo, 0.
+ for test, v in [('2022–26 minus 2017–21', 3.057), ('2017–26 minus 2007–16 (decennier)', 5.234),
+                 ('M 2017–21 minus M 2022–26', 5.751)]:
+     koll(f'MDE {test}', rad(MDE, test=test).mde, v)
+-for typ, test, v in [('addition', '2017–26', 1.622), ('addition', '2022–26', 2.353), ('deletion', '2017–26', 2.547)]:
++for typ, test, v in [('addition', '2017–26', 1.622), ('addition', '2022–26', 2.353), ('deletion', '2017–26', 2.566)]:
+     koll(f'MDE {typ} {test}', rad(MDE, typ=typ, test=test).mde, v)
+ 
+ # intervall och p från samma bootstrap ska alltid stämma: p < 0,05 precis när 0 ligger utanför intervallet
+diff --git a/thesis_final/code/output/02_table1_effect_by_year.py b/thesis_final/code/output/02_table1_effect_by_year.py
+index 27c6c17..2aaa3b0 100644
+--- a/thesis_final/code/output/02_table1_effect_by_year.py
++++ b/thesis_final/code/output/02_table1_effect_by_year.py
+@@ -1,5 +1,5 @@
+ # Tabell 1 (G&S Table I): överavkastning år för år, med periodrader.
+-# Årsmedel ur data/comparison/replication_effect_by_year.csv; periodrader och stjärnor ur results/effect/tabell1_lang.csv (01).
++# Årsmedel ur results/effect/effect_by_year.csv (räknas i 01 ur händelserna, samma urval); periodrader och stjärnor ur results/effect/tabell1_lang.csv (01).
+ # Kontroll: N-viktat medel av årsraderna = periodmedlet i tabell1_lang.csv, och N stämmer.
+ # Körs från thesis_final efter 01: python3 code/output/02_table1_effect_by_year.py
+ import sys
+@@ -9,7 +9,7 @@ import pandas as pd
+ from _style import *
+ 
+ T = pd.read_csv(RES / 'effect' / 'tabell1_lang.csv')
+-Y = pd.read_csv(DATA / 'comparison' / 'replication_effect_by_year.csv', header=[0, 1], index_col=0)
++Y = pd.read_csv(RES / 'effect' / 'effect_by_year.csv', header=[0, 1], index_col=0)
+ Y.columns = [f'{a}_{b}' for a, b in Y.columns]
+ YRS = [i for i in Y.index if str(i).isdigit()]
+ assert [int(y) for y in YRS] == list(range(2007, 2027)), YRS
+diff --git a/thesis_final/code/output/03_table2_effect_by_period.py b/thesis_final/code/output/03_table2_effect_by_period.py
+index b540b23..bd2326b 100644
+--- a/thesis_final/code/output/03_table2_effect_by_period.py
++++ b/thesis_final/code/output/03_table2_effect_by_period.py
+@@ -10,7 +10,7 @@ from _style import *
+ T = pd.read_csv(RES / 'effect' / 'tabell1_lang.csv')
+ assert T[T.panel != 'D'].ci_metod.str.startswith('95 % intervall: invertering').all(), 'tabell1_lang.csv har inte bootstrapintervall'
+ assert [int(one(T, panel='A/B', typ='addition', fönster='tot', urval=p).n) for p in PERS] == [33, 54, 82, 87]
+-assert [int(one(T, panel='A/B', typ='deletion', fönster='tot', urval=p).n) for p in PERS] == [38, 47, 63, 77]
++assert [int(one(T, panel='A/B', typ='deletion', fönster='tot', urval=p).n) for p in PERS] == [33, 46, 61, 75]   # utan de 10 borttagen enligt G&S regel (returns.py)
+ WIN = [('ann', 'Announcement [AD−1, AD+1]'), ('eff', 'Effective [ED−1, ED+1]'), ('tot', 'Total [AD−1, ED+1]')]
+ 
+ 
+@@ -41,8 +41,10 @@ def build(doc):
+          'Gross Index (.OMXSBGI), summed over the window. AD is the announcement date and ED the effective date. Each cell gives the '
+          f'mean across events. Inference: {WCR}. Brackets: {WCR_CI}. Stars come from the same bootstrap draws: {STARS}. '
+          'Deletions keep their sign. Events are counted for the total window; the announcement and effective windows include up to '
+-         'three more events per period. Difference in Panel C: 2017–26 minus 2007–16, same inference. Sample: 481 changes in 39 '
+-         'semi-annual reviews with effective dates from 2 July 2007 to 1 June 2026 (Table A1).')
++         'three more events per period. Difference in Panel C: 2017–26 minus 2007–16, same inference. Sample: 471 changes in 39 '
++         'semi-annual reviews with effective dates from 2 July 2007 to 1 June 2026 (Table A1). Ten deletions that follow a takeover '
++         'offer, a merger or acquisition by the firm, a delisting application or a delisting within 100 trading days are excluded, '
++         'as in Greenwood and Sammon (2025).')   # utkast 10 nov: författarna formulerar om
+ 
+ 
+ if __name__ == '__main__':
+diff --git a/thesis_final/code/output/04_figure2_effect_by_year.py b/thesis_final/code/output/04_figure2_effect_by_year.py
+index 3653884..91a13be 100644
+--- a/thesis_final/code/output/04_figure2_effect_by_year.py
++++ b/thesis_final/code/output/04_figure2_effect_by_year.py
+@@ -1,5 +1,5 @@
+ # Figur 2 (G&S Figure 2): indexeffekten per år, totalt fönster [AD−1, ED+1].
+-# Punkter: årsmedel ur data/comparison/replication_effect_by_year.csv (samma som tabell 1).
++# Punkter: årsmedel ur results/effect/effect_by_year.csv (räknas i 01 ur händelserna, samma urval) (samma som tabell 1).
+ # Linje: glidande medel över fem år av årsmedlen (G&S använder tio år på 40 år; vi har 20 år). Bara år med händelser räknas.
+ # Körs från thesis_final: python3 code/output/04_figure2_effect_by_year.py
+ import sys
+@@ -9,7 +9,7 @@ import numpy as np, pandas as pd
+ from _style import *
+ 
+ STEM = '04_figure2_effect_by_year'
+-Y = pd.read_csv(DATA / 'comparison' / 'replication_effect_by_year.csv', header=[0, 1], index_col=0)
++Y = pd.read_csv(RES / 'effect' / 'effect_by_year.csv', header=[0, 1], index_col=0)
+ Y.columns = [f'{a}_{b}' for a, b in Y.columns]
+ Y = Y.loc[[i for i in Y.index if str(i).isdigit()]]; Y.index = Y.index.astype(int)
+ assert list(Y.index) == list(range(2007, 2027))
+diff --git a/thesis_final/code/returns.py b/thesis_final/code/returns.py
+index f427956..833ad78 100644
+--- a/thesis_final/code/returns.py
++++ b/thesis_final/code/returns.py
+@@ -13,6 +13,12 @@ def rser(g):
+ RET=pd.DataFrame({r:rser(g) for r,g in px.groupby('ric')}).reindex(cal)
+ AR=RET.sub(mkt,axis=0)
+ ev=pd.read_csv(DATA/'events'/'omxsb_changes_with_car_2007_2026.csv',parse_dates=['AD','ED'])
++# Urval (10 nov 2026, G&S regel): borttag som beror på bud, fusion, köpare eller avnoteringsansökan (flag_offer) eller som
++# avnoterats inom 100 handelsdagar efter ED (flag_delist) utesluts ur alla CAR-tabeller. 10 borttag. Borttag med bara ändrat
++# aktieantal (flag_shares) är kvar här och utesluts bara där D används (02).
++_fl=pd.read_csv(DATA/'events'/'omxsb_deletion_flags_2007_2026.csv')
++GS_UTE=set(_fl.loc[_fl.flag_offer.astype(bool)|_fl.flag_delist.astype(bool),'event_id'])
++ev_alla=ev.copy(); ev=ev[~ev.event_id.isin(GS_UTE)].copy()
+ ev['iAD']=ev.AD.map(pos); ev['iED']=ev.ED.map(pos)
+ def wsum(ric,a,b,M=AR):
+     if ric not in M or pd.isna(a) or pd.isna(b): return np.nan
+diff --git a/thesis_final/data/FILES.csv b/thesis_final/data/FILES.csv
+index 356ab07..a1e0540 100644
+--- a/thesis_final/data/FILES.csv
++++ b/thesis_final/data/FILES.csv
+@@ -15,3 +15,4 @@ funds/fund_net_buying_fi_by_event_2019_2026.csv,Härledd ur FI:s innehav,"Indexf
+ msci/msci_sweden_changes_2007_2026.csv,MSCI (via LSEG),Ändringar i MSCI Sweden med besked- och ändringsdag,523,60168,34a436be0ece0d3b99a70f5ed7663b27,code/claude_checks/msci/msci_sweden_changes_2007_2026.csv
+ comparison/previous_run_demand_and_ownership_by_year.csv,Härledd (tidigare körning),"Köp och ägarandel per år från den tidigare körningen, för jämförelse",20,1989,d72a6c8239bbb6b93218dc54d84b2384,code/claude_checks/runda11_resultat/G_figur1_figur5.csv
+ comparison/replication_effect_by_year.csv,Härledd (replikeringen),"Effekten år för år, källa till Word-tabellen år för år",23,2765,4f69c1e95e2f276f18b76df874cdd4bf,output/omxsb_replication_2007/tables/tab_00_by_year.csv
++events/omxsb_deletion_flags_2007_2026.csv,Härledd (replikeringen),"Borttagen med flaggor: bud, fusion eller avnoteringsansökan (flag_offer), avnoterad inom 100 handelsdagar (flag_delist), aktieantalet ändrat mer än 10 % (flag_shares). Styr urvalet i 01, 05, 09 och 10",226,34975,dc545b95d46434697a8a4125c5ae9557,output/omxsb_replication_2007/mechanisms/step1_deletion_flags.csv
+diff --git a/thesis_final/run_all.py b/thesis_final/run_all.py
+index a15816d..990098d 100644
+--- a/thesis_final/run_all.py
++++ b/thesis_final/run_all.py
+@@ -27,6 +27,8 @@ STEG = [
+     ('04_msci_overlap_match.py', 'Vilka händelser som sammanfaller med MSCI'),
+     ('05_msci_overlap_results.py', 'Effekt och M med och utan MSCI-överlapp'),
+     ('06_mde.py', 'Minsta påvisbara effekt'),
++    ('09_news_screen.py', 'Robusthet: utan händelser med egen bolagsnyhet i fönstret'),
++    ('10_composition_runup.py', 'G&S tabell 2 och 4 (metod 5.3 och 5.4) och M på samma händelser'),
+ ]
+ # Word-tabeller och figurer, en fil per tabell eller figur, i Greenwood och Sammons ordning
+ STEG += [(f'output/{f.name}', f.stem) for f in sorted((ROOT / 'code' / 'output').glob('[0-9][0-9]_*.py'))]
