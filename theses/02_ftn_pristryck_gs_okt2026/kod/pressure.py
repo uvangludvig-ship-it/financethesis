@@ -20,10 +20,10 @@ import numpy as np
 import pandas as pd
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-REPO = os.path.abspath(os.path.join(HERE, ".."))
+REPO = os.path.abspath(os.path.join(HERE, "..", "..", ".."))  # repo-roten; filen flyttades 13 nov 2026 från code/ till theses/02_ftn_pristryck_gs_okt2026/kod/
 RAW = os.path.join(REPO, "data", "raw"); INP = os.path.join(REPO, "data", "input"); DER = os.path.join(REPO, "data", "derived")
 PRICES = os.path.join(RAW, "lseg", "panel_2012_2026")  # LSEG panel 2012-2026; see data/MANIFEST.md
-OUT = os.path.join(REPO, "output"); os.makedirs(OUT, exist_ok=True)
+OUT = os.path.join(HERE, "..", "output"); os.makedirs(OUT, exist_ok=True)  # 13 nov 2026: utdata i uppsatsmappen, inte i rotens output/
 M = os.path.join(DER, "measurements")
 
 Y_SQRT = 0.7

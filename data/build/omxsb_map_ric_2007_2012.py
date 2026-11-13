@@ -4,7 +4,7 @@ import numpy as np, pandas as pd
 REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 EV = os.path.join(REPO, "data", "input", "omxsb")
 D = os.path.join(REPO, "data", "raw", "lseg", "panel_2005_2026")
-OUT = os.path.join(REPO, "output", "omxsb_replication_2007")
+OUT = os.path.join(REPO, "theses", "03_omxsb_indexeffekt", "historik", "omxsb_replication_2007")  # flyttad 13 nov 2026 från output/omxsb_replication_2007
 os.makedirs(OUT, exist_ok=True)
 COLS = ["event_id", "effective_date", "announcement_date", "company", "ticker", "isin", "type", "review_cycle", "source_url", "verification", "notes"]
 

@@ -1,6 +1,6 @@
 # OMX Stockholm Benchmark (OMXSB): semi-annual constituent changes 2005 to 2012
 
-Companion to `omxsb_changes_2005_2012.csv` (built by `code/build/omxsb_build_2005_2012.py`, which imports the trading calendar and column list from `omxsb_build.py`). Compiled 27 Oct 2026 as the backward extension of `omxsb_changes_2013_2026.csv` / `omxsb_notes.md`; same columns, same vocabulary, same rule (nothing inferred from membership snapshots or from the LSEG index feed).
+Companion to `omxsb_changes_2005_2012.csv` (built by `data/build/omxsb_build_2005_2012.py`, which imports the trading calendar and column list from `omxsb_build.py`). Compiled 27 Oct 2026 as the backward extension of `omxsb_changes_2013_2026.csv` / `omxsb_notes.md`; same columns, same vocabulary, same rule (nothing inferred from membership snapshots or from the LSEG index feed).
 
 Headline: 12 of the 17 reviews whose effective date falls in 2005-2012 have a change list; 142 events (62 additions, 80 deletions), all VERIFIED from the exchange's own release text. The five earliest reviews (effective Jan 2005, Jul 2005, Jan 2006, Jul 2006, Jan 2007) could not be found anywhere online (section 3). The membership chain is consistent within 2005-2012 and across the join with the 2013-2026 file except for one name, Nokia (section 4).
 

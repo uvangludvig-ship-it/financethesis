@@ -76,7 +76,7 @@ Det tar cirka tio minuter. Först kontrolleras att datafilerna är exakt samma s
 
 ## Det som inte är med här
 
-Kontrollgrupperna, återgången efter ändringen, tvillingaktierna och förutsägbarheten körs fortfarande från sina gamla skript i repot (`code/claude_checks/`). Hela kurspanelen finns nu här, så de kan flyttas hit.
+Kontrollgrupperna, återgången efter ändringen, tvillingaktierna och förutsägbarheten körs fortfarande från sina gamla skript i repot (`theses/03_omxsb_indexeffekt/historik/claude_checks/`, som hette `code/claude_checks/` före 13 nov 2026). Hela kurspanelen finns nu här, så de kan flyttas hit.
 
 Av Greenwood och Sammons test går två inte att göra i Sverige: migrationer mellan index (tabell 3, figur 4 till 6) och implementation shortfall. Steg 07 har ingen egen Word-tabell; det ändrar ingen tabell.
 

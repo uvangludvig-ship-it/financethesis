@@ -1,28 +1,44 @@
 # archive/
 
-History. Nothing here guides current work; `PLAN.md` and `thesis/` do. Nothing here is deleted, so that every earlier decision can be traced.
+Det som inte hör till ett enskilt uppsatsalternativ. Inget här styr arbetet; det gör README-filerna i `theses/`. Inget raderas, så att varje tidigare beslut går att spåra.
 
-| Folder | What it is | Period |
-|---|---|---|
-| `topic_selection_2026-09/` | Shortlists, CapIQ feasibility, seven synopsis drafts, blind rerank, anchor notes (the former `research/` root) | 7 Sep to 4 Oct |
-| `agent_reports/` | Agent sweeps over literature and topics, red-team reports, the two raw fact reports | Sep to Oct |
-| `literature_sweeps_2026-10/` | Two literature sweeps of 5 to 6 Oct and Dahlquist-Martinez notes (superseded by `thesis/literature/`) | Oct |
-| `synopsis_source/` | LaTeX sources and backups of the submitted synopsis | Sep |
-| `research_archive/` | The former `research/_archive/`: thesis 1 (the SSZ plan, never executed), the 11 Oct transition folder (87 files), anchor review and selection, course text extracts, old plans | Oct |
-| `summaries_2026-10/` | `Thesis_summary_by_section`, `Uppsatsen_i_sammandrag` (replaced by `thesis/design/THESIS_IN_PLAIN_WORDS.md` v2) | Oct |
-| `old_readmes/` | The READMEs of `thesis2/`, `thesis2/code/` and `thesis2/data/prices/` as they were on 25 Oct, before the restructuring | Oct |
-| `inventory/` | `DATA_INVENTORY_2026-10-26.md` (machine-generated profile of every data file as of 26 Oct) and `STRUKTUR_2026-10-27.md` (the inventory and proposal behind the restructuring) | Oct |
-| `duplicates/` | Byte-identical copies that existed in two places. The live copy is named in the file name or below. | |
-| `tmp/` | anchor_audit, pdfs, winner_review: scratch from the topic selection | Sep to Oct |
+Den 13 nov 2026 flyttades det mesta som låg här till respektive alternativ:
+- `topic_selection_2026-09/`, `agent_reports/`, `synopsis_source/` och `tmp/winner_review/` → `theses/00_amnesval_sep2026/`
+- `research_archive/`, `literature_sweeps_2026-10/` och `tmp/anchor_audit/` → `theses/01_ftn_tidiga_ankare_okt2026/`
+- `summaries_2026-10/` → `theses/02_ftn_pristryck_gs_okt2026/`
+- `robusthet_repair_20261101/` och `omxsb_extension_20261031/` → `theses/03_omxsb_indexeffekt/historik/`
+
+| Fil eller mapp | Vad |
+|---|---|
+| `FLYTTKARTA_2026-11-13.tsv` | **Varje fil som flyttades 13 nov 2026:** gammal sökväg, ny sökväg, md5, storlek och om filen låg i git. 4 279 rader. Alla 5 812 filer i arbetskatalogen md5-kontrollerades före och efter flytten; ingen saknades och ingen ändrades |
+| `old_readmes/` | Startsidor och README-filer från mappar som inte finns längre: rotens README fram till 4 nov (`README_rot_2026-11-04.md`), `thesis/README.md` och `code/README.md` från 27 okt, samt READMEs för `thesis2/` från 12–25 okt |
+| `inventory/` | `DATA_INVENTORY_2026-10-26.md` (maskingenererad profil av varje datafil 26 okt) och `STRUKTUR_2026-10-27.md` (inventeringen bakom omstruktureringen 27 okt) |
+| `course_text_extracts/` | Textutdrag ur kursplanen, introduktionsföreläsningen och synopsisinstruktionen (härledda kopior; originalen ligger i `reference/course_context/`) |
+| `tmp/pdfs/` | Arbetsfiler från ämnesvalet: utdrag ur ekonometrimaterialet och två bilder av synopsisen |
+| `duplicates/` | Byte-identiska kopior av filer som finns på ett annat ställe. Tabellerna nedan anger var originalet finns |
 
 ## duplicates/
 
-| File here | Identical to (the live copy) |
+| Fil här | Identisk med (originalet) |
 |---|---|
 | `codebook_isin_list_lseg.csv` | `data/input/lseg/isin_list_lseg.csv` |
 | `codebook_omxsb_changes_2013_2026.csv` | `data/input/omxsb/omxsb_changes_2013_2026.csv` |
-| `drive-download-20261025T185638Z-1-001_same_as_panel_2012_2026.zip` | the five files in `data/raw/lseg/panel_2012_2026/` |
-| `extra_ppm_2023_12.xlsm`, `extra_ppm_2024_03.xlsm`, `extra_ppm_2024_06.xlsm`, `extra_ppm_2026_06.xlsm`, `extra_ppm_2026_08.xlsm` | the same months in `data/raw/ppm/2021-2026/` |
-| `root_code_ipynb_empty_placeholder.ipynb` | a 602-byte empty notebook that sat in the repo root; the real one is `code/notebooks/replication_omxsb.ipynb` |
+| `drive-download-20261025T185638Z-1-001_same_as_panel_2012_2026.zip` | de fem filerna i `data/raw/lseg/panel_2012_2026/` |
+| `extra_ppm_2023_12.xlsm`, `extra_ppm_2024_03.xlsm`, `extra_ppm_2024_06.xlsm`, `extra_ppm_2026_06.xlsm`, `extra_ppm_2026_08.xlsm` | samma månader i `data/raw/ppm/2021-2026/` |
+| `root_code_ipynb_empty_placeholder.ipynb` | en tom notebook på 602 byte som låg i roten; den riktiga är `theses/03_omxsb_indexeffekt/historik/omxsb_replication/kod/replication_omxsb.ipynb` |
 
-Duplicates that were left in place because both copies are read by code or sit inside a coherent set: `data/derived/measurements/` shares four files with `data/derived/ftn/` (bids_long, winners_fee_series, reallocation_losers = agentA_task2_loser_decomposition, reallocation_summary_by_round = agentA_summary_by_round), and 20 files in `data/derived/measurements/` also exist under `archive/research_archive/revised_2026-10-11/data/`.
+### duplicates/20261113_rot/ (låg i repots rot fram till 13 nov 2026)
+
+| Fil här | Identisk med (originalet) |
+|---|---|
+| `panel_utdrag.csv.gz` | `theses/03_omxsb_indexeffekt/thesis_final/data/prices/stock_prices_daily_2004_2026.csv.gz` och `theses/03_omxsb_indexeffekt/historik/claude_checks/data/panel_utdrag.csv.gz` |
+| `RESULTAT_2026-11-01.md` | `theses/03_omxsb_indexeffekt/historik/omxsb_robusthet_20261101/RESULTAT.md` |
+| `robusthet_hela_panelen.ipynb` | `theses/03_omxsb_indexeffekt/historik/omxsb_robusthet_20261101/kod/robusthet_hela_panelen.ipynb` |
+| `runda2_resultat/` (44 filer) | `theses/03_omxsb_indexeffekt/historik/claude_checks/runda2_resultat/` |
+| `runda3_resultat/` (3 filer) | `theses/03_omxsb_indexeffekt/historik/claude_checks/runda3_resultat/` |
+
+Dubbletter som fick ligga kvar eftersom båda kopiorna läses av kod eller hör till en sammanhållen helhet:
+- `data/derived/measurements/` delar fyra filer med `data/derived/ftn/`, och 20 filer där finns också i `theses/01_ftn_tidiga_ankare_okt2026/research_archive/revised_2026-10-11/data/`.
+- Indatapaketet `theses/03_omxsb_indexeffekt/historik/claude_checks/lokal_korning_rot_20261101/runda2_indata/` innehåller kopior av LSEG-filerna i `data/raw/lseg/klassificering/` och av `medlemskap_*` och `runda2_deklaration.md` i `claude_checks/`.
+- `theses/03_omxsb_indexeffekt/historik/omxsb_robusthet_20261101/rot_20261101/robusthet_hela_resultat/` innehåller fyra filer som också finns i `robusthet_repair_20261101/` och i `claude_checks/` (`hela_*`).
+- `thesis_final/data/` är en avsiktlig fryst kopia av sina källfiler, se `thesis_final/data/FILES.csv`.
