@@ -1,6 +1,6 @@
 # data/build/: koden som bygger eller hämtar data
 
-Här ligger all kod som skriver till `data/raw/`, `data/input/` eller `data/derived/`. Till 13 nov 2026 låg den i `code/build/` och `code/lseg/`. Analyskod ligger i respektive uppsatsmapp under `theses/`.
+Här ligger all kod som skriver till `data/raw/`, `data/input/` eller `data/derived/`. Till 13 nov 2026 låg den i `code/build/` och `code/lseg/`. Analyskod ligger i respektive uppsatsmapp under `pagaende/`, `under_utredning/` eller `arkiv/`.
 
 Skripten hittar repots rot med `../..` från sin egen plats. De ligger på samma djup som förut och fungerar därför oförändrat. Två rader ändrades 13 nov eftersom de pekade på flyttade resultatmappar: `omxsb_map_ric_2007_2012.py` och `lseg/tvilling_data.py`.
 
@@ -8,7 +8,7 @@ Skripten hittar repots rot med `../..` från sin egen plats. De ligger på samma
 |---|---|---|---|
 | `omxsb_build.py` | `data/input/omxsb/omxsb_changes_2013_2026.csv` (394 händelser) | Nasdaqs besked, källor i `omxsb_notes.md` | 03 |
 | `omxsb_build_2005_2012.py` | `data/input/omxsb/omxsb_changes_2005_2012.csv` (142 händelser) | OMX/Nasdaq OMX-besked, `omxsb_notes_2005_2012.md` | 03 |
-| `omxsb_map_ric_2007_2012.py` | `data/input/omxsb/omxsb_changes_2007_2026.csv` och `omxsb_events_with_ric_2007_2026.csv` (536 händelser med RIC). Granskningsfilen skrivs till `theses/03_omxsb_indexeffekt/historik/omxsb_replication_2007/mapping_review.txt` | de två listorna, `panel_2005_2026` | 03 |
+| `omxsb_map_ric_2007_2012.py` | `data/input/omxsb/omxsb_changes_2007_2026.csv` och `omxsb_events_with_ric_2007_2026.csv` (536 händelser med RIC). Granskningsfilen skrivs till `pagaende/03_omxsb_indexeffekt/historik/omxsb_replication_2007/mapping_review.txt` | de två listorna, `panel_2005_2026` | 03 |
 | `omxs30_build_csv.py` | `data/input/omxsb/omxs30_changes_2005_2026.csv` (48 händelser) | `omxs30_notes.md` | 03 |
 | `parse_ap_20261031.py`, `collect_ap_fi_20261031.py`, `finalize_ap_fi_20261031.py` | Hämtar AP-fondernas innehavslistor och FI:s blankningsregister till `data/raw/ap/` och `data/raw/fi_short/`, och bygger `data/derived/ap/` | AP1–AP4:s webbplatser, FI | 03 (historik) |
 | `build_ppm_panel_2018.py` | `data/derived/ppm/ppm_panel_2018_2026.csv` | `data/raw/ppm/` | 01, 02 |

@@ -14,7 +14,7 @@ TWIN_RICS = ['BONAVa.ST', 'BONAVb.ST', 'COREa.ST', 'COREb.ST', 'HUSQa.ST', 'HUSQ
 
 # %% DEL 1  --  lokalt: plocka ut alla händelseaktier + tvillingarna ur panelen (någon minut)
 import pandas as pd
-ev = pd.read_csv("theses/03_omxsb_indexeffekt/historik/omxsb_replication_2007/events_car.csv")  # flyttad 13 nov 2026 från output/
+ev = pd.read_csv("pagaende/03_omxsb_indexeffekt/historik/omxsb_replication_2007/events_car.csv")  # flyttad 13 nov 2026 från output/
 RICS = sorted(set(ev["RIC"].dropna().astype(str)) | set(TWIN_RICS))
 p = pd.read_parquet("data/raw/lseg/panel_2005_2026/stocks_daily_2005.parquet")
 print("kolumner i panelen:", p.columns.tolist())

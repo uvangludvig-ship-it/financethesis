@@ -1,6 +1,6 @@
 # Historik: OMXSB-arbetet före thesis_final (25 oktober – 10 november 2026)
 
-**Inget här gäller.** Det som gäller är `../thesis_final/`. Paketen ligger kvar med sina ursprungliga namn så att gamla hänvisningar går att följa. Gamla sökvägar slås upp i `archive/FLYTTKARTA_2026-11-13.tsv`. Skripten är sparade exakt som de kördes och pekar därför på den gamla strukturen (`output/…`, `code/…`). De ska läsas, inte köras om.
+**Inget här gäller.** Det som gäller är `../thesis_final/`. Paketen ligger kvar med sina ursprungliga namn så att gamla hänvisningar går att följa. Gamla sökvägar slås upp i `arkiv/repo_historik/FLYTTKARTA_2026-11-13.tsv`. Skripten är sparade exakt som de kördes och pekar därför på den gamla strukturen (`output/…`, `code/…`). De ska läsas, inte köras om.
 
 Där koden låg separat i `code/build/` eller `code/notebooks/` har den lagts i en undermapp `kod/` i det paket den skrev till.
 

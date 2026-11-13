@@ -32,7 +32,7 @@ Uppsatsen växte ur del 1 av oktoberplanen (alternativ 02). FTN-delen ingår int
 ## Hur man kör
 
 ```
-cd theses/03_omxsb_indexeffekt/thesis_final
+cd pagaende/03_omxsb_indexeffekt/thesis_final
 pip install pandas==3.0.5 numpy==2.5.3 scipy==1.18.1 python-docx==1.2.0 matplotlib==3.11.2
 python3 run_all.py          # cirka 10 minuter, sista raden ska vara "0 FEL"
 ```
@@ -41,7 +41,7 @@ Kontrollerat 13 nov 2026 på en kopia utanför repot med pandas 2.2.3, numpy 1.2
 
 ## Data
 
-`thesis_final/data/` är en fryst kopia av allt steg 01–16 läser. Varje fil har en md5-summa i `thesis_final/data/FILES.csv`. Kolumnen `original_path` där anger var filen låg **före** 13 nov. Den nya platsen slår man upp i `archive/FLYTTKARTA_2026-11-13.tsv`. Källorna i den gemensamma `data/` är främst:
+`thesis_final/data/` är en fryst kopia av allt steg 01–16 läser. Varje fil har en md5-summa i `thesis_final/data/FILES.csv`. Kolumnen `original_path` där anger var filen låg **före** 13 nov. Den nya platsen slår man upp i `arkiv/repo_historik/FLYTTKARTA_2026-11-13.tsv`. Källorna i den gemensamma `data/` är främst:
 - `data/raw/lseg/panel_2005_2026/` (kurspanelen; `stocks_daily_2005.parquet` är samma data som `thesis_final/data/prices/all_stocks_daily_*`),
 - `data/input/omxsb/` (händelselistorna med Nasdaqs besked),
 - `data/raw/lseg/klassificering/`,

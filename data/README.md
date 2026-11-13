@@ -1,6 +1,6 @@
 # data/: all data, gemensam för alla uppsatsalternativ
 
-Data flyttas aldrig in i en uppsatsmapp. Den ligger här, en gång, och varje alternativ pekar hit. Undantaget är `theses/03_omxsb_indexeffekt/thesis_final/data/`: det är en fryst och md5-kontrollerad kopia, så att den gällande uppsatsen går att köra fristående.
+Data flyttas aldrig in i en uppsatsmapp. Den ligger här, en gång, och varje alternativ pekar hit. Undantaget är `pagaende/03_omxsb_indexeffekt/thesis_final/data/`: det är en fryst och md5-kontrollerad kopia, så att den gällande uppsatsen går att köra fristående.
 
 - **`MANIFEST.md`** beskriver varje fil: vad den är, var den kommer ifrån och vilket skript som byggde den.
 - **Den här filen** visar vilket alternativ som använder vad.
@@ -16,7 +16,7 @@ Data flyttas aldrig in i en uppsatsmapp. Den ligger här, en gång, och varje al
 
 ## Vad som används av vilket alternativ
 
-02 = FTN-pristryck (vilande), 03 = OMXSB-indexeffekten (aktiv), 03h = bara i 03:s historik.
+Numren är alternativens nummer: 01 och 02 ligger i `arkiv/` (01 = FTN:s tidiga ankare, 02 = FTN-pristryck, vilande), 03 ligger i `pagaende/` (OMXSB-indexeffekten). 03h = används bara i 03:s historik.
 
 | Mapp | Innehåll | Används av |
 |---|---|---|

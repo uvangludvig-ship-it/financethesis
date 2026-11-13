@@ -1,6 +1,6 @@
 # 02 Pristryck när Fondtorgsnämnden flyttar premiepensionen (oktober 2026)
 
-**Status:** VILANDE sedan 29 oktober 2026. **Ingen avkastning kring ett FTN-datum har räknats.** Spärren `UNBLIND = False` sitter kvar i `kod/ftn_eventstudy.py` och `kod/dilution.py`. OMXSB-replikationen, som var del 1 här, blev en egen uppsats: alternativ 03. Den nuvarande uppsatsen (`../03_omxsb_indexeffekt/thesis_final/`) innehåller ingen FTN-del.
+**Status:** VILANDE sedan 29 oktober 2026. **Ingen avkastning kring ett FTN-datum har räknats.** Spärren `UNBLIND = False` sitter kvar i `kod/ftn_eventstudy.py` och `kod/dilution.py`. OMXSB-replikationen, som var del 1 här, blev en egen uppsats: alternativ 03. Den nuvarande uppsatsen (`pagaende/03_omxsb_indexeffekt/thesis_final/`) innehåller ingen FTN-del. Mappen ligger därför i `arkiv/`. Om alternativet tas upp igen flyttas hela mappen till `under_utredning/` eller `pagaende/`; koden fungerar på samma djup.
 **Senast ändrad:** 29–30 okt 2026 (plan och design). Mappen samlades här 13 nov 2026.
 
 ## Frågan
@@ -30,7 +30,7 @@
 | `sammanfattningar_2026-10/` | Äldre sammanfattningar (Word/PDF), ersatta av klartextversionen | okt |
 | `tabellanteckningar/NOTES.md` | En mening per tabell (aldrig ifylld) | 27 okt |
 
-Litteraturlistan för den här designen (`literature_verified.md`, `references.bib`) underhålls i `../03_omxsb_indexeffekt/litteratur/`.
+Litteraturlistan för den här designen (`literature_verified.md`, `references.bib`) underhålls i `pagaende/03_omxsb_indexeffekt/litteratur/`.
 
 ## Koden (`kod/`)
 
